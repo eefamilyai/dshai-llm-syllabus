@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M19 · Inference Engineering and Serving — From Zero to Frontier</title>
+<meta name="description" content="Prefill is compute-bound, decode is bandwidth-bound, and the rest is consequences.">
+<meta property="og:title" content="M19 · Inference Engineering and Serving — From Zero to Frontier">
+<meta property="og:description" content="Prefill is compute-bound, decode is bandwidth-bound, and the rest is consequences.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Large language models / M19</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M19">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M19</span><span class="pill d4">difficulty 4/5</span><span class="pill">2 weeks</span><span class="pill">prereqs: M15</span><span class="pill">5,362 words</span></div><h1>Inference Engineering and Serving</h1><p class="tagline">Prefill is compute-bound, decode is bandwidth-bound, and the rest is consequences.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>A 7-billion-parameter model that trains comfortably on one GPU can be undeliverable: it costs more per million tokens than the product can charge, returns its first token in 400 ms and then dribbles out 45 ms per token, and collapses at forty concurrent users because a structure you never had to think about during training — the KV cache — grows until it owns the device. Nearly every serving decision, from grouped-query attention to 4-bit weights to request scheduling, follows from one fact: <strong>prefill and decode are different workloads</strong>, one starved for arithmetic and one for memory bandwidth.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<ol>
+<li>How many tokens does one forward pass of an autoregressive decoder produce, and what must be recomputed if nothing is cached?</li>
+<li>What is the FLOP count of multiplying $\mathbf{W} \in \mathbb{R}^{d \times d}$ by $n$ input rows?</li>
+<li>What is arithmetic intensity, and what is a roofline's ridge point?</li>
+<li>With 32 query heads and 8 key/value heads, how many query heads share one key/value head?</li>
+<li>Write symmetric absmax quantization to $b$ bits in one line.</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. Exactly one; without a cache, token $t$ requires re-running the model over all $t-1$ predecessors, so $T$ tokens cost $O(T^2)$.
+2. $2nd^2$ FLOPs.
+3. FLOPs per byte moved from main memory; the ridge point is $\text{peak FLOP/s}$ divided by $\text{bandwidth}$, dividing bandwidth-bound from compute-bound.
+4. Four.
+5. $s = \max_i|w_i|/(2^{b-1}-1)$, $\hat{w}_i = s\,\operatorname{round}(w_i/s)$.
+
+Revisit **M15** if you missed 1; the roofline in **M24** is the source for 3.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<ul>
+<li>Compute a model's KV-cache footprint in bytes per token and the maximum batch it permits on a named GPU.</li>
+<li>Derive the arithmetic intensity of prefill and decode, place both on a roofline, and predict which one a device bottlenecks.</li>
+<li>Explain with a number why grouped-query attention raises decode throughput.</li>
+<li>Implement a block-based KV allocator and continuous-batching scheduler and measure the gain over static batching.</li>
+<li>Predict when 4-bit weight-only quantization does <em>not</em> speed anything up, and name the right lever instead.</li>
+<li>Derive the expected tokens per verification step in speculative decoding and say why the distribution is unchanged.</li>
+<li>Compute cost per million tokens from GPU count, hourly price, and measured throughput.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$P$, $L$</td>
+<td>parameter count, transformer layers</td>
+</tr>
+<tr>
+<td>$d$, $d_h$</td>
+<td>residual width, per-head dimension</td>
+</tr>
+<tr>
+<td>$n_h$, $n_{kv}$</td>
+<td>query heads, key/value heads, with $n_{kv} \le n_h$</td>
+</tr>
+<tr>
+<td>$g$</td>
+<td>group size, $g = n_h/n_{kv}$</td>
+</tr>
+<tr>
+<td>$T$, $B$</td>
+<td>tokens in context, concurrent sequences</td>
+</tr>
+<tr>
+<td>$b$</td>
+<td>bytes per stored number (2 for bf16)</td>
+</tr>
+<tr>
+<td>$k$</td>
+<td>KV bytes per token, $k = 2Ln_{kv}d_hb$</td>
+</tr>
+<tr>
+<td>$F$, $W_{\text{HBM}}$</td>
+<td>peak tensor-core throughput, memory bandwidth</td>
+</tr>
+<tr>
+<td>$r$</td>
+<td>ridge point, $r = F/W_{\text{HBM}}$</td>
+</tr>
+<tr>
+<td>$\mathrm{AI}$</td>
+<td>arithmetic intensity, FLOP/byte</td>
+</tr>
+<tr>
+<td>$\tau$</td>
+<td>distillation temperature</td>
+</tr>
+</tbody>
+</table>
+<p>GiB means $2^{30}$ bytes; GB means $10^9$.</p>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="prefill-and-decode-are-different-workloads">Prefill and decode are different workloads</h3>
+<p><strong>Intuition.</strong> A matmul reads numbers and does arithmetic. Hand it one vector and it spends all its time fetching the weight matrix, like a cook who reads the whole cookbook to make one omelette. Hand it a thousand vectors and the cookbook is amortised.</p>
+<p><strong>Formal definition.</strong> A layer $\mathbf{W} \in \mathbb{R}^{d\times d}$ in bf16 applied to $n$ rows does $2nd^2$ FLOPs and moves $2d^2$ bytes, so $\mathrm{AI} = n$; likewise for a whole model. Prefill has $n = BT$; decode has $n = B$ but must also drag the cache:</p>
+<p>$$
+\mathrm{AI}_{\text{decode}} = \frac{2PB}{2P + BTk}.
+$$</p>
+<p>You are compute-bound when $\mathrm{AI} > r$ and bandwidth-bound when $\mathrm{AI} < r$.</p>
+<p><strong>Why it is built this way.</strong> This is not a design choice; it is a dense matmul meeting a two-level memory hierarchy. Because $\mathrm{AI}_{\text{decode}}$ <em>falls</em> with $T$ and saturates at $2P/(Tk)$, long context pushes decode further into the bandwidth-bound regime — which is why cache compression beats weight compression at long context.</p>
+<p><strong>Worked micro-example.</strong> $P = 7\times10^9$ bf16 (13.0 GiB), $T = 2048$, $k = 512$ KiB, A100 80 GiB ($F = 312$ TFLOP/s, $W_{\text{HBM}} = 2039$ GB/s, $r = 153$). Prefill of 2048 tokens at $B=1$ has $\mathrm{AI} = 2048$, thirteen times above the ridge. Decode at $B=32$ moves $13.0 + 32.0 = 45.0$ GiB for 448 GFLOP, so $\mathrm{AI} = 9.9$ — sixteen times below it, predicting $45.0 \times 2^{30}/2.039\times10^{12} = 23.7$ ms against a 1.4 ms compute floor.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 392" width="100%" role="img" aria-label="The roofline model, with real operations placed on it" class="fig-svg"><defs><marker id="roof-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="92.0" y1="284.0" x2="532.0" y2="284.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="288.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e10</text><line x1="92.0" y1="242.1" x2="532.0" y2="242.1" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="246.1" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e11</text><line x1="92.0" y1="200.3" x2="532.0" y2="200.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="204.3" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e12</text><line x1="92.0" y1="158.4" x2="532.0" y2="158.4" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="162.4" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e13</text><line x1="92.0" y1="116.6" x2="532.0" y2="116.6" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="120.6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e14</text><line x1="92.0" y1="74.7" x2="532.0" y2="74.7" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="78.7" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e15</text><text x="92.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e-2</text><text x="202.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e0</text><text x="312.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e2</text><text x="422.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e4</text><text x="532.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e6</text><line x1="92.0" y1="284.0" x2="532.0" y2="284.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><line x1="92.0" y1="58.0" x2="92.0" y2="284.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M92.0,262.0 L93.5,260.9 L94.9,259.8 L96.4,258.7 L97.9,257.6 L99.3,256.4 L100.8,255.3 L102.3,254.2 L103.7,253.1 L105.2,252.0 L106.7,250.9 L108.1,249.7 L109.6,248.6 L111.1,247.5 L112.5,246.4 L114.0,245.3 L115.5,244.2 L116.9,243.1 L118.4,241.9 L119.9,240.8 L121.3,239.7 L122.8,238.6 L124.3,237.5 L125.7,236.4 L127.2,235.2 L128.7,234.1 L130.1,233.0 L131.6,231.9 L133.1,230.8 L134.5,229.7 L136.0,228.5 L137.5,227.4 L138.9,226.3 L140.4,225.2 L141.9,224.1 L143.3,223.0 L144.8,221.8 L146.3,220.7 L147.7,219.6 L149.2,218.5 L150.7,217.4 L152.1,216.3 L153.6,215.2 L155.1,214.0 L156.5,212.9 L158.0,211.8 L159.5,210.7 L160.9,209.6 L162.4,208.5 L163.9,207.3 L165.3,206.2 L166.8,205.1 L168.3,204.0 L169.7,202.9 L171.2,201.8 L172.7,200.6 L174.1,199.5 L175.6,198.4 L177.1,197.3 L178.5,196.2 L180.0,195.1 L181.5,193.9 L182.9,192.8 L184.4,191.7 L185.9,190.6 L187.3,189.5 L188.8,188.4 L190.3,187.3 L191.7,186.1 L193.2,185.0 L194.7,183.9 L196.1,182.8 L197.6,181.7 L199.1,180.6 L200.5,179.4 L202.0,178.3 L203.5,177.2 L204.9,176.1 L206.4,175.0 L207.9,173.9 L209.3,172.7 L210.8,171.6 L212.3,170.5 L213.7,169.4 L215.2,168.3 L216.7,167.2 L218.1,166.0 L219.6,164.9 L221.1,163.8 L222.5,162.7 L224.0,161.6 L225.5,160.5 L226.9,159.3 L228.4,158.2 L229.9,157.1 L231.3,156.0 L232.8,154.9 L234.3,153.8 L235.7,152.7 L237.2,151.5 L238.7,150.4 L240.1,149.3 L241.6,148.2 L243.1,147.1 L244.5,146.0 L246.0,144.8 L247.5,143.7 L248.9,142.6 L250.4,141.5 L251.9,140.4 L253.3,139.3 L254.8,138.1 L256.3,137.0 L257.7,135.9 L259.2,134.8 L260.7,133.7 L262.1,132.6 L263.6,131.4 L265.1,130.3 L266.5,129.2 L268.0,128.1 L269.5,127.0 L270.9,125.9 L272.4,124.8 L273.9,123.6 L275.3,122.5 L276.8,121.4 L278.3,120.3 L279.7,119.2 L281.2,118.1 L282.7,116.9 L284.1,115.8 L285.6,114.7 L287.1,113.6 L288.5,112.5 L290.0,111.4 L291.5,110.2 L292.9,109.1 L294.4,108.0 L295.9,106.9 L297.3,105.8 L298.8,104.7 L300.3,103.5 L301.7,102.4 L303.2,101.3 L304.7,100.2 L306.1,99.1 L307.6,98.0 L309.1,96.9 L310.5,95.7 L312.0,94.6 L313.5,93.8 L314.9,93.8 L316.4,93.8 L317.9,93.8 L319.3,93.8 L320.8,93.8 L322.3,93.8 L323.7,93.8 L325.2,93.8 L326.7,93.8 L328.1,93.8 L329.6,93.8 L331.1,93.8 L332.5,93.8 L334.0,93.8 L335.5,93.8 L336.9,93.8 L338.4,93.8 L339.9,93.8 L341.3,93.8 L342.8,93.8 L344.3,93.8 L345.7,93.8 L347.2,93.8 L348.7,93.8 L350.1,93.8 L351.6,93.8 L353.1,93.8 L354.5,93.8 L356.0,93.8 L357.5,93.8 L358.9,93.8 L360.4,93.8 L361.9,93.8 L363.3,93.8 L364.8,93.8 L366.3,93.8 L367.7,93.8 L369.2,93.8 L370.7,93.8 L372.1,93.8 L373.6,93.8 L375.1,93.8 L376.5,93.8 L378.0,93.8 L379.5,93.8 L380.9,93.8 L382.4,93.8 L383.9,93.8 L385.3,93.8 L386.8,93.8 L388.3,93.8 L389.7,93.8 L391.2,93.8 L392.7,93.8 L394.1,93.8 L395.6,93.8 L397.1,93.8 L398.5,93.8 L400.0,93.8 L401.5,93.8 L402.9,93.8 L404.4,93.8 L405.9,93.8 L407.3,93.8 L408.8,93.8 L410.3,93.8 L411.7,93.8 L413.2,93.8 L414.7,93.8 L416.1,93.8 L417.6,93.8 L419.1,93.8 L420.5,93.8 L422.0,93.8 L423.5,93.8 L424.9,93.8 L426.4,93.8 L427.9,93.8 L429.3,93.8 L430.8,93.8 L432.3,93.8 L433.7,93.8 L435.2,93.8 L436.7,93.8 L438.1,93.8 L439.6,93.8 L441.1,93.8 L442.5,93.8 L444.0,93.8 L445.5,93.8 L446.9,93.8 L448.4,93.8 L449.9,93.8 L451.3,93.8 L452.8,93.8 L454.3,93.8 L455.7,93.8 L457.2,93.8 L458.7,93.8 L460.1,93.8 L461.6,93.8 L463.1,93.8 L464.5,93.8 L466.0,93.8 L467.5,93.8 L468.9,93.8 L470.4,93.8 L471.9,93.8 L473.3,93.8 L474.8,93.8 L476.3,93.8 L477.7,93.8 L479.2,93.8 L480.7,93.8 L482.1,93.8 L483.6,93.8 L485.1,93.8 L486.5,93.8 L488.0,93.8 L489.5,93.8 L490.9,93.8 L492.4,93.8 L493.9,93.8 L495.3,93.8 L496.8,93.8 L498.3,93.8 L499.7,93.8 L501.2,93.8 L502.7,93.8 L504.1,93.8 L505.6,93.8 L507.1,93.8 L508.5,93.8 L510.0,93.8 L511.5,93.8 L512.9,93.8 L514.4,93.8 L515.9,93.8 L517.3,93.8 L518.8,93.8 L520.3,93.8 L521.7,93.8 L523.2,93.8 L524.7,93.8 L526.1,93.8 L527.6,93.8 L529.1,93.8 L530.5,93.8 L532.0,93.8" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/><line x1="313.0" y1="58.0" x2="313.0" y2="284.0" stroke="var(--fig-amber,#f5b544)" stroke-width="1" stroke-linecap="round" stroke-dasharray="5 4"/><text x="313.0" y="50.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">ridge ≈ 104 FLOPs/byte</text><circle cx="125.0" cy="236.9" r="5.0" fill="var(--fig-rose,#fb7185)"/><text x="135.0" y="240.9" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">elementwise</text><circle cx="169.0" cy="203.4" r="5.0" fill="var(--fig-rose,#fb7185)"/><text x="179.0" y="207.4" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">layernorm</text><circle cx="207.5" cy="174.1" r="5.0" fill="var(--fig-amber,#f5b544)"/><text x="217.5" y="178.1" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">GEMV (batch 1)</text><circle cx="279.0" cy="119.7" r="5.0" fill="var(--fig-violet,#a78bfa)"/><text x="289.0" y="123.7" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-violet,#a78bfa)" text-anchor="start" font-weight="400">attention, cached</text><circle cx="383.5" cy="93.8" r="5.0" fill="var(--fig-green,#34d399)"/><text x="393.5" y="97.8" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-green,#34d399)" text-anchor="start" font-weight="400">GEMM K=4096</text><text x="312.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">arithmetic intensity, FLOPs per byte (log)</text><text x="92.0" y="46.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">attainable FLOP/s (log)</text><rect x="590.0" y="78.0" width="246.0" height="174.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="608.0" y="102.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">read the slope</text><text x="608.0" y="126.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Left of the ridge, performance</text><text x="608.0" y="139.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">is set by bandwidth, not by</text><text x="608.0" y="152.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">FLOPs. Most of an LLM at</text><text x="608.0" y="165.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">inference lives on the slope,</text><text x="608.0" y="178.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">which is why batching and</text><text x="608.0" y="191.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">quantization help and bigger</text><text x="608.0" y="204.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">kernels do not.</text><text x="608.0" y="232.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.4" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">FlashAttention moves ops rightward</text></svg><figcaption>Prefill sits on the flat compute roof and decode far down the bandwidth slope; lengthening context moves decode further left, never right.</figcaption></figure></p>
+<h3 id="the-kv-cache-the-only-thing-that-grows-with-time">The KV cache: the only thing that grows with time</h3>
+<p><strong>Intuition.</strong> It is the transcript you keep so you never re-read the book. Keep the keys and values and you pay once; drop them and you pay every step.</p>
+<p><strong>Formal definition.</strong> Each layer caches $\mathbf{K}^{(l)},\mathbf{V}^{(l)} \in \mathbb{R}^{T \times n_{kv} \times d_h}$, costing $k = 2Ln_{kv}d_hb$ bytes per token and $Tk$ per sequence. For $L=32$, $n_{kv}=32$, $d_h=128$, $b=2$: $k = 524{,}288 = 2^{19}$ bytes — half a mebibyte per token, 2 GiB for a 4096-token sequence.</p>
+<p><strong>Why it is built this way.</strong> Caching converts generating $T$ tokens from $O(T^2)$ attention work into $O(T)$ at $O(T)$ memory per sequence. It is a loan against memory to buy compute, and at realistic context lengths the interest is the whole cost of the system: thirty-two users at 4096 tokens hold 64 GiB of cache against 13.0 GiB of weights. The cache, not the model, sets batch size, and batch size sets throughput.</p>
+<p><strong>Worked micro-example.</strong> At $B=32$ the 32.0 GiB of cache traffic is 2.5 times the weight traffic. A 4-bit weight format cuts the step from 45.0 to 35.4 GiB, a 1.27-fold gain; halving $k$ cuts it to 29.0 GiB, 1.55-fold.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" width="100%" role="img" aria-label="The KV cache: what is stored per layer, and how it grows" class="fig-svg"><defs><marker id="kv-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="120.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">without cache</text><rect x="30.0" y="56.0" width="180.0" height="120.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.4"/><rect x="44.0" y="70.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="83.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 1</text><rect x="44.0" y="94.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="107.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 2</text><rect x="44.0" y="118.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="131.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 3</text><rect x="44.0" y="142.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="155.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 4</text><text x="120.0" y="198.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">O(T²) work per token</text><line x1="226.0" y1="116.0" x2="268.0" y2="116.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#kv-ah)"/><text x="360.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">with KV cache</text><text x="286.0" y="72.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L0</text><rect x="292.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="56.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="106.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L1</text><rect x="292.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="90.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="140.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L2</text><rect x="292.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="124.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L3</text><rect x="292.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="158.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="457.0" y="206.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">one column per cached token, per layer, for both K and V</text><rect x="660.0" y="56.0" width="172.0" height="150.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="746.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">memory</text><text x="746.0" y="104.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">2 · L · H · T · dₕ</text><text x="746.0" y="124.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">· bytes per element</text><text x="746.0" y="152.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">7B, T=8192, bf16</text><text x="746.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">≈ 2 GB / sequence</text><text x="746.0" y="194.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">grows linearly, forever</text><text x="430.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">decode costs a matrix-vector product per step; the cache turns O(T) recompute into O(T) memory</text></svg><figcaption>The weight block is fixed while the two cache tensors per layer grow with context; the crossover is where serving becomes a memory problem.</figcaption></figure></p>
+<p><div class="viz" data-viz="v-kvcache"></div><div class="vizcap">Drag sequence length until the cache bar overtakes the weights, then halve the head count and watch it quarter — that gesture is the argument for grouped-query attention.</div></p>
+<h3 id="shrinking-the-cache-gqa-and-paged-attention">Shrinking the cache: GQA and paged attention</h3>
+<p><strong>Intuition.</strong> Share the notes between colleagues who need the same ones, and hand out storage by the room rather than by the wing.</p>
+<p><strong>Formal definition.</strong> Multi-query attention sets $n_{kv}=1$; grouped-query attention sets $n_{kv} = n_h/g$, so $k$ shrinks by exactly $g$. Separately, <em>paged attention</em> replaces per-sequence contiguous allocation with a pool of blocks of $s$ tokens addressed through a block table, so logical adjacency no longer implies physical adjacency; waste is at most $s-1$ slots per sequence.</p>
+<p><strong>Why it is built this way.</strong> They attack the two halves of the problem. GQA cuts per-token size at a small cost in expressiveness — query heads in a group cannot search keys for different things — and $g$ from 4 to 8 is measured to recover almost all of multi-head quality, while $g = n_h$ (MQA) is worse and now rare. Paging kills external fragmentation: reserving <code>max_seq_len</code> contiguously wastes 60 to 80 percent of memory on real traces, and that waste is what caps the batch.</p>
+<p><strong>Worked micro-example.</strong> With $g=4$, $k = 131{,}072$ bytes $= 128$ KiB, so at $B=32$, $T=2048$ the step moves 21.0 GiB in 11.1 ms instead of 45.0 GiB in 23.7 ms, and the freed pool allows roughly three times the batch. For paging, $s=16$ on a 4096-token sequence wastes at most 15 tokens — 7.5 KiB out of 2 GiB.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" width="100%" role="img" aria-label="Paged attention: fixed-size blocks instead of one contiguous buffer" class="fig-svg"><defs><marker id="paged-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="120.0" y="36.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">naive: pre-allocate max length</text><rect x="24.0" y="52.0" width="400.0" height="22.0" rx="4" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="1" stroke-dasharray="4 3"/><rect x="24.0" y="52.0" width="140.0" height="22.0" rx="4" fill="rgba(251,113,133,0.25)" stroke="none" stroke-width="1.5"/><text x="432.0" y="67.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">wasted 65%</text><rect x="24.0" y="82.0" width="400.0" height="22.0" rx="4" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="1" stroke-dasharray="4 3"/><rect x="24.0" y="82.0" width="90.0" height="22.0" rx="4" fill="rgba(251,113,133,0.25)" stroke="none" stroke-width="1.5"/><text x="432.0" y="97.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">wasted 77%</text><rect x="24.0" y="112.0" width="400.0" height="22.0" rx="4" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="1" stroke-dasharray="4 3"/><rect x="24.0" y="112.0" width="200.0" height="22.0" rx="4" fill="rgba(251,113,133,0.25)" stroke="none" stroke-width="1.5"/><text x="432.0" y="127.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">wasted 50%</text><text x="560.0" y="36.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">paged: blocks on demand</text><rect x="560.0" y="52.0" width="40.0" height="22.0" rx="4" fill="rgba(34,211,238,0.25)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1"/><text x="580.0" y="67.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">b1</text><rect x="604.0" y="52.0" width="40.0" height="22.0" rx="4" fill="rgba(34,211,238,0.25)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1"/><text x="624.0" y="67.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">b2</text><rect x="648.0" y="52.0" width="40.0" height="22.0" rx="4" fill="rgba(34,211,238,0.25)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1"/><text x="668.0" y="67.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">b3</text><rect x="692.0" y="52.0" width="40.0" height="22.0" rx="4" fill="rgba(34,211,238,0.25)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1"/><text x="712.0" y="67.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">b4</text><text x="744.0" y="67.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">no waste</text><rect x="560.0" y="82.0" width="40.0" height="22.0" rx="4" fill="rgba(34,211,238,0.25)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1"/><text x="580.0" y="97.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">b1</text><rect x="604.0" y="82.0" width="40.0" height="22.0" rx="4" fill="rgba(34,211,238,0.25)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1"/><text x="624.0" y="97.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">b2</text><rect x="648.0" y="82.0" width="40.0" height="22.0" rx="4" fill="rgba(34,211,238,0.25)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1"/><text x="668.0" y="97.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">b3</text><text x="700.0" y="97.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">no waste</text><rect x="560.0" y="112.0" width="40.0" height="22.0" rx="4" fill="rgba(34,211,238,0.25)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1"/><text x="580.0" y="127.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">b1</text><rect x="604.0" y="112.0" width="40.0" height="22.0" rx="4" fill="rgba(34,211,238,0.25)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1"/><text x="624.0" y="127.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">b2</text><rect x="648.0" y="112.0" width="40.0" height="22.0" rx="4" fill="rgba(34,211,238,0.25)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1"/><text x="668.0" y="127.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">b3</text><rect x="692.0" y="112.0" width="40.0" height="22.0" rx="4" fill="rgba(34,211,238,0.25)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1"/><text x="712.0" y="127.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">b4</text><rect x="736.0" y="112.0" width="40.0" height="22.0" rx="4" fill="rgba(34,211,238,0.25)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1"/><text x="756.0" y="127.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">b5</text><rect x="780.0" y="112.0" width="40.0" height="22.0" rx="4" fill="rgba(34,211,238,0.25)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1"/><text x="800.0" y="127.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">b6</text><text x="832.0" y="127.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">no waste</text><rect x="24.0" y="200.0" width="0.0" height="0.0" rx="8" fill="none"/><rect x="24.0" y="200.0" width="0.0" height="0.0" rx="8" fill="none"/><rect x="24.0" y="200.0" width="0.0" height="0.0" rx="8" fill="none"/><rect x="24.0" y="200.0" width="0.0" height="0.0" rx="8" fill="none"/><rect x="24.0" y="196.0" width="812.0" height="130.0" rx="10" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="42.0" y="220.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="650">block table</text><rect x="42.0" y="236.0" width="56.0" height="34.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><text x="70.0" y="258.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">phys 0</text><rect x="106.0" y="236.0" width="56.0" height="34.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><text x="134.0" y="258.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">phys 3</text><rect x="170.0" y="236.0" width="56.0" height="34.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><text x="198.0" y="258.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">phys 6</text><rect x="234.0" y="236.0" width="56.0" height="34.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><text x="262.0" y="258.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">phys 1</text><rect x="298.0" y="236.0" width="56.0" height="34.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><text x="326.0" y="258.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">phys 4</text><rect x="362.0" y="236.0" width="56.0" height="34.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><text x="390.0" y="258.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">phys 7</text><text x="430.0" y="258.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="16" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">→</text><rect x="500.0" y="236.0" width="128.0" height="34.0" rx="6" fill="rgba(34,211,238,0.18)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1"/><text x="564.0" y="258.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">logical block 0..5</text><text x="42.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">the same physical blocks can be shared by parallel samples decoding from one prompt: copy-on-write for free</text><text x="42.0" y="318.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">this is what makes continuous batching practical, and it is where the throughput win comes from</text></svg><figcaption>A block leaves a finished request and is handed straight to a new one while its neighbours stay put: the pool never develops a hole too small to use.</figcaption></figure></p>
+<h3 id="continuous-batching-and-the-metrics-that-measure-it">Continuous batching and the metrics that measure it</h3>
+<p><strong>Intuition.</strong> A bus that waits until full and runs a fixed route, versus a taxi rank where the next passenger takes the seat the moment one frees.</p>
+<p><strong>Formal definition.</strong> Static batching runs $B$ requests until <em>all</em> finish, then forms the next batch; continuous, or iteration-level, batching re-decides composition every step. The metrics are time to first token $\text{TTFT}$ (queueing plus prefill), time per output token $\text{TPOT}$, $\text{E2E} = \text{TTFT} + (n-1)\text{TPOT}$, aggregate throughput, and <strong>goodput</strong> — the tokens/s delivered inside the latency SLO.</p>
+<p><strong>Why it is built this way.</strong> Output lengths are heavy-tailed, so under static batching a 50-step sequence occupies a slot for the 300 steps its slowest batch-mate needs, and since step cost barely changes with batch in the bandwidth-bound regime, every idle slot is straight loss. Goodput exists because "tokens per second" is unfalsifiable: serve one request at a time for excellent TPOT and terrible throughput, or batch maximally for the reverse.</p>
+<p><strong>Worked micro-example.</strong> Later, 200 requests with outputs uniform on $[50,300]$ give $4.99$ tokens per step and mean TTFT of 840 steps under static batching, against $6.62$ and 2.7 steps under continuous. An SLO of 2 s at $n=200$ allows $\text{TPOT} \le (2000-\text{TTFT})/199$; at $\text{TTFT}=300$ ms that is 8.5 ms, which the 23.7 ms step misses by 2.8-fold, and cutting the batch to 12 still misses at 12.3 ms — the lever is $k$, not $B$. Two refinements matter: <em>chunked prefill</em> caps prefill tokens per step so long prompts do not stall decoding, and <em>preemption</em> handles exhaustion by swapping blocks to host memory or dropping the cache and recomputing it on resumption.</p>
+<h3 id="quantization">Quantization</h3>
+<p><strong>Intuition.</strong> Fewer bits per number means fewer bytes to fetch, and decode is a byte-fetching problem — but you must unpack before you multiply.</p>
+<p><strong>Formal definition.</strong> Symmetric absmax to $b$ bits: $s = \max_i|w_i|/(2^{b-1}-1)$, $\hat{w}_i = s\,\operatorname{round}(w_i/s)$, error at most $s/2$. Asymmetric (zero-point) spends one code on an offset so $[\alpha,\beta]$ need not straddle zero: $s = (\beta-\alpha)/(2^b-1)$, $z = \operatorname{round}(-\alpha/s)$, $\hat{w}_i = s(\operatorname{round}(w_i/s+z)-z)$. <em>Group-wise</em> applies either to blocks of 64 or 128, costing an fp16 scale per group — 4 bits at group 128 is really $4 + 16/128 = 4.125$ bits.</p>
+<p><strong>Why it is built this way.</strong> Quantization pays exactly when the kernel is bandwidth-bound and pays nothing when it is compute-bound, because tensor cores need 16- or 8-bit operands anyway. Hence int4 is a decode technology, not a prefill technology.</p>
+<p><strong>Worked micro-example.</strong> 13.0 GiB of bf16 weights become $7\times10^9 \times 4.125/8 = 3.36$ GiB, a 3.9-fold reduction — a 1.27-fold step-time gain at long context because the cache is untouched, and close to 3-fold at short context where weights dominate.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 400" width="100%" role="img" aria-label="Numeric formats: precision versus range" class="fig-svg"><defs><marker id="quant-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="30.0" y="52.0" width="110.0" height="40.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.5"/><text x="85.0" y="77.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="700">fp32</text><text x="152.0" y="69.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">23-bit mantissa</text><text x="152.0" y="84.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">4 bytes</text><rect x="300.0" y="60.0" width="400.0" height="24.0" rx="4" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="300.0" y="60.0" width="12.5" height="24.0" rx="4" fill="var(--fig-blue,#5b8cff)" stroke="none" stroke-width="1.5" opacity="0.9"/><rect x="312.5" y="60.0" width="100.0" height="24.0" rx="0" fill="var(--fig-blue,#5b8cff)" stroke="none" stroke-width="1.5" opacity="0.55"/><rect x="412.5" y="60.0" width="287.5" height="24.0" rx="0" fill="var(--fig-blue,#5b8cff)" stroke="none" stroke-width="1.5" opacity="0.28"/><text x="308.0" y="77.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="#0b0f1c" text-anchor="middle" font-weight="400">s</text><text x="362.5" y="77.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="#0b0f1c" text-anchor="middle" font-weight="400">exp 8</text><text x="556.2" y="77.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">mantissa 23</text><rect x="30.0" y="106.0" width="110.0" height="40.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.5"/><text x="85.0" y="131.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">bf16</text><text x="152.0" y="123.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">same range as fp32</text><text x="152.0" y="138.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">2 bytes</text><rect x="300.0" y="114.0" width="400.0" height="24.0" rx="4" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="300.0" y="114.0" width="25.0" height="24.0" rx="4" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><rect x="325.0" y="114.0" width="200.0" height="24.0" rx="0" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.55"/><rect x="525.0" y="114.0" width="175.0" height="24.0" rx="0" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.28"/><text x="308.0" y="131.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="#0b0f1c" text-anchor="middle" font-weight="400">s</text><text x="425.0" y="131.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="#0b0f1c" text-anchor="middle" font-weight="400">exp 8</text><text x="612.5" y="131.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">mantissa 7</text><rect x="30.0" y="160.0" width="110.0" height="40.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.5"/><text x="85.0" y="185.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="700">fp16</text><text x="152.0" y="177.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">overflows past 65504</text><text x="152.0" y="192.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">2 bytes</text><rect x="300.0" y="168.0" width="400.0" height="24.0" rx="4" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="300.0" y="168.0" width="25.0" height="24.0" rx="4" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.9"/><rect x="325.0" y="168.0" width="125.0" height="24.0" rx="0" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.55"/><rect x="450.0" y="168.0" width="250.0" height="24.0" rx="0" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.28"/><text x="308.0" y="185.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="#0b0f1c" text-anchor="middle" font-weight="400">s</text><text x="387.5" y="185.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="#0b0f1c" text-anchor="middle" font-weight="400">exp 5</text><text x="575.0" y="185.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">mantissa 10</text><rect x="30.0" y="214.0" width="110.0" height="40.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.5"/><text x="85.0" y="239.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="700">fp8 E4M3</text><text x="152.0" y="231.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">very narrow range</text><text x="152.0" y="246.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">1 byte</text><rect x="300.0" y="222.0" width="400.0" height="24.0" rx="4" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="300.0" y="222.0" width="50.0" height="24.0" rx="4" fill="var(--fig-amber,#f5b544)" stroke="none" stroke-width="1.5" opacity="0.9"/><rect x="350.0" y="222.0" width="200.0" height="24.0" rx="0" fill="var(--fig-amber,#f5b544)" stroke="none" stroke-width="1.5" opacity="0.55"/><rect x="550.0" y="222.0" width="150.0" height="24.0" rx="0" fill="var(--fig-amber,#f5b544)" stroke="none" stroke-width="1.5" opacity="0.28"/><text x="308.0" y="239.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="#0b0f1c" text-anchor="middle" font-weight="400">s</text><text x="450.0" y="239.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="#0b0f1c" text-anchor="middle" font-weight="400">exp 4</text><text x="625.0" y="239.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">mantissa 3</text><rect x="30.0" y="268.0" width="110.0" height="40.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.5"/><text x="85.0" y="293.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="700">int8</text><text x="152.0" y="285.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">uniform steps</text><text x="152.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">1 byte</text><rect x="300.0" y="276.0" width="400.0" height="24.0" rx="4" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="302.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="310.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="318.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="326.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="335.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="343.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="351.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="359.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="368.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="376.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="384.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="392.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="401.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="409.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="417.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="425.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="434.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="442.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="450.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="458.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="467.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="475.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="483.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="491.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="500.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="508.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="516.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="524.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="533.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="541.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="549.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="557.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="566.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="574.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="582.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="590.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="599.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="607.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="615.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="623.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="632.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="640.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="648.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="656.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="665.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="673.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="681.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="689.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="30.0" y="322.0" width="110.0" height="40.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.5"/><text x="85.0" y="347.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="700">int4</text><text x="152.0" y="339.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">16 levels total</text><text x="152.0" y="354.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">0.5 byte</text><rect x="300.0" y="330.0" width="400.0" height="24.0" rx="4" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="302.0" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="326.8" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="351.5" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="376.2" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="401.0" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="425.8" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="450.5" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="475.2" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="500.0" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="524.8" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="549.5" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="574.2" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="599.0" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="623.8" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="648.5" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="673.2" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><text x="430.0" y="384.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">fewer bits means coarser steps; narrower exponent range means more overflow. Quantization picks which to lose.</text></svg><figcaption>Look at int4: the spacing between representable values is visible, and the range is only usable after a per-group scale — that scale is the metadata you pay for.</figcaption></figure></p>
+<p><div class="viz" data-viz="v-quant"></div><div class="vizcap">Drag the value and watch where it lands at each precision; the int4 error is relative to the *group maximum*, not the value, which is why group size matters.</div></p>
+<p>The named methods attack different parts of this. <strong>GPTQ</strong> treats quantization as layer-wise least squares, minimising $\|\mathbf{W}\mathbf{X}-\hat{\mathbf{W}}\mathbf{X}\|_2^2$ on calibration activations: quantize one input channel at a time in fixed order, then push the error onto the channels not yet quantized using the damped inverse Hessian $\mathbf{H}^{-1}$ with $\mathbf{H} = 2\mathbf{X}\mathbf{X}^\top$. After quantizing column $j$, the error $e_j = (w_j-\hat{w}_j)/[\mathbf{H}^{-1}]_{jj}$ propagates as $\mathbf{W}_{:,j+1:} \to \mathbf{W}_{:,j+1:} - e_j[\mathbf{H}^{-1}]_{j,j+1:}$. <strong>AWQ</strong> observes that about 1 percent of weight channels carry disproportionate importance and that importance tracks <em>activation</em> magnitude rather than weight magnitude; it rescales per input channel, $\mathbf{W}' = \mathbf{W}\operatorname{diag}(\mathbf{s})$ with $\mathbf{X}' = \operatorname{diag}(\mathbf{s})^{-1}\mathbf{X}$, so the layer's function is unchanged while salient channels get finer relative resolution, and searches $\mathbf{s}_j = \bar{a}_j^{\beta}$ on a grid with no gradients, where $\bar{a}_j$ is channel $j$'s mean absolute activation. <strong>KV-cache quantization</strong> shrinks $k$ itself: keys carry outlier channels that persist across tokens, values carry outliers per token, so keys are quantized per channel and values per token. <strong>W4A16</strong> stores weights at 4 bits and multiplies in bf16, cutting weight traffic but not the cache. <strong>GGUF/k-quants</strong> in llama.cpp target CPU, Metal and batch-of-one: super-blocks of 256 split into eight sub-blocks of 32, a 6-bit scale per sub-block, 16-bit scale and 8-bit minimum per super-block, plus importance-matrix calibration.</p>
+<h3 id="spending-idle-flops-flashattention-speculation-distillation-parallelism">Spending idle FLOPs: FlashAttention, speculation, distillation, parallelism</h3>
+<p><strong>Intuition.</strong> FlashAttention never writes the intermediates down; speculative decoding fills idle arithmetic units with a guess it later checks for free.</p>
+<p><strong>Formal definition.</strong> FlashAttention tiles attention so the $\mathbf{Q}\mathbf{K}^\top$ block is consumed in on-chip memory, accumulating the softmax with a running maximum $m$ and a running denominator $a$, $m_{\text{new}} = \max(m_{\text{old}},m_i)$ and $a_{\text{new}} = a_{\text{old}}e^{m_{\text{old}}-m_{\text{new}}} + a_i e^{m_i-m_{\text{new}}}$ — exact, not approximate, and the same recurrence lets FlashDecoding split the cache into per-SM chunks and merge them. Speculative decoding proposes $\gamma$ tokens from a cheap draft $q$, evaluates them in one target pass, and accepts each with probability $\min(1,p/q)$, replacing rejections from the normalised residual $(p-q)_+$. Distillation trains a student on the teacher's softened distribution, $\mathcal{L} = (1-\lambda)\mathrm{CE}(\mathbf{y},\mathbf{p}_S) + \lambda\tau^2\mathrm{KL}(\mathbf{p}_T^{\tau}\|\mathbf{p}_S^{\tau})$; the $\tau^2$ factor exists because gradients against soft targets scale as $1/\tau^2$, so without it raising $\tau$ to reveal dark knowledge shrinks the distillation term to nothing.</p>
+<p><strong>Why it is built this way.</strong> All three exploit slack. In prefill the slack is memory capacity — at $T=8192$ with 32 heads the score matrix is 134 MiB <em>per head</em> and nobody reads it back. In low-batch decode the slack is arithmetic throughput — the bus is saturated while the tensor cores idle, so FLOPs consuming bytes already in registers are nearly free. Tensor parallelism divides the weight bytes each device must read, which is why it helps throughput, and inserts an all-reduce of a $B\times T\times d$ activation per layer, which is why it can hurt latency at batch one.</p>
+<p><strong>Worked micro-example.</strong> With $\alpha = 0.8$, $\gamma = 4$, the expected tokens per target step is $(1-0.8^5)/0.2 = 3.36$; if the draft costs 5 percent of a step, the speedup is $3.36/(1+4\times0.05) = 2.8\times$. At high batch, once the step is compute-bound, verification is no longer free and the gain collapses.</p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<p>One iteration of a continuous-batching engine.</p>
+<ol>
+<li><strong>Drain completions.</strong> For every sequence that emitted end-of-sequence or hit <code>max_tokens</code>, stream its output, free its blocks, remove it from the batch.</li>
+<li><strong>Schedule prefill.</strong> Walk the waiting queue in arrival order; admit request $i$ if <code>len(free) &gt;= ceil(plen/s) - owned</code> and a slot is free, else preempt the lowest-priority running sequence or stop admitting.</li>
+<li><strong>Budget the step.</strong> Cap new tokens per step across prefill chunks plus one decode token per running sequence, so no long prompt monopolises a step.</li>
+<li><strong>Write block tables.</strong> Extend each sequence's block list from the free list in logical order, recording <code>logical -&gt; physical</code>.</li>
+<li><strong>Forward with paged attention.</strong> Resolve block indices through the table; take positions from the per-sequence counter, not the block index, so positions stay monotonic across non-contiguous blocks.</li>
+<li><strong>Sample per sequence,</strong> applying each request's temperature, top-$p$, and seed to its own logit slice.</li>
+<li><strong>Stream,</strong> detokenising incrementally and holding back incomplete multi-byte tokens.</li>
+<li><strong>Record</strong> per-request timestamps for TTFT, TPOT, and goodput.</li>
+</ol>
+<p>```text
+loop:
+  for seq in finished(batch): free_blocks(seq); batch.remove(seq)
+  while waiting and slots(batch) > 0:
+      seq = waiting[0]; need = ceil(len(seq)/s) - len(seq.blocks)
+      if free_blocks_count() < need:
+          if can_preempt(batch): preempt(lowest_priority(batch))
+          else: break
+      alloc(seq, need); batch.add(seq); waiting.pop()
+  logits = model.forward(batch, paged_kv, block_tables)
+  new = sample(logits, batch.sampling_params)
+  stream(batch, new); append(batch, new); record_timings(batch)
+```</p>
+<p><strong>Complexity.</strong> Per decode step, time is $O(2PB + \sum_i 4LT_in_{kv}d_h)$ FLOPs and $O(2P + B\bar{T}k)$ bytes, so wall-clock is $\max(\text{FLOPs}/F,\ \text{bytes}/W_{\text{HBM}})$ — in practice the second. Memory is $O(2P + \sum_i \operatorname{ceil}(T_i/s) s k)$. Per-token cost is linear in $P/T$.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="1-from-the-roofline-to-the-maximum-useful-batch">1. From the roofline to the maximum useful batch</h3>
+<p>Set $\mathrm{AI}_{\text{decode}} = r$ and solve for $B$:</p>
+<p>$$
+\begin{aligned}
+\frac{2PB}{2P + BTk} = r &\text{, so that } 2PB - rBTk = 2Pr \\
+&\text{hence } B^{*} = \frac{2Pr}{2P - rTk}.
+\end{aligned}
+$$</p>
+<p>A finite solution needs $rTk < 2P$. Since intensity rises monotonically toward $2P/(Tk)$, the necessary condition for <em>any</em> batch to reach the compute roof is</p>
+<p>$$
+\frac{2P}{Tk} > r .
+$$</p>
+<p>On an A100, $2P/(Tk) = 14\times10^9/(2048 \times 524288) = 13.0$, far below $r = 153$; on an H100 ($r=295$) the gap widens. So no batch size reaches the ridge: this model never becomes compute-bound at 2048 tokens. That proves every worthwhile optimisation is a bytes optimisation and bounds what batching can ever buy.</p>
+<h3 id="2-quantization-noise">2. Quantization noise</h3>
+<p>With range $[-\alpha,\alpha]$ and step $\Delta = 2\alpha/2^b$, round-to-nearest error is approximately uniform on $[-\Delta/2,\Delta/2]$:</p>
+<p>$$
+\begin{aligned}
+\mathbb{E}[e] &= 0, \\
+\mathbb{E}[e^2] &= \frac{1}{\Delta}\int_{-\Delta/2}^{\Delta/2} e^2\,de = \frac{\Delta^2}{12}.
+\end{aligned}
+$$</p>
+<p>For a full-scale sinusoid of amplitude $\alpha$ the signal power is $\alpha^2/2$, so</p>
+<p>$$
+\mathrm{SQNR} = 10\log_{10}(\alpha^2/2) - 10\log_{10}(\Delta^2/12) = 10\log_{10}(6\alpha^2/\Delta^2) = 10\log_{10}(1.5 \cdot 4^{b}) = 1.76 + 6.02\,b
+$$</p>
+<p>in dB: 49.9 at 8 bits, 25.8 at 4. Two caveats: weights are roughly Gaussian with a long tail, so clipping at $\max|w|$ wastes range on outliers, and an MSE-optimal 4-bit grid clips well below the maximum. Those facts are what AWQ's channel scaling and GPTQ's error compensation exploit.</p>
+<h3 id="3-why-speculative-decoding-preserves-the-distribution">3. Why speculative decoding preserves the distribution</h3>
+<p>Draw $x\sim q$, accept with probability $\min(1,p(x)/q(x))$, and on rejection draw from $r(x) = (p(x)-q(x))_+ / Z$ with $Z = \sum_y (p(y)-q(y))_+$. Then, using $p - \min(p,q) = (p-q)_+$,</p>
+<p>$$
+\text{Pr}[\text{reject}] = 1 - \sum_y q(y)\min(1,p(y)/q(y)) = 1 - \sum_y \min(p(y),q(y)) = \sum_y (p(y)-q(y))_+ = Z,
+$$</p>
+<p>so</p>
+<p>$$
+\text{Pr}[\text{output}=x] = \min(p(x),q(x)) + Z\cdot\frac{(p(x)-q(x))_+}{Z} = \min(p(x),q(x)) + (p(x)-q(x))_+ = p(x),
+$$</p>
+<p>because $\min(a,b)+(a-b)_+ = a$. Each position is preserved independently and the draft depends only on the accepted prefix, so the sequence distribution is preserved. Acceptance is a run of Bernoulli successes:</p>
+<p>$$
+\mathbb{E}[\text{tokens}] = \sum_{i=0}^{\gamma}\text{Pr}[\text{at least } i] = \sum_{i=0}^{\gamma}\alpha^i = \frac{1-\alpha^{\gamma+1}}{1-\alpha},
+$$</p>
+<p>with the $i=\gamma$ term the always-produced correction token. Including relative draft cost $c$, speedup is $\frac{1-\alpha^{\gamma+1}}{(1-\alpha)(1+\gamma c)}$, maximised at finite $\gamma$ and vanishing as $\alpha \to 0$.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>A paged allocator plus a continuous-batching scheduler, stepping one decode at a time. No matmuls: the point is the memory and scheduling arithmetic, which is where the throughput comes from.</p>
+<p>```python
+import math, random
+
+class PagedKVCache:
+    def __init__(self, n_blocks, block_size, bpt):
+        self.s, self.bpt = block_size, bpt
+        self.free = list(range(n_blocks - 1, -1, -1))   # LIFO free list
+        self.table, self.tokens = {}, {}                # seq -> block ids / n tokens
+    def _need(self, sid, extra):
+        return math.ceil((self.tokens.get(sid, 0) + extra) / self.s) - len(self.table.get(sid, []))
+    def fits(self, sid, extra):
+        return len(self.free) >= self._need(sid, extra)
+    def grow(self, sid, extra):
+        need = self._need(sid, extra)
+        assert need <= len(self.free), "out of KV blocks"
+        self.table.setdefault(sid, []).extend(self.free.pop() for _ in range(need))
+        self.tokens[sid] = self.tokens.get(sid, 0) + extra
+    def release(self, sid):
+        self.free.extend(self.table.pop(sid, []))       # blocks go back to the pool
+        self.tokens.pop(sid, None)
+
+
+def simulate(reqs, n_blocks, mode="continuous", max_batch=8, block_size=16,
+             bpt=512 * 1024, max_ctx=2048):
+    """reqs: (id, arrival_step, prompt_len, output_len); one step = one decode."""
+    cache = PagedKVCache(n_blocks, block_size, bpt)
+    pending, running = list(reqs), {}
+    step = tokens = 0
+    peak = {"paged": 0.0, "naive": 0.0, "waste": 0.0}
+    ttft = {}
+    while pending or running:
+        if mode == "continuous":                       # admit whenever a slot frees
+            i = 0
+            while i < len(pending) and len(running) < max_batch:
+                rid, arr, plen, olen = pending[i]
+                if arr > step or not cache.fits(rid, plen):
+                    i += 1
+                    continue
+                cache.grow(rid, plen)                  # prefill reserves prompt blocks
+                ttft[rid], running[rid] = step - arr, olen
+                pending.pop(i)
+        elif not running:                              # static: wait for a full drain
+            for rid, arr, plen, olen in pending[:max_batch]:
+                if not cache.fits(rid, plen):
+                    break
+                cache.grow(rid, plen)
+                ttft[rid], running[rid] = step - arr, olen
+            pending = pending[len(running):]
+        step += 1                                      # one decode step
+        for rid in list(running):
+            cache.grow(rid, 1)
+            running[rid] -= 1
+            tokens += 1
+            if running[rid] == 0:
+                cache.release(rid)
+                del running[rid]
+        res = sum(len(b) for b in cache.table.values()) * block_size * bpt
+        use = sum(cache.tokens.values()) * bpt
+        peak["paged"] = max(peak["paged"], res)
+        peak["waste"] = max(peak["waste"], res - use)
+        peak["naive"] = max(peak["naive"], max_ctx * bpt * len(running))
+    return dict(tps=tokens / step, util=tokens / (step * max_batch),
+                ttft=sum(ttft.values()) / len(reqs),
+                paged=peak["paged"] / 2**30, naive=peak["naive"] / 2**30,
+                waste=peak["waste"] / 2**30)
+
+
+random.seed(7)
+reqs = [(i, i * 25, random.randint(64, 400), random.randint(50, 300)) for i in range(200)]
+for mode in ("static", "continuous"):
+    r = simulate(reqs, n_blocks=8192, mode=mode)
+    print(f"{mode:10s} tok/step={r['tps']:5.2f} util={r['util']:.2f} "
+          f"TTFT={r['ttft']:6.1f} paged={r['paged']:.2f}G naive={r['naive']:.1f}G")
+for bs in (4, 64, 256):
+    r = simulate(reqs, n_blocks=8192, block_size=bs)
+    print(f"block={bs:3d} wasted={100*r['waste']/r['paged']:5.1f}% of cache")
+```</p>
+<p><strong>What to expect.</strong> Deterministic under <code>seed(7)</code>:</p>
+<p>```text
+static     tok/step= 4.99 util=0.62 TTFT= 839.7 paged=1.46G naive=8.0G
+continuous tok/step= 6.62 util=0.83 TTFT=   2.7 paged=1.73G naive=8.0G
+block=  4 wasted=  0.6% of cache
+block= 64 wasted= 11.4% of cache
+block=256 wasted= 34.2% of cache
+```</p>
+<p>Static batching wastes 38 percent of its slots and makes every request wait for the slowest batch-mate. The naive <code>max_ctx</code> reservation peaks at 8.0 GiB where paging peaks at 1.7 GiB. Paged mode peaks <em>higher</em> than static in absolute GiB here because it runs a larger effective batch — memory used, not saved.</p>
+<h2 id="worked-example">Worked example</h2>
+<p>Capacity plan for one A100 80 GiB serving a Llama-2-7B-class model in bf16 at 2048-token average context, then the same model with $g = 4$.</p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Formula</th>
+<th>MHA</th>
+<th>GQA-4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Weights, working memory</td>
+<td>$2P$, reserved</td>
+<td>13.0 + 2.0 GiB</td>
+<td>13.0 + 2.0 GiB</td>
+</tr>
+<tr>
+<td>Cache budget</td>
+<td>$80 - 15.0$</td>
+<td>65.0 GiB</td>
+<td>65.0 GiB</td>
+</tr>
+<tr>
+<td>$k$ per token</td>
+<td>$2Ln_{kv}d_hb$</td>
+<td>512 KiB</td>
+<td>128 KiB</td>
+</tr>
+<tr>
+<td>Cache per sequence at 2048</td>
+<td>$Tk$</td>
+<td>1.0 GiB</td>
+<td>0.25 GiB</td>
+</tr>
+<tr>
+<td>Maximum batch</td>
+<td>budget $/\,Tk$</td>
+<td>65</td>
+<td>260</td>
+</tr>
+<tr>
+<td>Decode bytes at $B=32$</td>
+<td>$2P + BTk$</td>
+<td>45.0 GiB</td>
+<td>21.0 GiB</td>
+</tr>
+<tr>
+<td>Decode step</td>
+<td>bytes $/\,2039$ GB/s</td>
+<td>23.7 ms</td>
+<td>11.1 ms</td>
+</tr>
+<tr>
+<td>Compute floor</td>
+<td>$2PB/312$ TFLOP/s</td>
+<td>1.4 ms</td>
+<td>1.4 ms</td>
+</tr>
+<tr>
+<td>Throughput at $B=32$</td>
+<td>$B/\text{step}$</td>
+<td>~1350 tok/s</td>
+<td>~2900 tok/s</td>
+</tr>
+<tr>
+<td>Prefill, 2048-token prompt</td>
+<td>$2PT/125$ TFLOP/s</td>
+<td>~230 ms</td>
+<td>~230 ms</td>
+</tr>
+</tbody>
+</table>
+<p>At \$2 per GPU-hour one A100 costs \$0.000556 per second, so cost per million tokens is $0.000556 \times 10^6 / 2900 \approx \$0.19$ — about \$0.77 for four GPUs behind a load balancer before hosting margin. Input tokens are far cheaper: the same device prefills 2048 tokens per 230 ms, of order \$0.00006 per million tokens of pure compute, a ratio near $10^3$ against decode at this batch. Providers quote nearer 4 to 1 because they price to the market, but the direction is not in doubt: <strong>output tokens are the expensive ones, and they are expensive because of bytes, not FLOPs.</strong> Two checks catch most bad plans: does the cache exceed the weights (if so, cache compression outranks weight compression), and does the throughput figure survive division by the batch size to give a per-user token rate?</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="the-kv-cache-makes-inference-faster">"The KV cache makes inference faster"</h3>
+<p>It does the opposite to memory and only helps compute. Caching converts $O(T^2)$ attention into $O(T)$ while costing $O(T)$ memory per sequence, and at realistic context lengths fetching that memory is the bottleneck — the cache is five times the weights in the worked example.</p>
+<h3 id="bigger-batch-is-free-throughput">"Bigger batch is free throughput"</h3>
+<p>Batch helps only until the bus saturates and always costs latency: TTFT grows because prefill competes for the device, TPOT grows because each step moves more cache bytes. If a TPOT budget exists, the maximum batch is <em>derived</em> from it. Optimising tokens per second while ignoring goodput produces a system that is fast and useless.</p>
+<h3 id="4-bit-quantization-gives-a-4x-speedup">"4-bit quantization gives a 4x speedup"</h3>
+<p>Weight bytes fall 3.9-fold; nothing else does. The cache is untouched, unpacking costs ALU cycles, and fixed per-step overheads remain. At long context with a large batch the gain is 1.27-fold, at short context it approaches 3-fold, and on a compute-bound prefill it is approximately zero.</p>
+<h3 id="flashattention-speeds-up-inference">"FlashAttention speeds up inference"</h3>
+<p>It performs exactly the same FLOPs. What it removes is the $O(T^2)$ HBM traffic of the score matrix — decisive for prefill, nearly irrelevant for decode, where that matrix is a $1\times T$ vector. Decode benefits from FlashDecoding's split over the cache dimension, a parallelism fix for low-batch underutilisation, not an arithmetic fix.</p>
+<h3 id="speculative-decoding-changes-the-output-distribution">"Speculative decoding changes the output distribution"</h3>
+<p>Not if acceptance and residual sampling are implemented as specified — the marginal at each position is exactly $p$. Implement it wrong, for instance by accepting whenever the draft argmax matches, and you have silently replaced your model with something sharper and less diverse, which surfaces later as a benchmark regression you cannot explain.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>1.</strong> Compute $k$ for a 13B model with $L=40$, $n_{kv}=40$, $d_h=128$, fp16, and the footprint at 8192 tokens.</p>
+<details><summary>Solution</summary>
+
+$k = 2\cdot40\cdot40\cdot128\cdot2 = 819{,}200$ bytes $= 800$ KiB per token; at 8192 tokens that is 6.25 GiB per sequence, so a 40 GiB budget holds six sequences at full context.
+
+</details>
+
+<p><strong>2.</strong> TTFT is 350 ms, TPOT is 20 ms, and the response is 500 tokens. What fraction of end-to-end latency is prefill?</p>
+<details><summary>Solution</summary>
+
+$\text{E2E} = 350 + 499\times20 = 10{,}330$ ms, so prefill is 3.4 percent. At long outputs decode dominates, which is why TPOT is the number users feel.
+
+</details>
+
+<p><strong>3.</strong> Why is a 4-bit model not four times faster at 32k context?</p>
+<details><summary>Solution</summary>
+
+One sequence holds $32768 \times 512\,\text{KiB} = 16$ GiB of cache against 13 GiB of weights, so at $B=8$ the cache is 128 GiB against 13 GiB and compressing weights by 4 changes step time by about 8 percent. The lever is $k$: GQA, KV quantization, or a shorter context.
+
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>4.</strong> On an H100 ($F=989$ TFLOP/s, $W_{\text{HBM}}=3350$ GB/s), can any batch make decode compute-bound for $P=7\times10^9$, $T=1024$, $k=512$ KiB? Give the maximum achievable intensity.</p>
+<details><summary>Solution</summary>
+
+$r = 989/3.35 = 295$ FLOP/byte, while the asymptote is $2P/(Tk) = 14\times10^9/(1024\times524288) = 26.1$. Since $26.1 < 295$, the denominator $2P - rTk$ is negative for every $B$: **no batch reaches the ridge**, and the maximum intensity is 26.1, eleven times below the roof.
+
+</details>
+
+<p><strong>5.</strong> With a 70 GiB cache budget, $T=8192$, $L=32$, $d_h=128$, fp16, compute the maximum batch for $n_{kv}=32$ and $n_{kv}=8$.</p>
+<details><summary>Solution</summary>
+
+$n_{kv}=32$: $k = 512$ KiB, so a sequence costs 4 GiB — 17 sequences. $n_{kv}=8$: $k = 128$ KiB, so 1 GiB — 70 sequences. One architectural choice buys 4.1 times the batch.
+
+</details>
+
+<p><strong>6.</strong> A 4-bit format uses group size 128 with an fp16 scale per group. Give the effective bits per weight and the compression ratio against fp16.</p>
+<details><summary>Solution</summary>
+
+$4 + 16/128 = 4.125$ bits, so $16/4.125 = 3.88\times$. Group size 64 gives 4.25 bits and $3.76\times$; the metadata is 3 percent of the payload at group 128, which is why group size is a knob rather than a free choice.
+
+</details>
+
+<p><strong>7.</strong> Draft acceptance is $\alpha=0.7$, $\gamma=3$, and the draft costs 8 percent of a target step. Compute expected tokens per step and the speedup.</p>
+<details><summary>Solution</summary>
+
+$(1-0.7^4)/0.3 = 2.533$ tokens per step; speedup $= 2.533/(1+3\times0.08) = 2.04\times$. At $\alpha=0.9$ the same setup gives 3.44 tokens and $2.77\times$ — speculation bets on the draft being *right*, not merely cheap.
+
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>8.</strong> Add recompute-based preemption to the simulator: when the pool is exhausted, evict the largest-footprint running sequence, drop its blocks, and requeue it with its original prompt. Measure throughput and TTFT under <code>n_blocks=512</code>.</p>
+<details><summary>Hint</summary>
+
+Track a `remaining_prompt` field per sequence; on eviction free its blocks, increment a `chunk_done` counter, and re-admit later as if newly arrived. Throughput drops less than you expect while TTFT tail latency grows sharply, because preemption moves cost from the admitted set into the queue — exactly what admission control exists to manage.
+
+</details>
+
+<p><strong>9.</strong> Show that paged allocation with block size $s$ wastes at most $s-1$ slots per sequence, and give the expected waste when lengths are uniform on $[1,s]$.</p>
+<details><summary>Solution</summary>
+
+A sequence of length $T$ occupies $\operatorname{ceil}(T/s)\,s$ slots, so waste is $\operatorname{ceil}(T/s)\,s - T \in [0,s-1]$. For $T$ uniform on $[1,s]$ every sequence occupies one block, so waste is $s-T$ with expectation $(s-1)/2$ — 7.5 tokens at $s=16$, matching the measured 0.6 to 2.7 percent. For long sequences relative waste scales as $s/(2T)$.
+
+</details>
+
+<p><strong>10.</strong> Construct a workload where continuous batching loses to static batching on goodput, and name the mechanism.</p>
+<details><summary>Solution</summary>
+
+Strict 300 ms TPOT SLO, 16k-token prompts, 20-token outputs. Admitting a request requires a roughly 1.8 s prefill that blocks every decoding sequence and blows the SLO for all of them, while static batching clumps the prefill storms so decode windows stay clean. The mechanism is **prefill-decode interference**: continuous batching mixes a compute-bound workload with a latency-sensitive one in a single step. The fixes are chunked prefill and prefill/decode disaggregation.
+
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>Name the two inference regimes and the quantity that distinguishes them.</li>
+<li>Write the KV bytes-per-token formula and evaluate it for $L=32$, $n_{kv}=8$, $d_h=128$, fp16.</li>
+<li>What problem does paged attention solve, and what does it cost?</li>
+<li>Define TTFT, TPOT, throughput, and goodput, and say which belongs on a product review slide.</li>
+<li>Name the objective GPTQ minimises and the quantity AWQ protects.</li>
+<li>Why is the $\tau^2$ factor in the distillation loss necessary?</li>
+<li>A colleague reports "we doubled throughput" after enabling continuous batching. What two questions do you ask?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. Prefill (compute-bound) and decode (bandwidth-bound), distinguished by intensity relative to $F/W_{\text{HBM}}$.
+2. $2Ln_{kv}d_hb = 2\cdot32\cdot8\cdot128\cdot2 = 131{,}072$ bytes $= 128$ KiB.
+3. It removes external fragmentation from reserving `max_seq_len` contiguously, cutting waste from 60–80 percent to under one block; it costs a gather-based kernel resolving indices through a table instead of a stride.
+4. TTFT is time to first token, TPOT the mean time per output token, throughput aggregate tokens/s, goodput the tokens/s inside the SLO. Goodput plus a latency percentile belongs on the slide, because throughput alone can always be raised by making the product worse.
+5. GPTQ minimises $\|\mathbf{W}\mathbf{X}-\hat{\mathbf{W}}\mathbf{X}\|_2^2$ with inverse-Hessian compensation; AWQ protects the weight channels whose *input activations* are largest.
+6. Because gradients against soft targets scale as $1/\tau^2$; without the rescale, raising $\tau$ to reveal dark knowledge would shrink the distillation gradient toward zero relative to the hard-label term.
+7. (a) What happened to the TTFT and TPOT percentiles — did the SLO survive? (b) At what batch and context length, and was throughput measured in tokens or requests? A doubling at constant latency is real; a doubling at triple TTFT may be a trade the SLO forbids.
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><strong>Pope et al., "Efficiently Scaling Transformer Inference" (MLSys 2023).</strong> The cleanest formal cost model of this kind; extract the roofline placement and re-derive the decode intensity formula.</li>
+<li><strong>Kwon et al., "Efficient Memory Management for Large Language Model Serving with PagedAttention" (SOSP 2023).</strong> The vLLM paper; extract the allocator-waste measurement and the block-table design.</li>
+<li><strong>Yu et al., "Orca: A Distributed Serving System for Transformer-Based Generative Models" (OSDI 2022).</strong> Where iteration-level scheduling is introduced and measured against static batching.</li>
+<li><strong>Frantar et al., "GPTQ" (ICLR 2023)</strong> and <strong>Lin et al., "AWQ" (MLSys 2024).</strong> Read the OBQ error-compensation recursion before the engineering tricks, and AWQ's ablation showing activation magnitude beats weight magnitude as a salience proxy.</li>
+<li><strong>Leviathan, Kalman, and Matias, "Fast Inference from Transformers via Speculative Decoding" (ICML 2023).</strong> Check this module's exactness derivation against their Section 3.</li>
+<li><strong>Dao et al., "FlashAttention" (NeurIPS 2022)</strong> and <strong>Sarathi-Serve (Agrawal et al., OSDI 2024).</strong> The first for the online-softmax recurrence and I/O argument, the second for chunked prefill and the goodput framing.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when you can, without notes:</p>
+<ul>
+<li>Write the KV-cache formula from memory and evaluate it for a model you know.</li>
+<li>Place prefill and decode on a roofline and say which one a device bottlenecks, with the arithmetic.</li>
+<li>Explain to an engineer why their 4-bit model is only 1.3 times faster, and what to do instead.</li>
+<li>Derive the batch size a TPOT SLO permits, and say what to change when it is too small.</li>
+<li>Compute cost per million tokens from GPU count, hourly price, and measured throughput.</li>
+<li>Explain paged attention and continuous batching as answers to two different scarcities — fragmentation and slot idleness — rather than as features of a particular library.</li>
+</ul><div class="pager"><a id="prevlink" href="../m/18-preference-learning.html"><small>← previous</small><b>M18 · Preference Learning: RLHF, DPO, and Reasoning RL</b></a><a id="nextlink" class="next" href="../m/20-evaluation.html"><small>next →</small><b>M20 · Evaluation</b></a></div></article>
+</main>
+</div>
+</body></html>

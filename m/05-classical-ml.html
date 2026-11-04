@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M05 · Classical Machine Learning — From Zero to Frontier</title>
+<meta name="description" content="Empirical risk, the models that minimise it, and the metrics that decide whether it worked.">
+<meta property="og:title" content="M05 · Classical Machine Learning — From Zero to Frontier">
+<meta property="og:description" content="Empirical risk, the models that minimise it, and the metrics that decide whether it worked.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="on" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Machine learning bedrock / M05</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M05">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M05</span><span class="pill d2">difficulty 2/5</span><span class="pill">2 weeks</span><span class="pill">prereqs: M03, M04</span><span class="pill">8,218 words</span></div><h1>Classical Machine Learning</h1><p class="tagline">Empirical risk, the models that minimise it, and the metrics that decide whether it worked.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>The models in this module are the ones whose behaviour you can fully derive, and they are where the vocabulary of the rest of the course is defined: overfitting, regularisation, the kernel trick, bootstrap aggregation, gradient boosting, the bias–variance decomposition, cross-validation, AUC. Without them, a neural network is a black box with knobs, and the same failure modes appear unnamed — a model that memorises, a metric that flatters, a validation split that leaks. More concretely: the SVM dual is where the representer theorem comes from, and attention's kernel-like structure (<strong>M12</strong>) is unreadable without it; gradient boosting is functional gradient descent, which frames every later discussion of additive models; and precision, recall, calibration, and AUC are the tools with which <strong>M20</strong> judges a language model. This module is deliberately low on proofs-of-existence and high on derivations you can redo on paper.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<ol>
+<li>Write the residual sum of squares for a linear model and its gradient with respect to $\mathbf{w}$.</li>
+<li>What does $\mathbf{X}^\top\mathbf{X}$ being singular imply about the features?</li>
+<li>Give the log-likelihood of a logistic model, and its gradient.</li>
+<li>State the bias–variance decomposition of the MSE of an estimator.</li>
+<li>What is the entropy of a binary variable with $p = 0.25$?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $\mathrm{RSS}(\mathbf{w}) = \|\mathbf{X}\mathbf{w}-\mathbf{y}\|^2$; $\nabla = 2\mathbf{X}^\top(\mathbf{X}\mathbf{w}-\mathbf{y})$.
+2. That the columns are linearly dependent — some features are exact linear combinations of others, so no unique coefficient vector exists.
+3. $\ell(\mathbf{w}) = \sum_i[y_i\log\sigma(\mathbf{x}_i^\top\mathbf{w}) + (1-y_i)\log(1-\sigma(\mathbf{x}_i^\top\mathbf{w}))]$; $\nabla = \mathbf{X}^\top(\mathbf{p}-\mathbf{y})$ with $\mathbf{p}$ the predicted probabilities.
+4. $\mathbb{E}[(\hat\theta-\theta)^2] = \mathrm{Bias}^2 + \mathrm{Var}$.
+5. $-0.25\log0.25 - 0.75\log0.75 = 0.5623$ nats.
+
+If 1 or 3 is unfamiliar, revisit **M02**'s matrix calculus; if 4 or 5, **M03**.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<ul>
+<li>Solve linear regression three ways — normal equations, QR/SVD, gradient descent — and say precisely when each fails.</li>
+<li>Derive the ridge closed form and the lasso's soft-threshold solution, and explain geometrically why lasso produces exact zeros.</li>
+<li>Derive the logistic-regression Newton step and identify it with iteratively reweighted least squares.</li>
+<li>Derive the SVM dual from the Lagrangian, state the representer theorem, and explain what the kernel trick buys.</li>
+<li>Derive the CART splitting criterion from Gini impurity, and show that the entropy criterion is a mutual information.</li>
+<li>Explain bagging's variance reduction with the correlation formula, and derive gradient boosting as gradient descent in function space.</li>
+<li>Derive the bias–variance decomposition algebraically and use it to reason about complexity.</li>
+<li>Compute precision, recall, F1, ROC-AUC, PR-AUC, and calibration error, and say which metric misleads under class imbalance.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\mathbf{X}\in\mathbb{R}^{N\times d}$</td>
+<td>design matrix, one example per row</td>
+</tr>
+<tr>
+<td>$\mathbf{y}$</td>
+<td>targets</td>
+</tr>
+<tr>
+<td>$\mathbf{w}$, $b$</td>
+<td>weights, intercept</td>
+</tr>
+<tr>
+<td>$\lambda$</td>
+<td>regularisation strength (ridge/lasso)</td>
+</tr>
+<tr>
+<td>$\hat{y}$, $p$</td>
+<td>prediction; predicted probability</td>
+</tr>
+<tr>
+<td>$\ell$</td>
+<td>log-likelihood</td>
+</tr>
+<tr>
+<td>$\kappa(\cdot)$</td>
+<td>a kernel function; also used for condition number, disambiguated by context</td>
+</tr>
+<tr>
+<td>$\alpha_i$</td>
+<td>SVM dual variables</td>
+</tr>
+<tr>
+<td>$\mathcal{H}$</td>
+<td>a reproducing kernel Hilbert space</td>
+</tr>
+<tr>
+<td>$T$</td>
+<td>number of trees/rounds in an ensemble</td>
+</tr>
+<tr>
+<td>$\mathrm{TP},\mathrm{FP},\mathrm{FN},\mathrm{TN}$</td>
+<td>confusion-matrix counts</td>
+</tr>
+</tbody>
+</table>
+<p>Two conventions. First, "bias" is overloaded: the intercept $b$ and the statistical bias $\mathbb{E}[\hat\theta]-\theta$ are different objects, flagged in text wherever ambiguity is possible. Second, all losses are averages (not sums) unless the factor is written out, because regularisation strength is only comparable between the two conventions if you fix it.</p>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="the-supervised-setup-and-empirical-risk-minimisation">The supervised setup and empirical risk minimisation</h3>
+<p><strong>(1) Intuition.</strong> You have pairs $(\mathbf{x}_i, y_i)$; you want a function that predicts $y$ from $\mathbf{x}$ for pairs you have not seen. Everything else is a choice about how to measure error and how to keep the function from cheating.</p>
+<p><strong>(2) Formal.</strong> With a loss $\ell(\hat y, y)$, empirical risk is $\hat{R}(\mathbf{w}) = \frac1N\sum_i\ell(f_{\mathbf{w}}(\mathbf{x}_i), y_i)$ and ERM returns $\arg\min_{\mathbf{w}}\hat{R}(\mathbf{w}) + \lambda\Omega(\mathbf{w})$, where $\Omega$ is a complexity penalty. The true risk is $\mathbb{E}_{(\mathbf{x},y)\sim P}[\ell]$ over the data distribution you do not have.</p>
+<p><strong>(3) Why.</strong> ERM is a proxy: minimising training error is only a means, and the gap between $\hat R$ and $R$ is what generalisation means. Every classical model in this module is a different answer to the same two questions — which function class, and which penalty — and the whole of <strong>M08</strong> is the modern version of that gap.</p>
+<p><strong>(4) Micro-example.</strong> Two hypotheses for 5 points: $A$ predicts all 5 correctly and is a degree-4 polynomial; $B$ predicts 4 and is a line. $\hat R_A = 0 < \hat R_B = 0.2$, but if the truth is linear, $R_B$ much less than $R_A$. ERM prefers $A$; a penalty on curvature prefers $B$. That trade is the module.</p>
+<h3 id="linear-regression-solved-three-ways">Linear regression, solved three ways</h3>
+<p><strong>(1) Intuition.</strong> Fit the hyperplane that minimises squared vertical distance. The normal equations are the closed form; QR/SVD are the numerically safe way to compute it; gradient descent is how you would do it if the matrix were too large to factorise.</p>
+<p><strong>(2) Formal.</strong> $\hat{\mathbf{w}} = \arg\min\|\mathbf{X}\mathbf{w}-\mathbf{y}\|^2$ gives $\mathbf{X}^\top\mathbf{X}\mathbf{w} = \mathbf{X}^\top\mathbf{y}$, so $\hat{\mathbf{w}} = (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\mathbf{y}$. Equivalently, orthogonally project $\mathbf{y}$ onto $\mathcal{C}(\mathbf{X})$ (<strong>M01</strong>), so the residual is orthogonal to every column.</p>
+<p><strong>(3) Why.</strong> Three solve paths, three failure modes. Normal equations square the condition number ($\kappa(\mathbf{X}^\top\mathbf{X}) = \kappa(\mathbf{X})^2$) and fail outright when $\mathbf{X}$ has dependent columns. QR (or SVD) operates on $\mathbf{X}$ itself, so it is accurate to $\kappa(\mathbf{X})$ and handles rank deficiency by truncation; it costs $O(Nd^2)$ instead of $O(Nd^2 + d^3)$ but is the right default. Gradient descent costs $O(Nd)$ per step and never forms a $d\times d$ matrix, which is the only option when $d$ is enormous or the data is streamed.</p>
+<p><strong>(4) Micro-example.</strong> $\mathbf{X} = \begin{pmatrix}1&0\\0&1\\1&1\\2&1\end{pmatrix}$, $\mathbf{y} = (1,2,3,4)$: $\mathbf{X}^\top\mathbf{X} = \begin{pmatrix}6&3\\3&3\end{pmatrix}$ and $\mathbf{X}^\top\mathbf{y} = (12,9)$, so $\mathbf{w} = (1,2)$ with residuals identically zero — the model interpolates, so there is no training error to see and nothing about generalisation to infer.</p>
+<h3 id="ridge-lasso-and-why-only-one-sparsifies">Ridge, lasso, and why only one sparsifies</h3>
+<p><strong>(1) Intuition.</strong> Ridge shrinks coefficients smoothly toward zero; lasso shrinks some of them <em>exactly</em> to zero. The difference is geometry: the constraint regions have different shapes, and the lasso's has corners on the axes.</p>
+<p><strong>(2) Formal.</strong> Ridge: $\min\|\mathbf{X}\mathbf{w}-\mathbf{y}\|^2 + \lambda\|\mathbf{w}\|_2^2$, giving $\hat{\mathbf{w}} = (\mathbf{X}^\top\mathbf{X}+\lambda\mathbf{I})^{-1}\mathbf{X}^\top\mathbf{y}$. Lasso: $\min\|\mathbf{X}\mathbf{w}-\mathbf{y}\|^2 + \lambda\|\mathbf{w}\|_1$, with no closed form but a coordinate-wise soft-threshold solution.</p>
+<p><strong>(3) Why.</strong> The level sets of the lasso penalty are diamonds, whose vertices sit on the axes; the level sets of the squared error are ellipses, and where an ellipse first touches a diamond it usually touches at a vertex — a coordinate exactly zero. The ridge ball is round, so tangency happens at a generic point with all coordinates nonzero. That is the geometric reason, and derivation 2 gives the algebraic counterpart.</p>
+<p><strong>(4) Micro-example.</strong> One feature with correlation $\rho = \mathbf{x}^\top\mathbf{y} = 3$ and $\lambda = 1.5$: lasso gives $\operatorname{sign}(3)\max(3-1.5, 0) = 1.5$, while ridge gives $3/(1+1.5) = 1.2$. With $\rho = 1$ the lasso gives exactly $0$ and ridge gives $0.4$ — sparsity versus shrinkage in one line. On the four-point data above, $\lambda = 0.5$ moves $\hat{\mathbf{w}}$ from $(1,2)$ to $(1.0909, 1.6364)$.</p>
+<h3 id="logistic-regression-and-irls">Logistic regression and IRLS</h3>
+<p><strong>(1) Intuition.</strong> Linear regression predicts a number; classification needs a probability. Put a sigmoid on the linear score and fit by maximum likelihood — that is logistic regression, and it is a linear model in a transformed space, not a different animal.</p>
+<p><strong>(2) Formal.</strong> $p_i = \sigma(\mathbf{x}_i^\top\mathbf{w})$, $\ell(\mathbf{w}) = \sum_i[y_i\log p_i + (1-y_i)\log(1-p_i)]$, so $\nabla\ell = \mathbf{X}^\top(\mathbf{y}-\mathbf{p})$ and $\mathbf{H} = -\mathbf{X}^\top\mathbf{W}\mathbf{X}$ with $\mathbf{W} = \operatorname{diag}(p_i(1-p_i))$. The Newton step is</p>
+<p>$$\mathbf{w}_{t+1} = \mathbf{w}_t + (\mathbf{X}^\top\mathbf{W}\mathbf{X})^{-1}\mathbf{X}^\top(\mathbf{y}-\mathbf{p}),$$</p>
+<p>which is weighted least squares with weights $p_i(1-p_i)$ — hence iteratively reweighted least squares.</p>
+<p><strong>(3) Why.</strong> The log-likelihood is concave (since $\mathbf{H} \le 0$), so Newton converges to the global optimum in a handful of iterations and no learning rate is needed. Compare gradient descent, which needs the same step-size analysis as <strong>M04</strong> and can be slow when classes are separable (the optimum is at infinity). The Hessian's weights are also diagnostic: examples the model is confident about (…$p$ near 0 or 1) get almost no weight, so they stop influencing the fit.</p>
+<p><strong>(4) Micro-example.</strong> The four-point data with $\mathbf{w}_0 = \mathbf{0}$: $\mathbf{p} = (0.5,0.5,0.5,0.5)$, $\mathbf{g} = (-8,-10,-7.5)$, and $\mathbf{W} = 0.25\mathbf{I}$, so</p>
+<p>$$\mathbf{H} = -0.25\,\mathbf{X}_b^\top\mathbf{X}_b \quad\text{with}\quad \mathbf{X}_b = \begin{pmatrix}1&1&0\\1&0&1\\1&1&1\\1&2&1\end{pmatrix}.$$</p>
+<p>One Newton step reaches $\mathbf{w} = (-2, 4, 8)$ and probabilities $(0.881, 0.998, 1.000, 1.000)$ — essentially converged, with the bias driven large because the data is separable.</p>
+<h3 id="basis-expansion-and-the-kernel-trick">Basis expansion and the kernel trick</h3>
+<p><strong>(1) Intuition.</strong> A linear model is only linear in the features you give it. Give it $\phi(\mathbf{x})$ — squares, products, splines — and it becomes nonlinear in the original inputs while remaining linear in the weights, so all the linear machinery still applies.</p>
+<p><strong>(2) Formal.</strong> Replace $\mathbf{x}$ by $\phi(\mathbf{x})\in\mathbb{R}^D$ and fit $\mathbf{w}^\top\phi(\mathbf{x})$. If the algorithm only ever uses inner products $\langle\phi(\mathbf{x}_i),\phi(\mathbf{x}_j)\rangle$, define $k(\mathbf{x}_i,\mathbf{x}_j) = \langle\phi(\mathbf{x}_i),\phi(\mathbf{x}_j)\rangle$ and never form $\phi$: the kernel trick. The representer theorem states that the minimiser of any regularised risk of the form $\sum_i\ell(y_i, f(\mathbf{x}_i)) + \lambda\|f\|_{\mathcal{H}}^2$ over $f$ in a reproducing kernel Hilbert space lies in the span of the training data, $f^{*} = \sum_i\alpha_ik(\mathbf{x}_i,\cdot)$ — so an infinite-dimensional problem reduces to $N$ coefficients.</p>
+<p><strong>(3) Why.</strong> The trick converts an explicit feature map of dimension $D$ (possibly infinite, as with the Gaussian kernel) into an $N\times N$ Gram matrix. Its cost is that prediction requires touching every training point, so inference is $O(N)$ per query rather than $O(d)$ — which is precisely the tradeoff that kernel methods lose on large datasets and that attention (<strong>M12</strong>) revisits in a learned form.</p>
+<p><strong>(4) Micro-example.</strong> The polynomial kernel $k(\mathbf{a},\mathbf{b}) = (1+\mathbf{a}^\top\mathbf{b})^2$ on $\mathbb{R}^2$ equals $\langle\phi(\mathbf{a}),\phi(\mathbf{b})\rangle$ with $\phi(\mathbf{a}) = (1, \sqrt2a_1, \sqrt2a_2, a_1^2, \sqrt2a_1a_2, a_2^2)$ — six explicit features for a two-dimensional input, computed with one dot product and one squaring.</p>
+<h3 id="decision-trees-and-the-cart-criterion">Decision trees and the CART criterion</h3>
+<p><strong>(1) Intuition.</strong> A tree asks a sequence of yes/no questions, each chosen to make the two resulting groups as pure as possible. It is the most interpretable model in the module and the least stable.</p>
+<p><strong>(2) Formal.</strong> For a node with class proportions $\mathbf{p}$, impurity is Gini $G = 1-\sum_k p_k^2$ or entropy $H = -\sum_k p_k\log p_k$. A split into left/right with fractions $n_L/n$, $n_R/n$ is scored by the weighted impurity decrease</p>
+<p>$$\Delta = I(\text{parent}) - \frac{n_L}{n}I(\text{left}) - \frac{n_R}{n}I(\text{right}),$$</p>
+<p>and CART greedily takes the largest $\Delta$ over all features and thresholds.</p>
+<p><strong>(3) Why.</strong> Greedy is not optimal — finding the globally best tree is NP-hard — but the impurity decrease is exactly the criterion that a top-down search can evaluate incrementally, which is what makes the algorithm $O(dN\log N)$ with sorting rather than exponential. Gini and entropy almost always pick the same split; the difference is that entropy penalises impurity more sharply near purity.</p>
+<p><strong>(4) Micro-example.</strong> Parent node $(30, 10)$: $G = 1 - 0.75^2 - 0.25^2 = 0.375$. Splitting into $(20,0)$ and $(10,10)$ gives weighted Gini $0.5\cdot0 + 0.5\cdot0.5 = 0.25$, a gain of $0.125$. The competing split $(18,2)/(12,8)$ gives $0.45\cdot0.198 + 0.55\cdot0.5 = 0.33$, a gain of only $0.045$. The gain criterion strongly prefers the split that isolates a pure group, which is the behaviour you want.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="A decision tree, with the split criterion at every node" class="fig-svg"><defs><marker id="tree-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="348.0" y="24.0" width="144.0" height="44.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.5"/><text x="420.0" y="42.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="600">x₁ &lt; 0.5</text><text x="420.0" y="59.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Gini 0.500 → 0.375</text><rect x="148.0" y="126.0" width="144.0" height="44.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.5"/><text x="220.0" y="144.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="600">x₂ &lt; 1.2</text><text x="220.0" y="161.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Gini 0.444</text><rect x="548.0" y="126.0" width="144.0" height="44.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.5"/><text x="620.0" y="144.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="600">x₃ ≤ 0.8</text><text x="620.0" y="161.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Gini 0.320</text><rect x="62.0" y="242.0" width="116.0" height="40.0" rx="20" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.4"/><text x="120.0" y="266.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">class A</text><rect x="262.0" y="242.0" width="116.0" height="40.0" rx="20" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.4"/><text x="320.0" y="266.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="650">class B</text><rect x="462.0" y="242.0" width="116.0" height="40.0" rx="20" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.4"/><text x="520.0" y="266.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">class A</text><rect x="662.0" y="242.0" width="116.0" height="40.0" rx="20" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.4"/><text x="720.0" y="266.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="650">class B</text><line x1="420.0" y1="68.0" x2="220.0" y2="126.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#tree-ah)"/><text x="308.0" y="97.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">yes</text><line x1="420.0" y1="68.0" x2="620.0" y2="126.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#tree-ah)"/><text x="532.0" y="97.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">no</text><line x1="220.0" y1="170.0" x2="120.0" y2="242.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#tree-ah)"/><text x="158.0" y="206.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">yes</text><line x1="220.0" y1="170.0" x2="320.0" y2="242.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#tree-ah)"/><text x="282.0" y="206.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">no</text><line x1="620.0" y1="170.0" x2="520.0" y2="242.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#tree-ah)"/><text x="558.0" y="206.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">yes</text><line x1="620.0" y1="170.0" x2="720.0" y2="242.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#tree-ah)"/><text x="682.0" y="206.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">no</text><text x="420.0" y="322.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">each split greedily maximises the impurity drop Δ = Gini(parent) − Σ (nᵢ/n) Gini(child)</text></svg><figcaption>Each node shows its class counts, its impurity, and the split criterion that produced the two children; follow the path for one leaf and notice that every internal node asks a single threshold question on a single feature.</figcaption></figure></p>
+<h3 id="bagging-and-random-forests">Bagging and random forests</h3>
+<p><strong>(1) Intuition.</strong> A single tree is unstable — perturb the data slightly and the tree changes shape. Average many trees grown on bootstrap resamples and the variance falls, without the bias rising much.</p>
+<p><strong>(2) Formal.</strong> Bagging: draw $B$ bootstrap samples, fit $f_b$ on each, predict $\frac1B\sum_bf_b$. Random forests add feature subsampling at each split. For $B$ predictors each with variance $\sigma^2$ and pairwise correlation $\rho$,</p>
+<p>$$\mathrm{Var}\left(\frac1B\sum_b f_b\right) = \rho\sigma^2 + \frac{1-\rho}{B}\sigma^2 .$$</p>
+<p><strong>(3) Why.</strong> The formula shows the two knobs exactly. More trees ($B\to\infty$) removes only the second term; the floor is $\rho\sigma^2$, set by correlation. Feature subsampling exists solely to lower $\rho$ — it decorrelates the trees, which is why a random forest beats plain bagging. It also shows the limit: if all trees saw identical data they would be identical, $\rho=1$, and averaging would do nothing.</p>
+<p><strong>(4) Micro-example.</strong> $\sigma^2 = 1$, $\rho = 0.4$, $B = 25$: variance is $0.4 + 0.6/25 = 0.424$. Moving to $B=100$ gives $0.406$ — most of the benefit is already captured, and the remaining $0.4$ can only be removed by decorrelating the trees. Practical advice follows directly: past a few hundred trees, buy decorrelation, not more trees.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 336" width="100%" role="img" aria-label="Bagging reduces variance; boosting reduces bias" class="fig-svg"><defs><marker id="ens-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="210.0" y="34.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="13.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">bagging</text><rect x="96.0" y="54.0" width="228.0" height="60.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="210.0" y="78.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">training set</text><text x="210.0" y="96.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">bootstrap resample</text><line x1="210.0" y1="116.0" x2="84.0" y2="146.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#ens-ah)"/><rect x="52.0" y="148.0" width="64.0" height="42.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.3"/><text x="84.0" y="166.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">tree 1</text><text x="84.0" y="181.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">deep</text><line x1="84.0" y1="192.0" x2="210.0" y2="226.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#ens-ah)"/><line x1="210.0" y1="116.0" x2="168.0" y2="146.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#ens-ah)"/><rect x="136.0" y="148.0" width="64.0" height="42.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.3"/><text x="168.0" y="166.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">tree 2</text><text x="168.0" y="181.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">deep</text><line x1="168.0" y1="192.0" x2="210.0" y2="226.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#ens-ah)"/><line x1="210.0" y1="116.0" x2="252.0" y2="146.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#ens-ah)"/><rect x="220.0" y="148.0" width="64.0" height="42.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.3"/><text x="252.0" y="166.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">tree 3</text><text x="252.0" y="181.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">deep</text><line x1="252.0" y1="192.0" x2="210.0" y2="226.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#ens-ah)"/><line x1="210.0" y1="116.0" x2="336.0" y2="146.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#ens-ah)"/><rect x="304.0" y="148.0" width="64.0" height="42.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.3"/><text x="336.0" y="166.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">tree 4</text><text x="336.0" y="181.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">deep</text><line x1="336.0" y1="192.0" x2="210.0" y2="226.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#ens-ah)"/><rect x="132.0" y="228.0" width="156.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.5"/><text x="210.0" y="247.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">average</text><text x="210.0" y="263.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">variance ↓</text><text x="210.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">σ² → σ²/√B if errors are independent</text><line x1="420.0" y1="40.0" x2="420.0" y2="280.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/><text x="630.0" y="34.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="13.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="700">boosting</text><rect x="528.0" y="54.0" width="204.0" height="52.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="630.0" y="76.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">training set</text><text x="630.0" y="93.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">weights wᵢ = 1/n</text><rect x="528.0" y="122.0" width="96.0" height="38.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.3"/><text x="576.0" y="138.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">weak f1</text><text x="576.0" y="152.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">stump</text><line x1="626.0" y1="141.0" x2="690.0" y2="141.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#ens-ah)"/><text x="658.0" y="135.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">α = 1</text><rect x="692.0" y="122.0" width="136.0" height="38.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.1"/><text x="760.0" y="138.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">reweight errors</text><text x="760.0" y="151.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">up</text><rect x="528.0" y="168.0" width="96.0" height="38.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.3"/><text x="576.0" y="184.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">weak f2</text><text x="576.0" y="198.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">stump</text><line x1="626.0" y1="187.0" x2="690.0" y2="187.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#ens-ah)"/><text x="658.0" y="181.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">α = 2</text><rect x="692.0" y="168.0" width="136.0" height="38.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.1"/><text x="760.0" y="184.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">reweight errors</text><text x="760.0" y="197.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">up</text><rect x="528.0" y="214.0" width="96.0" height="38.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.3"/><text x="576.0" y="230.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">weak f3</text><text x="576.0" y="244.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">stump</text><line x1="626.0" y1="233.0" x2="690.0" y2="233.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#ens-ah)"/><text x="658.0" y="227.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">α = 3</text><rect x="692.0" y="214.0" width="136.0" height="38.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.1"/><text x="760.0" y="230.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">reweight errors</text><text x="760.0" y="243.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">up</text><rect x="528.0" y="262.0" width="300.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.5"/><text x="678.0" y="281.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">F(x) = Σ αₖ fₖ(x)</text><text x="678.0" y="297.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">bias ↓</text></svg><figcaption>Bagging and boosting side by side: bagging grows independent trees in parallel and averages, reducing variance, while boosting grows shallow trees in sequence on the previous model's residual and reduces bias. The panels show the resulting error decomposition for each.</figcaption></figure></p>
+<h3 id="gradient-boosting-as-functional-gradient-descent">Gradient boosting as functional gradient descent</h3>
+<p><strong>(1) Intuition.</strong> Boosting builds a model additively, one weak learner at a time, each fitted to what the current model gets wrong. Framed properly, it is gradient descent where the "parameter" is an entire function.</p>
+<p><strong>(2) Formal.</strong> With $F_{t} = F_{t-1} + \nu h_t$ and $h_t$ fitted to the negative gradient (pseudo-residuals) $r_i = -\partial\ell(y_i, F(\mathbf{x}_i))/\partial F(\mathbf{x}_i)$, evaluated at $F = F_{t-1}$. For squared loss the pseudo-residual is $y_i - F_{t-1}(\mathbf{x}_i)$; for logistic loss it is $y_i - p_i$.</p>
+<p><strong>(3) Why.</strong> The function-space view explains every hyperparameter at once: the learning rate $\nu$ (shrinkage) is a step size, the number of rounds is the iteration count, and the tree depth controls the <em>smoothness</em> of the step — a depth-1 stump can only move along axis-aligned steps, so deeper trees are a more expressive step direction but overfit faster. It also explains why boosting reduces bias and raises variance, exactly opposite to bagging.</p>
+<p><strong>(4) Micro-example.</strong> Four points with targets $(1, 2, 3, 4)$, $F_0 = 2.5$ (the mean). Squared-loss residuals: $(-1.5,-0.5,0.5,1.5)$. Fit a stump with $\nu = 0.1$ that predicts $-1$ on the left two and $+1$ on the right two; the update moves predictions to $2.4$ and $2.6$. Residuals shrink, and the next tree sees smaller targets — bias falls monotonically, and if you kept going with $\nu = 1$ the model would interpolate and the variance would explode.</p>
+<h3 id="knn-and-the-curse-of-dimensionality">kNN and the curse of dimensionality</h3>
+<p><strong>(1) Intuition.</strong> To predict, find the $k$ nearest training points and average their labels. It is the laziest possible learner — no training at all — and it exposes what "nearest" costs in high dimension.</p>
+<p><strong>(2) Formal.</strong> $\hat f(\mathbf{x}) = \frac1k\sum_{i\in\mathcal{N}_k(\mathbf{x})}y_i$. Under mild conditions it is consistent as $N\to\infty$ with $k\to\infty$, $k/N\to 0$. Distance concentration: for i.i.d. coordinates, the ratio of nearest to farthest distance approaches 1 as $d$ grows.</p>
+<p><strong>(3) Why.</strong> In high dimension every point is almost equidistant from every other, so "nearest neighbour" stops being informative and $k$NN degenerates toward a constant predictor. This is the concrete meaning of the curse of dimensionality, and it is the reason representation learning exists: the useful move is not a better neighbour search but a learned metric in which distances mean something.</p>
+<p><strong>(4) Micro-example.</strong> 1000 uniform points in $[0,1]^d$ and one query point: the nearest/farthest distance ratio is $0.0074$ at $d=2$, $0.223$ at $d=10$, $0.720$ at $d=100$, and $0.898$ at $d=1000$. By 1000 dimensions the nearest neighbour is 90% as far away as the farthest — the neighbourhood has stopped being local. Embedding dimensions in the hundreds with a learned metric are viable precisely because the metric is not uniform.</p>
+<h3 id="the-biasvariance-decomposition">The bias–variance decomposition</h3>
+<p><strong>(1) Intuition.</strong> Your expected error at a point has three parts: the noise in the data (irreducible), how far the average model is from the truth (bias), and how much the model moves between datasets (variance).</p>
+<p><strong>(2) Formal.</strong> For $y = f(\mathbf{x})+\varepsilon$ with $\mathbb{E}[\varepsilon] = 0$, $\mathrm{Var}[\varepsilon] = \sigma^2$, and $\hat f$ fitted on a random dataset,</p>
+<p>$$\mathbb{E}\left[(y-\hat f(\mathbf{x}))^2\right] = \sigma^2 + \left(\mathbb{E}[\hat f(\mathbf{x})]-f(\mathbf{x})\right)^2 + \mathrm{Var}[\hat f(\mathbf{x})].$$</p>
+<p><strong>(3) Why.</strong> It makes the complexity trade explicit and falsifiable: a deep tree has low bias and high variance, a stump the reverse, and the sum is U-shaped in complexity. It also explains why ensembles help in two different ways — averaging reduces variance, boosting reduces bias — and why "more data" helps only the variance term.</p>
+<p><strong>(4) Micro-example.</strong> $f(x) = x$ on $[0,1]$, noise $\sigma^2 = 0.04$, $N = 20$ points, and a model that is piecewise constant on $m$ equal bins. Squared bias is approximately $1/(12m^2)$; the variance of each bin's mean estimate contributes $\sigma^2m/N$ to the prediction error. Total $\approx 0.04(1+m/20) + 1/(12m^2)$: $m=1$ gives $0.1253$, $m=5$ gives $0.0533$, $m=20$ gives $0.0802$ — a U-shape whose minimum at $m\approx5$ is nowhere near either extreme, and whose right-hand rise is variance.</p>
+<p><div class="viz" data-viz="v-bias-variance"></div><div class="vizcap">Drag the polynomial degree and watch the fit, the squared bias, the variance, and the test error move on the same axes. Notice that the minimum of the test error is not at the minimum of either component, and that the training error keeps falling after the test error turns up.</div></p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 392" width="100%" role="img" aria-label="Bias, variance, and the U-shaped test error" class="fig-svg"><defs><marker id="bv-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><circle cx="96.0" cy="100.0" r="46.0" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2"/><circle cx="96.0" cy="100.0" r="30.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><circle cx="96.0" cy="100.0" r="14.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><circle cx="96.0" cy="100.0" r="2.5" fill="var(--fig-ink,#e6e9f5)"/><text x="96.0" y="162.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">low bias, low variance</text><circle cx="276.0" cy="100.0" r="46.0" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2"/><circle cx="276.0" cy="100.0" r="30.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><circle cx="276.0" cy="100.0" r="14.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><circle cx="276.0" cy="100.0" r="2.5" fill="var(--fig-ink,#e6e9f5)"/><text x="276.0" y="162.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">low bias, high variance</text><circle cx="96.0" cy="268.0" r="46.0" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2"/><circle cx="96.0" cy="268.0" r="30.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><circle cx="96.0" cy="268.0" r="14.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><circle cx="96.0" cy="268.0" r="2.5" fill="var(--fig-ink,#e6e9f5)"/><text x="96.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="400">high bias, low variance</text><circle cx="276.0" cy="268.0" r="46.0" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2"/><circle cx="276.0" cy="268.0" r="30.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><circle cx="276.0" cy="268.0" r="14.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><circle cx="276.0" cy="268.0" r="2.5" fill="var(--fig-ink,#e6e9f5)"/><text x="276.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">high bias, high variance</text><circle cx="96.0" cy="101.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="93.5" cy="95.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="91.9" cy="95.0" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="96.5" cy="106.7" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="91.6" cy="96.9" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="100.4" cy="101.8" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="96.9" cy="95.3" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="95.7" cy="103.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="83.9" cy="97.7" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="233.5" cy="88.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="232.1" cy="97.8" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="238.0" cy="103.3" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="280.7" cy="97.8" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="232.2" cy="96.2" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="274.5" cy="101.4" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="232.3" cy="94.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="246.6" cy="90.3" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="307.8" cy="90.3" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="111.8" cy="275.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="107.9" cy="253.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="112.8" cy="257.4" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="103.4" cy="257.7" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="120.0" cy="227.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="118.0" cy="258.6" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="107.5" cy="300.0" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="117.3" cy="229.6" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="112.5" cy="268.7" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="286.3" cy="276.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="290.0" cy="276.0" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="320.2" cy="242.8" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="298.1" cy="242.1" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="295.3" cy="225.6" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="274.6" cy="250.1" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="316.5" cy="287.2" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="252.3" cy="232.2" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="302.7" cy="223.1" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><line x1="470.0" y1="310.0" x2="800.0" y2="310.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.4" stroke-linecap="round"/><line x1="470.0" y1="74.0" x2="470.0" y2="310.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.4" stroke-linecap="round"/><path d="M471.6,164.4 L473.7,168.5 L475.8,172.2 L477.8,175.7 L479.9,179.0 L481.9,182.1 L484.0,185.2 L486.0,188.1 L488.1,190.9 L490.1,193.6 L492.2,196.2 L494.2,198.8 L496.3,201.2 L498.3,203.6 L500.4,206.0 L502.4,208.2 L504.5,210.4 L506.5,212.5 L508.6,214.6 L510.6,216.7 L512.7,218.6 L514.7,220.5 L516.8,222.4 L518.9,224.2 L520.9,226.0 L523.0,227.8 L525.0,229.4 L527.1,231.1 L529.1,232.7 L531.2,234.3 L533.2,235.8 L535.3,237.3 L537.3,238.8 L539.4,240.2 L541.4,241.6 L543.5,243.0 L545.5,244.3 L547.6,245.6 L549.6,246.9 L551.7,248.1 L553.7,249.4 L555.8,250.6 L557.8,251.7 L559.9,252.9 L561.9,254.0 L564.0,255.1 L566.1,256.1 L568.1,257.2 L570.2,258.2 L572.2,259.2 L574.3,260.2 L576.3,261.2 L578.4,262.1 L580.4,263.0 L582.5,263.9 L584.5,264.8 L586.6,265.7 L588.6,266.5 L590.7,267.3 L592.7,268.1 L594.8,268.9 L596.8,269.7 L598.9,270.5 L600.9,271.2 L603.0,271.9 L605.0,272.7 L607.1,273.4 L609.1,274.1 L611.2,274.7 L613.3,275.4 L615.3,276.0 L617.4,276.7 L619.4,277.3 L621.5,277.9 L623.5,278.5 L625.6,279.1 L627.6,279.6 L629.7,280.2 L631.7,280.8 L633.8,281.3 L635.8,281.8 L637.9,282.3 L639.9,282.9 L642.0,283.4 L644.0,283.8 L646.1,284.3 L648.1,284.8 L650.2,285.3 L652.2,285.7 L654.3,286.1 L656.3,286.6 L658.4,287.0 L660.5,287.4 L662.5,287.8 L664.6,288.2 L666.6,288.6 L668.7,289.0 L670.7,289.4 L672.8,289.8 L674.8,290.1 L676.9,290.5 L678.9,290.8 L681.0,291.2 L683.0,291.5 L685.1,291.9 L687.1,292.2 L689.2,292.5 L691.2,292.8 L693.3,293.1 L695.3,293.4 L697.4,293.7 L699.4,294.0 L701.5,294.3 L703.5,294.6 L705.6,294.8 L707.7,295.1 L709.7,295.4 L711.8,295.6 L713.8,295.9 L715.9,296.1 L717.9,296.4 L720.0,296.6 L722.0,296.9 L724.1,297.1 L726.1,297.3 L728.2,297.6 L730.2,297.8 L732.3,298.0 L734.3,298.2 L736.4,298.4 L738.4,298.6 L740.5,298.8 L742.5,299.0 L744.6,299.2 L746.6,299.4 L748.7,299.6 L750.7,299.8 L752.8,299.9 L754.9,300.1 L756.9,300.3 L759.0,300.5 L761.0,300.6 L763.1,300.8 L765.1,300.9 L767.2,301.1 L769.2,301.3 L771.3,301.4 L773.3,301.6 L775.4,301.7 L777.4,301.8 L779.5,302.0 L781.5,302.1 L783.6,302.3 L785.6,302.4 L787.7,302.5 L789.7,302.7 L791.8,302.8 L793.8,302.9 L795.9,303.0 L797.9,303.1 L800.0,303.3" fill="none" stroke="var(--fig-blue,#5b8cff)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M471.6,310.0 L473.7,309.9 L475.8,309.9 L477.8,309.8 L479.9,309.8 L481.9,309.7 L484.0,309.6 L486.0,309.6 L488.1,309.5 L490.1,309.4 L492.2,309.3 L494.2,309.3 L496.3,309.2 L498.3,309.1 L500.4,309.0 L502.4,308.9 L504.5,308.9 L506.5,308.8 L508.6,308.7 L510.6,308.6 L512.7,308.5 L514.7,308.4 L516.8,308.3 L518.9,308.2 L520.9,308.1 L523.0,308.0 L525.0,307.9 L527.1,307.8 L529.1,307.7 L531.2,307.6 L533.2,307.4 L535.3,307.3 L537.3,307.2 L539.4,307.1 L541.4,306.9 L543.5,306.8 L545.5,306.7 L547.6,306.5 L549.6,306.4 L551.7,306.3 L553.7,306.1 L555.8,306.0 L557.8,305.8 L559.9,305.7 L561.9,305.5 L564.0,305.4 L566.1,305.2 L568.1,305.0 L570.2,304.9 L572.2,304.7 L574.3,304.5 L576.3,304.3 L578.4,304.2 L580.4,304.0 L582.5,303.8 L584.5,303.6 L586.6,303.4 L588.6,303.2 L590.7,303.0 L592.7,302.8 L594.8,302.5 L596.8,302.3 L598.9,302.1 L600.9,301.9 L603.0,301.6 L605.0,301.4 L607.1,301.2 L609.1,300.9 L611.2,300.6 L613.3,300.4 L615.3,300.1 L617.4,299.9 L619.4,299.6 L621.5,299.3 L623.5,299.0 L625.6,298.7 L627.6,298.4 L629.7,298.1 L631.7,297.8 L633.8,297.5 L635.8,297.2 L637.9,296.8 L639.9,296.5 L642.0,296.1 L644.0,295.8 L646.1,295.4 L648.1,295.1 L650.2,294.7 L652.2,294.3 L654.3,293.9 L656.3,293.5 L658.4,293.1 L660.5,292.7 L662.5,292.3 L664.6,291.8 L666.6,291.4 L668.7,290.9 L670.7,290.5 L672.8,290.0 L674.8,289.5 L676.9,289.0 L678.9,288.5 L681.0,288.0 L683.0,287.5 L685.1,286.9 L687.1,286.4 L689.2,285.8 L691.2,285.3 L693.3,284.7 L695.3,284.1 L697.4,283.5 L699.4,282.9 L701.5,282.2 L703.5,281.6 L705.6,280.9 L707.7,280.3 L709.7,279.6 L711.8,278.9 L713.8,278.1 L715.9,277.4 L717.9,276.7 L720.0,275.9 L722.0,275.1 L724.1,274.3 L726.1,273.5 L728.2,272.7 L730.2,271.8 L732.3,271.0 L734.3,270.1 L736.4,269.2 L738.4,268.2 L740.5,267.3 L742.5,266.3 L744.6,265.4 L746.6,264.3 L748.7,263.3 L750.7,262.3 L752.8,261.2 L754.9,260.1 L756.9,259.0 L759.0,257.8 L761.0,256.7 L763.1,255.5 L765.1,254.3 L767.2,253.0 L769.2,251.7 L771.3,250.4 L773.3,249.1 L775.4,247.7 L777.4,246.4 L779.5,244.9 L781.5,243.5 L783.6,242.0 L785.6,240.5 L787.7,238.9 L789.7,237.4 L791.8,235.8 L793.8,234.1 L795.9,232.4 L797.9,230.7 L800.0,228.9" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M471.6,155.7 L473.7,159.7 L475.8,163.4 L477.8,166.8 L479.9,170.1 L481.9,173.2 L484.0,176.1 L486.0,179.0 L488.1,181.7 L490.1,184.4 L492.2,186.9 L494.2,189.4 L496.3,191.8 L498.3,194.1 L500.4,196.3 L502.4,198.5 L504.5,200.6 L506.5,202.7 L508.6,204.7 L510.6,206.6 L512.7,208.5 L514.7,210.3 L516.8,212.1 L518.9,213.8 L520.9,215.5 L523.0,217.1 L525.0,218.7 L527.1,220.2 L529.1,221.7 L531.2,223.2 L533.2,224.6 L535.3,226.0 L537.3,227.3 L539.4,228.6 L541.4,229.9 L543.5,231.1 L545.5,232.3 L547.6,233.5 L549.6,234.7 L551.7,235.8 L553.7,236.8 L555.8,237.9 L557.8,238.9 L559.9,239.9 L561.9,240.9 L564.0,241.8 L566.1,242.7 L568.1,243.6 L570.2,244.4 L572.2,245.3 L574.3,246.1 L576.3,246.8 L578.4,247.6 L580.4,248.3 L582.5,249.0 L584.5,249.7 L586.6,250.4 L588.6,251.0 L590.7,251.6 L592.7,252.2 L594.8,252.8 L596.8,253.4 L598.9,253.9 L600.9,254.4 L603.0,254.9 L605.0,255.4 L607.1,255.9 L609.1,256.3 L611.2,256.7 L613.3,257.1 L615.3,257.5 L617.4,257.9 L619.4,258.2 L621.5,258.5 L623.5,258.8 L625.6,259.1 L627.6,259.4 L629.7,259.7 L631.7,259.9 L633.8,260.1 L635.8,260.3 L637.9,260.5 L639.9,260.7 L642.0,260.8 L644.0,261.0 L646.1,261.1 L648.1,261.2 L650.2,261.3 L652.2,261.3 L654.3,261.4 L656.3,261.4 L658.4,261.4 L660.5,261.4 L662.5,261.4 L664.6,261.4 L666.6,261.4 L668.7,261.3 L670.7,261.2 L672.8,261.1 L674.8,261.0 L676.9,260.9 L678.9,260.7 L681.0,260.5 L683.0,260.3 L685.1,260.1 L687.1,259.9 L689.2,259.7 L691.2,259.4 L693.3,259.2 L695.3,258.9 L697.4,258.6 L699.4,258.2 L701.5,257.9 L703.5,257.5 L705.6,257.1 L707.7,256.7 L709.7,256.3 L711.8,255.9 L713.8,255.4 L715.9,254.9 L717.9,254.4 L720.0,253.9 L722.0,253.3 L724.1,252.8 L726.1,252.2 L728.2,251.6 L730.2,251.0 L732.3,250.3 L734.3,249.6 L736.4,248.9 L738.4,248.2 L740.5,247.5 L742.5,246.7 L744.6,245.9 L746.6,245.1 L748.7,244.2 L750.7,243.4 L752.8,242.5 L754.9,241.6 L756.9,240.6 L759.0,239.6 L761.0,238.6 L763.1,237.6 L765.1,236.5 L767.2,235.5 L769.2,234.3 L771.3,233.2 L773.3,232.0 L775.4,230.8 L777.4,229.5 L779.5,228.3 L781.5,227.0 L783.6,225.6 L785.6,224.2 L787.7,222.8 L789.7,221.4 L791.8,219.9 L793.8,218.4 L795.9,216.8 L797.9,215.2 L800.0,213.6" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/><circle cx="608.6" cy="256.2" r="4.5" fill="var(--fig-cyan,#22d3ee)"/><line x1="608.6" y1="74.0" x2="608.6" y2="310.0" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 3" opacity="0.6"/><text x="470.0" y="56.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">error</text><text x="800.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">model capacity →</text><rect x="480.0" y="348.0" width="11.0" height="11.0" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5"/><text x="496.0" y="358.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">total error</text><rect x="588.0" y="348.0" width="11.0" height="11.0" rx="3" fill="var(--fig-blue,#5b8cff)" stroke="none" stroke-width="1.5"/><text x="604.0" y="358.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">bias²</text><rect x="696.0" y="348.0" width="11.0" height="11.0" rx="3" fill="var(--fig-amber,#f5b544)" stroke="none" stroke-width="1.5"/><text x="712.0" y="358.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">variance</text><text x="614.6" y="246.2" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">sweet spot</text></svg><figcaption>The dartboard on the left separates the four regimes — low bias and low variance, high bias, high variance, and both — and the curve on the right shows how the two components cross over as complexity rises, with the irreducible noise floor beneath them.</figcaption></figure></p>
+<h3 id="cross-validation">Cross-validation</h3>
+<p><strong>(1) Intuition.</strong> To know how a model will do on unseen data, hold data out. To know how <em>the procedure</em> (including its hyperparameter choice) will do, hold out data, choose on the rest, then measure once.</p>
+<p><strong>(2) Formal.</strong> $K$-fold cross-validation partitions the data into $K$ folds, trains $K$ times on $K-1$ folds, and averages the held-out errors. Its bias is pessimistic (each model sees $(K-1)/K$ of the data) and its variance falls with $K$ but so does the training-set size per fit.</p>
+<p><strong>(3) Why.</strong> The subtlety is leakage: any preprocessing fitted on the full dataset before splitting — feature scaling, imputation, target encoding, feature selection — leaks test information into training and reports an optimistic score. Cross-validation must wrap the <em>entire</em> pipeline, which is why pipelines exist as objects. The same principle governs a language model's held-out set (<strong>M20</strong>), where the leak is contamination rather than scaling.</p>
+<p><strong>(4) Micro-example.</strong> Choosing $\lambda$ by 5-fold CV: for each of 5 held-out folds you refit on the other 4 for each candidate $\lambda$, then average the 5 errors. If you instead scaled the features using all the data before folding, the scaling constants encode the held-out means and variances, and the reported error is too low — often by more than the differences between candidate $\lambda$ values, which is exactly when it matters.</p>
+<h3 id="metrics-what-to-measure-and-how-each-one-lies">Metrics: what to measure, and how each one lies</h3>
+<p><strong>(1) Intuition.</strong> Accuracy is the fraction you got right, and it is the first thing people report, and it is the one that lies worst under imbalance. Precision asks "when I say positive, how often am I right"; recall asks "of the real positives, how many did I find"; and calibration asks whether "70% sure" means 70%.</p>
+<p><strong>(2) Formal.</strong> Confusion matrix counts $\mathrm{TP},\mathrm{FP},\mathrm{FN},\mathrm{TN}$; precision $= \mathrm{TP}/(\mathrm{TP}+\mathrm{FP})$; recall $= \mathrm{TP}/(\mathrm{TP}+\mathrm{FN})$; $F_1 = 2PR/(P+R)$. ROC-AUC is the probability that a random positive scores above a random negative; PR-AUC (average precision) summarises the precision–recall curve. Calibration error is $\sum_b \frac{n_b}{N}\left|\text{acc}(b) - \text{conf}(b)\right|$ over confidence bins.</p>
+<p><strong>(3) Why.</strong> ROC-AUC is insensitive to the base rate, which sounds like a virtue and is a vice when positives are rare: a model can have an excellent ROC-AUC while almost every positive prediction is wrong. PR-AUC's baseline is the prevalence itself, so it exposes that. Calibration is separate again — a model can rank perfectly (AUC 1.0) and be systematically overconfident, which is fatal for any downstream decision that treats probabilities as probabilities.</p>
+<p><strong>(4) Micro-example.</strong> 1000 examples, $\mathrm{TP} = 30$, $\mathrm{FP} = 20$, $\mathrm{FN} = 10$, $\mathrm{TN} = 940$: precision $0.60$, recall $0.75$, $F_1 = 0.667$, accuracy $0.97$ — and predicting everything negative scores $0.94$. Now an imbalanced benchmark with 1% positives: ROC-AUC $0.8323$ but average precision only $0.1610$, against a baseline of $0.01$. The ROC number says "good", the PR number says "better than chance by a factor of 16 and useless for triage". Both are true.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="How many questions does a benchmark need?" class="fig-svg"><defs><marker id="ci-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="80.0" y1="276.0" x2="500.0" y2="276.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="280.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">0%</text><line x1="80.0" y1="202.7" x2="500.0" y2="202.7" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="206.7" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">2%</text><line x1="80.0" y1="129.3" x2="500.0" y2="129.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="133.3" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">4%</text><line x1="80.0" y1="56.0" x2="500.0" y2="56.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="60.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">6%</text><line x1="80.0" y1="276.0" x2="500.0" y2="276.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><line x1="80.0" y1="56.0" x2="80.0" y2="276.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M80.0,-3317.3 L82.6,-45.4 L85.2,48.7 L87.9,90.4 L90.5,115.3 L93.1,132.3 L95.8,144.8 L98.4,154.5 L101.0,162.4 L103.6,168.9 L106.2,174.4 L108.9,179.1 L111.5,183.2 L114.1,186.9 L116.8,190.1 L119.4,193.0 L122.0,195.7 L124.6,198.0 L127.2,200.2 L129.9,202.3 L132.5,204.1 L135.1,205.9 L137.8,207.5 L140.4,209.0 L143.0,210.4 L145.6,211.7 L148.2,213.0 L150.9,214.1 L153.5,215.3 L156.1,216.3 L158.8,217.3 L161.4,218.3 L164.0,219.2 L166.6,220.1 L169.2,220.9 L171.9,221.7 L174.5,222.4 L177.1,223.2 L179.8,223.9 L182.4,224.5 L185.0,225.2 L187.6,225.8 L190.2,226.4 L192.9,227.0 L195.5,227.5 L198.1,228.1 L200.8,228.6 L203.4,229.1 L206.0,229.6 L208.6,230.1 L211.2,230.5 L213.9,231.0 L216.5,231.4 L219.1,231.9 L221.8,232.3 L224.4,232.7 L227.0,233.1 L229.6,233.4 L232.2,233.8 L234.9,234.2 L237.5,234.5 L240.1,234.8 L242.8,235.2 L245.4,235.5 L248.0,235.8 L250.6,236.1 L253.2,236.4 L255.9,236.7 L258.5,237.0 L261.1,237.3 L263.8,237.6 L266.4,237.9 L269.0,238.1 L271.6,238.4 L274.2,238.6 L276.9,238.9 L279.5,239.1 L282.1,239.4 L284.8,239.6 L287.4,239.8 L290.0,240.1 L292.6,240.3 L295.2,240.5 L297.9,240.7 L300.5,240.9 L303.1,241.1 L305.8,241.3 L308.4,241.5 L311.0,241.7 L313.6,241.9 L316.2,242.1 L318.9,242.3 L321.5,242.5 L324.1,242.7 L326.8,242.9 L329.4,243.0 L332.0,243.2 L334.6,243.4 L337.2,243.5 L339.9,243.7 L342.5,243.9 L345.1,244.0 L347.8,244.2 L350.4,244.3 L353.0,244.5 L355.6,244.6 L358.2,244.8 L360.9,244.9 L363.5,245.1 L366.1,245.2 L368.8,245.4 L371.4,245.5 L374.0,245.6 L376.6,245.8 L379.2,245.9 L381.9,246.0 L384.5,246.2 L387.1,246.3 L389.8,246.4 L392.4,246.5 L395.0,246.7 L397.6,246.8 L400.2,246.9 L402.9,247.0 L405.5,247.1 L408.1,247.3 L410.8,247.4 L413.4,247.5 L416.0,247.6 L418.6,247.7 L421.2,247.8 L423.9,247.9 L426.5,248.0 L429.1,248.1 L431.8,248.2 L434.4,248.3 L437.0,248.4 L439.6,248.5 L442.2,248.6 L444.9,248.7 L447.5,248.8 L450.1,248.9 L452.8,249.0 L455.4,249.1 L458.0,249.2 L460.6,249.3 L463.2,249.4 L465.9,249.5 L468.5,249.6 L471.1,249.7 L473.8,249.8 L476.4,249.8 L479.0,249.9 L481.6,250.0 L484.2,250.1 L486.9,250.2 L489.5,250.3 L492.1,250.3 L494.8,250.4 L497.4,250.5 L500.0,250.6" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="82.1" cy="-83.3" r="4.5" fill="var(--fig-amber,#f5b544)"/><text x="82.1" y="9.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">±9.8</text><circle cx="101.0" cy="162.4" r="4.5" fill="var(--fig-amber,#f5b544)"/><text x="101.0" y="152.4" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">±3.1</text><circle cx="185.0" cy="225.2" r="4.5" fill="var(--fig-amber,#f5b544)"/><text x="185.0" y="215.2" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">±1.4</text><circle cx="500.0" cy="250.6" r="4.5" fill="var(--fig-amber,#f5b544)"/><text x="500.0" y="240.6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">±0.7</text><text x="290.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">number of test items</text><text x="80.0" y="44.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">95% confidence half-width (percentage points)</text><rect x="540.0" y="76.0" width="260.0" height="160.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="558.0" y="100.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">± 1.96√(p(1−p)/n)</text><text x="558.0" y="126.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">At n = 1,000 the interval is</text><text x="558.0" y="139.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">about ±3 points. A claimed</text><text x="558.0" y="152.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">1-point improvement is inside</text><text x="558.0" y="165.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">the noise.</text><text x="558.0" y="196.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">report intervals, always</text><text x="420.0" y="322.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">variance across seeds and prompt formats is usually larger than the interval</text></svg><figcaption>The same eval score reported with its confidence interval, and how that interval narrows as the sample grows: at a few hundred examples the interval is wide enough to swallow the differences between most competing models, which is why a single-number benchmark comparison needs an error bar attached.</figcaption></figure></p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<p>The algorithm is <strong>fitting a classification tree by CART's greedy split search</strong>, because it exercises impurity, greedy search, recursion, and the variance argument for ensembles, and because it is the base learner for both bagging and boosting.</p>
+<ol>
+<li>Start at the root with all $N$ training examples and their labels.</li>
+<li>For each candidate feature $j$ and each candidate threshold $t$ (the midpoints between sorted distinct values): split the node into $L = \{i : x_{ij}\le t\}$ and $R$ its complement. Reject splits that leave fewer than <code>min_samples_leaf</code> examples on a side.</li>
+<li>Compute the impurity decrease $\Delta = I(\text{node}) - \frac{n_L}{n}I(L) - \frac{n_R}{n}I(R)$ for each candidate; keep the argmax. If the best $\Delta \le 0$, stop — the node becomes a leaf.</li>
+<li>Recurse on $L$ and $R$ with $depth+1$.</li>
+<li>Stop when: <code>max_depth</code> is reached, the node is pure, the node has fewer than <code>min_samples_split</code> examples, or no split improves impurity.</li>
+<li>A leaf predicts the majority class (classification) or the mean target (regression).</li>
+<li>Pruning: grow deep, then remove subtrees whose contribution to held-out accuracy is negative — cost-complexity pruning minimises $R(T) + \alpha|T|$ over subtrees, with $\alpha$ chosen by cross-validation.</li>
+</ol>
+<p>```text
+BUILD(node, depth):
+    if depth == max_depth or pure(node) or n(node) < min_split:
+        return leaf(majority_class(node))
+    best <- (0, None, None)
+    for j in features:
+        for t in midpoints(sorted unique values of column j):
+            L, R <- partition(node, j, t)
+            if |L| < min_leaf or |R| < min_leaf: continue
+            gain <- I(node) - (|L|/n)*I(L) - (|R|/n)*I(R)
+            if gain > best.gain: best <- (gain, j, t)
+    if best.gain <= 0: return leaf(majority_class(node))
+    L, R <- partition(node, best.j, best.t)
+    return Node(best.j, best.t, BUILD(L, depth+1), BUILD(R, depth+1))
+```</p>
+<p><strong>Complexity.</strong> Per node: $O(d\,N\log N)$ if thresholds are found by sorting once per feature (each split evaluation is $O(1)$ after prefix sums of class counts), or $O(dN^2)$ with the naive loop; depth $O(\log N)$ for balanced data, $O(N)$ worst case. Total training is $O(dN^2)$ for the naive version and $O(dN\log^2N)$ for the prefix-sum version. Prediction is $O(\text{depth})$, independent of $N$ — the property that kernel methods and $k$NN lack.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="1-the-normal-equations-and-why-they-fail">1. The normal equations, and why they fail</h3>
+<p>Minimise $R(\mathbf{w}) = \|\mathbf{X}\mathbf{w}-\mathbf{y}\|^2 = \mathbf{w}^\top\mathbf{X}^\top\mathbf{X}\mathbf{w} - 2\mathbf{y}^\top\mathbf{X}\mathbf{w} + \mathbf{y}^\top\mathbf{y}$. Differentiating (<strong>M02</strong>, identity 1 with $\mathbf{A} = \mathbf{X}^\top\mathbf{X}$ symmetric):</p>
+<p>$$\nabla R = 2\mathbf{X}^\top\mathbf{X}\mathbf{w} - 2\mathbf{X}^\top\mathbf{y} = 0 \;\Longrightarrow\; \mathbf{X}^\top\mathbf{X}\mathbf{w} = \mathbf{X}^\top\mathbf{y}.$$</p>
+<p>If $\mathbf{X}$ has full column rank, $\mathbf{X}^\top\mathbf{X}$ is invertible and $\hat{\mathbf{w}} = (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\mathbf{y}$. Two structural facts follow immediately. The residual is orthogonal to the column space: $\mathbf{X}^\top(\mathbf{y}-\mathbf{X}\hat{\mathbf{w}}) = 0$, so this is the orthogonal projection of $\mathbf{y}$ onto $\mathcal{C}(\mathbf{X})$ (<strong>M01</strong>), and the fitted values are $\mathbf{X}\hat{\mathbf{w}} = \mathbf{P}\mathbf{y}$ with $\mathbf{P} = \mathbf{X}(\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top$ idempotent.</p>
+<p><strong>Where it fails.</strong> (i) Rank deficiency: duplicated or linearly dependent columns make $\mathbf{X}^\top\mathbf{X}$ singular, so $\hat{\mathbf{w}}$ is not unique. (ii) Conditioning: $\kappa(\mathbf{X}^\top\mathbf{X}) = \kappa(\mathbf{X})^2$, so a design with $\kappa = 10^4$ produces normal equations with $\kappa = 10^8$ and eight digits lost; the SVD route (<strong>M01</strong>, derivation 5) solves the same problem at $\kappa(\mathbf{X})$. (iii) Cost: forming $\mathbf{X}^\top\mathbf{X}$ is $O(Nd^2)$ and inverting is $O(d^3)$, unusable when $d$ is $10^6$.</p>
+<h3 id="2-ridge-in-closed-form-and-lassos-exact-zeros">2. Ridge in closed form, and lasso's exact zeros</h3>
+<p><strong>Ridge.</strong> Add $\lambda\|\mathbf{w}\|^2$: $\nabla$ becomes $2\mathbf{X}^\top\mathbf{X}\mathbf{w} - 2\mathbf{X}^\top\mathbf{y} + 2\lambda\mathbf{w} = 0$, so</p>
+<p>$$\hat{\mathbf{w}} = (\mathbf{X}^\top\mathbf{X}+\lambda\mathbf{I})^{-1}\mathbf{X}^\top\mathbf{y}.$$</p>
+<p>Every eigenvalue of $\mathbf{X}^\top\mathbf{X}$ is shifted up by $\lambda$, so the condition number falls from $\lambda_{\max}/\lambda_{\min}$ to $(\lambda_{\max}+\lambda)/(\lambda_{\min}+\lambda)$ — the matrix is always invertible, and the solution is unique even under rank deficiency. In the SVD basis, $\hat{\mathbf{w}} = \sum_i \frac{\sigma_i}{\sigma_i^2+\lambda}\mathbf{v}_i\mathbf{u}_i^\top\mathbf{y}$: each singular direction is shrunk by the factor $\sigma_i^2/(\sigma_i^2+\lambda)$, which is near 1 for strong directions and near 0 for weak ones. That is exactly a soft filter on the spectrum, and it is why ridge behaves like a shrinkage estimator rather than a selector.</p>
+<p><strong>Lasso, coordinate-wise.</strong> For one coordinate with the others fixed, write the objective as a function of $w_j$ alone: $\sum_i(x_{ij}w_j - r_i)^2 + \lambda|w_j| + \text{const}$, where $r_i$ is the partial residual using the other coordinates. With $a = \sum_ix_{ij}^2$ and $\rho = \sum_ix_{ij}r_i$, the subgradient condition is</p>
+<p>$$2aw_j - 2\rho + \lambda\,\partial|w_j| \text{ contains } 0, \qquad \partial|w_j| = \begin{cases}\{+1\} & w_j>0\\ \{-1\} & w_j<0\\ [-1,1] & w_j = 0\end{cases}$$</p>
+<p>For $w_j > 0$: $2aw_j = 2\rho - \lambda$, requiring $\rho > \lambda/2$. For $w_j<0$: $\rho < -\lambda/2$. For $w_j = 0$: consistency requires $|2\rho| \le \lambda$. Combining, with $\lambda' = \lambda/2$ rescaled,</p>
+<p>$$\hat w_j = \operatorname{sign}(\rho)\max\left(|\rho| - \lambda', 0\right) .$$</p>
+<p>The max with zero is the whole story: whenever the correlation $|\rho|$ between the feature and the partial residual falls below the threshold, the coefficient is <em>exactly</em> zero, not merely small. Ridge's solution, $2aw_j - 2\rho + 2\lambda w_j = 0 \Rightarrow w_j = \rho/(a+\lambda)$, is zero only if $\rho$ is exactly zero.</p>
+<h3 id="3-logistic-regression-gradient-hessian-and-irls">3. Logistic regression: gradient, Hessian, and IRLS</h3>
+<p>With $p_i = \sigma(\mathbf{z}_i)$, $\mathbf{z} = \mathbf{X}\mathbf{w}$, the log-likelihood is $\ell = \sum_i[y_i\log p_i + (1-y_i)\log(1-p_i)]$. Using $\sigma'(z) = \sigma(z)(1-\sigma(z))$ and $\partial\ell/\partial p_i = y_i/p_i - (1-y_i)/(1-p_i) = (y_i-p_i)/(p_i(1-p_i))$,</p>
+<p>$$\frac{\partial\ell}{\partial z_i} = \frac{y_i-p_i}{p_i(1-p_i)}\cdot p_i(1-p_i) = y_i - p_i,$$</p>
+<p>the same collapse as <strong>M02</strong>'s softmax identity, in the two-class case. Then $\nabla_{\mathbf{w}}\ell = \mathbf{X}^\top(\mathbf{y}-\mathbf{p})$.</p>
+<p>For the Hessian, differentiate again: $\partial p_i/\partial z_i = p_i(1-p_i)$, so</p>
+<p>$$\mathbf{H} = \frac{\partial}{\partial\mathbf{w}}\left[\mathbf{X}^\top(\mathbf{y}-\mathbf{p})\right] = -\mathbf{X}^\top\operatorname{diag}\left(p_i(1-p_i)\right)\mathbf{X} = -\mathbf{X}^\top\mathbf{W}\mathbf{X}.$$</p>
+<p>$\mathbf{W}$ positive definite makes $\mathbf{H} \le 0$: the log-likelihood is concave, so any stationary point is the global maximum. Newton's step for maximisation is $\mathbf{w}_{t+1} = \mathbf{w}_t - \mathbf{H}^{-1}\nabla\ell = \mathbf{w}_t + (\mathbf{X}^\top\mathbf{W}\mathbf{X})^{-1}\mathbf{X}^\top(\mathbf{y}-\mathbf{p})$. Since $\mathbf{W}$ depends on $\mathbf{w}_t$, each iteration is a <em>weighted</em> least-squares solve — that is IRLS. Note the weight $p(1-p)$: confident examples get weight near zero, so they stop pulling the fit, which is what makes separable data drive the weights to infinity rather than to a finite optimum.</p>
+<h3 id="4-the-svm-dual-and-the-representer-theorem">4. The SVM dual and the representer theorem</h3>
+<p><strong>Primal.</strong> For labels $y_i\in\{-1,+1\}$ and a hyperplane $\mathbf{w}^\top\mathbf{x}+b = 0$, hard-margin SVM maximises the margin subject to correct classification:</p>
+<p>$$\min_{\mathbf{w},b}\frac12\|\mathbf{w}\|^2 \quad\text{s.t.}\quad y_i(\mathbf{w}^\top\mathbf{x}_i+b)\ge1 \ \ \forall i .$$</p>
+<p><strong>Lagrangian.</strong> With multipliers $\alpha_i \ge 0$,</p>
+<p>$$\mathcal{L}(\mathbf{w},b,\boldsymbol{\alpha}) = \frac12\|\mathbf{w}\|^2 - \sum_i\alpha_i\left[y_i(\mathbf{w}^\top\mathbf{x}_i+b)-1\right].$$</p>
+<p>Stationarity in the primal variables:</p>
+<p>$$\frac{\partial\mathcal{L}}{\partial\mathbf{w}} = \mathbf{w} - \sum_i\alpha_iy_i\mathbf{x}_i = 0 \;\Longrightarrow\; \mathbf{w} = \sum_i\alpha_iy_i\mathbf{x}_i, \qquad \frac{\partial\mathcal{L}}{\partial b} = -\sum_i\alpha_iy_i = 0 .$$</p>
+<p><strong>Dual.</strong> Substitute back. The $\|\mathbf{w}\|^2/2$ term becomes $\frac12\sum_{ij}\alpha_i\alpha_jy_iy_j\mathbf{x}_i^\top\mathbf{x}_j$, and by the stationarity relation it appears twice with opposite sign:</p>
+<p>$$\mathcal{L} = \frac12\sum_{ij}\alpha_i\alpha_jy_iy_j\mathbf{x}_i^\top\mathbf{x}_j - \sum_{ij}\alpha_i\alpha_jy_iy_j\mathbf{x}_i^\top\mathbf{x}_j - b\underbrace{\sum_i\alpha_iy_i}_{=0} + \sum_i\alpha_i = \sum_i\alpha_i - \frac12\sum_{ij}\alpha_i\alpha_jy_iy_j\mathbf{x}_i^\top\mathbf{x}_j .$$</p>
+<p>So the dual problem is</p>
+<p>$$\max_{\boldsymbol{\alpha}\ge0}\ \sum_i\alpha_i - \frac12\sum_{ij}\alpha_i\alpha_jy_iy_j\langle\mathbf{x}_i,\mathbf{x}_j\rangle \quad\text{s.t.}\quad \sum_i\alpha_iy_i = 0 .$$</p>
+<p><strong>Three consequences.</strong> (i) The data enter only through inner products $\langle\mathbf{x}_i,\mathbf{x}_j\rangle$, so replacing them by $k(\mathbf{x}_i,\mathbf{x}_j)$ gives a nonlinear classifier for free — the kernel trick, exactly and only because of this dual form. (ii) KKT gives $\alpha_i[y_i(\mathbf{w}^\top\mathbf{x}_i+b)-1] = 0$, so only points on the margin have $\alpha_i>0$; these are the support vectors, and every other point is irrelevant to the solution. (iii) $\mathbf{w} = \sum_i\alpha_iy_i\mathbf{x}_i$ says the solution lies in the span of the data — the finite-dimensional case of the representer theorem, which extends it to any regularised risk in a reproducing kernel Hilbert space: the minimiser has the form $f^{*} = \sum_i\alpha_ik(\mathbf{x}_i,\cdot)$ regardless of the dimension of $\mathcal{H}$.</p>
+<h3 id="5-carts-criterion-from-gini-and-from-entropy">5. CART's criterion, from Gini and from entropy</h3>
+<p>For a node with class proportions $\mathbf{p}$, Gini impurity is $G = 1-\sum_kp_k^2$ — the probability that two independent draws from the node disagree. For a split with fractions $\pi_L = n_L/n$ and $\pi_R$,</p>
+<p>$$\Delta_G = G(\text{parent}) - \pi_LG(L) - \pi_RG(R) .$$</p>
+<p>Expand the two-class case to see what is actually being maximised. Write the parent's positive fraction as $p$ and the two children's as $p_L, p_R$. Since $G = 1 - p^2 - (1-p)^2 = 2p(1-p)$,</p>
+<p>$$\Delta_G = 2p(1-p) - 2\pi_Lp_L(1-p_L) - 2\pi_Rp_R(1-p_R).$$</p>
+<p>Now the entropy version. Define $H(p) = -p\log p - (1-p)\log(1-p)$; the impurity decrease is</p>
+<p>$$\Delta_H = H(p) - \pi_LH(p_L) - \pi_RH(p_R) .$$</p>
+<p>Both are special cases of a general impurity $I$ that is concave in $p$ and symmetric about $1/2$. The reason to prefer one is not correctness but convenience: Gini avoids logarithms and is marginally faster. And $\Delta_H$ has an information-theoretic identity worth knowing — it equals the mutual information between the split indicator $S$ and the label $Y$:</p>
+<p>$$I(S;Y) = H(Y) - H(Y\mid S) = H(p) - \left[\pi_LH(p_L) + \pi_RH(p_R)\right] = \Delta_H,$$</p>
+<p>using the <strong>M03</strong> definition of mutual information. A tree that greedily maximises entropy decrease is greedily maximising the information each split reveals about the label.</p>
+<p><strong>Micro-check.</strong> Parent $(30,10)$, so $p = 0.75$ and $G = 0.375$. Split $(20,0)/(10,10)$: $\pi_L = 0.5$, $p_L = 1$, $p_R = 0.5$, so $\Delta_G = 0.375 - 0.5(0) - 0.5(0.5) = 0.125$. Split $(18,2)/(12,8)$: $p_L = 0.9$, $p_R = 0.6$, giving weighted Gini $0.45\cdot0.18 + 0.55\cdot0.48 = 0.345$ and $\Delta_G = 0.030$. The first split isolates a pure node and wins by a factor of four — the criterion's preference for purity, quantified.</p>
+<h3 id="6-the-biasvariance-decomposition-algebraically">6. The bias–variance decomposition, algebraically</h3>
+<p>Let $y = f(\mathbf{x}) + \varepsilon$ with $\mathbb{E}[\varepsilon] = 0$, $\mathrm{Var}[\varepsilon] = \sigma^2$, and let $\hat f = \hat f_D(\mathbf{x})$ depend on the training set $D$, with $\varepsilon$ independent of $D$. Write $\bar f = \mathbb{E}_D[\hat f]$. Then</p>
+<p>$$\begin{aligned}
+\mathbb{E}_{D,\varepsilon}\left[(y-\hat f)^2\right] &= \mathbb{E}\left[(f+\varepsilon-\hat f)^2\right] \\
+&= \mathbb{E}\left[(f-\hat f)^2\right] + 2\mathbb{E}\left[\varepsilon(f-\hat f)\right] + \mathbb{E}[\varepsilon^2] .
+\end{aligned}$$</p>
+<p>The cross term vanishes because $\varepsilon$ is independent of $D$ and mean zero: $\mathbb{E}[\varepsilon]\cdot\mathbb{E}[f-\hat f] = 0$. The last term is $\sigma^2$. For the first, add and subtract $\bar f$:</p>
+<p>$$\begin{aligned}
+\mathbb{E}\left[(f-\hat f)^2\right] &= \mathbb{E}\left[(f-\bar f + \bar f-\hat f)^2\right] \\
+&= (f-\bar f)^2 + 2(f-\bar f)\,\mathbb{E}[\bar f - \hat f] + \mathbb{E}[(\bar f-\hat f)^2] \\
+&= \mathrm{Bias}^2 + 0 + \mathrm{Var}(\hat f),
+\end{aligned}$$</p>
+<p>since $\mathbb{E}[\bar f-\hat f] = \bar f-\bar f = 0$. Collecting:</p>
+<p>$$\mathbb{E}\left[(y-\hat f)^2\right] = \sigma^2 + \mathrm{Bias}^2(\hat f) + \mathrm{Var}(\hat f).$$</p>
+<p>The decomposition is exact, not approximate, and the three terms are genuinely independent knobs: noise is a property of the problem, bias of the model class, variance of the model class <em>and</em> the sample size.</p>
+<h3 id="7-baggings-variance-reduction-with-correlation">7. Bagging's variance reduction, with correlation</h3>
+<p>Let $f_1,\ldots,f_B$ have common variance $\sigma^2$ and pairwise correlation $\rho$. Then</p>
+<p>$$\begin{aligned}
+\mathrm{Var}\left(\frac1B\sum_b f_b\right) &= \frac{1}{B^2}\left[\sum_b\mathrm{Var}(f_b) + \sum_{b\ne c}\mathrm{Cov}(f_b,f_c)\right] \\
+&= \frac{1}{B^2}\left[B\sigma^2 + B(B-1)\rho\sigma^2\right] = \frac{\sigma^2}{B} + \frac{B-1}{B}\rho\sigma^2 = \rho\sigma^2 + \frac{1-\rho}{B}\sigma^2 .
+\end{aligned}$$</p>
+<p>Two limits: $B\to\infty$ leaves $\rho\sigma^2$, so averaging cannot beat correlation; $\rho = 1$ gives $\sigma^2$ for any $B$, so averaging identical models is pointless. Random forests subsample features precisely to reduce $\rho$, which is the only term in the formula that a practitioner can actually move. This is also why ensembles of independently trained neural networks help less than the naive $1/B$ suggests — they see the same data and are strongly correlated.</p>
+<h3 id="8-gradient-boosting-is-gradient-descent-in-function-space">8. Gradient boosting is gradient descent in function space</h3>
+<p>Treat the model as a vector $F = (F(\mathbf{x}_1),\ldots,F(\mathbf{x}_N))$ in $\mathbb{R}^N$ and the loss as a function of that vector, $L(F) = \sum_i\ell(y_i, F_i)$. Ordinary gradient descent on $F$ would take $F \leftarrow F - \nu\nabla_F L$, i.e.</p>
+<p>$$F_i \leftarrow F_i - \nu\,\frac{\partial\ell(y_i,F_i)}{\partial F_i} .$$</p>
+<p>The negative gradient $r_i = -\partial\ell(y_i,F_i)/\partial F_i$ is the pseudo-residual. But $F$ must remain a function representable by the model class, so instead of stepping along $-r$ directly, fit a weak learner $h_t$ to the targets $r$ and step along <em>its</em> direction:</p>
+<p>$$F_t = F_{t-1} + \nu h_t, \qquad h_t = \arg\min_{h\in\mathcal{H}}\sum_i\left(r_i - h(\mathbf{x}_i)\right)^2 .$$</p>
+<p>That is gradient descent with the step direction constrained to $\mathcal{H}$ and the step length $\nu$. For squared loss, $\partial\ell/\partial F_i = F_i - y_i$, so $r_i = y_i - F_i$: the pseudo-residual is the residual, and "fit the next tree to the residuals" is exactly gradient descent. For logistic loss, $\partial\ell/\partial F_i = p_i - y_i$, so $r_i = y_i - p_i$ — the same $\mathbf{p}-\mathbf{y}$ that appears in <strong>M02</strong> and in derivation 3, for the third time and the same reason. The shrinkage $\nu$ is a step size; the tree depth bounds the norm and smoothness of the step direction; and the number of rounds is the iteration count. One framework, three hyperparameters, no separate theory.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>A CART classifier with an exhaustive split search, Gini impurity, and a depth limit. Everything the derivations claim is visible in about fifty lines.</p>
+<p>```python
+import numpy as np
+
+def gini(y):
+    if len(y) == 0:
+        return 0.0
+    p = np.bincount(y, minlength=2) / len(y)
+    return 1.0 - np.sum(p ** 2)                 # 1 - sum p_k^2
+
+class Node:
+    def __init__(self, feature=None, threshold=None, left=None, right=None, value=None):
+        self.feature, self.threshold = feature, threshold
+        self.left, self.right, self.value = left, right, value
+
+def best_split(X, y, min_leaf=1):
+    """Exhaustive search; returns (impurity decrease, feature, threshold)."""
+    parent, best = gini(y), (0.0, None, None)
+    for j in range(X.shape[1]):
+        for t in np.unique(X[:, j]):            # midpoints omitted for brevity
+            left = X[:, j] <= t
+            if left.sum() < min_leaf or (~left).sum() < min_leaf:
+                continue
+            wl = left.mean()                    # n_L / n
+            gain = parent - (wl * gini(y[left]) + (1 - wl) * gini(y[~left]))
+            if gain > best[0]:
+                best = (gain, j, t)
+    return best
+
+def build(X, y, depth=0, max_depth=3, min_leaf=1):
+    node = Node(value=int(np.bincount(y, minlength=2).argmax()))
+    if depth >= max_depth or len(np.unique(y)) == 1:
+        return node                              # leaf: majority class
+    gain, j, t = best_split(X, y, min_leaf)
+    if j is None or gain <= 0:
+        return node
+    left = X[:, j] <= t
+    node.feature, node.threshold = j, t
+    node.left = build(X[left], y[left], depth + 1, max_depth, min_leaf)
+    node.right = build(X[~left], y[~left], depth + 1, max_depth, min_leaf)
+    return node
+
+def predict_one(node, x):
+    while node.feature is not None:              # walk until a leaf
+        node = node.left if x[node.feature] <= node.threshold else node.right
+    return node.value
+
+X = np.array([[0.,0.],[0.,1.],[1.,0.],[1.,1.],[0.2,0.1],[0.1,0.3],[0.9,0.8],[0.8,0.9]])
+y = np.array([0,0,0,0,0,0,1,1])
+tree = build(X, y, max_depth=2)
+pred = np.array([predict_one(tree, x) for x in X])
+print("predictions:", pred)                      # [0 0 0 0 0 0 1 1]
+print("accuracy   :", (pred == y).mean())        # 1.0
+print("root split : feature", tree.feature, "threshold", tree.threshold)   # 0, 0.2
+```</p>
+<p><strong>What to expect.</strong> The root splits on feature 0 at threshold $0.2$, isolating the two positive-class points, and a depth-2 tree reaches 100% training accuracy on this separable toy set. Print every node's <code>gini</code> before and after the split and you will see the decrease the algorithm is maximising. Two things worth breaking deliberately: set <code>max_depth=1</code> and watch accuracy fall to $0.75$ (bias), then set <code>min_leaf=1</code> with <code>max_depth=None</code> on noisy data and watch training accuracy go to 1.0 while nothing generalises (variance). The exhaustive search is $O(dN^2)$ here; sorting once per feature and using prefix sums of class counts makes it $O(dN\log N)$.</p>
+<h2 id="worked-example">Worked example</h2>
+<p><strong>A confusion matrix, and four metrics that disagree.</strong> 1000 test examples, positives 4% of the data.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>predicted positive</th>
+<th>predicted negative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>actual positive</strong></td>
+<td>TP = 30</td>
+<td>FN = 10</td>
+</tr>
+<tr>
+<td><strong>actual negative</strong></td>
+<td>FP = 20</td>
+<td>TN = 940</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Precision $= 30/50 = 0.60$: two of every five alarms are false.</li>
+<li>Recall $= 30/40 = 0.75$: three of every four real positives are caught.</li>
+<li>$F_1 = 2(0.6)(0.75)/(1.35) = 0.667$.</li>
+<li>Accuracy $= 970/1000 = 0.97$.</li>
+</ul>
+<p>Now the baseline: always predicting negative gives accuracy $0.94$. So the model adds three percentage points of accuracy while being wrong on half its positive predictions — and a single-number report of "97% accurate" hides both facts. This is why accuracy is the wrong default under imbalance, and why the first thing to compute is the confusion matrix, not the score.</p>
+<p><strong>ROC-AUC versus PR-AUC on an imbalanced ranking.</strong> A score-based detector on 1000 examples with 10 positives: ROC-AUC $= 0.8323$, average precision $= 0.1610$, baseline precision $= 0.01$.</p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Value</th>
+<th>What it says</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROC-AUC</td>
+<td>0.8323</td>
+<td>a random positive outranks a random negative 83% of the time</td>
+</tr>
+<tr>
+<td>Average precision</td>
+<td>0.1610</td>
+<td>a flagged example is positive 16% of the time on average</td>
+</tr>
+<tr>
+<td>Baseline (prevalence)</td>
+<td>0.0100</td>
+<td>random flagging</td>
+</tr>
+<tr>
+<td>Lift over baseline</td>
+<td>16.1×</td>
+<td>real signal, but 84% of flags are still wrong</td>
+</tr>
+</tbody>
+</table>
+<p>Both numbers are correct and they support opposite decisions. ROC-AUC is prevalence-free — it is a property of the ranking alone — which is exactly why it cannot tell you whether the <em>flag</em> is useful. PR-AUC's baseline is the prevalence, so it answers the operational question. When positives are rare and the cost of a false positive is real, report PR-AUC; report ROC-AUC when comparing rankings across populations with different prevalences.</p>
+<p><strong>Calibration.</strong> The same model, binned by predicted probability, against observed frequency:</p>
+<table>
+<thead>
+<tr>
+<th>confidence bin</th>
+<th>n</th>
+<th>mean confidence</th>
+<th>observed frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.0–0.1</td>
+<td>3022</td>
+<td>0.050</td>
+<td>0.003</td>
+</tr>
+<tr>
+<td>0.2–0.3</td>
+<td>2848</td>
+<td>0.250</td>
+<td>0.069</td>
+</tr>
+<tr>
+<td>0.4–0.5</td>
+<td>2344</td>
+<td>0.449</td>
+<td>0.196</td>
+</tr>
+<tr>
+<td>0.6–0.7</td>
+<td>1730</td>
+<td>0.648</td>
+<td>0.415</td>
+</tr>
+<tr>
+<td>0.8–0.9</td>
+<td>805</td>
+<td>0.844</td>
+<td>0.701</td>
+</tr>
+<tr>
+<td>0.9–1.0</td>
+<td>285</td>
+<td>0.935</td>
+<td>0.874</td>
+</tr>
+</tbody>
+</table>
+<p>Every bin overstates the observed frequency, and the expected calibration error is $0.1746$ — huge. This model's <em>ranking</em> can be excellent while its probabilities are unusable as probabilities, which matters because any downstream decision that compares a probability to a cost threshold is reading the confidence, not the ranking.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="regularisation-is-about-preventing-the-weights-from-getting-large">"Regularisation is about preventing the weights from getting large"</h3>
+<p>That is the mechanism, not the purpose. The purpose is to trade bias for variance, which the decomposition makes precise: a shrunk estimator is biased but may have much lower variance, and the sum is what matters. Ridge is a soft filter on the singular spectrum, not a magnitude cap; lasso is a selector, and the geometry is why it produces exact zeros rather than small numbers. A model with large weights and correct predictions is not thereby overfitted.</p>
+<h3 id="a-decision-tree-is-interpretable-so-it-is-the-safe-choice">"A decision tree is interpretable, so it is the safe choice"</h3>
+<p>A single tree is interpretable and <em>unstable</em>: change one training point and the whole structure can change. Its predictions are also piecewise constant, so it cannot extrapolate — a tree trained on prices up to 100 predicts at most the largest leaf mean for a price of 1000. The interpretability is real but so is the variance, and bagging fixes the variance while destroying the interpretability. That is the honest trade, not a free lunch.</p>
+<h3 id="boosting-and-bagging-both-reduce-variance">"Boosting and bagging both reduce variance"</h3>
+<p>They reduce <em>different</em> terms. Bagging averages correlated predictors and reduces variance with the bias essentially unchanged. Boosting fits successive models to the gradient, so it reduces bias (the model becomes more expressive as rounds accumulate) while its variance grows — which is why boosting needs shrinkage, shallow trees, and early stopping, and why it can overfit if run too long while bagging essentially cannot.</p>
+<h3 id="roc-auc-is-the-right-summary-for-an-imbalanced-problem">"ROC-AUC is the right summary for an imbalanced problem"</h3>
+<p>ROC-AUC is prevalence-invariant, which is a bug when the base rate is 1%: an excellent AUC can coexist with almost every positive prediction being wrong (0.8323 versus average precision 0.1610 above). PR-AUC's baseline is the prevalence, so it reflects the operational question. Neither is universally correct: ROC-AUC is the right comparison when prevalences genuinely differ between deployment populations.</p>
+<h3 id="if-the-loss-is-lower-the-model-is-better-calibrated">"If the loss is lower, the model is better calibrated"</h3>
+<p>Loss and calibration are different properties. A model can have low cross-entropy and be badly calibrated in the tails, or be perfectly calibrated with a worse loss than a sharper model. Calibration is a property of the <em>mapping</em> from scores to probabilities, measurable with a reliability diagram, and fixable post hoc by isotonic or temperature scaling (<strong>M20</strong>) — which changes no ranking at all.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>5.1</strong> With $\mathbf{X}^\top\mathbf{X} = \begin{pmatrix}6&3\\3&3\end{pmatrix}$ and $\mathbf{X}^\top\mathbf{y} = (12,9)$, solve for $\hat{\mathbf{w}}$, then compute the ridge solution at $\lambda = 0.5$.</p>
+<details><summary>Solution</summary>
+
+$\det = 18-9 = 9$, inverse $= \frac19\begin{pmatrix}3&-3\\-3&6\end{pmatrix}$, so $\hat{\mathbf{w}} = \frac19(36-27,\ -36+54) = (1,2)$. Ridge: $\mathbf{X}^\top\mathbf{X}+0.5\mathbf{I} = \begin{pmatrix}6.5&3\\3&3.5\end{pmatrix}$, $\det = 22.75-9 = 13.75$, $\hat{\mathbf{w}} = \frac{1}{13.75}(42-27,\ -36+58.5) = (1.0909, 1.6364)$ — both coordinates shrunk, neither to zero.
+</details>
+
+<p><strong>5.2</strong> Compute pretest odds, likelihood ratio, and posterior for a test with 90% sensitivity and 95% specificity at 2% prevalence.</p>
+<details><summary>Solution</summary>
+
+Pretest odds $= 0.02/0.98 = 0.0204$. Positive likelihood ratio $= 0.9/0.05 = 18$. Posterior odds $= 0.3673$, so posterior probability $= 0.3673/1.3673 = 0.2687$. A positive result moves the probability from 2% to 27% — a large relative move and still a low absolute probability.
+</details>
+
+<p><strong>5.3</strong> A node has counts $(40, 10)$. Compute Gini and entropy.</p>
+<details><summary>Solution</summary>
+
+$p = 0.8$: $G = 1-0.64-0.04 = 0.32$; $H = -0.8\log0.8 - 0.2\log0.2 = 0.1785+0.3219 = 0.5004$ nats. Note $G = 2p(1-p) = 0.32$ for the binary case, a useful shortcut.
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>5.4</strong> Derive the lasso coordinate solution and say what happens at $\rho = 0$.</p>
+<details><summary>Solution</summary>
+
+Minimise $aw_j^2 - 2\rho w_j + \lambda|w_j|$ over $w_j$. For $w_j>0$ the subgradient is $2aw_j-2\rho+\lambda = 0 \Rightarrow w_j = (\rho-\lambda/2)/a$, valid when $\rho>\lambda/2$. For $w_j<0$, $w_j = (\rho+\lambda/2)/a$, valid when $\rho<-\lambda/2$. Otherwise $w_j = 0$ with the subgradient condition $|2\rho|\le\lambda$ satisfied. Combining, $\hat w_j = \operatorname{sign}(\rho)\max(|\rho|-\lambda/2, 0)/a$. At $\rho = 0$ the solution is exactly 0 for any $\lambda>0$ — the feature is dropped entirely, not merely down-weighted.
+</details>
+
+<p><strong>5.5</strong> Show that the entropy split criterion equals the mutual information between the split and the label.</p>
+<details><summary>Solution</summary>
+
+By definition, $I(S;Y) = H(Y) - H(Y\mid S)$. Conditioning on $S$ gives $H(Y\mid S) = \pi_LH(p_L) + \pi_RH(p_R)$, and $H(Y) = H(p)$ for the parent. So $I(S;Y) = H(p) - \pi_LH(p_L) - \pi_RH(p_R) = \Delta_H$. Consequently a tree that maximises entropy decrease is maximising how much each split tells you about the label — the same criterion as a decision-tree induction algorithm seeking information gain.
+</details>
+
+<p><strong>5.6</strong> Derive the ridge solution in the SVD basis and show each direction is filtered by $\sigma_i^2/(\sigma_i^2+\lambda)$.</p>
+<details><summary>Solution</summary>
+
+With $\mathbf{X} = \mathbf{U}\mathbf{\Sigma}\mathbf{V}^\top$, $\mathbf{X}^\top\mathbf{X} = \mathbf{V}\mathbf{\Sigma}^2\mathbf{V}^\top$, so $(\mathbf{X}^\top\mathbf{X}+\lambda\mathbf{I})^{-1} = \mathbf{V}(\mathbf{\Sigma}^2+\lambda\mathbf{I})^{-1}\mathbf{V}^\top$. Then $\hat{\mathbf{w}} = \mathbf{V}(\mathbf{\Sigma}^2+\lambda\mathbf{I})^{-1}\mathbf{\Sigma}\mathbf{U}^\top\mathbf{y} = \sum_i\frac{\sigma_i}{\sigma_i^2+\lambda}\mathbf{v}_i(\mathbf{u}_i^\top\mathbf{y})$. Compare the unregularised $\sum_i\frac{1}{\sigma_i}\mathbf{v}_i(\mathbf{u}_i^\top\mathbf{y})$: the ridge version is the unregularised coefficient times $\sigma_i^2/(\sigma_i^2+\lambda)$, which is $\approx1$ for $\sigma_i^2$ far above $\lambda$ and $\approx\sigma_i^2/\lambda$ for $\sigma_i^2$ far below $\lambda$. Weak, noise-dominated directions are suppressed; strong ones pass almost unchanged.
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>5.7</strong> Construct a dataset on which kNN with $k=1$ achieves zero training error and 50% test error, and explain it with the curse of dimensionality.</p>
+<details><summary>Solution</summary>
+
+Take $N$ points uniform in $[0,1]^d$ with labels drawn as independent fair coin flips — pure noise, no signal. Any classifier's expected test error is 50%. 1-NN gets zero training error (the nearest neighbour of a training point is itself, distance 0, so the label is copied) and 50% test error, since the nearest *test* neighbour carries an independent label. Adding dimensions makes it worse in a specific way: the nearest neighbour's distance approaches the farthest, so the neighbour's label carries almost no information about the query, and the gap between training and test error is now structural rather than sample-size-related. This is the cleanest demonstration that zero training error is uninformative.
+</details>
+
+<p><strong>5.8</strong> Show that a soft-margin SVM with hinge loss is equivalent to an unregularised linear classifier with an L2 penalty, and identify the parameter pairing.</p>
+<details><summary>Solution</summary>
+
+The soft-margin primal is $\min\frac12\|\mathbf{w}\|^2 + C\sum_i\xi_i$ subject to $y_i(\mathbf{w}^\top\mathbf{x}_i+b)\ge1-\xi_i$, $\xi_i\ge0$. Eliminating $\xi_i$ by substituting the minimal feasible value $\xi_i = \max(0, 1-y_i(\mathbf{w}^\top\mathbf{x}_i+b))$ gives the unconstrained problem $\min\frac12\|\mathbf{w}\|^2 + C\sum_i\max(0,1-y_if(\mathbf{x}_i))$ — hinge loss plus L2 regularisation, with $C$ playing the role of $1/\lambda$ (larger $C$, weaker regularisation). This is why an SVM is "just" a regularised linear classifier, and why the kernel trick applies equally to any loss whose solution admits the representer form.
+</details>
+
+<p><strong>5.9</strong> Prove that the expected calibration error of a perfectly calibrated model is zero, and construct two models with identical ROC-AUC but different calibration.</p>
+<details><summary>Solution</summary>
+
+If $\mathbb{P}(y=1\mid \hat p = c) = c$ for every $c$, then in each bin the observed frequency equals the mean confidence, so every term in $\sum_b\frac{n_b}{N}|\text{acc}(b)-\text{conf}(b)|$ is zero. For the construction: let model $A$ output $\hat p = \sigma(s)$ and model $B$ output $\hat p' = \sigma(2s)$ where $s$ is any score. Both are monotone transforms of $s$, so they induce identical rankings and identical ROC-AUC, and identical PR-AUC. They differ only in the numbers: $B$ is sharper and therefore less calibrated if the true probability is $\sigma(s)$. Calibration is a property of the score *values*, discrimination of the score *order* — two independent properties of one model, and only one of them can be measured by AUC.
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>Give the normal equations, and three distinct failure modes of solving them.</li>
+<li>Why does lasso produce exact zeros and ridge not? Give both the geometric and the algebraic reason.</li>
+<li>Derive the logistic gradient and Hessian and identify IRLS.</li>
+<li>Derive the SVM dual and state what the dual form makes possible.</li>
+<li>Show that entropy-based CART gain is a mutual information.</li>
+<li>Derive the bias–variance decomposition and say which term ensembles reduce.</li>
+<li>Give the bagging variance formula and its two limits.</li>
+<li>Why can accuracy be 97% on a dataset where the model is wrong half the time it says "positive"?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $\mathbf{X}^\top\mathbf{X}\mathbf{w} = \mathbf{X}^\top\mathbf{y}$. Fails under rank deficiency (no unique solution), under poor conditioning ($\kappa$ squares), and under scale ($O(Nd^2+d^3)$ time, $O(d^2)$ memory).
+2. Geometrically, the lasso's diamond constraint has vertices on the axes and the error ellipse usually first touches a vertex; the ridge ball is round, so tangency is generic. Algebraically, the coordinate solution is $\operatorname{sign}(\rho)\max(|\rho|-\lambda/2,0)/a$, which is exactly zero for small $|\rho|$, while ridge gives $\rho/(a+\lambda)$, which is never exactly zero.
+3. $\nabla\ell = \mathbf{X}^\top(\mathbf{y}-\mathbf{p})$; $\mathbf{H} = -\mathbf{X}^\top\mathbf{W}\mathbf{X}$ with $\mathbf{W} = \operatorname{diag}(p_i(1-p_i))$. Newton's step is a weighted least-squares solve with those weights, hence IRLS.
+4. $\max_{\alpha\ge0}\sum_i\alpha_i - \frac12\sum_{ij}\alpha_i\alpha_jy_iy_j\langle\mathbf{x}_i,\mathbf{x}_j\rangle$ subject to $\sum_i\alpha_iy_i = 0$. The data appear only through inner products, so a kernel can replace them — the kernel trick — and the solution is supported only on the support vectors.
+5. $I(S;Y) = H(Y)-H(Y\mid S) = H(p) - [\pi_LH(p_L)+\pi_RH(p_R)]$, which is exactly $\Delta_H$.
+6. $\mathbb{E}[(y-\hat f)^2] = \sigma^2 + \mathrm{Bias}^2 + \mathrm{Var}$, obtained by adding and subtracting $\bar f = \mathbb{E}_D[\hat f]$ and using $\mathbb{E}[\bar f-\hat f] = 0$. Bagging reduces variance; boosting reduces bias.
+7. $\rho\sigma^2 + (1-\rho)\sigma^2/B$; $B\to\infty$ leaves $\rho\sigma^2$, and $\rho=1$ leaves $\sigma^2$ for any $B$.
+8. Because only 4% of examples are positive: with 30 TP, 20 FP, 10 FN, 940 TN, accuracy is 0.97 while precision is 0.60, and always predicting negative already scores 0.94.
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><strong>Hastie, Tibshirani, Friedman, <em>The Elements of Statistical Learning</em> (2nd ed., Springer, 2009; free PDF).</strong> Extract chapters 3 (ridge and lasso with the geometry), 7 (model assessment), and 10 (boosting). This is the reference text for the whole module.</li>
+<li><strong>Bishop, <em>Pattern Recognition and Machine Learning</em> (Springer, 2006), chapters 3, 4, and 7.</strong> Extract section 3.1.4 on the lasso's geometry and chapter 7 on the SVM dual and KKT conditions — the clearest published derivation of the dual.</li>
+<li><strong>Cortes and Vapnik, "Support-vector networks," <em>Machine Learning</em> 20, 1995.</strong> The original paper. Extract the margin argument and note how much of the modern formulation (soft margin, kernels) was already present.</li>
+<li><strong>Breiman, "Random Forests," <em>Machine Learning</em> 45, 2001.</strong> Extract the convergence argument and the correlation-versus-strength discussion, which is the derivation-7 formula in words.</li>
+<li><strong>Friedman, "Greedy Function Approximation: A Gradient Boosting Machine," <em>Annals of Statistics</em> 29(5), 2001.</strong> Extract section 4, where boosting is derived as gradient descent in function space — the source for derivation 8.</li>
+<li><strong>Friedman, Hastie, Tibshirani, "Additive logistic regression: a statistical view of boosting," <em>Annals of Statistics</em> 28(2), 2000.</strong> Extract the discussion of why boosting's variance behaviour differs from bagging's.</li>
+<li><strong>Saito and Rehmsmeier, "The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets," <em>PLOS ONE</em> 10(3), 2015 (free).</strong> Extract the simulated imbalance comparison — the source of the ROC-versus-PR argument in the worked example.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when you can, without notes:</p>
+<ol>
+<li>Solve linear regression by normal equations, say what breaks at $\kappa = 10^6$, and name the numerically safe alternative.</li>
+<li>Derive the ridge closed form and the lasso soft-threshold solution, and explain the sparsity difference in one geometric sentence.</li>
+<li>Derive the logistic gradient and Hessian, perform one Newton step by hand, and identify it as IRLS.</li>
+<li>Derive the SVM dual, state the representer theorem from memory, and explain what the kernel trick actually buys and costs.</li>
+<li>Derive the CART criterion from Gini, and show it is a mutual information when you use entropy.</li>
+<li>Derive the bias–variance decomposition and the bagging variance formula, and say which ensembles reduce which term.</li>
+<li>Compute precision, recall, F1, ROC-AUC, PR-AUC, and calibration error from a confusion matrix and a scored list, and say which one misleads in a given deployment.</li>
+</ol><div class="pager"><a id="prevlink" href="../m/04-optimization.html"><small>← previous</small><b>M04 · Optimization for Deep Learning</b></a><a id="nextlink" class="next" href="../m/06-neurons-mlps.html"><small>next →</small><b>M06 · Neurons, Perceptrons, and Multilayer Networks</b></a></div></article>
+</main>
+</div>
+</body></html>

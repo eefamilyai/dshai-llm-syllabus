@@ -1,0 +1,362 @@
+[
+ {
+  "id": "M00",
+  "title": "How to Use This Syllabus",
+  "phase": 0,
+  "weeks": "0.5",
+  "difficulty": "1",
+  "tagline": "Read this first. It decides whether the other twenty-nine modules work.",
+  "slug": "00-how-to-use",
+  "words": 3522
+ },
+ {
+  "id": "M01",
+  "title": "Linear Algebra for Deep Learning",
+  "phase": 1,
+  "weeks": "2",
+  "difficulty": "2",
+  "tagline": "Matmul, projection, factorization, and shape \u2014 the four moves every network is built from.",
+  "slug": "01-linear-algebra",
+  "words": 6604
+ },
+ {
+  "id": "M02",
+  "title": "Multivariable and Matrix Calculus",
+  "phase": 1,
+  "weeks": "2",
+  "difficulty": "3",
+  "tagline": "Derivatives as local linear maps, and the vector-Jacobian product that makes backprop one sweep.",
+  "slug": "02-calculus",
+  "words": 6716
+ },
+ {
+  "id": "M03",
+  "title": "Probability, Statistics, and Information Theory",
+  "phase": 1,
+  "weeks": "2",
+  "difficulty": "3",
+  "tagline": "Uncertainty, estimation, and the three quantities every loss function is built from.",
+  "slug": "03-probability",
+  "words": 7024
+ },
+ {
+  "id": "M04",
+  "title": "Optimization for Deep Learning",
+  "phase": 1,
+  "weeks": "2",
+  "difficulty": "3",
+  "tagline": "Why descent works on a surface with no guarantees, and what each optimizer actually fixes.",
+  "slug": "04-optimization",
+  "words": 8212
+ },
+ {
+  "id": "M05",
+  "title": "Classical Machine Learning",
+  "phase": 2,
+  "weeks": "2",
+  "difficulty": "2",
+  "tagline": "Empirical risk, the models that minimise it, and the metrics that decide whether it worked.",
+  "slug": "05-classical-ml",
+  "words": 8218
+ },
+ {
+  "id": "M06",
+  "title": "Neurons, Perceptrons, and Multilayer Networks",
+  "phase": 3,
+  "weeks": "2",
+  "difficulty": "2",
+  "tagline": "From a single threshold unit to a network that can approximate any continuous function.",
+  "slug": "06-neurons-mlps",
+  "words": 6026
+ },
+ {
+  "id": "M07",
+  "title": "Backpropagation and Automatic Differentiation",
+  "phase": 3,
+  "weeks": "2",
+  "difficulty": "4",
+  "tagline": "How a network learns the derivative of its own mistakes.",
+  "slug": "07-backprop-autograd",
+  "words": 5904
+ },
+ {
+  "id": "M08",
+  "title": "Training Dynamics and Generalization",
+  "phase": 3,
+  "weeks": "2",
+  "difficulty": "4",
+  "tagline": "Why deep networks train at all, and why they generalize when theory says they should not.",
+  "slug": "08-training-dynamics",
+  "words": 7641
+ },
+ {
+  "id": "M09",
+  "title": "Building Your Own Deep Learning Framework",
+  "phase": 3,
+  "weeks": "2",
+  "difficulty": "3",
+  "tagline": "Six stages from a scalar autograd engine to a trained character-level language model.",
+  "slug": "09-build-a-framework",
+  "words": 6963
+ },
+ {
+  "id": "M10",
+  "title": "Convolutional Networks",
+  "phase": 4,
+  "weeks": "2",
+  "difficulty": "3",
+  "tagline": "Why a 3\u00d73 stencil that slides over pixels encodes more than a million weights.",
+  "slug": "10-convolutions",
+  "words": 12122
+ },
+ {
+  "id": "M11",
+  "title": "Recurrent Networks, LSTMs, and Sequence Models",
+  "phase": 4,
+  "weeks": "2",
+  "difficulty": "3",
+  "tagline": "Sequences before attention \u2014 gates, cell states, and the gradient product that killed them.",
+  "slug": "11-recurrent-networks",
+  "words": 11535
+ },
+ {
+  "id": "M12",
+  "title": "Attention and the Transformer",
+  "phase": 4,
+  "weeks": "3",
+  "difficulty": "5",
+  "tagline": "Soft dictionary lookup, derived from the variance of a dot product to a working model.",
+  "slug": "12-attention-transformers",
+  "words": 14209
+ },
+ {
+  "id": "M13",
+  "title": "The Modern Architecture Zoo",
+  "phase": 4,
+  "weeks": "2",
+  "difficulty": "5",
+  "tagline": "What survived the transformer, what replaced it, and which claims are actually measured.",
+  "slug": "13-modern-architectures",
+  "words": 11803
+ },
+ {
+  "id": "M14",
+  "title": "Tokenization",
+  "phase": 5,
+  "weeks": "1",
+  "difficulty": "2",
+  "tagline": "The fixed, lossy map between text and tensors, and what it silently breaks.",
+  "slug": "14-tokenization",
+  "words": 6872
+ },
+ {
+  "id": "M15",
+  "title": "Language Modeling and Decoding",
+  "phase": 5,
+  "weeks": "2",
+  "difficulty": "3",
+  "tagline": "From the chain rule to a single sequence, and why those are different problems.",
+  "slug": "15-language-modeling",
+  "words": 7351
+ },
+ {
+  "id": "M16",
+  "title": "Pretraining and Scaling Laws",
+  "phase": 5,
+  "weeks": "3",
+  "difficulty": "5",
+  "tagline": "Turning a corpus into a base model, and predicting the loss before you spend the money.",
+  "slug": "16-pretraining-scaling",
+  "words": 8672
+ },
+ {
+  "id": "M17",
+  "title": "Supervised Fine-Tuning and Parameter-Efficient Tuning",
+  "phase": 5,
+  "weeks": "2",
+  "difficulty": "3",
+  "tagline": "Turning a next-token predictor into an assistant, and doing it on one GPU.",
+  "slug": "17-sft-peft",
+  "words": 7711
+ },
+ {
+  "id": "M18",
+  "title": "Preference Learning: RLHF, DPO, and Reasoning RL",
+  "phase": 5,
+  "weeks": "3",
+  "difficulty": "5",
+  "tagline": "From human comparisons to a policy, and what each shortcut to that policy costs.",
+  "slug": "18-preference-learning",
+  "words": 9054
+ },
+ {
+  "id": "M19",
+  "title": "Inference Engineering and Serving",
+  "phase": 5,
+  "weeks": "2",
+  "difficulty": "4",
+  "tagline": "Prefill is compute-bound, decode is bandwidth-bound, and the rest is consequences.",
+  "slug": "19-inference-serving",
+  "words": 5362
+ },
+ {
+  "id": "M20",
+  "title": "Evaluation",
+  "phase": 5,
+  "weeks": "2",
+  "difficulty": "3",
+  "tagline": "A score without an interval and a contamination check is not a measurement.",
+  "slug": "20-evaluation",
+  "words": 5862
+ },
+ {
+  "id": "M21",
+  "title": "Interpretability and Safety",
+  "phase": 5,
+  "weeks": "2",
+  "difficulty": "4",
+  "tagline": "A probe shows correlation, a circuit claims cause; always know which one you have.",
+  "slug": "21-interpretability-safety",
+  "words": 7262
+ },
+ {
+  "id": "M22",
+  "title": "Retrieval, Tools, and Agents",
+  "phase": 5,
+  "weeks": "2",
+  "difficulty": "3",
+  "tagline": "Most RAG failures are retrieval failures misdiagnosed as generation failures.",
+  "slug": "22-retrieval-agents",
+  "words": 5726
+ },
+ {
+  "id": "M23",
+  "title": "Multimodality",
+  "phase": 5,
+  "weeks": "2",
+  "difficulty": "4",
+  "tagline": "An image is a token sequence, and the length of that sequence sets the whole design.",
+  "slug": "23-multimodality",
+  "words": 6291
+ },
+ {
+  "id": "M24",
+  "title": "GPU Architecture and CUDA",
+  "phase": 6,
+  "weeks": "2",
+  "difficulty": "4",
+  "tagline": "Why the GPU is a bandwidth machine wearing a compute machine's costume.",
+  "slug": "24-gpu-cuda",
+  "words": 8330
+ },
+ {
+  "id": "M25",
+  "title": "Distributed Training",
+  "phase": 6,
+  "weeks": "2",
+  "difficulty": "5",
+  "tagline": "Every parallelism scheme is a different answer to the same memory equation.",
+  "slug": "25-distributed-training",
+  "words": 8055
+ },
+ {
+  "id": "M26",
+  "title": "Efficiency Engineering",
+  "phase": 6,
+  "weeks": "2",
+  "difficulty": "4",
+  "tagline": "Most benchmarks are wrong, and most fixes are aimed at the wrong bottleneck.",
+  "slug": "26-efficiency-engineering",
+  "words": 7940
+ },
+ {
+  "id": "M27",
+  "title": "Research Method: Reading, Reproducing, and Writing",
+  "phase": 7,
+  "weeks": "2",
+  "difficulty": "2",
+  "tagline": "Most published improvements are noise wearing a confidence interval's clothing.",
+  "slug": "27-research-method",
+  "words": 7428
+ },
+ {
+  "id": "M28",
+  "title": "The Capstone Ladder",
+  "phase": 7,
+  "weeks": "6",
+  "difficulty": "3",
+  "tagline": "Ten builds, each with a number that tells you whether it is finished.",
+  "slug": "28-capstone-ladder",
+  "words": 6807
+ },
+ {
+  "id": "M29",
+  "title": "Frontiers and Open Problems",
+  "phase": 7,
+  "weeks": "1",
+  "difficulty": "2",
+  "tagline": "What is settled, what is contested, and what measurement would settle it.",
+  "slug": "29-frontiers",
+  "words": 7909
+ },
+ {
+  "id": "A",
+  "title": "Formula Sheet",
+  "phase": 8,
+  "weeks": "0",
+  "difficulty": "2",
+  "tagline": "Every equation in the course, grouped by module, one line of meaning each.",
+  "slug": "apx-a-formula-sheet",
+  "words": 3140
+ },
+ {
+  "id": "B",
+  "title": "Glossary",
+  "phase": 8,
+  "weeks": "0",
+  "difficulty": "2",
+  "tagline": "One crisp sentence per term, for the words papers use without defining.",
+  "slug": "apx-b-glossary",
+  "words": 4804
+ },
+ {
+  "id": "C",
+  "title": "Annotated Paper List",
+  "phase": 8,
+  "weeks": "0",
+  "difficulty": "3",
+  "tagline": "Seventy-eight papers worth reading properly, and what to take from each.",
+  "slug": "apx-c-paper-list",
+  "words": 3024
+ },
+ {
+  "id": "D",
+  "title": "Resource Map",
+  "phase": 8,
+  "weeks": "0",
+  "difficulty": "2",
+  "tagline": "What to read, watch, and run, what each is best for, and what has gone stale.",
+  "slug": "apx-d-resource-map",
+  "words": 1851
+ },
+ {
+  "id": "E",
+  "title": "Schedules",
+  "phase": 8,
+  "weeks": "0",
+  "difficulty": "2",
+  "tagline": "Three routes through the curriculum, costed in hours, with the gaps named.",
+  "slug": "apx-e-schedules",
+  "words": 2447
+ },
+ {
+  "id": "F",
+  "title": "Project Ideas",
+  "phase": 8,
+  "weeks": "0",
+  "difficulty": "3",
+  "tagline": "Forty projects, graded by difficulty, each with a criterion that says when it is done.",
+  "slug": "apx-f-projects",
+  "words": 1882
+ }
+]

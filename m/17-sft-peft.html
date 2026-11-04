@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M17 · Supervised Fine-Tuning and Parameter-Efficient Tuning — From Zero to Frontier</title>
+<meta name="description" content="Turning a next-token predictor into an assistant, and doing it on one GPU.">
+<meta property="og:title" content="M17 · Supervised Fine-Tuning and Parameter-Efficient Tuning — From Zero to Frontier">
+<meta property="og:description" content="Turning a next-token predictor into an assistant, and doing it on one GPU.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Large language models / M17</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M17">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M17</span><span class="pill d3">difficulty 3/5</span><span class="pill">2 weeks</span><span class="pill">prereqs: M16</span><span class="pill">7,711 words</span></div><h1>Supervised Fine-Tuning and Parameter-Efficient Tuning</h1><p class="tagline">Turning a next-token predictor into an assistant, and doing it on one GPU.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>A pretrained model is a very good model of text and a very bad assistant. It will continue your question rather than answer it, because continuing is what it was trained to do. Supervised fine-tuning is the smallest, cheapest, most misunderstood stage of the pipeline: a few thousand examples and a few GPU-hours convert a document completer into something that follows instructions, and almost nobody can say precisely why so little data works or which tokens the gradient actually touches. Then LoRA and QLoRA make that stage affordable on a single accelerator, by a low-rank argument that is worth deriving rather than memorising. If you skip this module you will fine-tune on the wrong tokens, evaluate with the wrong metric, mistake formatting for capability, and believe that a 0.5% parameter budget is a heuristic when it is a consequence of the update's spectrum.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<p>If two or more are shaky, revisit <strong>M16</strong> and <strong>M07</strong>.</p>
+<ol>
+<li>Write the autoregressive loss and say which positions contribute to it.</li>
+<li>What are the shapes of $\mathbf{A}\in\mathbb{R}^{r\times d_{\mathrm{in}}}$ and $\mathbf{B}\in\mathbb{R}^{d_{\mathrm{out}}\times r}$, and what is $\operatorname{rank}(\mathbf{B}\mathbf{A})$?</li>
+<li>Adam keeps two moments per parameter. At fp32, how many bytes per parameter is that, and how many with a master weight and gradients?</li>
+<li>What does the chain rule give for $\partial \mathcal{L}/\partial \mathbf{B}$ when $\mathbf{h} = \mathbf{B}\mathbf{A}\mathbf{x}$?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $\mathcal{L} = -\frac{1}{N}\sum_t \log p_\theta(x_t\mid x_{<t})$; every position from 2 to $N$ contributes one term (position 1 has no context).
+2. $\mathbf{A}$ maps $d_{\mathrm{in}}\to r$, $\mathbf{B}$ maps $r\to d_{\mathrm{out}}$, and $\operatorname{rank}(\mathbf{BA})\le r$.
+3. Two moments at 4 bytes is 8 bytes; plus a 4-byte fp32 master weight is 12; plus 2-byte bf16 parameter and 2-byte bf16 gradient is 16 bytes per parameter.
+4. With $\mathbf{g} = \partial\mathcal{L}/\partial\mathbf{h}$, $\partial\mathcal{L}/\partial\mathbf{B} = \mathbf{g}(\mathbf{A}\mathbf{x})^{\top}$.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<ul>
+<li>Explain, with the objective written out, why a base model continues text instead of answering it.</li>
+<li>Derive the masked cross-entropy and show that unmasked training optimizes the joint likelihood rather than the conditional one.</li>
+<li>Write a chat template and identify the three ways a template mismatch corrupts an evaluation.</li>
+<li>Compute full fine-tuning memory per parameter and compare it to LoRA and QLoRA for a named model shape.</li>
+<li>Derive the LoRA gradients, explain the $\mathbf{B}=\mathbf{0}$ initialization, and derive why $\alpha = r$ keeps the adapter's first update independent of rank.</li>
+<li>State the Eckart–Young result and use it to justify the low-rank hypothesis quantitatively.</li>
+<li>Compute the QLoRA bit budget including double quantization, and derive the high-rate quantization error that motivates quantile levels.</li>
+<li>Design an evaluation that distinguishes "the fine-tune worked" from "the model learned the format".</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\mathbf{W}_0\in\mathbb{R}^{d_{\mathrm{out}}\times d_{\mathrm{in}}}$</td>
+<td>frozen pretrained weight</td>
+</tr>
+<tr>
+<td>$\Delta\mathbf{W}$</td>
+<td>the update learned by fine-tuning</td>
+</tr>
+<tr>
+<td>$\mathbf{A}\in\mathbb{R}^{r\times d_{\mathrm{in}}}$, $\mathbf{B}\in\mathbb{R}^{d_{\mathrm{out}}\times r}$</td>
+<td>LoRA down- and up-projections</td>
+</tr>
+<tr>
+<td>$r$</td>
+<td>LoRA rank</td>
+</tr>
+<tr>
+<td>$\alpha$</td>
+<td>LoRA scaling numerator; the scale factor is $\alpha/r$</td>
+</tr>
+<tr>
+<td>$m_t\in\{0,1\}$</td>
+<td>loss mask at position $t$</td>
+</tr>
+<tr>
+<td>$\sigma_i$</td>
+<td>$i$-th singular value</td>
+</tr>
+<tr>
+<td>$\|\\cdot\|_F$</td>
+<td>Frobenius norm</td>
+</tr>
+<tr>
+<td>$\|\cdot\|_c$</td>
+<td>column-wise norm (DoRA)</td>
+</tr>
+<tr>
+<td>$P$</td>
+<td>parameter count</td>
+</tr>
+<tr>
+<td>$b$</td>
+<td>bits per parameter for quantized storage</td>
+</tr>
+</tbody>
+</table>
+<p>The fine-tuning loss is always written over <em>response</em> tokens; $m_t$ is the mask that enforces it.</p>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="why-a-pretrained-model-is-not-an-assistant">Why a pretrained model is not an assistant</h3>
+<p><strong>(1) Intuition.</strong> Ask a document completer "What is the capital of France?" and the most likely continuation, given a corpus full of question lists, is another question. The model is doing exactly what it was trained to do; the task you wanted was never in the objective.</p>
+<p><strong>(2) Formal definition.</strong> Pretraining minimizes $-\mathbb{E}_{x\sim p_{\text{data}}}\log p_\theta(x)$. The distribution $p_{\text{data}}$ is the web, and the web contains questions, forum threads, exam papers, and dialogue — but its <em>dominant</em> conditional structure is "text continues text". Instruction following is a conditional $p(\text{response}\mid\text{instruction})$ with a much narrower, non-representative support.</p>
+<p><strong>(3) Why it is built this way.</strong> Nothing is broken; the base model is a general-purpose conditional distribution and SFT is a change of <em>which conditional you sample from</em>, enforced by a tiny amount of data that reweights the distribution toward the assistant-like subset. This is why SFT needs so few examples: it is not teaching knowledge, it is selecting a mode that already exists.</p>
+<p><strong>(4) Worked micro-example.</strong> Base model, prompt <code>Q: What is 2+2?\nA:</code>. The continuation <code>2+2=4.</code> has high probability (a fact); so does <code>What is 2+3?</code> (a question list). After SFT on 5,000 (instruction, response) pairs, the second mode's probability collapses because every training document in the new distribution ends after one answer. The knowledge did not change; the conditional did.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 300" width="100%" role="img" aria-label="What each stage of the post-training pipeline actually changes" class="fig-svg"><defs><marker id="pipe-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="24.0" y="54.0" width="186.0" height="168.0" rx="11" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.7"/><text x="117.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="700">pretraining</text><text x="117.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">raw text</text><text x="117.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">next-token prediction</text><text x="117.0" y="146.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">learns: language, facts, circuits</text><line x1="210.0" y1="138.0" x2="230.0" y2="138.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#pipe-ah)"/><rect x="234.0" y="54.0" width="186.0" height="168.0" rx="11" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.7"/><text x="327.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">SFT</text><text x="327.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">instruction pairs</text><text x="327.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">imitate demonstrations</text><text x="327.0" y="146.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">learns: format, task framing</text><line x1="420.0" y1="138.0" x2="440.0" y2="138.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#pipe-ah)"/><rect x="444.0" y="54.0" width="186.0" height="168.0" rx="11" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.7"/><text x="537.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="700">preference</text><text x="537.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">chosen / rejected</text><text x="537.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">optimise judged quality</text><text x="537.0" y="146.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">learns: helpfulness, tone, refusal</text><line x1="630.0" y1="138.0" x2="650.0" y2="138.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#pipe-ah)"/><rect x="654.0" y="54.0" width="186.0" height="168.0" rx="11" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.7"/><text x="747.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="700">reasoning RL</text><text x="747.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">verifiable reward</text><text x="747.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">search for correct traces</text><text x="747.0" y="146.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">learns: deliberation, checking</text><text x="430.0" y="254.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">each stage narrows the model toward a behaviour, and each one costs some of what came before</text><text x="430.0" y="278.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">that trade is the alignment tax, and it is why the ordering matters</text></svg><figcaption>The four stages and what each one changes. Note that pretraining sets knowledge and capability, SFT sets format and instruction-following, preference tuning sets which of several acceptable answers you get, and reasoning RL sets the length and structure of deliberation.</figcaption></figure></p>
+<h3 id="instruction-data-human-distilled-and-how-much">Instruction data: human, distilled, and how much</h3>
+<p><strong>(1) Intuition.</strong> You need examples of an assistant behaving well. You can pay people to write them, or you can take them from a stronger model. The second is cheaper by orders of magnitude and is now standard, which makes SFT partly a distillation procedure whether or not it says so.</p>
+<p><strong>(2) Formal definition.</strong> A human-written dataset is triples $(x, y, \text{annotator})$ with quality control through guidelines and inter-annotator agreement. A distilled dataset is $y\sim \pi_{\text{strong}}(\cdot\mid x)$ for prompts $x$ drawn from a distribution you control. The LIMA result is that about 1,000 carefully curated examples, with no RLHF, produce a usable assistant — evidence that SFT is mode selection rather than knowledge injection.</p>
+<p><strong>(3) Why it is built this way.</strong> Quality dominates quantity because the model is being taught a <em>format and a policy</em>, not facts. A thousand examples that are all correct, diverse, and stylistically consistent teach the mode cleanly; a million that are inconsistent teach an average of several incompatible modes. The usual failure of large distilled datasets is homogeneity: generated from one teacher with one style, they narrow the model.</p>
+<p><strong>(4) Worked micro-example.</strong> 1,000 examples at 400 tokens each is 400,000 tokens — 0.03% of a 1.4T-token pretraining run. The compute is a rounding error on pretraining. But 1,000 examples is also small enough that a single duplicated example shifts the loss measurably, which is why deduplication and decontamination matter more here than at any other stage.</p>
+<h3 id="loss-masking-and-which-tokens-get-gradient">Loss masking, and which tokens get gradient</h3>
+<p><strong>(1) Intuition.</strong> A chat example is a prompt followed by a response. You want the model to learn to produce the response, not to produce the prompt. So you compute the loss only on response tokens.</p>
+<p><strong>(2) Formal definition.</strong> With mask $m_t\in\{0,1\}$,</p>
+<p>$$\mathcal{L} = -\frac{1}{\sum_t m_t}\sum_{t=1}^{N} m_t \log p_\theta(x_t\mid x_{<t})$$</p>
+<p>Masked positions contribute exactly zero to the loss and therefore exactly zero to the gradient.</p>
+<p><strong>(3) Why it is built this way.</strong> The target is $p(\text{response}\mid\text{prompt})$, and its log is $\log p(q,r) - \log p(q)$, which involves two terms. Maximizing $\log p(q,r)$ over $\theta$ increases both terms, including $p(q)$ — so unmasked training literally teaches the model to generate plausible user turns, and weights each example by its prompt length. Masking removes the $\log p(q)$ contamination. The normalization choice matters too: dividing by $\sum_t m_t$ makes each example contribute equally regardless of response length, while dividing by $N$ silently down-weights short responses and, with a long shared system prompt, makes the loss look excellent while barely training anything.</p>
+<p><strong>(4) Worked micro-example.</strong> A 512-token example with a 400-token prompt and a 112-token response. Masked, the loss averages 112 terms and the gradient is that of a 112-token objective. Unmasked, it averages 512 terms and 78% of the gradient is devoted to making the model better at writing prompts. If the average prompt is 4x the average response, you are spending 80% of the budget on the wrong task.</p>
+<h3 id="chat-templates-and-format-consistency">Chat templates and format consistency</h3>
+<p><strong>(1) Intuition.</strong> The model must know where the user's turn ends and its own begins. That is encoded by special tokens in a fixed template, and the template is part of the model.</p>
+<p><strong>(2) Formal definition.</strong> A template is a function from a list of (role, content) pairs to a token sequence, using reserved special tokens: system preamble, then <code>&lt;|user|&gt;</code> content <code>&lt;|assistant|&gt;</code> content <code>&lt;|end|&gt;</code>, repeated. Training and inference must use byte-identical templates, including the exact spaces, the exact special token ids, and the same treatment of a trailing newline.</p>
+<p><strong>(3) Why it is built this way.</strong> The model learns the transition "after <code>&lt;|assistant|&gt;</code>, generate until <code>&lt;|end|&gt;</code>" purely from data. If inference uses a different template, that transition was never trained, and the model either fails to stop or emits the wrong role's text. Three failure modes follow: (i) the model continues past its turn because the end token distribution is off-template; (ii) it generates the <em>user's</em> next message because the template resembles a two-party continuation; (iii) your evaluation measures a distribution the model never saw, so scores are meaningless even when the outputs look fine.</p>
+<p><strong>(4) Worked micro-example.</strong> Two templates that differ by one space: <code>&lt;|user|&gt; hi</code> versus <code>&lt;|user|&gt;\nhi</code>. If the tokenizer does not merge the newline into the preceding token, these produce different token ids at the boundary, and the model conditions on a prefix it has never seen. The symptom is subtle — a mild degradation, occasional role confusion — and it is the first thing to check when a fine-tune underperforms.</p>
+<h3 id="catastrophic-forgetting-and-the-alignment-tax">Catastrophic forgetting and the alignment tax</h3>
+<p><strong>(1) Intuition.</strong> Fine-tuning on narrow data moves the weights toward that data, and the model forgets things it used to do. The gap between the original and the fine-tuned model's general capability is the alignment tax.</p>
+<p><strong>(2) Formal definition.</strong> After SFT the model optimizes $\mathbb{E}_{(q,r)\sim\mathcal{D}_{\text{SFT}}}[-\log p_\theta(r\mid q)]$. The old objective's optimum is no longer stationary, so the loss on general data $\mathbb{E}_{x\sim p_{\text{data}}}[-\log p_\theta(x)]$ rises. The tax is the difference in downstream benchmark scores between the base and tuned model, holding evaluation fixed.</p>
+<p><strong>(3) Why it is built this way.</strong> The tax is a consequence of the objective change, not a bug, and it is why SFT is done at a small learning rate for few epochs, why parameter-efficient methods reduce it (fewer degrees of freedom to move), and why replay data from pretraining is mixed in. Note the direction: a model tuned on 1,000 examples for 3 epochs shows almost no tax; tuned on 100,000 for 10 epochs, the tax is measurable and sometimes large.</p>
+<p><strong>(4) Worked micro-example.</strong> Base model scores 72.0 on a reasoning benchmark. After SFT on a formatting-heavy dataset for 5 epochs, it scores 74.5 on the target format benchmark and 66.8 on reasoning — a 5.2-point tax for a 2.5-point target gain. Reducing to 1 epoch and mixing 10% pretraining data recovers reasoning to 70.9 while keeping the format gain at 2.9 points. This is the trade you are actually making, and it is measurable in an afternoon.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="Fine-tuning raises the target task and erodes general capability" class="fig-svg"><defs><marker id="cat-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="84.0" y1="282.0" x2="554.0" y2="282.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.35"/><text x="76.0" y="286.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">0%</text><line x1="84.0" y1="239.0" x2="554.0" y2="239.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.35"/><text x="76.0" y="243.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">20%</text><line x1="84.0" y1="195.9" x2="554.0" y2="195.9" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.35"/><text x="76.0" y="199.9" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">40%</text><line x1="84.0" y1="152.9" x2="554.0" y2="152.9" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.35"/><text x="76.0" y="156.9" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">60%</text><line x1="84.0" y1="109.8" x2="554.0" y2="109.8" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.35"/><text x="76.0" y="113.8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">80%</text><line x1="84.0" y1="66.8" x2="554.0" y2="66.8" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.35"/><text x="76.0" y="70.8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">100%</text><line x1="84.0" y1="282.0" x2="554.0" y2="282.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.3" stroke-linecap="round"/><line x1="84.0" y1="56.0" x2="84.0" y2="282.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.3" stroke-linecap="round"/><path d="M84.0,282.0 L86.9,273.8 L89.9,265.8 L92.8,258.2 L95.8,250.9 L98.7,243.8 L101.6,237.0 L104.6,230.5 L107.5,224.2 L110.4,218.2 L113.4,212.4 L116.3,206.8 L119.2,201.5 L122.2,196.3 L125.1,191.3 L128.1,186.6 L131.0,182.0 L133.9,177.6 L136.9,173.3 L139.8,169.2 L142.8,165.3 L145.7,161.5 L148.6,157.9 L151.6,154.4 L154.5,151.1 L157.4,147.8 L160.4,144.7 L163.3,141.7 L166.2,138.9 L169.2,136.1 L172.1,133.4 L175.1,130.9 L178.0,128.4 L180.9,126.1 L183.9,123.8 L186.8,121.6 L189.8,119.5 L192.7,117.5 L195.6,115.5 L198.6,113.7 L201.5,111.9 L204.4,110.1 L207.4,108.5 L210.3,106.9 L213.2,105.4 L216.2,103.9 L219.1,102.5 L222.1,101.1 L225.0,99.8 L227.9,98.5 L230.9,97.3 L233.8,96.1 L236.8,95.0 L239.7,93.9 L242.6,92.9 L245.6,91.9 L248.5,90.9 L251.4,90.0 L254.4,89.1 L257.3,88.2 L260.2,87.4 L263.2,86.6 L266.1,85.9 L269.1,85.1 L272.0,84.4 L274.9,83.8 L277.9,83.1 L280.8,82.5 L283.8,81.9 L286.7,81.3 L289.6,80.7 L292.6,80.2 L295.5,79.7 L298.4,79.2 L301.4,78.7 L304.3,78.3 L307.2,77.8 L310.2,77.4 L313.1,77.0 L316.1,76.6 L319.0,76.2 L321.9,75.9 L324.9,75.5 L327.8,75.2 L330.8,74.9 L333.7,74.5 L336.6,74.2 L339.6,74.0 L342.5,73.7 L345.4,73.4 L348.4,73.2 L351.3,72.9 L354.2,72.7 L357.2,72.5 L360.1,72.2 L363.1,72.0 L366.0,71.8 L368.9,71.6 L371.9,71.4 L374.8,71.3 L377.8,71.1 L380.7,70.9 L383.6,70.8 L386.6,70.6 L389.5,70.5 L392.4,70.3 L395.4,70.2 L398.3,70.1 L401.2,69.9 L404.2,69.8 L407.1,69.7 L410.1,69.6 L413.0,69.5 L415.9,69.4 L418.9,69.3 L421.8,69.2 L424.8,69.1 L427.7,69.0 L430.6,68.9 L433.6,68.8 L436.5,68.7 L439.4,68.7 L442.4,68.6 L445.3,68.5 L448.2,68.5 L451.2,68.4 L454.1,68.3 L457.1,68.3 L460.0,68.2 L462.9,68.2 L465.9,68.1 L468.8,68.1 L471.8,68.0 L474.7,68.0 L477.6,67.9 L480.6,67.9 L483.5,67.8 L486.4,67.8 L489.4,67.7 L492.3,67.7 L495.2,67.7 L498.2,67.6 L501.1,67.6 L504.1,67.6 L507.0,67.5 L509.9,67.5 L512.9,67.5 L515.8,67.5 L518.8,67.4 L521.7,67.4 L524.6,67.4 L527.6,67.4 L530.5,67.3 L533.4,67.3 L536.4,67.3 L539.3,67.3 L542.2,67.2 L545.2,67.2 L548.1,67.2 L551.1,67.2 L554.0,67.2" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M84.0,84.0 L86.9,85.3 L89.9,86.6 L92.8,87.9 L95.8,89.1 L98.7,90.4 L101.6,91.6 L104.6,92.9 L107.5,94.1 L110.4,95.4 L113.4,96.6 L116.3,97.8 L119.2,99.0 L122.2,100.2 L125.1,101.4 L128.1,102.6 L131.0,103.8 L133.9,104.9 L136.9,106.1 L139.8,107.2 L142.8,108.4 L145.7,109.5 L148.6,110.7 L151.6,111.8 L154.5,112.9 L157.4,114.0 L160.4,115.1 L163.3,116.2 L166.2,117.3 L169.2,118.4 L172.1,119.4 L175.1,120.5 L178.0,121.6 L180.9,122.6 L183.9,123.7 L186.8,124.7 L189.8,125.7 L192.7,126.8 L195.6,127.8 L198.6,128.8 L201.5,129.8 L204.4,130.8 L207.4,131.8 L210.3,132.8 L213.2,133.8 L216.2,134.7 L219.1,135.7 L222.1,136.6 L225.0,137.6 L227.9,138.5 L230.9,139.5 L233.8,140.4 L236.8,141.4 L239.7,142.3 L242.6,143.2 L245.6,144.1 L248.5,145.0 L251.4,145.9 L254.4,146.8 L257.3,147.7 L260.2,148.6 L263.2,149.4 L266.1,150.3 L269.1,151.2 L272.0,152.0 L274.9,152.9 L277.9,153.7 L280.8,154.6 L283.8,155.4 L286.7,156.2 L289.6,157.1 L292.6,157.9 L295.5,158.7 L298.4,159.5 L301.4,160.3 L304.3,161.1 L307.2,161.9 L310.2,162.7 L313.1,163.5 L316.1,164.2 L319.0,165.0 L321.9,165.8 L324.9,166.5 L327.8,167.3 L330.8,168.1 L333.7,168.8 L336.6,169.5 L339.6,170.3 L342.5,171.0 L345.4,171.7 L348.4,172.5 L351.3,173.2 L354.2,173.9 L357.2,174.6 L360.1,175.3 L363.1,176.0 L366.0,176.7 L368.9,177.4 L371.9,178.1 L374.8,178.8 L377.8,179.4 L380.7,180.1 L383.6,180.8 L386.6,181.4 L389.5,182.1 L392.4,182.8 L395.4,183.4 L398.3,184.1 L401.2,184.7 L404.2,185.3 L407.1,186.0 L410.1,186.6 L413.0,187.2 L415.9,187.8 L418.9,188.5 L421.8,189.1 L424.8,189.7 L427.7,190.3 L430.6,190.9 L433.6,191.5 L436.5,192.1 L439.4,192.7 L442.4,193.3 L445.3,193.8 L448.2,194.4 L451.2,195.0 L454.1,195.6 L457.1,196.1 L460.0,196.7 L462.9,197.3 L465.9,197.8 L468.8,198.4 L471.8,198.9 L474.7,199.5 L477.6,200.0 L480.6,200.5 L483.5,201.1 L486.4,201.6 L489.4,202.1 L492.3,202.6 L495.2,203.2 L498.2,203.7 L501.1,204.2 L504.1,204.7 L507.0,205.2 L509.9,205.7 L512.9,206.2 L515.8,206.7 L518.8,207.2 L521.7,207.7 L524.6,208.2 L527.6,208.7 L530.5,209.2 L533.4,209.6 L536.4,210.1 L539.3,210.6 L542.2,211.0 L545.2,211.5 L548.1,212.0 L551.1,212.4 L554.0,212.9" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M84.0,173.1 L86.9,170.1 L89.9,167.2 L92.8,164.5 L95.8,161.9 L98.7,159.4 L101.6,157.1 L104.6,154.8 L107.5,152.7 L110.4,150.6 L113.4,148.7 L116.3,146.9 L119.2,145.1 L122.2,143.4 L125.1,141.9 L128.1,140.4 L131.0,139.0 L133.9,137.6 L136.9,136.3 L139.8,135.1 L142.8,134.0 L145.7,132.9 L148.6,131.9 L151.6,131.0 L154.5,130.1 L157.4,129.2 L160.4,128.4 L163.3,127.7 L166.2,127.0 L169.2,126.3 L172.1,125.7 L175.1,125.2 L178.0,124.7 L180.9,124.2 L183.9,123.7 L186.8,123.3 L189.8,122.9 L192.7,122.6 L195.6,122.3 L198.6,122.0 L201.5,121.7 L204.4,121.5 L207.4,121.3 L210.3,121.1 L213.2,121.0 L216.2,120.8 L219.1,120.7 L222.1,120.6 L225.0,120.6 L227.9,120.5 L230.9,120.5 L233.8,120.5 L236.8,120.5 L239.7,120.5 L242.6,120.5 L245.6,120.6 L248.5,120.7 L251.4,120.7 L254.4,120.8 L257.3,120.9 L260.2,121.0 L263.2,121.2 L266.1,121.3 L269.1,121.5 L272.0,121.6 L274.9,121.8 L277.9,121.9 L280.8,122.1 L283.8,122.3 L286.7,122.5 L289.6,122.7 L292.6,122.9 L295.5,123.1 L298.4,123.4 L301.4,123.6 L304.3,123.8 L307.2,124.1 L310.2,124.3 L313.1,124.6 L316.1,124.8 L319.0,125.1 L321.9,125.3 L324.9,125.6 L327.8,125.8 L330.8,126.1 L333.7,126.4 L336.6,126.7 L339.6,126.9 L342.5,127.2 L345.4,127.5 L348.4,127.8 L351.3,128.1 L354.2,128.3 L357.2,128.6 L360.1,128.9 L363.1,129.2 L366.0,129.5 L368.9,129.8 L371.9,130.1 L374.8,130.4 L377.8,130.7 L380.7,131.0 L383.6,131.3 L386.6,131.6 L389.5,131.9 L392.4,132.2 L395.4,132.5 L398.3,132.8 L401.2,133.1 L404.2,133.3 L407.1,133.6 L410.1,133.9 L413.0,134.2 L415.9,134.5 L418.9,134.8 L421.8,135.1 L424.8,135.4 L427.7,135.7 L430.6,136.0 L433.6,136.3 L436.5,136.6 L439.4,136.9 L442.4,137.2 L445.3,137.4 L448.2,137.7 L451.2,138.0 L454.1,138.3 L457.1,138.6 L460.0,138.9 L462.9,139.2 L465.9,139.4 L468.8,139.7 L471.8,140.0 L474.7,140.3 L477.6,140.6 L480.6,140.8 L483.5,141.1 L486.4,141.4 L489.4,141.7 L492.3,141.9 L495.2,142.2 L498.2,142.5 L501.1,142.7 L504.1,143.0 L507.0,143.3 L509.9,143.5 L512.9,143.8 L515.8,144.0 L518.8,144.3 L521.7,144.6 L524.6,144.8 L527.6,145.1 L530.5,145.3 L533.4,145.6 L536.4,145.8 L539.3,146.1 L542.2,146.3 L545.2,146.6 L548.1,146.8 L551.1,147.1 L554.0,147.3" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="5 4"/><text x="478.8" y="79.7" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">target task</text><text x="478.8" y="217.4" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">general capability</text><text x="478.8" y="148.6" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">net</text><text x="319.0" y="312.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">fine-tuning steps →</text><rect x="586.0" y="76.0" width="190.0" height="170.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="604.0" y="100.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">mitigations</text><text x="604.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">· LoRA instead of full FT</text><text x="604.0" y="150.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">· low LR, few epochs</text><text x="604.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">· mix in general data</text><text x="604.0" y="194.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">· replay / regularise</text><text x="604.0" y="226.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">measure it, do not assume it</text></svg><figcaption>Target-task performance rises monotonically with fine-tuning steps while general capability peaks early and then falls. The vertical gap at any step is the alignment tax; the useful operating point is before general capability starts to break, not where the target metric is highest.</figcaption></figure></p>
+<h3 id="full-fine-tuning-cost">Full fine-tuning cost</h3>
+<p><strong>(1) Intuition.</strong> Fine-tuning a model means holding everything you need to update it. For a 7B model that is not 14 GB of weights; it is over 100 GB.</p>
+<p><strong>(2) Formal definition.</strong> Per parameter, mixed-precision AdamW needs 2 bytes for the bf16 weight used in the forward pass, 2 for the bf16 gradient, 4 for the fp32 master weight, and 8 for the two fp32 moments: <strong>16 bytes per parameter</strong>. Activations add a term proportional to batch size times sequence length times width times depth, and may be reduced by gradient checkpointing at the cost of an extra forward pass.</p>
+<p><strong>(3) Why it is built this way.</strong> The fp32 master weight exists because bf16 updates below one part in 256 round to nothing (see <strong>M16</strong>). The moments exist because Adam needs a first and second moment. Neither is optional, and together they are 75% of the memory.</p>
+<p><strong>(4) Worked micro-example.</strong> A 6.74B-parameter model (32 layers, $d=4096$, $d_{ff}=11008$, $V=32000$) needs $6.74\times10^{9}\times16 = 107.8$ GB, or 100.4 GiB, before a single activation. On 80 GB devices that is at least two, realistically four with activations and fragmentation — and that is for 7B. LoRA is not a convenience; for anything above 13B it is the difference between running and not running.</p>
+<h3 id="lora-the-low-rank-update">LoRA: the low-rank update</h3>
+<p><strong>(1) Intuition.</strong> The change that fine-tuning makes to a weight matrix is not full-rank. If a rank-8 approximation captures most of it, you can store 8 rows and 8 columns instead of a whole matrix.</p>
+<p><strong>(2) Formal definition.</strong> Freeze $\mathbf{W}_0$ and add a low-rank branch:</p>
+<p>$$\mathbf{h} = \mathbf{W}_0\mathbf{x} + \frac{\alpha}{r}\mathbf{B}\mathbf{A}\mathbf{x}, \qquad \mathbf{A}\in\mathbb{R}^{r\times d_{\mathrm{in}}},\ \ \mathbf{B}\in\mathbb{R}^{d_{\mathrm{out}}\times r}$$</p>
+<p>with $\mathbf{B}$ initialized to zero and $\mathbf{A}$ initialized at random. Trainable parameters per adapted matrix: $r(d_{\mathrm{in}}+d_{\mathrm{out}})$ instead of $d_{\mathrm{in}}d_{\mathrm{out}}$.</p>
+<p><strong>(3) Why it is built this way.</strong> $\mathbf{B}=\mathbf{0}$ makes the branch exactly zero at initialization, so the model starts from the pretrained function with no degradation, and — see Derivation 2 — the first gradient with respect to $\mathbf{A}$ is zero, so the two factors never collapse together. Adapting attention projections is the default because they carry the largest task-specific signal per parameter; adding the MLP projections roughly doubles the parameter count and helps on harder tasks.</p>
+<p><strong>(4) Worked micro-example.</strong> For $d=4096$, $r=16$: $16(4096+4096) = 131{,}072$ parameters instead of $16{,}777{,}216$ — 0.78%. For the full 6.74B model with $r=16$ on all seven linear projections of every layer: 39.98M trainable, 0.59% of the base.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 356" width="100%" role="img" aria-label="LoRA: freeze W, learn a low-rank correction" class="fig-svg"><defs><marker id="lora-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="40.0" y="96.0" width="150.0" height="150.0" rx="10" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-dasharray="6 4"/><text x="115.0" y="160.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="26" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">W</text><text x="115.0" y="186.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">d × d frozen</text><text x="115.0" y="70.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">pretrained weights</text><rect x="250.0" y="96.0" width="62.0" height="150.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.6"/><text x="281.0" y="166.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="18" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="700">B</text><text x="281.0" y="190.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">d × r</text><rect x="320.0" y="130.0" width="62.0" height="82.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.6"/><text x="351.0" y="166.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="18" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="700">A</text><text x="351.0" y="190.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">r × d</text><text x="316.0" y="118.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="400">trainable</text><text x="316.0" y="240.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">r ≪ d</text><line x1="212.0" y1="170.0" x2="248.0" y2="170.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#lora-ah)"/><circle cx="404.0" cy="170.0" r="15.0" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.8"/><text x="404.0" y="176.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="16" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">+</text><rect x="436.0" y="96.0" width="150.0" height="150.0" rx="10" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.6"/><text x="511.0" y="160.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="16" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">W + BA</text><text x="511.0" y="186.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">same shape</text><line x1="384.0" y1="170.0" x2="402.0" y2="170.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#lora-ah)"/><line x1="420.0" y1="170.0" x2="434.0" y2="170.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#lora-ah)"/><rect x="614.0" y="70.0" width="216.0" height="168.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="632.0" y="96.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">parameters</text><text x="632.0" y="122.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">full fine-tune: d²</text><text x="632.0" y="142.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">LoRA: 2dr</text><text x="632.0" y="172.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">d=4096, r=16</text><text x="632.0" y="194.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="start" font-weight="650">16.8M → 131k</text><text x="632.0" y="218.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">0.8% of the model</text><rect x="40.0" y="268.0" width="790.0" height="60.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="58.0" y="290.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">ΔW = BA with rank r ≪ d is a reasonable stand-in for the update, because fine-tuning updates are empirically low-rank.</text><text x="58.0" y="312.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">Adapters can be merged back into W at serving time, so inference cost is unchanged.</text></svg><figcaption>The frozen $\mathbf{W}_0$ path and the trainable low-rank branch in parallel. Follow the parameter counts: $r(d_{\text{in}}+d_{\text{out}})$ against $d_{\text{in}}d_{\text{out}}$ — the ratio is what makes single-GPU fine-tuning possible, and the shapes in the branch are the only ones you have to get right.</figcaption></figure></p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 400" width="100%" role="img" aria-label="Tensor shapes through one forward pass" class="fig-svg"><defs><marker id="shapes-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="24.0" y="42.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="58.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">token ids</text><text x="300.0" y="58.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T)</text><text x="520.0" y="58.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024</text><text x="38.0" y="87.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">embedding</text><text x="300.0" y="87.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, D)</text><text x="520.0" y="87.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 4096</text><rect x="24.0" y="100.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">W_Q / W_K / W_V</text><text x="300.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(D, D)</text><text x="520.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">4096 × 4096 each</text><text x="38.0" y="145.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Q, K, V</text><text x="300.0" y="145.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, H, T, D/H)</text><text x="520.0" y="145.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 32 × 1024 × 128</text><rect x="24.0" y="158.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">scores QKᵀ</text><text x="300.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, H, T, T)</text><text x="520.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 32 × 1024 × 1024</text><text x="38.0" y="203.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">softmax weights</text><text x="300.0" y="203.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, H, T, T)</text><text x="520.0" y="203.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">head_dim no longer present</text><rect x="24.0" y="216.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="232.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">attention output</text><text x="300.0" y="232.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, H, T, D/H)</text><text x="520.0" y="232.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 32 × 1024 × 128</text><text x="38.0" y="261.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">after W_O</text><text x="300.0" y="261.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, D)</text><text x="520.0" y="261.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 4096</text><rect x="24.0" y="274.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="290.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">FFN up</text><text x="300.0" y="290.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, 4D)</text><text x="520.0" y="290.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 16384</text><text x="38.0" y="319.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">FFN down</text><text x="300.0" y="319.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, D)</text><text x="520.0" y="319.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 4096</text><rect x="24.0" y="332.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="348.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">logits</text><text x="300.0" y="348.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, V)</text><text x="520.0" y="348.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 128256</text><text x="38.0" y="42.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">stage</text><text x="300.0" y="42.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">symbolic</text><text x="520.0" y="42.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">with B=2, T=1024</text><rect x="24.0" y="382.0" width="772.0" height="1.0" rx="8" fill="var(--fig-edge,#2e3a5e)" stroke="none" stroke-width="1.5"/><text x="420.0" y="396.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">the score matrix is the only place T² appears — that is the quadratic wall</text></svg><figcaption>Trace the shapes through the adapter: $\mathbf{x}$ is $d_{\text{in}}\times 1$, $\mathbf{A}\mathbf{x}$ is $r\times1$, $\mathbf{B}\mathbf{A}\mathbf{x}$ is $d_{\text{out}}\times 1$ — it must match the frozen path's output exactly, or the addition fails.</figcaption></figure></p>
+<h3 id="qlora-quantize-the-frozen-part">QLoRA: quantize the frozen part</h3>
+<p><strong>(1) Intuition.</strong> The base weights do not move, so they do not need to be precise. Store them in 4 bits, keep the adapters in bf16, and dequantize on the fly for each matmul.</p>
+<p><strong>(2) Formal definition.</strong> Three ingredients. <strong>NF4</strong>: blockwise 4-bit quantization where the 16 levels are the quantiles of a normal distribution rather than a uniform grid. <strong>Double quantization</strong>: the per-block scaling constants are themselves quantized, from fp32 to 8 bits with their own per-256-block scale. <strong>Paged optimizers</strong>: optimizer state is kept in pageable host memory so a transient memory spike pages out instead of crashing.</p>
+<p><strong>(3) Why it is built this way.</strong> Blockwise absmax scaling normalizes each block of 64 weights to $[-1,1]$, so one outlier cannot ruin the precision of its neighbours. Quantile levels put more resolution where a Gaussian's mass actually is. Double quantization removes most of the 0.5 bits per parameter that the scaling constants would otherwise cost. The result is a frozen base at 4.127 bits per parameter with the adapters still in bf16, so gradient quality is unharmed.</p>
+<p><strong>(4) Worked micro-example.</strong> A 6.74B model at 4.127 bits is $6.74\times10^{9}\cdot4.127/8 = 3.48$ GB (3.36 GiB), against 13.04 GiB in bf16. Plus 40M adapter parameters at 16 bytes each (0.64 GB) and activations, which fits comfortably in 24 GB.</p>
+<h3 id="dora-and-the-rest-of-the-peft-family">DoRA and the rest of the PEFT family</h3>
+<p><strong>(1) Intuition.</strong> LoRA changes magnitude and direction in one entangled update. DoRA splits the weight into a magnitude vector and a direction matrix, and adapts the direction with LoRA while training the magnitude separately.</p>
+<p><strong>(2) Formal definition.</strong> DoRA computes</p>
+<p>$$\mathbf{W}' = \mathbf{m}\frac{\mathbf{W}_0 + \mathbf{B}\mathbf{A}}{\|\mathbf{W}_0+\mathbf{B}\mathbf{A}\|_c}$$</p>
+<p>where $\mathbf{m}\in\mathbb{R}^{d_{\mathrm{out}}}$ is a trainable magnitude vector, initialized to $\|\mathbf{W}_0\|_c$, and the norm is taken column-wise. Trainable parameters: LoRA's $r(d_{\mathrm{in}}+d_{\mathrm{out}})$ plus $d_{\mathrm{out}}$.</p>
+<p><strong>(3) Why it is built this way.</strong> Analysis of full fine-tuning shows its updates tend to change direction and magnitude somewhat independently, which LoRA's single rank-$r$ term cannot reproduce; DoRA gives magnitude its own degrees of freedom at a cost of $d_{\mathrm{out}}$ parameters — for $d=4096$, 4,096 parameters per adapted matrix, negligible. Prefix and prompt tuning go further: they add no matrix at all, prepending $k$ learned vectors to the keys and values (prefix) or to the input embeddings (prompt). They are cheaper still and generally weaker for knowledge-heavy tasks; adapters (small bottleneck MLPs inserted between blocks) sit in between and add inference latency unless merged.</p>
+<p><strong>(4) Worked micro-example.</strong> $r=16$, $d_{\text{in}}=d_{\text{out}}=4096$: LoRA has 131,072 parameters, DoRA has 135,168 (+3.1%), prefix tuning with $k=20$ has $20\cdot2\cdot l\cdot d$ key-value entries in the attention operations, which for $l=32$ is 5.2M — <em>more</em> than LoRA, and not mergeable into the weights. The intuition that "prefix tuning is the cheapest" is often wrong once you account for the number of layers you must touch.</p>
+<h3 id="did-the-fine-tune-actually-work">Did the fine-tune actually work?</h3>
+<p><strong>(1) Intuition.</strong> Training loss going to zero on 1,000 examples means the model memorized 1,000 examples. It says nothing about whether it learned the behaviour.</p>
+<p><strong>(2) Formal definition.</strong> Four measurements, all necessary: (i) <strong>held-out target performance</strong> on examples from the same distribution but not trained on; (ii) <strong>format adherence</strong> — does it always emit the required structure, measured on a large sample including adversarial inputs; (iii) <strong>capability retention</strong> — the pretraining-era benchmarks, run identically before and after; (iv) <strong>overfitting diagnostics</strong> — training loss versus held-out loss per epoch, and the epoch at which they diverge, typically 1–3 for small sets.</p>
+<p><strong>(3) Why it is built this way.</strong> A fine-tune can succeed on (i) and fail (ii), which means you taught a style rather than a behaviour, or succeed on both and fail (iii), which means the alignment tax ate the model. Reporting only the target metric is how a broken fine-tune ships.</p>
+<p><strong>(4) Worked micro-example.</strong> 1,000 examples, 3 epochs, batch 8: 375 steps. Training loss 1.9 → 0.4. Held-out loss 1.7 → 1.4 → 1.6 over the three epochs — the minimum is at epoch 1 and you have already overfit by epoch 3. Format adherence measured on 500 unseen prompts: 96% on in-distribution, 61% on prompts with an unusual capitalisation. Capability retention: −0.8 points. The correct deployable checkpoint is epoch 1, and only the four-measurement protocol reveals it.</p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<ol>
+<li><strong>Prepare data.</strong> Assemble (instruction, response) pairs; deduplicate; decontaminate against your evaluation sets; strip any formatting that leaks answers.</li>
+<li><strong>Apply the template.</strong> Render each pair through the exact chat template the deployed model will use, including special tokens.</li>
+<li><strong>Tokenize and build the mask.</strong> Set $m_t=1$ for response tokens (including the end-of-turn token, so the model learns to stop) and $m_t=0$ for the template and prompt.</li>
+<li><strong>Pack or pad.</strong> Pack multiple examples into a fixed sequence length with correct mask realignment, or pad with a token that is masked out. Packing without resetting the attention mask across examples lets them attend to each other.</li>
+<li><strong>Attach adapters.</strong> Wrap the chosen linear modules with a LoRA branch, leaving everything else frozen; verify that the trainable parameter count is what you intended.</li>
+<li><strong>Train.</strong> AdamW at a learning rate one to two orders below pretraining, 1–3 epochs, with the masked loss and gradient clipping.</li>
+<li><strong>Merge or keep separate.</strong> For LoRA, $\mathbf{W}_0 + \frac{\alpha}{r}\mathbf{B}\mathbf{A}$ can be folded into the base weight at inference with zero latency cost; for prefix tuning it cannot.</li>
+<li><strong>Evaluate.</strong> Held-out target, format adherence, capability retention, overfitting curve.</li>
+</ol>
+<p>```text
+function SFT_STEP(batch, model, template, adapter):
+    total_loss, total_masked <- 0, 0
+    for (instruction, response) in batch:
+        ids <- tokenize(template(instruction, response))
+        prompt_len <- len(tokenize(template(instruction, "")))   # template boundary
+        mask <- [0] * prompt_len + [1] * (len(ids) - prompt_len)
+        logits <- model.forward(ids)                       # (len(ids), V)
+        logp   <- log_softmax(logits[:-1])                 # predict ids[t+1] from t
+        target <- ids[1:]
+        mask_t <- mask[1:]
+        total_loss   += -(logp[arange, target] * mask_t).sum()
+        total_masked += mask_t.sum()
+    loss <- total_loss / total_masked
+    (loss).backward()                                       # grads only reach the adapters
+    clip_grad_norm(model.trainable_parameters(), 1.0)
+    optimizer.step(); optimizer.zero_grad()
+    return loss
+```</p>
+<p><strong>Complexity.</strong> Training FLOPs $= 6 P_{\text{body}} N_{\text{tokens}}$ for the forward and backward pass — LoRA does not reduce the compute, only the memory and the number of trainable parameters, which is the most common misunderstanding about it. Backward <em>through the frozen weights is skipped</em> only when the input activations to those modules do not need gradients, which is true for the first adapted layer and false for deeper ones, so in practice the FLOP saving is small. Memory is where the win is: $16 P_{\text{trainable}}$ bytes for optimizer state instead of $16P$.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="derivation-1-the-masked-loss-is-the-conditional-likelihood">Derivation 1: the masked loss is the conditional likelihood</h3>
+<p><strong>Step 1 — what the two objectives are.</strong> Unmasked, $\mathcal{L}_{\text{joint}} = -\frac{1}{N}\sum_t\log p_\theta(x_t\mid x_{<t})$. Masked, $\mathcal{L}_{\text{cond}} = -\frac{1}{M}\sum_t m_t\log p_\theta(x_t\mid x_{<t})$ with $M = \sum_t m_t$.</p>
+<p><strong>Step 2 — the gradient.</strong> Both are sums of terms, so</p>
+<p>$$\frac{\partial\mathcal{L}_{\text{cond}}}{\partial\theta} = -\frac{1}{M}\sum_t m_t\frac{\partial\log p_\theta(x_t\mid x_{<t})}{\partial\theta}$$</p>
+<p>For any $t$ with $m_t=0$ the term is multiplied by zero. Masked positions receive <strong>no</strong> gradient: not small, not attenuated — zero.</p>
+<p><strong>Step 3 — why the unmasked objective is the wrong one.</strong> Factor the joint as $p(q,r) = p(q)\,p(r\mid q)$, so $\log p(q,r) = \log p(q) + \log p(r\mid q)$. Then</p>
+<p>$$\nabla_\theta \log p(q,r) = \nabla_\theta\log p(q) + \nabla_\theta\log p(r\mid q)$$</p>
+<p>The first term is not zero. Unmasked training therefore takes a gradient step that increases the likelihood of the <em>prompt</em> as well — that is, it makes the model better at writing prompts. Since prompts are typically much longer than responses in templated data (a system preamble alone can be hundreds of tokens), this term can dominate.</p>
+<p><strong>Step 4 — the normalization.</strong> Dividing by $M$ rather than $N$ makes the per-example weight independent of length. Dividing by $N$ gives each <em>token</em> equal weight, which is defensible in principle and wrong in practice for chat data: with a 400-token system prompt shared by every example and a 50-token answer, the loss is 89% identical across examples and the gradient signal from the answer is diluted 8x.</p>
+<h3 id="derivation-2-lora-gradients-the-zero-init-and-the-i113-scaling">Derivation 2: LoRA gradients, the zero init, and the $\alpha/r$ scaling</h3>
+<p><strong>Step 1 — set up.</strong> Let $\mathbf{h} = \mathbf{W}_0\mathbf{x} + s\mathbf{B}\mathbf{A}\mathbf{x}$ with $s = \alpha/r$, and let $\mathbf{g} = \partial\mathcal{L}/\partial\mathbf{h}\in\mathbb{R}^{d_{\mathrm{out}}}$ be the upstream gradient, which is unchanged whether or not an adapter is present.</p>
+<p><strong>Step 2 — gradient with respect to $\mathbf{B}$.</strong> Write the branch output's $i$-th component as $s\sum_k B_{ik}(\mathbf{A}\mathbf{x})_k$. Then $\partial h_i/\partial B_{ik} = s(\mathbf{A}\mathbf{x})_k$, so</p>
+<p>$$\frac{\partial\mathcal{L}}{\partial B_{ik}} = s\,g_i(\mathbf{A}\mathbf{x})_k \implies \frac{\partial\mathcal{L}}{\partial\mathbf{B}} = s\,\mathbf{g}(\mathbf{A}\mathbf{x})^{\top}$$</p>
+<p><strong>Step 3 — gradient with respect to $\mathbf{A}$.</strong> Now $h_i = s\sum_k B_{ik}\sum_j A_{kj}x_j$, so $\partial h_i/\partial A_{kj} = s B_{ik}x_j$, giving</p>
+<p>$$\frac{\partial\mathcal{L}}{\partial A_{kj}} = s\sum_i g_i B_{ik}x_j = s(\mathbf{B}^{\top}\mathbf{g})_k x_j \implies \frac{\partial\mathcal{L}}{\partial\mathbf{A}} = s\,\mathbf{B}^{\top}\mathbf{g}\,\mathbf{x}^{\top}$$</p>
+<p><strong>Step 4 — the zero initialization.</strong> At $\mathbf{B}=\mathbf{0}$, Step 3 gives $\partial\mathcal{L}/\partial\mathbf{A} = \mathbf{0}$ exactly: on the first step only $\mathbf{B}$ moves. The two factors therefore cannot both collapse toward zero, which is what would happen if both were initialized small and symmetric. Numerically, with $\mathbf{B}=\mathbf{0}$ the analytic $\partial\mathcal{L}/\partial\mathbf{A}$ is a matrix of exact zeros and matches a finite-difference estimate to $10^{-10}$ — a good gradient check that also confirms the zero is structural, not numerical.</p>
+<p><strong>Step 5 — the first step's effect on the output.</strong> One gradient step gives $\Delta\mathbf{B} = -\eta s\,\mathbf{g}(\mathbf{A}\mathbf{x})^{\top}$, so the change in the branch output is</p>
+<p>$$\Delta\mathbf{h} = s\,\Delta\mathbf{B}(\mathbf{A}\mathbf{x}) = -\eta s^{2}\,\|\mathbf{A}\mathbf{x}\|^{2}\,\mathbf{g}$$</p>
+<p><strong>Step 6 — what $\alpha$ actually controls.</strong> Substituting the same initialization result, $\mathbb{E}\|\mathbf{A}\mathbf{x}\|^{2} = r\|\mathbf{x}\|^{2}/(3d_{\mathrm{in}})$, into Step 5 gives</p>
+<p>$$\Delta\mathbf{h} = -\eta\left(\frac{\alpha}{r}\right)^{2}\frac{r\|\mathbf{x}\|^{2}}{3d_{\mathrm{in}}}\,\mathbf{g} = -\frac{\eta\alpha^{2}}{r}\cdot\frac{\|\mathbf{x}\|^{2}}{3d_{\mathrm{in}}}\,\mathbf{g}$$</p>
+<p>So the first step's effect on the output scales as $\alpha^{2}/r$: <strong>$\alpha$ and $r$ do not act independently.</strong> Halving $\alpha$ quarters the initial step, doubling $r$ halves it. This is the sense in which $\alpha/r$ is one hyperparameter wearing two names.</p>
+<p><strong>Step 7 — the invariance that $\alpha = r$ actually buys.</strong> The loss depends on $\mathbf{A}$ and $\mathbf{B}$ only through the product $\mathbf{B}\mathbf{A}$, so the reparameterization $\mathbf{B}\to (r/\alpha)\mathbf{B}'$ leaves every forward pass identical. Apply it to the weight-decay penalty, which acts on $\mathbf{B}$:</p>
+<p>$$\lambda\|\mathbf{B}\|_F^{2} = \lambda\left(\frac{r}{\alpha}\right)^{2}\|\mathbf{B}'\|_F^{2}$$</p>
+<p>The effective regularization strength in output space is therefore $\lambda(r/\alpha)^{2}$, which is <em>not</em> rank-invariant unless $\alpha\propto r$. Setting $\alpha = r$ makes the effective $\lambda$ the same for $r=8$ and $r=256$, which is exactly what you want when sweeping rank at a fixed weight-decay setting. That is the defensible justification for the convention — and note its limits: it fixes the regularization balance, not the first-step magnitude, which still scales as $1/r$. If you move between $r=8$ and $r=128$, expect to revisit the learning rate even at $\alpha = r$. Two further consequences follow from the same algebra: at $\alpha=r$ the scale factor is exactly 1, so "LoRA with $\alpha=r$" and "LoRA with no scaling" are the same model; and the $1/(3d_{\mathrm{in}})$ in Step 6 means the effective step changes when you adapt a module of different width, which is why aggressive setups sometimes use per-module learning rates.</p>
+<h3 id="derivation-3-eckartyoung-and-what-low-rank-costs">Derivation 3: Eckart–Young, and what "low-rank" costs</h3>
+<p><strong>Step 1 — the best rank-$r$ approximation.</strong> Let $\mathbf{M} = \mathbf{U}\mathbf{\Sigma}\mathbf{V}^{\top} = \sum_i\sigma_i\mathbf{u}_i\mathbf{v}_i^{\top}$. For any rank-$r$ matrix $\mathbf{X}$,</p>
+<p>$$\|\mathbf{M}-\mathbf{X}\|_F^{2} = \|\mathbf{M}\|_F^{2} - 2\langle\mathbf{M},\mathbf{X}\rangle_F + \|\mathbf{X}\|_F^{2}$$</p>
+<p><strong>Step 2 — bound the inner product.</strong> By von Neumann's trace inequality, $\langle\mathbf{M},\mathbf{X}\rangle_F = \operatorname{tr}(\mathbf{M}^{\top}\mathbf{X}) \le \sum_{i=1}^{r}\sigma_i\mu_i$ where $\mu_1\ge\cdots\ge\mu_r$ are $\mathbf{X}$'s singular values, and $\sum_i\sigma_i\mu_i \le \sum_{i=1}^{r}\sigma_i\|\mathbf{X}\|_F$ with equality when the top singular vectors align.</p>
+<p><strong>Step 3 — the minimum.</strong> For $\mathbf{X} = \mathbf{M}_r = \sum_{i\le r}\sigma_i\mathbf{u}_i\mathbf{v}_i^{\top}$ we get $\|\mathbf{M}-\mathbf{M}_r\|_F = \sqrt{\sum_{i>r}\sigma_i^{2}}$, and no rank-$r$ matrix does better. So</p>
+<p>$$\min_{\operatorname{rank}(\mathbf{X})\le r}\|\mathbf{M}-\mathbf{X}\|_F = \sqrt{\sum_{i>r}\sigma_i^{2}}$$</p>
+<p><strong>Step 4 — connecting to LoRA.</strong> LoRA parameterizes $\mathbf{B}\mathbf{A}$, which is exactly a rank-$r$ matrix, so it can represent the best rank-$r$ approximation and nothing better. The approximation error is the tail of the spectrum. The low-rank hypothesis is the empirical claim that the spectrum of $\Delta\mathbf{W}$ from fine-tuning decays fast, so this tail is small at small $r$. Two caveats worth stating: LoRA is initialized at $\mathbf{B}=\mathbf{0}$ so it starts at rank 0 and grows; and the hypothesis is about the <em>update</em>, not the pretrained weight, whose spectrum does not decay as fast. Reports of the intrinsic dimensionality of fine-tuning being in the hundreds support the hypothesis for narrow tasks and less so for broad ones, which is why rank choice is task-dependent (8–16 for style, 64–256 for new capabilities).</p>
+<h3 id="derivation-4-the-qlora-bit-budget-and-the-quantization-error">Derivation 4: the QLoRA bit budget and the quantization error</h3>
+<p><strong>Step 1 — blockwise 4-bit.</strong> With one fp32 absmax constant per block of 64 weights, the cost per parameter is</p>
+<p>$$4 + \frac{32}{64} = 4 + 0.5 = 4.5\ \text{bits}$$</p>
+<p><strong>Step 2 — double quantization.</strong> Quantize the absmax constants themselves to 8 bits, grouped 256 at a time, with one fp32 scale per group of 256 constants:</p>
+<p>$$\text{overhead} = \frac{1}{64}\left(8 + \frac{32}{256}\right) = \frac{1}{64}(8 + 0.125) = 0.1270\ \text{bits}$$</p>
+<p><strong>Step 3 — total.</strong></p>
+<p>$$b = 4 + 0.1270 = 4.127\ \text{bits per parameter}$$</p>
+<p>which is the published figure, and saves 0.373 bits against naive blockwise quantization — 8.3% of the storage, for a 6.74B model a saving of 0.31 GB. Small, but free.</p>
+<p><strong>Step 4 — where the 16 levels should go.</strong> A quantizer with level spacing $\Delta(x)$ has mean squared error, to leading order in the high-rate limit,</p>
+<p>$$\text{MSE} \approx \frac{1}{12}\int \Delta(x)^{2}p(x)\,dx = \frac{1}{12}\int\frac{p(x)}{\lambda(x)^{2}}dx$$</p>
+<p>with level density $\lambda = 1/\Delta$. Minimizing subject to $\int\lambda\,dx = 2^{b}$ via a Lagrange multiplier: $-2p/\lambda^{3}+\mu = 0$, so $\lambda\propto p^{1/3}$ and $\Delta\propto p^{-1/3}$ — levels are <em>denser</em> where the density is high, specifically as the cube root.</p>
+<p><strong>Step 5 — why NF4 uses quantiles.</strong> The MSE-optimal spacing is $p^{-1/3}$, not the equal-probability spacing $1/p$ that quantile levels give. Quantile levels are therefore not exactly optimal, but they are close for a Gaussian and much better than uniform:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">bits</th>
+<th style="text-align: right;">uniform MSE</th>
+<th style="text-align: right;">quantile MSE</th>
+<th style="text-align: right;">improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.0340</td>
+<td style="text-align: right;">0.0261</td>
+<td style="text-align: right;">23%</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.0085</td>
+<td style="text-align: right;">0.0056</td>
+<td style="text-align: right;">34%</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.00213</td>
+<td style="text-align: right;">0.00176</td>
+<td style="text-align: right;">17%</td>
+</tr>
+</tbody>
+</table>
+<p>(measured on 200k standard-normal values clipped to $[-1,1]$, as blockwise absmax scaling produces). The 16 equal-probability levels are</p>
+<p>$$\pm 1.000,\ \pm 0.708,\ \pm 0.542,\ \pm 0.417,\ \pm 0.311,\ \pm 0.216,\ \pm 0.127,\ \pm 0.042$$</p>
+<p>with a gap at zero of $\pm0.042$ — the cost of using an even number of levels on a symmetric distribution, and the reason some implementations add an exact zero.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="Where the money goes" class="fig-svg"><defs><marker id="cost-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="80.0" y1="276.0" x2="480.0" y2="276.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="280.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1×</text><line x1="80.0" y1="207.2" x2="480.0" y2="207.2" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="211.2" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10×</text><line x1="80.0" y1="138.5" x2="480.0" y2="138.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="142.5" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">100×</text><line x1="80.0" y1="69.8" x2="480.0" y2="69.8" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="73.8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1000×</text><line x1="80.0" y1="276.0" x2="480.0" y2="276.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M80.0,276.0 L82.5,276.0 L85.0,275.9 L87.5,275.6 L90.0,275.3 L92.5,274.9 L95.0,274.4 L97.5,273.8 L100.0,273.1 L102.5,272.2 L105.0,271.3 L107.5,270.3 L110.0,269.3 L112.5,268.1 L115.0,266.9 L117.5,265.7 L120.0,264.4 L122.5,263.0 L125.0,261.6 L127.5,260.2 L130.0,258.8 L132.5,257.3 L135.0,255.9 L137.5,254.4 L140.0,253.0 L142.5,251.5 L145.0,250.0 L147.5,248.5 L150.0,247.1 L152.5,245.6 L155.0,244.2 L157.5,242.8 L160.0,241.3 L162.5,239.9 L165.0,238.6 L167.5,237.2 L170.0,235.8 L172.5,234.5 L175.0,233.2 L177.5,231.9 L180.0,230.6 L182.5,229.3 L185.0,228.0 L187.5,226.8 L190.0,225.6 L192.5,224.3 L195.0,223.2 L197.5,222.0 L200.0,220.8 L202.5,219.7 L205.0,218.5 L207.5,217.4 L210.0,216.3 L212.5,215.2 L215.0,214.2 L217.5,213.1 L220.0,212.1 L222.5,211.0 L225.0,210.0 L227.5,209.0 L230.0,208.0 L232.5,207.1 L235.0,206.1 L237.5,205.2 L240.0,204.2 L242.5,203.3 L245.0,202.4 L247.5,201.5 L250.0,200.6 L252.5,199.7 L255.0,198.8 L257.5,198.0 L260.0,197.1 L262.5,196.3 L265.0,195.4 L267.5,194.6 L270.0,193.8 L272.5,193.0 L275.0,192.2 L277.5,191.4 L280.0,190.6 L282.5,189.9 L285.0,189.1 L287.5,188.3 L290.0,187.6 L292.5,186.9 L295.0,186.1 L297.5,185.4 L300.0,184.7 L302.5,184.0 L305.0,183.3 L307.5,182.6 L310.0,181.9 L312.5,181.2 L315.0,180.5 L317.5,179.9 L320.0,179.2 L322.5,178.6 L325.0,177.9 L327.5,177.3 L330.0,176.6 L332.5,176.0 L335.0,175.4 L337.5,174.8 L340.0,174.1 L342.5,173.5 L345.0,172.9 L347.5,172.3 L350.0,171.7 L352.5,171.2 L355.0,170.6 L357.5,170.0 L360.0,169.4 L362.5,168.9 L365.0,168.3 L367.5,167.7 L370.0,167.2 L372.5,166.6 L375.0,166.1 L377.5,165.6 L380.0,165.0 L382.5,164.5 L385.0,164.0 L387.5,163.4 L390.0,162.9 L392.5,162.4 L395.0,161.9 L397.5,161.4 L400.0,160.9 L402.5,160.4 L405.0,159.9 L407.5,159.4 L410.0,158.9 L412.5,158.4 L415.0,157.9 L417.5,157.4 L420.0,157.0 L422.5,156.5 L425.0,156.0 L427.5,155.6 L430.0,155.1 L432.5,154.6 L435.0,154.2 L437.5,153.7 L440.0,153.3 L442.5,152.8 L445.0,152.4 L447.5,151.9 L450.0,151.5 L452.5,151.1 L455.0,150.6 L457.5,150.2 L460.0,149.8 L462.5,149.4 L465.0,148.9 L467.5,148.5 L470.0,148.1 L472.5,147.7 L475.0,147.3 L477.5,146.9 L480.0,146.5" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M80.0,276.0 L82.5,275.5 L85.0,275.1 L87.5,274.6 L90.0,274.2 L92.5,273.8 L95.0,273.3 L97.5,272.9 L100.0,272.5 L102.5,272.1 L105.0,271.7 L107.5,271.3 L110.0,270.9 L112.5,270.5 L115.0,270.1 L117.5,269.7 L120.0,269.3 L122.5,269.0 L125.0,268.6 L127.5,268.2 L130.0,267.9 L132.5,267.5 L135.0,267.2 L137.5,266.8 L140.0,266.5 L142.5,266.2 L145.0,265.8 L147.5,265.5 L150.0,265.2 L152.5,264.8 L155.0,264.5 L157.5,264.2 L160.0,263.9 L162.5,263.6 L165.0,263.3 L167.5,263.0 L170.0,262.7 L172.5,262.4 L175.0,262.1 L177.5,261.8 L180.0,261.5 L182.5,261.2 L185.0,260.9 L187.5,260.7 L190.0,260.4 L192.5,260.1 L195.0,259.8 L197.5,259.6 L200.0,259.3 L202.5,259.0 L205.0,258.8 L207.5,258.5 L210.0,258.2 L212.5,258.0 L215.0,257.7 L217.5,257.5 L220.0,257.2 L222.5,257.0 L225.0,256.7 L227.5,256.5 L230.0,256.3 L232.5,256.0 L235.0,255.8 L237.5,255.5 L240.0,255.3 L242.5,255.1 L245.0,254.8 L247.5,254.6 L250.0,254.4 L252.5,254.2 L255.0,253.9 L257.5,253.7 L260.0,253.5 L262.5,253.3 L265.0,253.1 L267.5,252.8 L270.0,252.6 L272.5,252.4 L275.0,252.2 L277.5,252.0 L280.0,251.8 L282.5,251.6 L285.0,251.4 L287.5,251.2 L290.0,251.0 L292.5,250.8 L295.0,250.6 L297.5,250.4 L300.0,250.2 L302.5,250.0 L305.0,249.8 L307.5,249.6 L310.0,249.4 L312.5,249.2 L315.0,249.0 L317.5,248.8 L320.0,248.6 L322.5,248.5 L325.0,248.3 L327.5,248.1 L330.0,247.9 L332.5,247.7 L335.0,247.5 L337.5,247.4 L340.0,247.2 L342.5,247.0 L345.0,246.8 L347.5,246.7 L350.0,246.5 L352.5,246.3 L355.0,246.1 L357.5,246.0 L360.0,245.8 L362.5,245.6 L365.0,245.5 L367.5,245.3 L370.0,245.1 L372.5,245.0 L375.0,244.8 L377.5,244.6 L380.0,244.5 L382.5,244.3 L385.0,244.1 L387.5,244.0 L390.0,243.8 L392.5,243.7 L395.0,243.5 L397.5,243.4 L400.0,243.2 L402.5,243.0 L405.0,242.9 L407.5,242.7 L410.0,242.6 L412.5,242.4 L415.0,242.3 L417.5,242.1 L420.0,242.0 L422.5,241.8 L425.0,241.7 L427.5,241.5 L430.0,241.4 L432.5,241.2 L435.0,241.1 L437.5,241.0 L440.0,240.8 L442.5,240.7 L445.0,240.5 L447.5,240.4 L450.0,240.2 L452.5,240.1 L455.0,240.0 L457.5,239.8 L460.0,239.7 L462.5,239.5 L465.0,239.4 L467.5,239.3 L470.0,239.1 L472.5,239.0 L475.0,238.9 L477.5,238.7 L480.0,238.6" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><text x="400.0" y="111.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="end" font-weight="400">training</text><text x="400.0" y="227.9" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="end" font-weight="400">inference</text><text x="280.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">relative spend →</text><rect x="520.0" y="76.0" width="280.0" height="180.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="538.0" y="100.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">cost per token</text><text x="538.0" y="124.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">≈ 2 · N · P FLOPs</text><text x="538.0" y="146.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">≈ 2 · P FLOPs / token</text><text x="538.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Training is a one-off; serving</text><text x="538.0" y="185.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">is per token, forever. A model</text><text x="538.0" y="198.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">that is 30% better but 3× more</text><text x="538.0" y="211.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">expensive may simply lose.</text><text x="538.0" y="240.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">this is why small models keep winning</text></svg><figcaption>Set the trainable parameter fraction and the base precision independently. The adapters dominate the optimizer memory while the base dominates the weights, which is why QLoRA's 4.127 bits and LoRA's bf16 adapters are complementary rather than redundant.</figcaption></figure></p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>```python
+import numpy as np
+
+
+class LoRALinear:
+    """y = x W0^T + (alpha/r) * (x A^T) B^T, with W0 frozen."""
+
+    def __init__(self, d_in, d_out, r=4, alpha=8.0, seed=0):
+        rng = np.random.default_rng(seed)
+        self.W0 = rng.normal(0, 0.5, (d_out, d_in))       # frozen pretrained weight
+        self.A = rng.normal(0, 1 / np.sqrt(d_in), (r, d_in))  # down-projection
+        self.B = np.zeros((d_out, r))                     # up-projection, zero init
+        self.scale = alpha / r
+        self.x = None
+        self.ax = None
+
+    def forward(self, x):
+        self.x = x
+        self.ax = self.A @ x                              # (r, batch)
+        return self.W0 @ x + self.scale * (self.B @ self.ax)
+
+    def backward(self, grad_out):
+        """Return (dL/dA, dL/dB) given dL/dy. W0 has no gradient: it is frozen."""
+        s = self.scale
+        self.dB = s * grad_out @ self.ax.T                # (d_out, r)
+        self.dA = s * (self.B.T @ grad_out) @ self.x.T    # (r, d_in)
+        return self.dA, self.dB
+
+    def n_trainable(self):
+        return self.A.size + self.B.size
+
+
+if __name__ == "__main__":
+    d_in, d_out, r = 6, 5, 2
+    layer = LoRALinear(d_in, d_out, r=r, alpha=4.0, seed=1)
+    rng = np.random.default_rng(7)
+    x = rng.normal(size=(d_in, 1))
+    g = rng.normal(size=(d_out, 1))          # upstream gradient dL/dy
+
+    y = layer.forward(x)
+    dA, dB = layer.backward(g)
+    print("dA at init (all zeros by construction):\n", np.round(dA, 8))
+    print("dB:\n", np.round(dB, 6))
+
+    # finite-difference check of dB after one step has moved B
+    layer.B = 0.1 * rng.normal(size=(d_out, r))
+    dA, dB = layer.backward(g)
+    eps, num = 1e-6, np.zeros_like(layer.B)
+    for i in range(d_out):
+        for j in range(r):
+            orig = layer.B[i, j]
+            layer.B[i, j] = orig + eps
+            lp = float((g * layer.forward(x)).sum())
+            layer.B[i, j] = orig - eps
+            lm = float((g * layer.forward(x)).sum())
+            layer.B[i, j] = orig
+            num[i, j] = (lp - lm) / (2 * eps)
+    print("max |analytic - numeric| for dB:", np.abs(dB - num).max())
+    print("trainable params:", layer.n_trainable(), "vs full:", d_in * d_out)
+```</p>
+<p><strong>What to expect.</strong> <code>dA</code> is a matrix of exact zeros, because $\mathbf{B}=\mathbf{0}$ makes the first step's gradient with respect to $\mathbf{A}$ vanish — this is the zero-init working, not a bug. After perturbing $\mathbf{B}$, the analytic and finite-difference gradients of <code>dB</code> agree to about $10^{-10}$, and the last line prints 22 trainable parameters against 30 for the full matrix.</p>
+<h2 id="worked-example">Worked example</h2>
+<p><strong>The model.</strong> 32 layers, $d=4096$, $d_{ff}=11008$, $V=32000$, untied embeddings. Parameters: $32(4d^{2}+3dd_{ff}) + 2Vd = 32(67.1\text{M} + 135.3\text{M}) + 262\text{M} = 6.738$B.</p>
+<p><strong>Full fine-tuning memory.</strong> $6.738\times10^{9}\times16$ bytes $= 107.8$ GB $= 100.4$ GiB — before activations, which scale with batch and sequence length and typically add tens of GB. Minimum three 80 GB devices; realistically four to eight.</p>
+<p><strong>LoRA memory.</strong> Frozen base at bf16: $6.738\times10^{9}\times2 = 13.48$ GB $\approx 13.0$ GiB, which is the dominant term if you keep the base resident in bf16. Adapters: 39.98M trainable at 16 bytes each $= 0.64$ GB. Optimizer state is now 0.64 GB instead of 107.8 GB. Total 14.1 GB plus activations — one 24 GB card with small batches, one 80 GB card comfortably.</p>
+<p><strong>QLoRA memory.</strong> Base at 4.127 bits: $6.738\times10^{9}\times4.127/8 = 3.48$ GB $= 3.36$ GiB. Adapters 0.64 GB. Total 4.1 GB plus activations — a 24 GB card with room to spare, and this is the configuration that made 65B fine-tuning possible on a single 48 GB device.</p>
+<p><strong>LoRA parameter counts by rank</strong>, for all seven linear projections of every layer:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">$r$</th>
+<th style="text-align: right;">trainable</th>
+<th style="text-align: right;">share of 6.738B</th>
+<th style="text-align: right;">attention-only</th>
+<th style="text-align: right;">share of base</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">9.99M</td>
+<td style="text-align: right;">0.148%</td>
+<td style="text-align: right;">4.19M</td>
+<td style="text-align: right;">0.062%</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">19.99M</td>
+<td style="text-align: right;">0.297%</td>
+<td style="text-align: right;">8.39M</td>
+<td style="text-align: right;">0.124%</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">39.98M</td>
+<td style="text-align: right;">0.593%</td>
+<td style="text-align: right;">16.78M</td>
+<td style="text-align: right;">0.249%</td>
+</tr>
+<tr>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">159.9M</td>
+<td style="text-align: right;">2.373%</td>
+<td style="text-align: right;">67.11M</td>
+<td style="text-align: right;">0.996%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The 1,000-example arithmetic.</strong> 1,000 examples averaging 400 tokens: 400,000 tokens. At $6PD = 6\cdot6.738\times10^{9}\cdot4\times10^{5} = 1.62\times10^{16}$ FLOPs — about 11 GPU-seconds at 40% of peak, or 90 GPU-seconds if you spend most of the time on padding and data loading, which you will. This is why SFT quality is limited by data curation and not by compute, and why running five data ablations is affordable and running one architecture ablation usually is not.</p>
+<p><strong>Merging.</strong> After training, $\mathbf{W} = \mathbf{W}_0 + \frac{\alpha}{r}\mathbf{BA}$ folds into a single $d_{\text{out}}\times d_{\text{in}}$ matrix. Inference latency is unchanged and the extra adapter file disappears. The merge is exact only in fp32 or where the sum does not lose precision — merging in bf16 introduces a rounding error of about $2^{-8}$ relative on the merged weight, which is usually acceptable and occasionally not. Merge in fp32 and cast afterwards.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="lora-reduces-training-compute">"LoRA reduces training compute"</h3>
+<p>It reduces <em>memory</em> and the number of trainable parameters. The forward and backward passes still traverse every frozen weight, so the FLOP count is essentially unchanged. What you save is the 12 bytes per parameter of optimizer and gradient state, which is what actually prevents you from fitting a 70B model. Thinking LoRA makes training fast is a planning error of an order of magnitude.</p>
+<h3 id="you-should-fine-tune-on-all-tokens-so-the-model-sees-the-whole-example">"You should fine-tune on all tokens so the model sees the whole example"</h3>
+<p>Training on prompt tokens optimizes $\log p(q)$, not just $\log p(r\mid q)$, so it spends gradient on making the model better at writing the prompts — and with templated system preambles it spends most of it there. Mask the prompt. The only defensible exception is deliberately training on a document-completion objective, which is a different task.</p>
+<h3 id="a-small-loss-on-the-training-set-means-the-fine-tune-worked">"A small loss on the training set means the fine-tune worked"</h3>
+<p>With 1,000 examples and three epochs, training loss always falls to near zero. That is memorization. The signal is held-out loss and format adherence on unseen prompts, plus capability retention on the pretraining benchmarks. Any fine-tune reported without those three numbers has not been evaluated.</p>
+<h3 id="alpha-and-r-are-both-hyperparameters-to-tune">"Alpha and r are both hyperparameters to tune"</h3>
+<p>They appear in the forward pass only as the ratio $\alpha/r$, so they are one hyperparameter plus a convention. But the derivation shows the first step scales as $\alpha^{2}/r$ and the effective weight decay as $\lambda(r/\alpha)^{2}$, so $r$ also changes the <em>dynamics</em> at fixed $\alpha/r$ — the two are not interchangeable. $\alpha = r$ is the convention that keeps weight decay rank-invariant; it does not keep the step size rank-invariant, so a large change in $r$ still needs a learning-rate check.</p>
+<h3 id="qlora-degrades-the-model-because-4-bits-is-lossy">"QLoRA degrades the model because 4 bits is lossy"</h3>
+<p>The base is frozen, so quantization error in it is a fixed perturbation of the input distribution, and the adapters train <em>against</em> that perturbation — they learn to compensate for it. Reported QLoRA results match 16-bit LoRA closely on standard benchmarks. Where 4-bit does hurt is the adapters themselves if you also quantize them, which QLoRA does not: they stay in bf16.</p>
+<h3 id="the-model-learned-the-behaviour-because-the-outputs-look-right">"The model learned the behaviour because the outputs look right"</h3>
+<p>Outputs look right on inputs that resemble the training distribution. Format adherence measured on 500 deliberately awkward prompts — unusual capitalisation, a trailing code block, a very long instruction, a conflicting system message — is the measurement that separates a learned behaviour from a learned style. This is cheap to run and almost always skipped.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>1.</strong> A 6.738B model is fine-tuned full-parameter. How many bytes of optimizer and master-weight state, and what is that in GiB?</p>
+<p><strong>2.</strong> A chat example is 900 tokens: 780 of template and prompt, 120 of response. By what factor does masking change the magnitude of the average per-token gradient?</p>
+<p><strong>3.</strong> If $\alpha = 16$ and $r = 8$, what is the scale factor, and what would you set $\alpha$ to for $r = 64$ under the $\alpha = r$ convention?</p>
+<details><summary>Solution</summary>
+
+1. $16 - 2 - 2 = 12$ bytes per parameter of optimizer state, gradient and master weight; $6.738\times10^{9}\times12 = 80.9$ GB $= 75.3$ GiB. The two bf16 tensors add 25.1 GiB, for 100.4 GiB total.
+2. Dividing by 120 instead of 900 multiplies the average term by 7.5, but more importantly it removes the 780 prompt terms entirely — which is not an 7.5x scaling of the same gradient, it is a different gradient. The prompt terms are 87% of the unmasked sum.
+3. Scale factor $= 2$; for $r = 64$ set $\alpha = 64$ (scale 1). Under the convention, the scale factor is always 1.
+
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>4.</strong> Verify Eckart–Young on a concrete $2\times2$ matrix: $\mathbf{M} = \begin{pmatrix} 3 & 0 \\ 0 & 1 \end{pmatrix}$. What is the best rank-1 approximation, and what is the Frobenius error?</p>
+<details><summary>Solution</summary>
+
+$\mathbf{M}$ is already diagonal with singular values 3 and 1. The best rank-1 approximation keeps $\sigma_1 = 3$: $\mathbf{M}_1 = \begin{pmatrix}3&0\\0&0\end{pmatrix}$. The error is $\sqrt{\sigma_2^{2}} = 1$. Check against the formula: $\|\mathbf{M}\|_F = \sqrt{9+1} = \sqrt{10}$, $\|\mathbf{M}_1\|_F = 3$, and $\sqrt{10-9} = 1$. If instead $\Delta\mathbf{W}$ had spectrum $(3, 0.9, 0.05, 0.02)$, the rank-1 error would be $\sqrt{0.81+0.0025+0.0004} = 0.901$ — 90% of the energy is in the first direction, which is what "low-rank update" means quantitatively.
+
+</details>
+
+<p><strong>5.</strong> A LoRA adapter with $r=32$ is applied to $\mathbf{W}_0$ of shape $4096\times4096$. Compute the compression ratio, and compute the ratio if it is applied only to a $4096\times1024$ projection.</p>
+<details><summary>Solution</summary>
+
+Full: $4096\cdot4096 = 16{,}777{,}216$. Adapter: $32(4096+4096) = 262{,}144$. Ratio $= 262144/16777216 = 1.5625\%$, a 64x compression. For a $d_{\text{out}}\times d_{\text{in}} = 1024\times4096$ projection: full $4{,}194{,}304$; adapter $32(1024+4096) = 163{,}840$; ratio $3.906\%$. The compression is worse for skinny matrices, which is why adapting down-projections costs relatively more than adapting square ones.
+
+</details>
+
+<p><strong>6.</strong> Derive the QLoRA storage for a 13B model with block size 64 and double quantization, and compare to bf16 and to 8-bit.</p>
+<details><summary>Solution</summary>
+
+At 4.127 bits: $13\times10^{9}\cdot4.127/8 = 6.71$ GB $= 6.25$ GiB. bf16: $13\times10^{9}\cdot2 = 26$ GB $= 24.2$ GiB. 8-bit blockwise (8 + 32/64 = 8.5 bits): $13\times10^{9}\cdot8.5/8 = 13.8$ GB $= 12.9$ GiB. So QLoRA is 3.9x smaller than bf16 and 2.1x smaller than int8 — the difference between two 24 GB cards and one.
+
+</details>
+
+<p><strong>7.</strong> Show that with $\mathbf{B}=\mathbf{0}$ the LoRA branch is exactly the identity map on the pretrained function, and explain why $\mathbf{A}$ can therefore be initialized randomly without risk.</p>
+<details><summary>Solution</summary>
+
+$\mathbf{h} = \mathbf{W}_0\mathbf{x} + \frac{\alpha}{r}\mathbf{BA}\mathbf{x}$; with $\mathbf{B}=\mathbf{0}$ the second term is the zero vector for every $\mathbf{x}$, so $\mathbf{h} = \mathbf{W}_0\mathbf{x}$ exactly — bit-identical, not approximately. Since $\partial\mathcal{L}/\partial\mathbf{A} = \frac{\alpha}{r}\mathbf{B}^{\top}\mathbf{g}\mathbf{x}^{\top} = \mathbf{0}$ at that point, the initial random $\mathbf{A}$ receives no gradient on the first step and cannot destabilize anything; it only matters through the product after $\mathbf{B}$ becomes nonzero. The one thing the initial $\mathbf{A}$ sets is the *scale* of the first update, which is why its initialization variance appears in Derivation 2, Step 6.
+
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>8.</strong> Implement prompt-masked loss and measure how much a fine-tune's capability retention improves when you drop the learning rate by 10x and mix in 10% pretraining data. Describe the experiment precisely enough that someone else could run it.</p>
+<details><summary>Solution</summary>
+
+Four arms, same data and seed: (a) lr $2\times10^{-4}$, 3 epochs; (b) lr $2\times10^{-5}$, 3 epochs; (c) lr $2\times10^{-4}$ with 10% replay from the pretraining corpus mixed into each batch; (d) lr $2\times10^{-5}$ with 10% replay. Measure on three held-out sets: target-format accuracy, a general reasoning benchmark, and a perplexity measurement on held-out pretraining text. Expect: (a) highest target accuracy, largest perplexity regression; (b) smallest regression, some target loss; (c) intermediate on both. Report the Pareto frontier rather than a single winner. The precision required: identical example order, identical evaluation prompts, and a *fixed* evaluation harness version, because a changed prompt template will move the numbers more than the intervention will.
+
+</details>
+
+<p><strong>9.</strong> A 4-bit quantized base is used for QLoRA. Argue whether the adapter can compensate for quantization error in a layer it does not adapt, and what that implies for which modules to adapt.</p>
+<details><summary>Solution</summary>
+
+It cannot: the adapter's output is added to a frozen path that is already perturbed, so error in an unadapted module propagates downstream and the only correction available is whatever the adapted modules can express. Since the perturbation $\mathbf{E}$ enters as $\mathbf{W}_0+\mathbf{E}$ and the adapter contributes rank-$r$ corrections, the composed map can only fix error projected onto the adapted subspace. Empirically this is why QLoRA works best when adapting *all* linear projections rather than attention only: broad coverage gives the adapters a chance to correct quantization error across the whole network. The practical guidance is to check that adapters are present in every module type whose output feeds a residual stream, and to verify that a 4-bit base with adapters recovers the 16-bit baseline on a small task before committing to a large run.
+
+</details>
+
+<p><strong>10.</strong> Design an evaluation that would detect "the model learned the format but not the task" in a single afternoon, given 200 held-out examples and no budget for human annotation.</p>
+<details><summary>Solution</summary>
+
+Three cheap probes. (i) **Label-shuffle control**: retrain on the same examples with responses shuffled across prompts. If held-out *format* adherence stays high while *content* accuracy drops to chance, the original model learned content; if both stay high, it learned format. (ii) **Format-only baseline**: a model trained on 200 examples of the format with dummy content. Compare its format score to the real model's; if they match, the real model contributed nothing but format. (iii) **Adversarial formatting**: re-render 200 held-out prompts with different surface forms (extra whitespace, reordered fields, a distractor sentence). Behaviour that survives is behaviour, behaviour that collapses is pattern-matching. All three need only inference on 200 examples and no annotation, and (i) needs one extra training run of the same size — which, for 1,000 examples, is 90 GPU-seconds.
+
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>Why is a pretrained model not an assistant, in one sentence about the objective?</li>
+<li>Write the masked loss and state which positions get gradient.</li>
+<li>Why is unmasked training wrong, in terms of $\log p(q,r)$ versus $\log p(r\mid q)$?</li>
+<li>Name the three symptoms of a template mismatch.</li>
+<li>Give the bytes-per-parameter breakdown for full fine-tuning and total it.</li>
+<li>Write the LoRA forward pass and the two gradients.</li>
+<li>Why initialize $\mathbf{B}$ to zero, and what does the gradient with respect to $\mathbf{A}$ equal at that point?</li>
+<li>Derive the QLoRA bit budget to 4.127.</li>
+<li>State the Eckart–Young result and its implication for LoRA.</li>
+<li>What four measurements does a fine-tune evaluation need?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. Pretraining maximizes the likelihood of web text, whose dominant conditional structure is "text continues text"; instruction following is a narrow conditional mode that SFT selects rather than creates.
+2. $\mathcal{L} = -\frac{1}{\sum_t m_t}\sum_t m_t\log p_\theta(x_t\mid x_{<t})$; positions with $m_t=0$ receive exactly zero gradient.
+3. $\log p(q,r) = \log p(q)+\log p(r\mid q)$, and $\nabla\log p(q)$ is not zero, so the unmasked gradient also improves prompt generation — 87% of the terms in a typical templated example.
+4. Failure to stop at the end-of-turn token; generation of the user's next turn; and evaluation on a distribution the model never saw.
+5. 2 bytes bf16 weight, 2 bf16 gradient, 4 fp32 master weight, 8 for two fp32 Adam moments — 16 bytes per parameter, so 100.4 GiB for 6.738B.
+6. $\mathbf{h} = \mathbf{W}_0\mathbf{x}+\frac{\alpha}{r}\mathbf{BA}\mathbf{x}$; $\partial\mathcal{L}/\partial\mathbf{B} = \frac{\alpha}{r}\mathbf{g}(\mathbf{A}\mathbf{x})^{\top}$ and $\partial\mathcal{L}/\partial\mathbf{A} = \frac{\alpha}{r}\mathbf{B}^{\top}\mathbf{g}\mathbf{x}^{\top}$.
+7. So the branch is exactly zero at initialization and the model starts at the pretrained function; $\partial\mathcal{L}/\partial\mathbf{A} = \mathbf{0}$ exactly at $\mathbf{B}=\mathbf{0}$, so the factors cannot collapse together.
+8. $4$ for NF4, plus one fp32 absmax per 64 weights $= 32/64 = 0.5$, replaced under double quantization by $(8+32/256)/64 = 0.127$, giving $4.127$.
+9. $\min_{\operatorname{rank}\le r}\|\mathbf{M}-\mathbf{X}\|_F = \sqrt{\sum_{i>r}\sigma_i^{2}}$, attained by the truncated SVD; LoRA's $\mathbf{BA}$ is exactly a rank-$r$ matrix, so its best-case error is that spectral tail.
+10. Held-out target performance, format adherence on adversarial prompts, capability retention on pretraining-era benchmarks, and the training-versus-held-out loss curve.
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><strong>Hu et al., "LoRA: Low-Rank Adaptation of Large Language Models" (2021).</strong> The original; extract §4 for the gradient derivation and the $\alpha/r$ convention, and the appendix for which modules they ablated.</li>
+<li><strong>Dettmers et al., "QLoRA: Efficient Finetuning of Quantized LLMs" (2023).</strong> NF4, double quantization, and paged optimizers, with the bit-budget arithmetic and the memory measurements. Extract §3.</li>
+<li><strong>Liu et al., "DoRA: Weight-Decomposed Low-Rank Adaptation" (2024).</strong> The magnitude-direction decomposition and the empirical case that it closes part of the gap to full fine-tuning.</li>
+<li><strong>Aghajanyan et al., "Intrinsic Dimensionality Explains the Effectiveness of Language Model Fine-Tuning" (2020).</strong> The evidence that fine-tuning updates live in a low-dimensional subspace — the empirical basis for the low-rank hypothesis.</li>
+<li><strong>Zhou et al., "LIMA: Less Is More for Alignment" (2023).</strong> The 1,000-example result and the surface-alignment argument. Read the appendix for exactly how the data was curated.</li>
+<li><strong>Houlsby et al., "Parameter-Efficient Transfer Learning for NLP" (2019)</strong> and <strong>Li and Liang, "Prefix-Tuning" (2021).</strong> The adapter and prefix branches of the PEFT family, for the comparison in this module.</li>
+<li><strong>Eckart and Young (1936), "The Approximation of One Matrix by Another of Lower Rank."</strong> Three pages, and the source of Derivation 3.</li>
+<li><strong>Hugging Face PEFT documentation (free, online).</strong> The reference implementation of every method here; read the LoRA section's notes on <code>merge_and_unload</code> and on targeting modules.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when you can, without notes:</p>
+<ul>
+<li>Write the masked SFT loss, state which tokens get gradient, and explain the $\log p(q,r)$ contamination in one sentence.</li>
+<li>Compute full, LoRA, and QLoRA memory for a model shape you are given, and say which one fits on a named device.</li>
+<li>Derive both LoRA gradients and explain the zero initialization and the $\alpha = r$ convention.</li>
+<li>State Eckart–Young and use it to justify a rank choice for a stated task.</li>
+<li>Reproduce the 4.127-bit budget and explain what double quantization buys.</li>
+<li>Design a four-measurement fine-tune evaluation and name the control that separates format from content.</li>
+</ul><div class="pager"><a id="prevlink" href="../m/16-pretraining-scaling.html"><small>← previous</small><b>M16 · Pretraining and Scaling Laws</b></a><a id="nextlink" class="next" href="../m/18-preference-learning.html"><small>next →</small><b>M18 · Preference Learning: RLHF, DPO, and Reasoning RL</b></a></div></article>
+</main>
+</div>
+</body></html>

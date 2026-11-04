@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M01 · Linear Algebra for Deep Learning — From Zero to Frontier</title>
+<meta name="description" content="Matmul, projection, factorization, and shape — the four moves every network is built from.">
+<meta property="og:title" content="M01 · Linear Algebra for Deep Learning — From Zero to Frontier">
+<meta property="og:description" content="Matmul, projection, factorization, and shape — the four moves every network is built from.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="on" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Mathematical foundations / M01</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M01">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M01</span><span class="pill d2">difficulty 2/5</span><span class="pill">2 weeks</span><span class="pill">prereqs: none</span><span class="pill">6,604 words</span></div><h1>Linear Algebra for Deep Learning</h1><p class="tagline">Matmul, projection, factorization, and shape — the four moves every network is built from.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>Every object inside a transformer is a matrix: the embedding table $\mathbf{E} \in \mathbb{R}^{|V| \times d}$, the query projection $\mathbf{W}_Q$, the score matrix $\mathbf{Q}\mathbf{K}^\top \in \mathbb{R}^{n \times n}$, the unembedding $\mathbf{W}_U$. If a matrix is only a grid of numbers, attention is a formula to memorise, LoRA's $\mathbf{B}\mathbf{A}$ is a trick, and "rank-16 adapter" is noise. Calling <code>x @ W</code> works either way; what breaks is your ability to say what the product does to the space, why the shapes must be what they are, why a near-singular weight matrix destroys training, and why PCA and the SVD are one fact seen from two sides. Backpropagation (<strong>M07</strong>), attention (<strong>M12</strong>), and LoRA (<strong>M17</strong>) are written in this language.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<ol>
+<li>$\mathbf{A} \in \mathbb{R}^{3 \times 4}$, $\mathbf{x} \in \mathbb{R}^{4}$: what is the shape of $\mathbf{A}\mathbf{x}$, and what does one entry mean?</li>
+<li>Compute $\|(3,-4)\|_2$.</li>
+<li>Give two $2\times2$ matrices with $\mathbf{A}\mathbf{B} \ne \mathbf{B}\mathbf{A}$.</li>
+<li>A $5\times3$ matrix has rank 3. How many solutions has $\mathbf{A}\mathbf{x} = \mathbf{0}$?</li>
+<li>If $\mathbf{A}\mathbf{v} = \lambda\mathbf{v}$ with $\mathbf{v} \ne \mathbf{0}$, what happens to the direction of $\mathbf{v}$?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $\mathbb{R}^{3}$; entry $i$ is $\langle \mathbf{a}_{i:}, \mathbf{x}\rangle$, the projection of $\mathbf{x}$ onto row $i$.
+2. $\sqrt{9+16} = 5$.
+3. $\begin{pmatrix}0&1\\0&0\end{pmatrix}\begin{pmatrix}0&0\\1&0\end{pmatrix} = \begin{pmatrix}1&0\\0&0\end{pmatrix}$ but the reverse product is $\begin{pmatrix}0&0\\0&1\end{pmatrix}$.
+4. Exactly one, $\mathbf{x} = \mathbf{0}$: full column rank means the null space is trivial.
+5. It is unchanged; the map rescales it by $\lambda$ (negative flips it, zero annihilates it).
+
+If you miss more than one, work through lectures 1–6 of MIT 18.06 or 3Blue1Brown's *Essence of Linear Algebra* first. Nothing later needs proofs; everything later needs fluency.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<ul>
+<li>Compute a matrix product three ways — composition, sum of outer products, batch of dot products — and say which reading exposes a given shape error.</li>
+<li>Derive the SVD from the eigendecomposition of $\mathbf{A}^\top\mathbf{A}$, and explain why the SVD exists for every matrix while the eigendecomposition does not.</li>
+<li>Derive PCA twice, from projected variance and from reconstruction error, and show the two stationary conditions coincide.</li>
+<li>State Eckart–Young, compute the best rank-$k$ approximation of a small matrix, and price a LoRA adapter in parameters.</li>
+<li>Read any tensor shape in a network and name the axis a broadcast will silently expand.</li>
+<li>Predict, from a spectrum, the largest gradient-descent step that will not diverge.</li>
+<li>List the four fundamental subspaces with bases and dimensions, and say what each means for a linear model.</li>
+<li>Implement PCA by the covariance eigendecomposition and verify it against a truncated SVD.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\mathbf{X} \in \mathbb{R}^{n \times d}$</td>
+<td>$n$ examples (rows), $d$ features (columns)</td>
+</tr>
+<tr>
+<td>$\mathbf{x}_i$, $x_j$</td>
+<td>example $i$ (a row); component $j$ of a vector</td>
+</tr>
+<tr>
+<td>$\langle \mathbf{a},\mathbf{b}\rangle$</td>
+<td>inner product $\sum_j a_j b_j$</td>
+</tr>
+<tr>
+<td>$\|\mathbf{x}\|_p$, $\|\mathbf{A}\|_F$</td>
+<td>$p$-norm; Frobenius norm $\sqrt{\sum_{ij}\mathbf{A}_{ij}^2}$</td>
+</tr>
+<tr>
+<td>$\sigma_i$</td>
+<td>$i$-th singular value, $\sigma_1 \ge \sigma_2 \ge \cdots \ge 0$</td>
+</tr>
+<tr>
+<td>$\lambda_i$</td>
+<td>$i$-th eigenvalue</td>
+</tr>
+<tr>
+<td>$\mathbf{U}\mathbf{\Sigma}\mathbf{V}^\top$</td>
+<td>SVD: $\mathbf{U},\mathbf{V}$ orthogonal, $\mathbf{\Sigma}$ diagonal</td>
+</tr>
+<tr>
+<td>$\kappa(\mathbf{A})$</td>
+<td>condition number $\sigma_{\max}/\sigma_{\min}$</td>
+</tr>
+<tr>
+<td>$\mathcal{C}(\mathbf{A})$, $\mathcal{N}(\mathbf{A})$</td>
+<td>column space, null space</td>
+</tr>
+<tr>
+<td>$\mathbf{I}_d$, $\mathbf{1}_n$</td>
+<td>identity; vector of $n$ ones</td>
+</tr>
+</tbody>
+</table>
+<p>Vectors are columns; rows of a data matrix are examples. $\operatorname{rank}$ means the number of nonzero singular values, which equals the dimension of the column space — that equality is what the SVD makes obvious.</p>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="vectors-spans-and-bases">Vectors, spans, and bases</h3>
+<p><strong>(1) Intuition.</strong> A vector is a displacement; a basis is a choice of ruler directions. Describing a colour as $(255,128,0)$ is not the colour, it is the colour <em>in the RGB basis</em>.</p>
+<p><strong>(2) Formal.</strong> $\mathbf{b}_1,\ldots,\mathbf{b}_k$ <em>span</em> a space if every vector is $\sum_j c_j\mathbf{b}_j$; they are <em>independent</em> if $\sum_j c_j\mathbf{b}_j = \mathbf{0}$ forces all $c_j = 0$; a <em>basis</em> is both, and every basis of $\mathbb{R}^d$ has $d$ elements.</p>
+<p><strong>(3) Why.</strong> Independence buys uniqueness of coordinates: if $\sum_j c_j\mathbf{b}_j = \sum_j c'_j\mathbf{b}_j$ then $\sum_j(c_j - c'_j)\mathbf{b}_j = \mathbf{0}$, so independence forces $c_j = c'_j$. Without it a lookup table (an embedding, a projection) is ill-defined and no inverse exists.</p>
+<p><strong>(4) Micro-example.</strong> $\mathbf{x} = (4,2)$ in the basis $\mathbf{b}_1 = (1,0)$, $\mathbf{b}_2 = (1,1)$: the second component gives $c_2 = 2$, the first gives $c_1 + 2 = 4$, so $\mathbf{c} = (2,2)$, and indeed $2(1,0)+2(1,1) = (4,2)$. Replace $\mathbf{b}_1$ with $(2,0)$ and the set spans only the $x$-axis: rank 1, and $(4,2)$ is unreachable.</p>
+<h3 id="norms-and-what-each-induces">Norms, and what each induces</h3>
+<p><strong>(1) Intuition.</strong> A norm says how big a vector is, and different norms price different things: $\ell_1$ sums the components (taxicab), $\ell_2$ is straight-line distance, $\ell_\infty$ is the worst single component.</p>
+<p><strong>(2) Formal.</strong> For $p \ge 1$, $\|\mathbf{x}\|_p = \left(\sum_j |x_j|^p\right)^{1/p}$ and $\|\mathbf{x}\|_\infty = \max_j |x_j|$.</p>
+<p><strong>(3) Why.</strong> The unit ball <em>is</em> the geometry. The $\ell_1$ ball is a diamond with corners on the axes, so growing it cheapest puts you on a corner where most coordinates are exactly zero; the $\ell_2$ ball is round, so the solution spreads. That is the geometric reason $\ell_1$ regularisation sparsifies and $\ell_2$ does not (<strong>M05</strong>). $\ell_\infty$ appears when the worst case matters, not the total.</p>
+<p><strong>(4) Micro-example.</strong> For $(3,-4)$: $\ell_1 = 7$, $\ell_2 = 5$, $\ell_\infty = 4$. For $(1,1)$: $\ell_1 = 2$ but $\ell_2 = 1.414$ — a 41% disagreement on an ordinary vector, so "the gradient norm is 1" is meaningless until you name the norm.</p>
+<h3 id="inner-products-angles-cosine-similarity">Inner products, angles, cosine similarity</h3>
+<p><strong>(1) Intuition.</strong> The inner product is a projection with a scale factor: how much of $\mathbf{a}$ lies along $\mathbf{b}$, times the length of $\mathbf{b}$.</p>
+<p><strong>(2) Formal.</strong> $\langle\mathbf{a},\mathbf{b}\rangle = \mathbf{a}^\top\mathbf{b} = \|\mathbf{a}\|_2\|\mathbf{b}\|_2\cos\theta$, and $\cos\theta = \langle\mathbf{a},\mathbf{b}\rangle/(\|\mathbf{a}\|_2\|\mathbf{b}\|_2) \in [-1,1]$.</p>
+<p><strong>(3) Why.</strong> Cosine is scale-invariant, so embeddings of different magnitude still compare. Attention scores are inner products, hence measure alignment rather than length; the variance of a dot product of $d$ independent unit-variance entries grows with $d$, which is exactly why the scores are divided by $\sqrt{d_k}$ before the softmax (<strong>M12</strong>).</p>
+<p><strong>(4) Micro-example.</strong> $\mathbf{a} = (1,2)$, $\mathbf{b} = (3,1)$: inner product 5, norms $\sqrt5$ and $\sqrt{10}$, $\cos\theta = 5/\sqrt{50} = 0.7071$, so $45\text{°}$. Double $\mathbf{b}$: the inner product doubles to 10, the cosine is unchanged.</p>
+<p><div class="viz" data-viz="v-cosine-sim"></div><div class="vizcap">Drag either vector. Watch the dot product change when you lengthen a vector while the cosine stays put, and the sign flip as one vector crosses 90 degrees from the other.</div></p>
+<h3 id="matrices-as-maps-matrices-as-data">Matrices as maps, matrices as data</h3>
+<p><strong>(1) Intuition.</strong> A matrix has two lives: a verb that moves points, and a noun that tabulates measurements. Most shape confusion comes from mixing the two in one expression.</p>
+<p><strong>(2) Formal.</strong> $\mathbf{A} \in \mathbb{R}^{m\times n}$ is the linear map $\mathbf{A}\mathbf{x} = \sum_j x_j\mathbf{a}_{:j}$, so the columns are where the standard basis lands: $\mathbf{A}\mathbf{e}_j = \mathbf{a}_{:j}$.</p>
+<p><strong>(3) Why.</strong> The column picture self-checks shapes: an $m\times n$ matrix eats $n$-vectors. A layer <code>y = x @ W</code> with <code>x</code> of shape <code>(batch, d_in)</code> and <code>W</code> of shape <code>(d_in, d_out)</code> is a verb along the feature axis of a noun, leaving batch untouched — which is why one layer serves any batch size.</p>
+<p><strong>(4) Micro-example.</strong> $\mathbf{A} = \begin{pmatrix}1&2\\3&4\end{pmatrix}$ sends $\mathbf{e}_1 \mapsto (1,3)$ and $\mathbf{e}_2 \mapsto (2,4)$. The unit square becomes the parallelogram spanned by those vectors, with area $|1\cdot4 - 2\cdot3| = 2$ — the determinant.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 372" width="100%" role="img" aria-label="A matrix as a transformation of the plane" class="fig-svg"><defs><marker id="linmap-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="-17.9" y1="40.0" x2="-17.9" y2="320.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="64.6" y1="40.0" x2="64.6" y2="320.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="147.1" y1="40.0" x2="147.1" y2="320.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="229.6" y1="40.0" x2="229.6" y2="320.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="312.1" y1="40.0" x2="312.1" y2="320.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="394.6" y1="40.0" x2="394.6" y2="320.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="44.0" y1="390.6" x2="374.0" y2="390.6" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="44.0" y1="308.1" x2="374.0" y2="308.1" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="44.0" y1="225.6" x2="374.0" y2="225.6" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="44.0" y1="143.1" x2="374.0" y2="143.1" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="44.0" y1="60.6" x2="374.0" y2="60.6" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="44.0" y1="-21.9" x2="374.0" y2="-21.9" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="44.0" y1="225.6" x2="374.0" y2="225.6" stroke="var(--fig-faint,#3a4467)" stroke-width="1" stroke-linecap="round"/><line x1="147.1" y1="40.0" x2="147.1" y2="320.5" stroke="var(--fig-faint,#3a4467)" stroke-width="1" stroke-linecap="round"/><path d="M147.1,225.6 L229.6,225.6 L229.6,143.1 L147.1,143.1 Z" fill="rgba(91,140,255,0.07)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="4 3"/><path d="M147.1,225.6 L270.9,192.6 L320.4,93.6 L196.6,126.6 Z" fill="rgba(34,211,238,0.13)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><line x1="147.1" y1="225.6" x2="270.9" y2="192.6" stroke="var(--fig-blue,#5b8cff)" stroke-width="2.4" stroke-linecap="round" marker-end="url(#linmap-ah)"/><line x1="147.1" y1="225.6" x2="196.6" y2="126.6" stroke="var(--fig-amber,#f5b544)" stroke-width="2.4" stroke-linecap="round" marker-end="url(#linmap-ah)"/><line x1="147.1" y1="225.6" x2="229.6" y2="225.6" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.3" stroke-linecap="round" marker-end="url(#linmap-ah)" stroke-dasharray="3 3" opacity="0.55"/><line x1="147.1" y1="225.6" x2="147.1" y2="143.1" stroke="var(--fig-amber,#f5b544)" stroke-width="1.3" stroke-linecap="round" marker-end="url(#linmap-ah)" stroke-dasharray="3 3" opacity="0.55"/><text x="270.9" y="192.6" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-blue,#5b8cff)" text-anchor="start" font-weight="600">Ae1</text><text x="196.6" y="126.6" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-amber,#f5b544)" text-anchor="end" font-weight="600">Ae2</text><text x="44.0" y="360.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">dashed outline: the unit square you started with</text><rect x="410.0" y="40.0" width="392.0" height="296.0" rx="12" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="432.0" y="74.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="14" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">A =</text><path d="M484.0,54.0 L478.0,54.0 L478.0,94.3 L484.0,94.3" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M596.0,54.0 L602.0,54.0 L602.0,94.3 L596.0,94.3" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/><text x="540.0" y="69.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="13" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">1.5 0.6</text><text x="540.0" y="89.2" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="13" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">0.4 1.2</text><line x1="432.0" y1="112.0" x2="780.0" y2="112.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1" stroke-linecap="round"/><text x="432.0" y="138.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">det A</text><text x="520.0" y="138.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="650">1.56</text><text x="432.0" y="154.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">the area of the blue square is multiplied by 1.56</text><text x="432.0" y="184.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">rank</text><text x="520.0" y="184.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="650">2</text><text x="432.0" y="200.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">the image still covers the plane; nothing is flattened</text><text x="432.0" y="230.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Ae1</text><text x="520.0" y="230.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="650">(1.5, 0.4)</text><text x="432.0" y="246.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">where the first basis vector lands</text><text x="432.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Ae2</text><text x="520.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="650">(0.6, 1.2)</text><text x="432.0" y="292.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">where the second one lands</text><text x="432.0" y="326.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-violet,#a78bfa)" text-anchor="start" font-weight="600">every column of A is just the image of a basis vector.</text></svg><figcaption>The two basis vectors move and drag the grid with them; follow one grid cell and notice it stays a parallelogram, because a linear map shears and stretches but never bends.</figcaption></figure></p>
+<p><div class="viz" data-viz="v-matrix-transform"></div><div class="vizcap">Drag the four entries and watch the unit square and grid deform. Push toward a singular matrix: the cell area collapses, the live determinant readout crosses zero, and two different inputs now map to the same output.</div></p>
+<h3 id="matrix-multiplication-three-readings">Matrix multiplication: three readings</h3>
+<p><strong>(1) Intuition.</strong> Composition (apply $\mathbf{B}$, then $\mathbf{A}$); sum of rank-one pieces; batch of dot products.</p>
+<p><strong>(2) Formal.</strong> With $\mathbf{A} \in \mathbb{R}^{m\times n}$, $\mathbf{B} \in \mathbb{R}^{n\times p}$:</p>
+<p>$$(\mathbf{A}\mathbf{B})_{ij} = \sum_{k=1}^{n}\mathbf{A}_{ik}\mathbf{B}_{kj}, \qquad \mathbf{A}\mathbf{B} = \sum_{k=1}^{n}\mathbf{a}_{:k}\mathbf{b}_{k:}, \qquad (\mathbf{A}\mathbf{B})\mathbf{x} = \mathbf{A}(\mathbf{B}\mathbf{x}).$$</p>
+<p><strong>(3) Why.</strong> Each reading answers a different question. Composition gives the chain rule for Jacobians (<strong>M02</strong>, <strong>M07</strong>). Outer products bound the rank by $\min(m,n,p)$ — the fact behind LoRA. Batched dots are why a GPU kernel tiles the output and streams rows and columns through registers.</p>
+<p><strong>(4) Micro-example.</strong> $\mathbf{A} = \begin{pmatrix}1&2\\3&4\end{pmatrix}$, $\mathbf{B} = \begin{pmatrix}5&6\\7&8\end{pmatrix}$. Outer-product form: $5\begin{pmatrix}1\\3\end{pmatrix}(1,0) + 6\begin{pmatrix}1\\3\end{pmatrix}(0,1) + 7\begin{pmatrix}2\\4\end{pmatrix}(1,0) + 8\begin{pmatrix}2\\4\end{pmatrix}(0,1) = \begin{pmatrix}19&22\\43&50\end{pmatrix}$, matching the batched-dot entry $\langle(1,2),(5,7)\rangle = 19$. Cost: $2mnp$ flops, so a $4096^3$ product is $1.37\times10^{11}$ flops.</p>
+<h3 id="rank-and-the-column-space">Rank and the column space</h3>
+<p><strong>(1) Intuition.</strong> Rank is the number of independent directions the map actually produces. A rank-1 matrix crushes the plane onto a line.</p>
+<p><strong>(2) Formal.</strong> $\operatorname{rank}(\mathbf{A}) = \dim\mathcal{C}(\mathbf{A}) = \dim(\text{row space}) = $ number of nonzero $\sigma_i$, and rank–nullity gives $\operatorname{rank}(\mathbf{A}) + \dim\mathcal{N}(\mathbf{A}) = n$.</p>
+<p><strong>(3) Why.</strong> Rank is a capacity statement: a layer whose weight has rank $r$ can only ever output in an $r$-dimensional subspace, whatever its nominal width. And rank + nullity $= n$ says every input splits into a part that survives and a part that is destroyed, with sizes always summing to the input dimension.</p>
+<p><strong>(4) Micro-example.</strong> $\mathbf{A} = \begin{pmatrix}1&2\\2&4\end{pmatrix}$: column 2 is twice column 1, so rank 1; $\mathbf{A}(2,-1) = (0,0)$, so $\mathcal{N}(\mathbf{A}) = \operatorname{span}\{(2,-1)\}$; rank 1 + nullity 1 = 2. Singular values $5.4772$ and $0$.</p>
+<h3 id="the-four-fundamental-subspaces">The four fundamental subspaces</h3>
+<p><strong>(1) Intuition.</strong> A matrix relates $\mathbb{R}^n$ to $\mathbb{R}^m$ and, in each space, splits it into the part it can reach and the perpendicular part it cannot. Four pieces, two per side.</p>
+<p><strong>(2) Formal.</strong> For $\mathbf{A} \in \mathbb{R}^{m\times n}$ of rank $r$:</p>
+<table>
+<thead>
+<tr>
+<th>Subspace</th>
+<th>Lives in</th>
+<th>Dimension</th>
+<th>Meaning for a model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Column space $\mathcal{C}(\mathbf{A})$</td>
+<td>$\mathbb{R}^m$</td>
+<td>$r$</td>
+<td>outputs the model can produce</td>
+</tr>
+<tr>
+<td>Left null space $\mathcal{N}(\mathbf{A}^\top)$</td>
+<td>$\mathbb{R}^m$</td>
+<td>$m-r$</td>
+<td>output directions nothing reaches</td>
+</tr>
+<tr>
+<td>Row space $\mathcal{C}(\mathbf{A}^\top)$</td>
+<td>$\mathbb{R}^n$</td>
+<td>$r$</td>
+<td>input directions that matter</td>
+</tr>
+<tr>
+<td>Null space $\mathcal{N}(\mathbf{A})$</td>
+<td>$\mathbb{R}^n$</td>
+<td>$n-r$</td>
+<td>input directions the map ignores</td>
+</tr>
+</tbody>
+</table>
+<p>with $\mathbb{R}^n = \mathcal{C}(\mathbf{A}^\top)\oplus\mathcal{N}(\mathbf{A})$ and $\mathbb{R}^m = \mathcal{C}(\mathbf{A})\oplus\mathcal{N}(\mathbf{A}^\top)$.</p>
+<p><strong>(3) Why.</strong> These four are the complete story of a linear map. Least squares is the projection of $\mathbf{y}$ onto $\mathcal{C}(\mathbf{A})$; a feature in $\mathcal{N}(\mathbf{A})$ is one your model provably cannot use; collinearity in a design matrix means some input direction is invisible, which is exactly why $\mathbf{X}^\top\mathbf{X}$ turns singular (<strong>M05</strong>).</p>
+<p><strong>(4) Micro-example.</strong> $\mathbf{A} = \begin{pmatrix}1&2\\2&4\end{pmatrix}$, $r = 1$. Column and row space are both $\operatorname{span}\{(1,2)\}$; both null spaces are $\operatorname{span}\{(2,-1)\}$. Split the input $(3,1) = (1,2) + (2,-1)$: only the first piece survives, and $\mathbf{A}(3,1) = (5,10) = 5(1,2)$.</p>
+<h3 id="eigenvectors-and-eigenvalues">Eigenvectors and eigenvalues</h3>
+<p><strong>(1) Intuition.</strong> Apply a matrix to a typical vector and it returns rotated. A few directions return on their own line, merely stretched: those are eigenvectors, and the stretch factors are eigenvalues.</p>
+<p><strong>(2) Formal.</strong> $\mathbf{A}\mathbf{v} = \lambda\mathbf{v}$ with $\mathbf{v}\ne\mathbf{0}$, equivalently $(\mathbf{A}-\lambda\mathbf{I})\mathbf{v} = \mathbf{0}$ with a nonzero solution, which needs $\det(\mathbf{A}-\lambda\mathbf{I}) = 0$. The $n$ roots satisfy $\sum_i\lambda_i = \operatorname{tr}\mathbf{A}$ and $\prod_i\lambda_i = \det\mathbf{A}$.</p>
+<p><strong>(3) Why.</strong> In the eigenbasis the matrix is diagonal, so iterating is trivial: $\mathbf{A}^k\mathbf{v} = \lambda^k\mathbf{v}$. Every question about repeated application becomes a question about $|\lambda|$ — which is why the stability bound in <strong>M04</strong> is an eigenvalue condition and why a recurrent network's gradients vanish or explode according to a spectral radius (<strong>M11</strong>).</p>
+<p><strong>(4) Micro-example.</strong> $\mathbf{A} = \begin{pmatrix}2&1\\1&2\end{pmatrix}$: $\mathbf{A}(1,1) = (3,3) = 3(1,1)$ and $\mathbf{A}(1,-1) = (1,-1) = 1(1,-1)$, so $\lambda = 3,1$. Checks: trace $4 = 3+1$, determinant $3 = 3\cdot1$. The rotation $\begin{pmatrix}0&-1\\1&0\end{pmatrix}$ has characteristic polynomial $\lambda^2+1$: eigenvalues $\pm i$, no real eigenvector, because every vector turns 90 degrees.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 372" width="100%" role="img" aria-label="Eigenvectors are the directions that do not rotate" class="fig-svg"><defs><marker id="eigen-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="-2.1" y1="46.0" x2="-2.1" y2="332.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><line x1="82.1" y1="46.0" x2="82.1" y2="332.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><line x1="166.2" y1="46.0" x2="166.2" y2="332.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><line x1="250.3" y1="46.0" x2="250.3" y2="332.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><line x1="334.4" y1="46.0" x2="334.4" y2="332.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><line x1="418.5" y1="46.0" x2="418.5" y2="332.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><line x1="40.0" y1="390.9" x2="359.6" y2="390.9" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><line x1="40.0" y1="306.8" x2="359.6" y2="306.8" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><line x1="40.0" y1="222.6" x2="359.6" y2="222.6" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><line x1="40.0" y1="138.5" x2="359.6" y2="138.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><line x1="40.0" y1="54.4" x2="359.6" y2="54.4" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><line x1="40.0" y1="-29.7" x2="359.6" y2="-29.7" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><line x1="40.0" y1="222.6" x2="359.6" y2="222.6" stroke="var(--fig-faint,#3a4467)" stroke-width="1" stroke-linecap="round"/><line x1="166.2" y1="46.0" x2="166.2" y2="332.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1" stroke-linecap="round"/><line x1="48.5" y1="320.9" x2="283.9" y2="124.4" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="5 4" opacity="0.5"/><line x1="166.2" y1="222.6" x2="253.4" y2="149.9" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.8" stroke-linecap="round" marker-end="url(#eigen-ah)"/><circle cx="332.6" cy="83.7" r="5.0" fill="var(--fig-cyan,#22d3ee)"/><line x1="253.4" y1="149.9" x2="332.6" y2="83.7" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#eigen-ah)" stroke-dasharray="3 3" opacity="0.7"/><line x1="264.4" y1="340.3" x2="67.9" y2="104.9" stroke="var(--fig-rose,#fb7185)" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="5 4" opacity="0.5"/><line x1="166.2" y1="222.6" x2="93.4" y2="135.5" stroke="var(--fig-rose,#fb7185)" stroke-width="2.8" stroke-linecap="round" marker-end="url(#eigen-ah)"/><circle cx="108.6" cy="153.7" r="5.0" fill="var(--fig-rose,#fb7185)"/><line x1="93.4" y1="135.5" x2="108.6" y2="153.7" stroke="var(--fig-rose,#fb7185)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#eigen-ah)" stroke-dasharray="3 3" opacity="0.7"/><circle cx="166.2" cy="222.6" r="3.2" fill="var(--fig-ink,#e6e9f5)"/><text x="196.0" y="88.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">λ₁ = 1.91</text><text x="196.0" y="106.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="700">λ₂ = 0.79</text><text x="40.0" y="360.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">dashed: the invariant lines. Dotted: where each vector is carried.</text><rect x="410.0" y="46.0" width="396.0" height="286.0" rx="12" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="430.0" y="80.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="17" fill="var(--fig-violet,#a78bfa)" text-anchor="start" font-weight="700">A v = λ v</text><text x="430.0" y="104.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">the matrix scales v; it never rotates v</text><line x1="430.0" y1="120.0" x2="786.0" y2="120.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1" stroke-linecap="round"/><text x="430.0" y="148.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="650">λ₁ = 1.909</text><text x="430.0" y="166.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">stretch along the cyan direction</text><text x="430.0" y="195.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="650">λ₂ = 0.791</text><text x="430.0" y="213.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">mild compression along the rose direction</text><text x="430.0" y="242.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="650">λ₁λ₂ = 1.510</text><text x="430.0" y="260.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">equals det A: area splits into independent stretches</text><text x="430.0" y="289.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="650">|λ| &lt; 1</text><text x="430.0" y="307.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">that direction is genuinely shrunk</text></svg><figcaption>Each eigen-direction keeps its line through the origin while every other direction rotates off it, and the arrows along the eigen-lines change length by exactly the eigenvalue.</figcaption></figure></p>
+<p><div class="viz" data-viz="v-eigen"></div><div class="vizcap">Drag the matrix entries with the eigen-overlay on. As you rotate toward a pure rotation the two eigen-lines swing together and then vanish from the real plane — a complex eigenvalue pair, which this widget handles.</div></p>
+<h3 id="symmetric-and-positive-definite-matrices">Symmetric and positive-definite matrices</h3>
+<p><strong>(1) Intuition.</strong> Symmetric matrices are the well-behaved ones: their stretch directions are perpendicular, so no rotation is mixed in; if every stretch is positive the map pushes everything away from the origin, and the quadratic form is a bowl.</p>
+<p><strong>(2) Formal.</strong> $\mathbf{A} = \mathbf{A}^\top$ has, by the spectral theorem, an orthonormal eigenbasis with real eigenvalues: $\mathbf{A} = \mathbf{Q}\mathbf{\Lambda}\mathbf{Q}^\top$. It is positive semi-definite if $\mathbf{x}^\top\mathbf{A}\mathbf{x}\ge0$ for all $\mathbf{x}$, equivalently if all $\lambda_i \ge 0$.</p>
+<p><strong>(3) Why.</strong> Three central matrices are symmetric by construction: Hessians (mixed partials commute, <strong>M02</strong>), so Newton's method decouples into independent scalings; covariance matrices, so PCA needs only real eigenvalues; and $\mathbf{A}^\top\mathbf{A}$, which is what makes the SVD exist.</p>
+<p><strong>(4) Micro-example.</strong> $\begin{pmatrix}2&1\\1&2\end{pmatrix}$ has $\lambda = 3,1 > 0$: positive definite, and $\mathbf{x}^\top\mathbf{A}\mathbf{x} = 2x_1^2+2x_1x_2+2x_2^2 > 0$ off the origin. $\begin{pmatrix}0&1\\1&0\end{pmatrix}$ has $\lambda = 1,-1$: indefinite, curving up along $(1,1)$ and down along $(1,-1)$ — a saddle, the terrain <strong>M04</strong> must climb.</p>
+<h3 id="determinants-as-volume-scaling">Determinants as volume scaling</h3>
+<p><strong>(1) Intuition.</strong> The determinant is the factor by which the map multiplies signed volume: the area of the image of the unit square in 2-D, the volume of the image of the unit cube in 3-D.</p>
+<p><strong>(2) Formal.</strong> $\det(\mathbf{A}\mathbf{B}) = \det\mathbf{A}\det\mathbf{B}$, $\det\mathbf{I} = 1$, $\det = 0$ exactly when $\mathbf{A}$ is singular. Since $\mathbf{A} = \mathbf{U}\mathbf{\Sigma}\mathbf{V}^\top$ with orthogonal factors of determinant $\pm1$, $|\det\mathbf{A}| = \prod_i\sigma_i$.</p>
+<p><strong>(3) Why.</strong> The determinant answers <em>whether</em> information survives — a zero determinant means a dimension was crushed. It does not answer <em>how well</em>: $\begin{pmatrix}1&1000\\0&1\end{pmatrix}$ has determinant 1 and condition number near $10^6$. Volume is preserved; shape is destroyed, and shape is what ruins optimisation.</p>
+<p><strong>(4) Micro-example.</strong> $\begin{pmatrix}3&0\\4&5\end{pmatrix}$ has $\det = 15$, and the unit square maps to a parallelogram of area 15. Via the SVD: $\sigma = 6.7082$ and $2.2361$, product $\sqrt{225} = 15$.</p>
+<h3 id="the-singular-value-decomposition">The singular value decomposition</h3>
+<p><strong>(1) Intuition.</strong> Any matrix, square or not, is a rotation, then a scaling, then a rotation. Choose the right two perpendicular frames and the map is just "multiply axis $i$ by $\sigma_i$".</p>
+<p><strong>(2) Formal.</strong> For every $\mathbf{A} \in \mathbb{R}^{m\times n}$ there are orthogonal $\mathbf{U}, \mathbf{V}$ and a diagonal $\mathbf{\Sigma}$ with $\mathbf{\Sigma}_{ii} = \sigma_i \ge 0$ such that</p>
+<p>$$\mathbf{A} = \mathbf{U}\mathbf{\Sigma}\mathbf{V}^\top = \sum_{i=1}^{\min(m,n)}\sigma_i\mathbf{u}_i\mathbf{v}_i^\top .$$</p>
+<p><strong>(3) Why.</strong> Eigenvectors exist only for square matrices, may be complex, and may fail to span. The SVD always exists, handles rectangles, gives orthonormal bases on both sides, and orders factors by importance — which is why every least-squares routine is built on it.</p>
+<p><strong>(4) Micro-example.</strong> $\mathbf{A} = \begin{pmatrix}3&0\\4&5\end{pmatrix}$: $\mathbf{A}^\top\mathbf{A} = \begin{pmatrix}25&20\\20&25\end{pmatrix}$, eigenvalues $45$ and $5$, so $\sigma = (6.7082, 2.2361)$ and $\mathbf{v}_1 = (1,1)/\sqrt2$, $\mathbf{v}_2 = (1,-1)/\sqrt2$. Then $\mathbf{u}_1 = \mathbf{A}\mathbf{v}_1/\sigma_1 = (0.3162,0.9487)$ and $\mathbf{u}_2 = \mathbf{A}\mathbf{v}_2/\sigma_2 = (0.9487,-0.3162)$. Signs are arbitrary; a fully sign-flipped decomposition is equally valid.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 330" width="100%" role="img" aria-label="SVD as rotate, scale, rotate" class="fig-svg"><defs><marker id="svd-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="28.5" y1="72.0" x2="28.5" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="73.8" y1="72.0" x2="73.8" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="119.0" y1="72.0" x2="119.0" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="164.2" y1="72.0" x2="164.2" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="209.5" y1="72.0" x2="209.5" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="24.0" y1="241.6" x2="214.0" y2="241.6" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="24.0" y1="196.4" x2="214.0" y2="196.4" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="24.0" y1="151.2" x2="214.0" y2="151.2" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="24.0" y1="105.9" x2="214.0" y2="105.9" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="24.0" y1="60.7" x2="214.0" y2="60.7" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="24.0" y1="151.2" x2="214.0" y2="151.2" stroke="var(--fig-faint,#3a4467)" stroke-width="1" stroke-linecap="round"/><line x1="119.0" y1="72.0" x2="119.0" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="1" stroke-linecap="round"/><path d="M119.0,151.2 L164.2,151.2 L164.2,105.9 L119.0,105.9 Z" fill="none" stroke="var(--fig-blue,#5b8cff)" stroke-width="2.0" stroke-linejoin="round" stroke-linecap="round"/><text x="119.0" y="54.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">start</text><text x="119.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">the unit square</text><line x1="217.0" y1="154.0" x2="231.0" y2="154.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#svd-ah)"/><line x1="238.5" y1="72.0" x2="238.5" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="283.8" y1="72.0" x2="283.8" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="329.0" y1="72.0" x2="329.0" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="374.2" y1="72.0" x2="374.2" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="419.5" y1="72.0" x2="419.5" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="234.0" y1="241.6" x2="424.0" y2="241.6" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="234.0" y1="196.4" x2="424.0" y2="196.4" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="234.0" y1="151.2" x2="424.0" y2="151.2" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="234.0" y1="105.9" x2="424.0" y2="105.9" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="234.0" y1="60.7" x2="424.0" y2="60.7" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="234.0" y1="151.2" x2="424.0" y2="151.2" stroke="var(--fig-faint,#3a4467)" stroke-width="1" stroke-linecap="round"/><line x1="329.0" y1="72.0" x2="329.0" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="1" stroke-linecap="round"/><path d="M329.0,151.2 L293.7,179.5 L265.4,144.2 L300.7,115.9 Z" fill="none" stroke="var(--fig-violet,#a78bfa)" stroke-width="2.0" stroke-linejoin="round" stroke-linecap="round"/><text x="329.0" y="54.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">Vᵀ applied</text><text x="329.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">a pure rotation</text><line x1="427.0" y1="154.0" x2="441.0" y2="154.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#svd-ah)"/><line x1="448.5" y1="72.0" x2="448.5" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="493.8" y1="72.0" x2="493.8" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="539.0" y1="72.0" x2="539.0" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="584.2" y1="72.0" x2="584.2" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="629.5" y1="72.0" x2="629.5" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="444.0" y1="241.6" x2="634.0" y2="241.6" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="444.0" y1="196.4" x2="634.0" y2="196.4" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="444.0" y1="151.2" x2="634.0" y2="151.2" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="444.0" y1="105.9" x2="634.0" y2="105.9" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="444.0" y1="60.7" x2="634.0" y2="60.7" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="444.0" y1="151.2" x2="634.0" y2="151.2" stroke="var(--fig-faint,#3a4467)" stroke-width="1" stroke-linecap="round"/><line x1="539.0" y1="72.0" x2="539.0" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="1" stroke-linecap="round"/><path d="M539.0,151.2 L472.8,174.7 L419.7,145.4 L485.9,121.8 Z" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2.0" stroke-linejoin="round" stroke-linecap="round"/><text x="539.0" y="54.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">Σ Vᵀ applied</text><text x="539.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">stretch by σ₁, σ₂</text><line x1="637.0" y1="154.0" x2="651.0" y2="154.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#svd-ah)"/><line x1="658.5" y1="72.0" x2="658.5" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="703.8" y1="72.0" x2="703.8" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="749.0" y1="72.0" x2="749.0" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="794.2" y1="72.0" x2="794.2" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="839.5" y1="72.0" x2="839.5" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="654.0" y1="241.6" x2="844.0" y2="241.6" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="654.0" y1="196.4" x2="844.0" y2="196.4" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="654.0" y1="151.2" x2="844.0" y2="151.2" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="654.0" y1="105.9" x2="844.0" y2="105.9" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="654.0" y1="60.7" x2="844.0" y2="60.7" stroke="var(--fig-faint,#3a4467)" stroke-width="0.7" stroke-linecap="round" opacity="0.4"/><line x1="654.0" y1="151.2" x2="844.0" y2="151.2" stroke="var(--fig-faint,#3a4467)" stroke-width="1" stroke-linecap="round"/><line x1="749.0" y1="72.0" x2="749.0" y2="230.3" stroke="var(--fig-faint,#3a4467)" stroke-width="1" stroke-linecap="round"/><path d="M749.0,151.2 L816.9,133.1 L844.0,78.8 L776.1,96.9 Z" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.0" stroke-linejoin="round" stroke-linecap="round"/><text x="749.0" y="54.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">UΣVᵀ applied</text><text x="749.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">the final rotation</text><text x="420.0" y="30.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="14" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">A = U Σ Vᵀ — every matrix is rotate, then scale, then rotate</text><text x="420.0" y="324.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">σ = (1.876, 0.832); κ = σ₁/σ₂ = 2.26 — the ratio that sets how slowly gradient descent crawls</text></svg><figcaption>Three panel states: the first rotation aligns the right singular vectors with the axes, the middle scales each axis by its singular value, the last rotation places them in the output frame. Watch the unit circle become an ellipse whose semi-axis lengths are the singular values.</figcaption></figure></p>
+<h3 id="conditioning">Conditioning</h3>
+<p><strong>(1) Intuition.</strong> The condition number is the aspect ratio of that ellipse: how much harder the matrix stretches its favourite direction than its least favourite. A well-conditioned matrix distorts gently; a badly conditioned one turns a ball into a needle.</p>
+<p><strong>(2) Formal.</strong> $\kappa(\mathbf{A}) = \sigma_{\max}/\sigma_{\min} = \|\mathbf{A}\|_2\|\mathbf{A}^{-1}\|_2$ for invertible $\mathbf{A}$, and it bounds relative-error amplification: $\|\delta\mathbf{x}\|/\|\mathbf{x}\| \le \kappa\,\|\delta\mathbf{b}\|/\|\mathbf{b}\|$.</p>
+<p><strong>(3) Why.</strong> $\kappa$ is the single number that says how much your arithmetic costs: in float64 you lose about $\log_{10}\kappa$ digits. In optimisation it sets the ratio of fastest to slowest curvature, so a step small enough for the steep direction makes progress along the shallow one $\kappa$ times slower (<strong>M04</strong> derives this).</p>
+<p><strong>(4) Micro-example.</strong> $\mathbf{A} = \operatorname{diag}(1,100)$: $\kappa = 100$, and $f(\mathbf{x}) = \frac12\mathbf{x}^\top\mathbf{A}\mathbf{x}$ is a valley steeper across than along. Stability needs $\eta < 2/100 = 0.02$, while the $\lambda = 1$ direction would tolerate $\eta < 2$. You are forced onto the small step and crawl.</p>
+<h3 id="tensors-broadcasting-shape-reasoning">Tensors, broadcasting, shape reasoning</h3>
+<p><strong>(1) Intuition.</strong> A tensor is an array with more than two axes; broadcasting is the rule that replicates the smaller operand instead of failing — convenient when intended, catastrophic when not.</p>
+<p><strong>(2) Formal.</strong> Align shapes from the right; two aligned dimensions are compatible if equal or if one is 1, which is expanded; missing leading dimensions count as 1. Expansion is done with a zero stride, so <code>(N,1) + (1,M)</code> never materialises an $N\times M$ input.</p>
+<p><strong>(3) Why.</strong> Without broadcasting you would reshape everywhere; with it, a per-feature bias <code>(d,)</code> combines with a batch <code>(N,d)</code> in one line. The price is that the <em>wrong</em> broadcast also succeeds, silently.</p>
+<p><strong>(4) Micro-example.</strong> <code>(3,1,4)</code> with <code>(2,1)</code>: 4 vs 1 becomes 4, 1 vs 2 becomes 2, then 3 survives — result <code>(3,2,4)</code>. The bug: with <code>logits</code> <code>(N,C)</code> and <code>targets</code> <code>(N,)</code>, the expression <code>logits - targets</code> is shape-valid and subtracts example $i$'s scalar from <em>all</em> of its $C$ logits instead of from the matching class. It runs, it is wrong, and nothing raises.</p>
+<h3 id="why-factorization-is-the-whole-game">Why factorization is the whole game</h3>
+<ul>
+<li><strong>LoRA.</strong> A full update $\Delta\mathbf{W} \in \mathbb{R}^{d\times k}$ costs $dk$ parameters; constrain it to rank $r$ as $\Delta\mathbf{W} = \mathbf{B}\mathbf{A}$ with $\mathbf{B}\in\mathbb{R}^{d\times r}$, $\mathbf{A}\in\mathbb{R}^{r\times k}$ and it costs $r(d+k)$. At $d = k = 4096$, $r = 16$: $1.68\times10^7$ parameters become $1.31\times10^5$, a 128-fold cut. Eckart–Young (below) is what makes "keep the top $r$" principled; the assumption that the update spectrum decays fast is empirical (<strong>M17</strong>).</li>
+<li><strong>Embeddings.</strong> Factorising a word–context co-occurrence matrix into low rank yields vectors whose dot products approximate co-occurrence statistics — the sense in which word2vec is implicit matrix factorisation.</li>
+<li><strong>Attention.</strong> $\mathbf{Q}\mathbf{K}^\top$ has entries $\langle\mathbf{q}_i,\mathbf{k}_j\rangle$: a Gram matrix of a rank-$\min(n,d_k)$ map, and each head writes only into the $d_k$-dimensional span of its value vectors. A head with $d_k = 64$ cannot address more than 64 directions, which is why heads are cheap to prune and why multi-head attention splits the width rather than widening it (<strong>M12</strong>).</li>
+</ul>
+<p>The rest of this module makes those three sentences precise.</p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<p>The algorithmic spine is <strong>PCA via the SVD</strong>, because it touches every object above: centring (a projection), the covariance (symmetric PSD), the eigendecomposition, the SVD, low-rank approximation, and conditioning.</p>
+<ol>
+<li>Assemble $\mathbf{X} \in \mathbb{R}^{N\times d}$, one example per row.</li>
+<li>Column means $\boldsymbol{\mu} = \frac{1}{N}\mathbf{X}^\top\mathbf{1}_N \in \mathbb{R}^d$; centre, $\mathbf{X}_c = \mathbf{X} - \mathbf{1}_N\boldsymbol{\mu}^\top$. Without this the first component chases the mean rather than the variance.</li>
+<li>Optionally divide each column by its standard deviation: covariance PCA (units matter) versus correlation PCA (units do not). This is a modelling decision, not a default.</li>
+<li>Covariance $\mathbf{C} = \frac{1}{N-1}\mathbf{X}_c^\top\mathbf{X}_c$, symmetric PSD by construction.</li>
+<li>Eigendecomposition $\mathbf{C} = \mathbf{V}\mathbf{\Lambda}\mathbf{V}^\top$; sort $\lambda_1\ge\lambda_2\ge\cdots\ge0$ and permute the columns of $\mathbf{V}$ to match.</li>
+<li>Better numerically: take the thin SVD $\mathbf{X}_c = \mathbf{U}\mathbf{S}\mathbf{V}^\top$ and read $\lambda_i = s_i^2/(N-1)$ and the same $\mathbf{V}$. Identical in exact arithmetic; the SVD route never forms a matrix with $\kappa^2$.</li>
+<li>Choose $k$ as the smallest index with $\sum_{i\le k}\lambda_i/\sum_{i\le d}\lambda_i \ge \tau$ (0.95 and 0.99 are the usual targets).</li>
+<li>Project: $\mathbf{Z} = \mathbf{X}_c\mathbf{V}_k \in \mathbb{R}^{N\times k}$ — row $\mathbf{z}_i$ is example $i$'s new coordinates.</li>
+<li>Reconstruct: $\hat{\mathbf{X}} = \mathbf{Z}\mathbf{V}_k^\top + \mathbf{1}_N\boldsymbol{\mu}^\top$; the squared residual is $\sum_{i>k}s_i^2$ by Eckart–Young.</li>
+</ol>
+<p>```text
+INPUT  X (N x d), target variance tau
+MU    <- (1/N) * X^T @ ones(N);      XC <- X - ones(N) @ MU^T
+[opt] XC <- XC / std(XC, axis=0)                      # correlation PCA
+U, S, VT <- SVD(XC)                                   # thin
+LAM   <- S^2 / (N - 1)                                # covariance eigenvalues
+K     <- min k such that cumsum(LAM)[k] / sum(LAM) >= tau
+VK    <- VT[:K].T;   Z <- XC @ VK                     # loadings, scores
+XHAT  <- Z @ VK.T + ones(N) @ MU^T                    # reconstruction
+RESID <- sum(S[K:]^2)                                 # squared Frobenius error
+RETURN Z, VK, LAM, XHAT, RESID
+```</p>
+<p><strong>Complexity.</strong> Thin SVD: $O(Nd\min(N,d))$ time, $O(Nd)$ memory. The covariance route costs $O(Nd^2)$ for the product plus $O(d^3)$ to diagonalise, with $O(d^2)$ memory — cheaper when $N \ge d$ and much larger, at the price of squaring $\kappa$. Projection and reconstruction are $O(Ndk)$.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="1-matmul-is-composition-and-a-sum-of-outer-products">1. Matmul is composition and a sum of outer products</h3>
+<p>$$\begin{aligned}
+((\mathbf{A}\mathbf{B})\mathbf{x})_i &= \sum_{j}(\mathbf{A}\mathbf{B})_{ij}x_j = \sum_j\left(\sum_k \mathbf{A}_{ik}\mathbf{B}_{kj}\right)x_j = \sum_k\mathbf{A}_{ik}\left(\sum_j\mathbf{B}_{kj}x_j\right) = (\mathbf{A}(\mathbf{B}\mathbf{x}))_i,
+\end{aligned}$$</p>
+<p>which is the composition identity: regrouping a finite sum is the entire proof. For the outer-product form, expand entries of $\sum_k \mathbf{a}_{:k}\mathbf{b}_{k:}$:</p>
+<p>$$\left(\sum_k\mathbf{a}_{:k}\mathbf{b}_{k:}\right)_{ij} = \sum_k(\mathbf{a}_{:k})_i(\mathbf{b}_{k:})_j = \sum_k\mathbf{A}_{ik}\mathbf{B}_{kj} = (\mathbf{A}\mathbf{B})_{ij}.$$</p>
+<p>Each term is rank 1, so a sum of $n$ terms has rank at most $n$; applying the same to $\mathbf{A}$'s own rank gives $\operatorname{rank}(\mathbf{A}\mathbf{B})\le\min(\operatorname{rank}\mathbf{A},\operatorname{rank}\mathbf{B})$.</p>
+<h3 id="2-i309-is-symmetric-positive-semi-definite">2. $\mathbf{A}^\top\mathbf{A}$ is symmetric positive semi-definite</h3>
+<p>$(\mathbf{A}^\top\mathbf{A})^\top = \mathbf{A}^\top\mathbf{A}$, and for every $\mathbf{x}$,</p>
+<p>$$\mathbf{x}^\top\mathbf{A}^\top\mathbf{A}\mathbf{x} = (\mathbf{A}\mathbf{x})^\top(\mathbf{A}\mathbf{x}) = \|\mathbf{A}\mathbf{x}\|_2^2 \ge 0,$$</p>
+<p>with equality iff $\mathbf{A}\mathbf{x} = \mathbf{0}$. Hence its eigenvalues are real and nonnegative and its eigenvectors orthogonal — the two facts the SVD needs.</p>
+<h3 id="3-the-svd-from-the-eigendecomposition-of-i313">3. The SVD from the eigendecomposition of $\mathbf{A}^\top\mathbf{A}$</h3>
+<p><strong>Step 1.</strong> By the spectral theorem $\mathbf{A}^\top\mathbf{A} = \mathbf{V}\mathbf{\Lambda}\mathbf{V}^\top$ with $\mathbf{V}$ orthogonal and $\lambda_i\ge0$.</p>
+<p><strong>Step 2.</strong> Order $\lambda_1\ge\cdots\ge\lambda_r>0=\lambda_{r+1}=\cdots=\lambda_n$; the index $r$ is $\operatorname{rank}(\mathbf{A})$ because $\mathbf{x}^\top\mathbf{A}^\top\mathbf{A}\mathbf{x} = 0$ exactly on $\mathcal{N}(\mathbf{A})$.</p>
+<p><strong>Step 3.</strong> $\sigma_i = \sqrt{\lambda_i}$, and for $i\le r$ define $\mathbf{u}_i = \mathbf{A}\mathbf{v}_i/\sigma_i$.</p>
+<p><strong>Step 4.</strong> These are unit vectors: $\|\mathbf{A}\mathbf{v}_i\|^2 = \mathbf{v}_i^\top\mathbf{A}^\top\mathbf{A}\mathbf{v}_i = \mathbf{v}_i^\top(\lambda_i\mathbf{v}_i) = \sigma_i^2$. They are orthogonal: for $i\ne j\le r$,</p>
+<p>$$\mathbf{u}_i^\top\mathbf{u}_j = \frac{\mathbf{v}_i^\top\mathbf{A}^\top\mathbf{A}\mathbf{v}_j}{\sigma_i\sigma_j} = \frac{\lambda_j\,\mathbf{v}_i^\top\mathbf{v}_j}{\sigma_i\sigma_j} = 0.$$</p>
+<p><strong>Step 5.</strong> Extend $\{\mathbf{u}_1,\ldots,\mathbf{u}_r\}$ to an orthonormal basis of $\mathbb{R}^m$ by Gram–Schmidt. These extra vectors span the left null space.</p>
+<p><strong>Step 6.</strong> Check $\mathbf{A} = \mathbf{U}\mathbf{\Sigma}\mathbf{V}^\top$ on the basis $\{\mathbf{v}_j\}$, which suffices since both sides are linear. On the right, $\mathbf{U}\mathbf{\Sigma}\mathbf{V}^\top\mathbf{v}_j = \mathbf{U}\mathbf{\Sigma}\mathbf{e}_j = \sigma_j\mathbf{u}_j$. On the left, $\mathbf{A}\mathbf{v}_j = \sigma_j\mathbf{u}_j$ for $j\le r$ by construction, and for $j>r$, $\|\mathbf{A}\mathbf{v}_j\|^2 = \lambda_j = 0$ so both sides are $\mathbf{0}$.</p>
+<p><strong>Corollary.</strong> $\det\mathbf{A} = \det\mathbf{U}\det\mathbf{\Sigma}\det\mathbf{V}^\top$, and orthogonal factors have determinant $\pm1$, so $|\det\mathbf{A}| = \prod_i\sigma_i$; also $\|\mathbf{A}\|_2 = \sigma_1$ and $\kappa = \sigma_1/\sigma_n$ for invertible square $\mathbf{A}$.</p>
+<p><strong>Rotate–scale–rotate.</strong> $\mathbf{V}^\top\mathbf{x}$ re-expresses $\mathbf{x}$ in the orthonormal right-singular frame (an isometry: no shape change). $\mathbf{\Sigma}$ multiplies coordinate $i$ by $\sigma_i$ — the only step that changes shape, mapping the unit ball to an axis-aligned ellipsoid. $\mathbf{U}$ rotates it into the output frame. Hence the image of the unit ball is an ellipsoid with semi-axes $\sigma_i\mathbf{u}_i$, and $\|\mathbf{A}\mathbf{x}\|_2 \le \sigma_1\|\mathbf{x}\|_2$ with equality at $\mathbf{x} = \mathbf{v}_1$ — the reason $\sigma_1$ is the operator norm.</p>
+<h3 id="4-eckartyoung">4. Eckart–Young</h3>
+<p><strong>Lemma (von Neumann).</strong> $\langle\mathbf{A},\mathbf{B}\rangle = \operatorname{tr}(\mathbf{A}^\top\mathbf{B}) \le \sum_i\sigma_i(\mathbf{A})\sigma_i(\mathbf{B})$: the inner product is largest when singular vectors align. This is the one standard result used without full proof here.</p>
+<p><strong>Theorem.</strong> With $\mathbf{A}_k = \sum_{i\le k}\sigma_i\mathbf{u}_i\mathbf{v}_i^\top$, for every $\mathbf{B}$ of rank $\le k$:</p>
+<p>$$\|\mathbf{A}-\mathbf{A}_k\|_F^2 = \sum_{i>k}\sigma_i^2 \le \|\mathbf{A}-\mathbf{B}\|_F^2 .$$</p>
+<p><strong>Proof.</strong> Expand and bound the middle term with the lemma:</p>
+<p>$$\begin{aligned}
+\|\mathbf{A}-\mathbf{B}\|_F^2 &= \|\mathbf{A}\|_F^2 - 2\langle\mathbf{A},\mathbf{B}\rangle + \|\mathbf{B}\|_F^2 \\
+&\ge \sum_i\sigma_i^2 - 2\sum_{i\le k}\sigma_i\sigma_i(\mathbf{B}) + \sum_{i\le k}\sigma_i(\mathbf{B})^2
+= \sum_{i>k}\sigma_i^2 + \sum_{i\le k}(\sigma_i - \sigma_i(\mathbf{B}))^2 \ge \sum_{i>k}\sigma_i^2,
+\end{aligned}$$</p>
+<p>using $\operatorname{rank}\mathbf{B}\le k$ to truncate both sums over $\mathbf{B}$'s singular values. Equality needs $\sigma_i(\mathbf{B}) = \sigma_i$ for $i\le k$ with aligned vectors, i.e. $\mathbf{B} = \mathbf{A}_k$; substituting gives the stated error. The theorem turns "keep the top $k$" from a heuristic into the provably optimal rank-$k$ approximation, and prices the loss as the discarded share of squared spectral mass.</p>
+<h3 id="5-the-pseudoinverse-and-why-least-squares-needs-it">5. The pseudoinverse, and why least squares needs it</h3>
+<p>For $\mathbf{A} = \mathbf{U}\mathbf{\Sigma}\mathbf{V}^\top$ define $\mathbf{A}^+ = \mathbf{V}\mathbf{\Sigma}^+\mathbf{U}^\top$, where $\mathbf{\Sigma}^+$ inverts each nonzero $\sigma_i$ and leaves zeros. If $\mathbf{A}$ has full column rank then</p>
+<p>$$\mathbf{A}^+\mathbf{A} = \mathbf{V}\mathbf{\Sigma}^+\mathbf{\Sigma}\mathbf{V}^\top = \mathbf{V}\mathbf{I}_n\mathbf{V}^\top = \mathbf{I}_n .$$</p>
+<p>For general $\mathbf{A}$, $\mathbf{x}^{*} = \mathbf{A}^+\mathbf{b}$ is the minimum-norm least-squares solution. Least-squares part: for any $\mathbf{x}$,</p>
+<p>$$\|\mathbf{A}\mathbf{x}-\mathbf{b}\|^2 = \|\mathbf{A}(\mathbf{x}-\mathbf{x}^{*})\|^2 + \|\mathbf{A}\mathbf{x}^{*}-\mathbf{b}\|^2 + 2\langle\mathbf{A}(\mathbf{x}-\mathbf{x}^{*}),\ \mathbf{A}\mathbf{x}^{*}-\mathbf{b}\rangle,$$</p>
+<p>and the cross term vanishes because $\mathbf{A}(\mathbf{x}-\mathbf{x}^{*})\in\mathcal{C}(\mathbf{A})$ is orthogonal to $\mathbf{A}\mathbf{x}^{*}-\mathbf{b} \in \mathcal{N}(\mathbf{A}^\top)$. The division by $\sigma_{\min}$ is where conditioning bites: a tiny singular value inflates the fit by $1/\sigma_{\min}$, so truncating the smallest ones (or adding ridge) is not cosmetic.</p>
+<h3 id="6-pca-twice-and-why-the-two-agree">6. PCA twice, and why the two agree</h3>
+<p><strong>Route A, maximise projected variance.</strong> Project centred data on a unit $\mathbf{w}$: $z_i = \mathbf{w}^\top\mathbf{x}_{c,i}$, with sample variance $\frac{1}{N-1}\sum_i z_i^2 = \mathbf{w}^\top\mathbf{C}\mathbf{w}$. With the Lagrangian $\mathcal{L} = \mathbf{w}^\top\mathbf{C}\mathbf{w} - \lambda(\mathbf{w}^\top\mathbf{w}-1)$,</p>
+<p>$$\frac{\partial\mathcal{L}}{\partial\mathbf{w}} = 2\mathbf{C}\mathbf{w} - 2\lambda\mathbf{w} = 0 \;\Longrightarrow\; \mathbf{C}\mathbf{w} = \lambda\mathbf{w},$$</p>
+<p>so every stationary point is an eigenvector and the objective there equals $\lambda$. For any unit $\mathbf{w}$, $\mathbf{w}^\top\mathbf{C}\mathbf{w} = \sum_i\lambda_i(\mathbf{v}_i^\top\mathbf{w})^2 \le \lambda_1\sum_i(\mathbf{v}_i^\top\mathbf{w})^2 = \lambda_1$, so the maximum is $\lambda_1$ at $\mathbf{w} = \mathbf{v}_1$. Repeat under $\mathbf{w}^\top\mathbf{v}_1 = 0$ to get $\mathbf{v}_2$, and so on.</p>
+<p><strong>Route B, minimise reconstruction error.</strong> Let $\mathbf{P} = \mathbf{W}\mathbf{W}^\top$ with $\mathbf{W}\in\mathbb{R}^{d\times k}$ orthonormal columns. Since $\|(\mathbf{I}-\mathbf{P})\mathbf{x}\|^2 = \mathbf{x}^\top\mathbf{x} - \mathbf{x}^\top\mathbf{W}\mathbf{W}^\top\mathbf{x}$ and the sample average of $\mathbf{x}^\top\mathbf{M}\mathbf{x}$ is $\operatorname{tr}(\mathbf{M}\mathbf{C})$,</p>
+<p>$$\frac{1}{N-1}\sum_i\|\mathbf{x}_{c,i}-\mathbf{P}\mathbf{x}_{c,i}\|^2 = \operatorname{tr}(\mathbf{C}) - \operatorname{tr}(\mathbf{W}^\top\mathbf{C}\mathbf{W}).$$</p>
+<p>Minimising the error means maximising $\sum_{j\le k}\mathbf{w}_j^\top\mathbf{C}\mathbf{w}_j$ over orthonormal $\mathbf{w}_j$; by Route A's bound the maximum is $\sum_{j\le k}\lambda_j$, attained at $\mathbf{W} = [\mathbf{v}_1,\ldots,\mathbf{v}_k]$.</p>
+<p><strong>Why they agree.</strong> The two objectives differ by the constant $\operatorname{tr}(\mathbf{C})$, so maximising retained variance and minimising discarded variance cannot disagree: both give the stationary condition $\mathbf{C}\mathbf{W} = \mathbf{W}\mathbf{\Lambda}$. Route A supplies the interpretation, Route B supplies the error formula and generalises to the SVD of $\mathbf{X}_c$, which is what you compute.</p>
+<h3 id="7-conditioning-amplifies-error-and-slows-gradient-descent">7. Conditioning amplifies error and slows gradient descent</h3>
+<p><strong>Error.</strong> With $\mathbf{b} = \mathbf{A}\mathbf{x}$ and $\delta\mathbf{x} = \mathbf{A}^{-1}\delta\mathbf{b}$,</p>
+<p>$$\|\delta\mathbf{x}\|\le\|\mathbf{A}^{-1}\|\|\delta\mathbf{b}\| = \frac{\|\delta\mathbf{b}\|}{\sigma_n}, \qquad \|\mathbf{b}\|\le\sigma_1\|\mathbf{x}\| \;\Longrightarrow\; \frac{1}{\|\mathbf{x}\|}\le\frac{\sigma_1}{\|\mathbf{b}\|}.$$</p>
+<p>Multiplying gives $\|\delta\mathbf{x}\|/\|\mathbf{x}\|\le\kappa\|\delta\mathbf{b}\|/\|\mathbf{b}\|$, attained when $\delta\mathbf{b}\parallel\mathbf{u}_1$ and $\mathbf{x}\parallel\mathbf{v}_n$: $\kappa$ is exact, not pessimistic.</p>
+<p><strong>Descent.</strong> For $f(\mathbf{x}) = \frac12\mathbf{x}^\top\mathbf{A}\mathbf{x}$ with $\mathbf{A}$ symmetric positive definite, gradient descent is $\mathbf{x}_{k+1} = (\mathbf{I}-\eta\mathbf{A})\mathbf{x}_k$, which decouples in the eigenbasis into $x^{(i)}_{k+1} = (1-\eta\lambda_i)x^{(i)}_k$. Direction $i$ decays iff $|1-\eta\lambda_i|<1$, i.e. $0<\eta<2/\lambda_i$; all directions must be stable, so $\eta<2/\lambda_{\max}$. At $\eta = 1/\lambda_{\max}$ the slow direction contracts by $1-1/\kappa$ per step, so reaching error $\varepsilon$ costs about $\kappa\log(1/\varepsilon)$ iterations. $\kappa$ is the wall-clock cost of training, not a numerical curiosity.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>PCA by covariance eigendecomposition, reconstructed and cross-checked against the truncated SVD. <code>numpy</code> supplies only the eigensolver and the SVD; centring, ordering, truncation, and error accounting are explicit.</p>
+<p>```python
+import numpy as np
+
+def pca_eigh(X, k):
+    """PCA via the eigendecomposition of the covariance matrix."""
+    N = X.shape[0]
+    mu = X.mean(axis=0)                  # (d,)  column means
+    Xc = X - mu                          # centre: project out the mean direction
+    C = (Xc.T @ Xc) / (N - 1)            # (d,d) symmetric PSD by construction
+    lam, V = np.linalg.eigh(C)           # ascending eigenvalues, orthonormal V
+    order = np.argsort(lam)[::-1]        # descending, so component 1 is the largest
+    lam, V = lam[order], V[:, order]
+    lam = np.clip(lam, 0.0, None)        # round-off can produce tiny negatives
+    Vk = V[:, :k]                        # (d,k) loadings
+    Z = Xc @ Vk                          # (N,k) scores
+    return Z, Vk, lam, Z @ Vk.T + mu     # reconstruction includes the mean again
+
+def truncated_svd(X, k):
+    """Same truncation via the SVD, to check the eigendecomposition route."""
+    mu = X.mean(axis=0); Xc = X - mu
+    U, S, Vt = np.linalg.svd(Xc, full_matrices=False)
+    A_k = (U[:, :k] * S[:k]) @ Vt[:k]    # best rank-k approximation (Eckart-Young)
+    return S, np.linalg.norm(Xc - A_k), A_k + mu
+
+X = np.array([[2.5,2.4],[0.5,0.7],[2.2,2.9],[1.9,2.2],[3.1,3.0],
+              [2.3,2.7],[2.0,1.6],[1.0,1.1],[1.5,1.6],[1.1,0.9]])
+
+Z, Vk, lam, Xhat = pca_eigh(X, k=1)
+S, err, recon = truncated_svd(X, k=1)
+print("eigenvalues     :", lam)                 # [1.28403 0.04908]
+print("explained ratio :", lam / lam.sum())     # [0.96318 0.03682]
+print("loadings        :", Vk.ravel())          # ~[0.6779 0.7352]
+print("sqrt(eig), S/sqrt(N-1):", np.sqrt(lam), S / np.sqrt(len(X) - 1))
+print("eigh error, svd error  :", np.linalg.norm(X - Xhat), err)   # equal to ~1e-15
+```</p>
+<p><strong>What to expect.</strong> Eigenvalues $1.28403$ and $0.04908$: the first component keeps 96.3% of the variance, so <code>k=1</code> suffices. The loadings $(0.6779, 0.7352)$ mix the two features almost equally, as a cloud stretched along the diagonal implies. The two reconstruction errors must agree to round-off; if they do not, the $N$ versus $N-1$ normalisation differs between the routes. The SVD's discarded singular value, $S[1] = 0.6646$, squared, is the rank-1 error — Eckart–Young, numerically.</p>
+<h2 id="worked-example">Worked example</h2>
+<h3 id="trace-1-the-svd-of-a-i424-matrix-by-hand">Trace 1: the SVD of a $2\times2$ matrix by hand</h3>
+<p>Let $\mathbf{A} = \begin{pmatrix}3&0\\4&5\end{pmatrix}$.</p>
+<p><strong>Form $\mathbf{A}^\top\mathbf{A}$ and diagonalise it.</strong></p>
+<p>$$\mathbf{A}^\top\mathbf{A} = \begin{pmatrix}3&4\\0&5\end{pmatrix}\begin{pmatrix}3&0\\4&5\end{pmatrix} = \begin{pmatrix}25&20\\20&25\end{pmatrix}, \qquad \det(\mathbf{A}^\top\mathbf{A}-\lambda\mathbf{I}) = (25-\lambda)^2 - 400 = 0,$$</p>
+<p>so $25-\lambda = \pm20$ and $\lambda = 45, 5$.</p>
+<p><strong>Singular values and right vectors.</strong> $\sigma_1 = \sqrt{45} = 6.7082$, $\sigma_2 = \sqrt5 = 2.2361$, hence $\sigma_1\sigma_2 = 15 = \det\mathbf{A}$. For $\lambda = 45$, $\mathbf{A}^\top\mathbf{A}-45\mathbf{I} = \begin{pmatrix}-20&20\\20&-20\end{pmatrix}$ has null vector $(1,1)$, so $\mathbf{v}_1 = (0.7071,0.7071)$; for $\lambda = 5$, $\mathbf{v}_2 = (0.7071,-0.7071)$.</p>
+<p><strong>Left vectors</strong>, from $\mathbf{u}_i = \mathbf{A}\mathbf{v}_i/\sigma_i$:</p>
+<p>$$\mathbf{A}\mathbf{v}_1 = \begin{pmatrix}2.1213\\6.3640\end{pmatrix} \Rightarrow \mathbf{u}_1 = \begin{pmatrix}0.3162\\0.9487\end{pmatrix}, \qquad \mathbf{A}\mathbf{v}_2 = \begin{pmatrix}2.1213\\-0.7071\end{pmatrix} \Rightarrow \mathbf{u}_2 = \begin{pmatrix}0.9487\\-0.3162\end{pmatrix}.$$</p>
+<p><strong>Checks.</strong> $\mathbf{u}_1^\top\mathbf{u}_2 = 0$, and $\sigma_1\mathbf{u}_1\mathbf{v}_1^\top + \sigma_2\mathbf{u}_2\mathbf{v}_2^\top = \begin{pmatrix}3&0\\4&5\end{pmatrix}$ exactly. $\kappa = 6.7082/2.2361 = 3$, so roughly half a digit is lost in a solve.</p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\sigma_1,\sigma_2$</td>
+<td>6.7082, 2.2361</td>
+</tr>
+<tr>
+<td>$\kappa$, $\det$, $\prod_i\sigma_i$</td>
+<td>3.0000, 15.0000, 15.0000</td>
+</tr>
+<tr>
+<td>best rank-1 error $\|\mathbf{A}-\mathbf{A}_1\|_F$</td>
+<td>2.2361</td>
+</tr>
+<tr>
+<td>relative rank-1 error ($\|\mathbf{A}\|_F = 7.0711$)</td>
+<td>0.3162</td>
+</tr>
+</tbody>
+</table>
+<h3 id="trace-2-pca-on-ten-points">Trace 2: PCA on ten points</h3>
+<p>$\mathbf{X}$ is the ten-row cloud above; $\mu_1 = 1.81$, $\mu_2 = 1.91$.</p>
+<p><strong>Covariance</strong> with $N-1 = 9$: $\mathbf{C} = \begin{pmatrix}0.61656&0.61544\\0.61544&0.71656\end{pmatrix}$. Both diagonal entries are close and the off-diagonal nearly as large, so the cloud is stretched along $45\text{°}$ and the first loading should mix the features almost equally.</p>
+<p><strong>Eigenvalues.</strong> $(0.61656-\lambda)(0.71656-\lambda)-0.61544^2 = 0$ gives $\lambda_1 = 1.28403$, $\lambda_2 = 0.04908$. Checks: $\lambda_1+\lambda_2 = 1.33311 = \operatorname{tr}\mathbf{C}$ and $\lambda_1\lambda_2 = 0.06303 = \det\mathbf{C}$.</p>
+<p><strong>Explained variance and loadings.</strong> $1.28403/1.33311 = 0.9632$, and $\mathbf{v}_1 = (0.6779,0.7352)$, $\mathbf{v}_2 = (-0.7352,0.6779)$.</p>
+<p><strong>First three scores</strong>, from $z_{i1} = 0.6779(x_{i1}-1.81)+0.7352(x_{i2}-1.91)$:</p>
+<table>
+<thead>
+<tr>
+<th>$i$</th>
+<th>$\mathbf{x}_i$</th>
+<th>$\mathbf{x}_i-\boldsymbol{\mu}$</th>
+<th>$z_{i1}$</th>
+<th>$z_{i2}$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>(2.5, 2.4)</td>
+<td>(0.69, 0.49)</td>
+<td>$-0.8280$</td>
+<td>$0.1751$</td>
+</tr>
+<tr>
+<td>2</td>
+<td>(0.5, 0.7)</td>
+<td>(-1.31, -1.21)</td>
+<td>$1.7776$</td>
+<td>$-0.1429$</td>
+</tr>
+<tr>
+<td>3</td>
+<td>(2.2, 2.9)</td>
+<td>(0.39, 0.99)</td>
+<td>$-0.9922$</td>
+<td>$-0.3844$</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Error.</strong> $s_1 = \sqrt{9\lambda_1} = 3.3994$, $s_2 = \sqrt{9\lambda_2} = 0.6646$. The rank-1 reconstruction errs by $s_2 = 0.6646$ against a total norm of $3.4638$ — $19.2\%$ in norm, which squares to the $3.7\%$ of discarded variance. Both routes agree, as derivation 6 requires.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="a-matrix-is-just-a-table-of-numbers">"A matrix is just a table of numbers"</h3>
+<p>It is a linear map, and the table is its representation in a particular pair of bases. The table view hides that a $4096\times4096$ weight matrix of rank 64 uses almost none of its possible directions, and hides why transposing changes what a map does.</p>
+<h3 id="the-determinant-measures-how-invertible-a-matrix-is">"The determinant measures how invertible a matrix is"</h3>
+<p>It measures <em>whether</em> a matrix is invertible and how volume scales. $\begin{pmatrix}1&1000\\0&1\end{pmatrix}$ has determinant 1 and condition number about $10^6$; a solve loses six digits. Optimisation cares about conditioning, not volume.</p>
+<h3 id="eigenvectors-and-singular-vectors-are-the-same-thing">"Eigenvectors and singular vectors are the same thing"</h3>
+<p>They coincide only for symmetric positive semi-definite matrices. In general $\mathbf{v}_i$ diagonalises $\mathbf{A}^\top\mathbf{A}$ and $\mathbf{u}_i$ diagonalises $\mathbf{A}\mathbf{A}^\top$ — different spaces, generally different directions. A $90\text{°}$ rotation has no real eigenvectors but singular values $(1,1)$ and is perfectly conditioned.</p>
+<h3 id="more-dimensions-means-more-information">"More dimensions means more information"</h3>
+<p>Dimensions that are combinations of others are redundant, and dimensions you cannot measure are noise. Rank, not shape, bounds capacity: a 1000-dimensional embedding of a rank-50 co-occurrence matrix carries 50 dimensions of signal and 950 of arbitrary choice. That is why truncating embeddings is often free, and why two independently trained tables are not comparable at the same shape.</p>
+<h3 id="broadcasting-does-what-i-meant">"Broadcasting does what I meant"</h3>
+<p>Broadcasting does what right-alignment says. <code>(N, d) - (N,)</code> is shape-valid and almost always wrong: it subtracts per-example scalars along the feature axis. Write the intended output shape in a comment before the expression, and use <code>(N, 1)</code>.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>1.1</strong> <code>X</code> is <code>(32,128)</code>, <code>W</code> is <code>(128,256)</code>, <code>v</code> is <code>(256,)</code>. Give the shape of <code>X @ W @ v</code>, say what one entry means, and state which association is cheaper to evaluate.</p>
+<details><summary>Solution</summary>
+
+`(32,)` — one scalar per example. Entry $i$ is $\langle \mathbf{x}_i, \mathbf{W}\mathbf{v}\rangle$, a single projection of each example. `X @ (W @ v)` costs $O(256^2 + 32\cdot256)$; `(X @ W) @ v` costs $O(32\cdot256^2)$ because it forms the full $(32,256)$ matrix first. Associativity lets you choose the cheap order — the same freedom backward-pass implementations exploit.
+</details>
+
+<p><strong>1.2</strong> Compute the three norms of $\mathbf{x} = (2,-3,6)$ and say which constrains the largest single coordinate.</p>
+<details><summary>Solution</summary>
+
+$\ell_1 = 11$, $\ell_2 = \sqrt{4+9+36} = 7$, $\ell_\infty = 6$. Only $\ell_\infty \le c$ is literally "$|x_j|\le c$ for every $j$"; the chain $\|\mathbf{x}\|_\infty \le \|\mathbf{x}\|_2 \le \|\mathbf{x}\|_1$ holds in general.
+</details>
+
+<p><strong>1.3</strong> For $\mathbf{A} = \begin{pmatrix}1&2\\2&4\end{pmatrix}$ give the rank, the null space, the singular values, and $\kappa$.</p>
+<details><summary>Solution</summary>
+
+$\det = 0$, so $\operatorname{rank} = 1$ (column 2 is twice column 1). Null space $\operatorname{span}\{(2,-1)\}$. $\mathbf{A}$ is symmetric, so singular values are $|\lambda|$: $\lambda^2 - 5\lambda = 0$ gives $\sigma = (5,0)$ and $\kappa = \infty$.
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>1.4</strong> Compute the SVD of $\mathbf{A} = \begin{pmatrix}2&0\\0&-3\end{pmatrix}$ from scratch, checking every step, and verify $\sigma_1\sigma_2 = |\det\mathbf{A}|$.</p>
+<details><summary>Solution</summary>
+
+$\mathbf{A}^\top\mathbf{A} = \operatorname{diag}(4,9)$, eigenvalues $9,4$ so $\sigma_1 = 3$, $\sigma_2 = 2$. Right vectors: $\lambda = 9 \Rightarrow \mathbf{v}_1 = (0,1)$; $\lambda = 4 \Rightarrow \mathbf{v}_2 = (1,0)$ — note the ordering swap. Left: $\mathbf{u}_1 = \mathbf{A}\mathbf{v}_1/3 = (0,-1)$, $\mathbf{u}_2 = (1,0)$. Check: $3\begin{pmatrix}0&0\\0&-1\end{pmatrix} + 2\begin{pmatrix}1&0\\0&0\end{pmatrix} = \begin{pmatrix}2&0\\0&-3\end{pmatrix}$. And $6 = |{-6}|$. A negative eigenvalue becomes a sign flip inside $\mathbf{U}$; singular values are never negative.
+</details>
+
+<p><strong>1.5</strong> Singular values $(5,3,1,0.5)$. Give the relative error of the best rank-2 approximation in the Frobenius norm and in the squared Frobenius norm.</p>
+<details><summary>Solution</summary>
+
+Discarded mass $= 1+0.25 = 1.25$; total $= 25+9+1+0.25 = 35.25$. Squared-norm relative error $1.25/35.25 = 3.55\%$; norm relative error $\sqrt{1.25/35.25} = 18.8\%$. The factor of $\sqrt{\cdot}$ between them is why you must name the norm.
+</details>
+
+<p><strong>1.6</strong> A LoRA adapter targets a $4096\times4096$ matrix at ranks 8 and 64. Give parameters and compression versus full fine-tuning, and the bf16 memory at rank 8.</p>
+<details><summary>Solution</summary>
+
+Full: $16{,}777{,}216$ parameters. Rank 8: $8(4096+4096) = 65{,}536$ (256× smaller); rank 64: $524{,}288$ (32× smaller). In bf16 (2 bytes) the rank-8 adapter is 131 KB against 33.6 MB. When $d = k$ the compression is $d/(2r)$ — linear in rank, not quadratic.
+</details>
+
+<p><strong>1.7</strong> Compute $\kappa$ for $\begin{pmatrix}1&1\\1&1.01\end{pmatrix}$ and explain in one sentence why it is dangerous in a least-squares fit.</p>
+<details><summary>Solution</summary>
+
+Singular values $2.0050125$ and $0.0049875$, so $\kappa = 402$. The two columns point almost the same way, so a relative error of $10^{-3}$ in the targets can produce a relative error of order $0.4$ in the coefficients: predictions stay stable while the coefficients swing between runs. Ridge regression fixes it by lifting $\sigma_{\min}$ away from zero.
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>1.8</strong> Implement power iteration for the top right singular vector and show the error contracts by $(\sigma_2/\sigma_1)^2$ per step.</p>
+<details><summary>Solution</summary>
+
+Iterate $\mathbf{v} \leftarrow \mathbf{A}^\top\mathbf{A}\mathbf{v}$, normalise. With $\mathbf{v}_0 = \sum_i c_i\mathbf{v}_i$, after $k$ steps the vector is $\lambda_1^k\left(c_1\mathbf{v}_1 + \sum_{i>1}c_i(\lambda_i/\lambda_1)^k\mathbf{v}_i\right)$, so contamination contracts by $\lambda_i/\lambda_1 = (\sigma_i/\sigma_1)^2$. For $\mathbf{A} = \begin{pmatrix}3&0\\4&5\end{pmatrix}$ that ratio is $5/45 = 1/9$: about one digit per step, from $(1,0)$ through $(0.7809,0.6247)$, $(0.7081,0.7061)$ to $(0.7071,0.7071)$. When the top two singular values are close, this stalls — which is why practical SVD uses Lanczos or randomised variants.
+</details>
+
+<p><strong>1.9</strong> Build a $2\times2$ matrix with determinant exactly 1 and condition number near $10^4$, and say what it does to a float64 solve.</p>
+<details><summary>Solution</summary>
+
+$\begin{pmatrix}1&100\\0&1\end{pmatrix}$: $\det = 1$, singular values $100.01$ and $0.009999$, so $\kappa \approx 10^4$. Float64 carries about 16 digits and a solve loses $\log_{10}\kappa \approx 4$, leaving 12 — fine here. Push the off-diagonal to $10^8$ and $\kappa\approx10^{16}$: every entry is exactly representable and the determinant is still 1, yet the computed solution is noise. The determinant never warned you; $\kappa$ did.
+</details>
+
+<p><strong>1.10</strong> A matrix is $\sigma_1\mathbf{u}_1\mathbf{v}_1^\top + \mathbf{N}$ with i.i.d. noise of entry standard deviation $\epsilon$ in $\mathbf{N}$. When does the second singular value stop being signal, and what does that imply for choosing $k$?</p>
+<details><summary>Solution</summary>
+
+The largest singular value of an $m\times n$ i.i.d. noise matrix is about $\epsilon(\sqrt{m}+\sqrt{n})$. A component $\sigma_i$ is recoverable only if it exceeds that edge; below it you are measuring noise. In practice plot the whole spectrum on a log scale and cut at the elbow, but not below the noise floor $\epsilon(\sqrt{m}+\sqrt{n})$. This is also why the success of low-rank fine-tuning is an empirical claim about the spectrum of $\Delta\mathbf{W}$, not a theorem.
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>Why can an $m\times n$ matrix not be applied to an $m$-vector?</li>
+<li>Give the three readings of $\mathbf{A}\mathbf{B}$ and one place each is the natural one.</li>
+<li>Why is $\|\mathbf{u}_i\| = 1$ in the SVD construction?</li>
+<li>Which matrices have an orthonormal eigenbasis, and why does it matter for Newton's method?</li>
+<li>State Eckart–Young and give the rank-$k$ Frobenius error.</li>
+<li>Two features are nearly collinear. Relate that to rank, $\kappa$, and coefficient variance.</li>
+<li>Why is the SVD route to PCA numerically preferable to forming $\mathbf{X}_c^\top\mathbf{X}_c$?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. Entry $i$ is a row of length $n$ dotted with a column of length $m$: undefined unless $m = n$.
+2. Composition (backprop: Jacobians multiply in order); outer products (the rank bound behind LoRA); batched dots (GPU kernels and the attention score matrix).
+3. $\|\mathbf{A}\mathbf{v}_i\|^2 = \mathbf{v}_i^\top\mathbf{A}^\top\mathbf{A}\mathbf{v}_i = \lambda_i = \sigma_i^2$, so dividing by $\sigma_i$ normalises it.
+4. Real symmetric matrices (spectral theorem). Newton solves $\mathbf{H}\mathbf{p} = -\mathbf{g}$, which in $\mathbf{H}$'s eigenbasis is $p_i = -g_i/\lambda_i$ — one scalar problem per direction, well defined and a descent direction exactly when all $\lambda_i>0$.
+5. $\mathbf{A}_k = \sum_{i\le k}\sigma_i\mathbf{u}_i\mathbf{v}_i^\top$ minimises $\|\mathbf{A}-\mathbf{B}\|_F$ over $\operatorname{rank}\mathbf{B}\le k$, with $\|\mathbf{A}-\mathbf{A}_k\|_F^2 = \sum_{i>k}\sigma_i^2$.
+6. Full rank but effectively reduced: $\sigma_{\min}$ is tiny, so $\kappa$ explodes, and coefficients have variance proportional to the diagonal of $(\mathbf{X}^\top\mathbf{X})^{-1}$, large along the near-null direction. Predictions stay stable; coefficients do not.
+7. $\kappa(\mathbf{X}_c^\top\mathbf{X}_c) = \kappa(\mathbf{X}_c)^2$: you lose twice as many digits and small eigenvalues can round negative.
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><strong>Gilbert Strang, <em>Introduction to Linear Algebra</em>; MIT 18.06 lectures 5–10 and 29 (free, MIT OpenCourseWare).</strong> Extract the one-diagram four-subspaces picture and the SVD lecture; nothing else draws the subspace geometry as clearly.</li>
+<li><strong>Trefethen and Bau, <em>Numerical Linear Algebra</em> (SIAM, 1997), lectures 4, 5, 12.</strong> Extract why the SVD is the right mental model for a matrix-as-operator and what conditioning really bounds.</li>
+<li><strong>Goodfellow, Bengio, Courville, <em>Deep Learning</em> (2016), chapter 2</strong> (free at deeplearningbook.org). Extract the field's own compact statements of the SVD, the pseudoinverse, and their numbered uses.</li>
+<li><strong>3Blue1Brown, <em>Essence of Linear Algebra</em> (free video series), episodes 6 and 14.</strong> Extract the geometric reading of the determinant as an area factor and of eigenvectors as directions that stay on their line.</li>
+<li><strong>Eckart and Young, "The approximation of one matrix by another of lower rank," <em>Psychometrika</em> 1(3), 1936.</strong> The original theorem: four pages, no functional analysis, and a useful reminder of how elementary the result is.</li>
+<li><strong>Hu et al., "LoRA: Low-Rank Adaptation of Large Language Models," 2021 (arXiv:2106.09685), section 4.</strong> Extract the argument for low rank — an empirical claim about update spectra, not a consequence of Eckart–Young alone.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when you can, without notes:</p>
+<ol>
+<li>Produce $\mathbf{U}$, $\mathbf{\Sigma}$, $\mathbf{V}^\top$ for a given $2\times2$ matrix by deriving them from $\mathbf{A}^\top\mathbf{A}$, and check $\sigma_1\sigma_2 = |\det\mathbf{A}|$.</li>
+<li>Explain the four fundamental subspaces to someone else in two minutes, with the ML meaning of each.</li>
+<li>Derive PCA from variance maximisation and from reconstruction error, and say in one sentence why they must agree.</li>
+<li>Predict the largest stable gradient-descent step from a spectrum, and roughly how many iterations training needs.</li>
+<li>State every tensor shape in an expression containing a matmul and a subtraction, and whether the broadcast is the intended one.</li>
+</ol><div class="pager"><a id="prevlink" href="../m/00-how-to-use.html"><small>← previous</small><b>M00 · How to Use This Syllabus</b></a><a id="nextlink" class="next" href="../m/02-calculus.html"><small>next →</small><b>M02 · Multivariable and Matrix Calculus</b></a></div></article>
+</main>
+</div>
+</body></html>

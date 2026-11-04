@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>C · Annotated Paper List — From Zero to Frontier</title>
+<meta name="description" content="Seventy-eight papers worth reading properly, and what to take from each.">
+<meta property="og:title" content="C · Annotated Paper List — From Zero to Frontier">
+<meta property="og:description" content="Seventy-eight papers worth reading properly, and what to take from each.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Appendices / C</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="C">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">C</span><span class="pill d3">difficulty 3/5</span><span class="pill">0 weeks</span><span class="pill">prereqs: none</span><span class="pill">3,024 words</span></div><h1>Annotated Paper List</h1><p class="tagline">Seventy-eight papers worth reading properly, and what to take from each.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="how-this-list-was-built">How this list was built</h2>
+<p>Every entry gives the title, authors, year, and the specific thing to extract. Where an author list or year could not be confirmed, the entry gives the title and year alone, or says <strong>verify</strong>. No entry is here because it is famous; each is here because it contains something you cannot get from a secondary source. Read in the order the groups are in, not the order within them.</p>
+<h2 id="foundations">Foundations</h2>
+<p><strong>Learning representations by back-propagating errors.</strong> D. Rumelhart, G. Hinton, R. Williams (1986). The paper that made backpropagation mainstream; note that it derives the delta rule for a network with a hidden layer and shows the XOR result, which is still the cleanest demonstration of why hidden units matter.</p>
+<p><strong>Gradient-based learning applied to document recognition.</strong> Y. LeCun, L. Bottou, Y. Bengio, P. Haffner (1998). The LeNet paper: extract the architecture-as-inductive-bias argument and the convolutional weight-sharing diagram, which is still the best explanation of why convolutions are cheap.</p>
+<p><strong>Long Short-Term Memory.</strong> S. Hochreiter, J. Schmidhuber (1997). Read for the constant-error-carousel argument — the derivation of why the cell state's additive update avoids vanishing gradients, which is the whole idea.</p>
+<p><strong>ImageNet Classification with Deep Convolutional Neural Networks.</strong> A. Krizhevsky, I. Sutskever, G. Hinton (2012). The AlexNet paper: extract the engineering choices (ReLU, dropout, data augmentation, GPU split) and note how much of the gain was training recipe rather than architecture.</p>
+<p><strong>Understanding the difficulty of training deep feedforward neural networks.</strong> X. Glorot, Y. Bengio (2010). The derivation of variance-preserving initialisation; extract the variance propagation argument, not the formula.</p>
+<p><strong>Delving Deep into Rectifiers.</strong> K. He, X. Zhang, S. Ren, J. Sun (2015). He initialisation, and the argument that ReLU's zeroing of half the units halves the variance, requiring the factor of 2.</p>
+<p><strong>Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift.</strong> S. Ioffe, C. Szegedy (2015). Extract the algorithm and the train/eval statistics distinction; the "internal covariate shift" explanation is now widely considered wrong, which makes it a good exercise in reading a paper's causal claim against later evidence.</p>
+<p><strong>Dropout: A Simple Way to Prevent Neural Networks from Overfitting.</strong> N. Srivastava, G. Hinton, A. Krizhevsky, I. Sutskever, R. Salakhutdinov (2014). The ensemble interpretation and the inference-time scaling rule $p$ versus $1-p$.</p>
+<p><strong>Adam: A Method for Stochastic Optimization.</strong> D. Kingma, J. Ba (2015). Read for the bias-correction derivation specifically; that is the part people skip and then misremember.</p>
+<p><strong>Decoupled Weight Decay Regularization.</strong> I. Loshchilov, F. Hutter (2019). Why L2 penalty inside an adaptive optimiser is not weight decay; extract the argument that the two differ by a factor of $1/\sqrt{\hat v}$.</p>
+<p><strong>Understanding deep learning requires rethinking generalization.</strong> C. Zhang, S. Bengio, M. Hardt, B. Recht, O. Vinyals (2017). The random-label experiments. Extract the finding that capacity does not determine generalisation, and the finiteness of the experiment's scope.</p>
+<p><strong>Layer Normalization.</strong> J. Ba, J. Kiros, G. Hinton (2016). The transposition of batch norm to the feature dimension, and the argument for why it suits sequence models.</p>
+<h2 id="architecture">Architecture</h2>
+<p><strong>Neural Machine Translation by Jointly Learning to Align and Translate.</strong> D. Bahdanau, K. Cho, Y. Bengio (2015). Attention before transformers: extract the alignment-weight construction, since it makes the query/key/value abstraction obvious before it was abstracted.</p>
+<p><strong>Attention Is All You Need.</strong> A. Vaswani et al. (2017). The canonical source: scaled dot-product attention, multi-head projection shapes, positional encodings, and the exact residual/normalisation layout, which differs from what modern models use.</p>
+<p><strong>BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding.</strong> J. Devlin, M.-W. Chang, K. Lee, K. Toutanova (2019). Masked language modelling and next-sentence prediction; extract the pretrain/fine-tune split that defined the encoder line.</p>
+<p><strong>Improving Language Understanding by Generative Pre-Training.</strong> A. Radford, K. Narasimhan, T. Salimans, I. Sutskever (2018). GPT-1: the decoder-only choice and the argument that generative pretraining plus task-specific input formatting beats task-specific architectures.</p>
+<p><strong>Language Models are Unsupervised Multitask Learners.</strong> A. Radford, J. Wu, R. Child, D. Luan, D. Amodei, I. Sutskever (2019). GPT-2: byte-level BPE, the web-text corpus construction, and zero-shot task transfer; extract the tokenizer section for <strong>M14</strong>.</p>
+<p><strong>Language Models are Few-Shot Learners.</strong> T. Brown et al. (2020). GPT-3: the in-context learning result and the scaling table. Read the appendix on data contamination, which is unusually candid.</p>
+<p><strong>RoFormer: Enhanced Transformer with Rotary Position Embedding.</strong> J. Su, Y. Lu, S. Pan, A. Murtadha, X. Wen, Y. Liu (2021; TACL 2024). RoPE; extract the derivation that the rotated dot product depends only on relative offset.</p>
+<p><strong>Train Short, Test Long: Attention with Linear Biases Enables Input Length Extrapolation.</strong> O. Press, N. Smith, M. Lewis (2022). ALiBi: the bias-only positional scheme, and the argument that it extrapolates where learned encodings do not.</p>
+<p><strong>Fast Transformer Decoding: One Write-Head is All You Need.</strong> N. Shazeer (2019). Multi-query attention, with the derivation of why decode is bandwidth-bound on the KV cache. This is the clearest statement of the memory argument in <strong>M19</strong>.</p>
+<p><strong>GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints.</strong> J. Ainslie, J. Lee-Thorp, M. de Jong, Y. Zemlyanskiy, F. Lebrón, S. Sanghai (2023). The uptraining recipe from multi-head to grouped-query; extract the cache-size arithmetic table.</p>
+<p><strong>GLU Variants Improve Transformer.</strong> N. Shazeer (2020). The gated linear unit family, including SwiGLU; extract the parameter-count compensation ($2/3$ hidden width) that makes the comparison fair.</p>
+<p><strong>An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale.</strong> A. Dosovitskiy et al. (2021). ViT: the patch-embedding construction and the data-scale threshold below which convolutions win.</p>
+<p><strong>Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity.</strong> W. Fedus, B. Zoph, N. Shazeer (2022). Top-1 routing, the capacity factor, and the load-balancing loss; the practical account of what breaks in MoE training.</p>
+<p><strong>Mamba: Linear-Time Sequence Modeling with Selective State Spaces.</strong> A. Gu, T. Dao (2023). The selective state-space alternative to attention, and the argument about what "selection" buys that convolution cannot.</p>
+<h2 id="pretraining-and-scaling">Pretraining and scaling</h2>
+<p><strong>Scaling Laws for Neural Language Models.</strong> J. Kaplan, S. McCandlish, T. Henighan, et al. (2020). The original power laws; extract the functional form and the (contested) claim that parameters matter more than data, which Chinchilla later reversed.</p>
+<p><strong>Training Compute-Optimal Large Language Models.</strong> J. Hoffmann, S. Borgeaud, A. Mensch, et al. (2022). Chinchilla: the three fitting methods, their disagreement, and the fact that training a model settled it. Extract the allocation result — roughly 20 tokens per parameter.</p>
+<p><strong>Scaling Data-Constrained Language Models.</strong> N. Muennighoff, A. Rush, B. Boaz, et al. (2023). What happens when you repeat data; extract the finding that up to about four epochs of repetition costs little and then degrades, which is the quantitative basis for the data-scarcity discussion in <strong>M29</strong>.</p>
+<p><strong>An Empirical Model of Large-Batch Training.</strong> S. McCandlish, J. Kaplan, D. Amodei (2018). The gradient-noise-scale model: extract the prediction that there is a critical batch size beyond which more parallelism buys no speed, and how it scales with model size.</p>
+<p><strong>Mixed Precision Training.</strong> P. Micikevicius, S. Narang, J. Alben, et al. (2018). Loss scaling and fp32 master weights; extract the numerical argument for why fp16 needs scaling and bf16 does not.</p>
+<p><strong>Emergent Abilities of Large Language Models.</strong> J. Wei, Y. Tay, R. Bommasani, et al. (2022). The claim and its figures. Read it as the statement of a position, then read the next entry.</p>
+<p><strong>Are Emergent Abilities of Large Language Models a Mirage?</strong> R. Schaeffer, B. Miranda, S. Koyejo (2023). The metric-resolution rebuttal, with reanalyses of the same models under continuous metrics. The pair makes an excellent exercise in reading contested evidence.</p>
+<p><strong>Training Verifiers to Solve Math Word Problems.</strong> K. Cobbe, V. Kosaraju, M. Bavarian, et al. (2021). GSM8K, plus the verifier/reranking result that predicted the reasoning-training line of work.</p>
+<p><strong>Scaling Laws for Reward Model Overoptimization.</strong> L. Gao, J. Schulman, J. Hilton (2023). The quantitative account of reward hacking: extract the curve showing proxy reward rising while true reward falls, and the KL axis on which it is plotted.</p>
+<h2 id="tokenization">Tokenization</h2>
+<p><strong>Neural Machine Translation of Rare Words with Subword Units.</strong> R. Sennrich, B. Haddow, A. Birch (2016). The BPE-for-NMT paper that introduced subword tokenization to the field; extract the merge algorithm and the vocabulary-size ablation.</p>
+<p><strong>Subword Regularization: Improving Neural Network Translation Models with Multiple Subword Candidates.</strong> T. Kudo (2018). Unigram tokenization and the argument that a single segmentation is itself a loss of information; useful as the principled alternative to BPE.</p>
+<p><strong>SentencePiece: A simple and language independent subword tokenizer and detokenizer for Neural Text Processing.</strong> T. Kudo, J. Richardson (2018). Whitespace-as-a-character and why it makes tokenization reversible and language-agnostic; extract the trainable-tokenizer-as-artefact idea, which is what <strong>M14</strong> builds.</p>
+<h2 id="fine-tuning-and-adaptation">Fine-tuning and adaptation</h2>
+<p><strong>Parameter-Efficient Transfer Learning for NLP.</strong> N. Houlsby, A. Giurgiu, S. Jastrzebski, et al. (2019). Adapters: the first strong evidence that a tiny fraction of new parameters can match full fine-tuning, and the origin of the "frozen base plus small delta" pattern.</p>
+<p><strong>LoRA: Low-Rank Adaptation of Large Language Models.</strong> E. Hu, Y. Shen, P. Waller, Z. Allen-Zhu, L. Li, S. Wang, L. Wang, W. Chen (2022). The low-rank update, the $\alpha/r$ scaling, and the empirical finding that adapting $Q$ and $V$ is enough; extract the parameter-count table.</p>
+<p><strong>QLoRA: Efficient Finetuning of Quantized LLMs.</strong> T. Dettmers, A. Pagnoni, A. Holtzman, L. Zettlemoyer (2023). NF4 quantization with double quantization and paged optimiser states; extract the numerical-precision discussion, which is a good guard against careless 4-bit claims.</p>
+<p><strong>Finetuned Language Models Are Zero-Shot Learners.</strong> J. Wei, M. Bosma, V. Zhao, et al. (2022). FLAN: instruction tuning as a way to make a base model respond to instructions, and the finding that tuning on many tasks generalises to held-out ones.</p>
+<p><strong>Training language models to follow instructions with human feedback.</strong> L. Ouyang, J. Wu, X. Jiang, et al. (2022). InstructGPT: the three-stage SFT → reward model → PPO pipeline, and the ranking-based evaluation that shows a 1.3B tuned model beating a 175B base model.</p>
+<h2 id="preference-learning-and-reasoning-rl">Preference learning and reasoning RL</h2>
+<p><strong>Proximal Policy Optimization Algorithms.</strong> J. Schulman, F. Wolski, P. Dhariwal, A. Radford, O. Klimov (2017). The clipped surrogate objective; extract the derivation of why clipping bounds the policy change and the practical details (advantages, entropy bonus, epochs per batch).</p>
+<p><strong>High-Dimensional Continuous Control Using Generalized Advantage Estimation.</strong> J. Schulman, P. Moritz, S. Levine, M. Jordan, P. Abbeel (2016). GAE: the $\lambda$ interpolation between bias and variance, with the derivation in one page.</p>
+<p><strong>Direct Preference Optimization: Your Language Model is Secretly a Reward Model.</strong> R. Rafailov, A. Sharma, E. Mitchell, S. Ermon, C. Manning, C. Finn (2023). The reparameterisation from RLHF to a classification loss; read the derivation of the implicit reward, since that is what the whole method rests on.</p>
+<p><strong>Training a Helpful and Harmless Assistant with Reinforcement Learning from Human Feedback.</strong> Y. Bai et al. (2022). The practical RLHF account: preference data collection, the reward model, and the KL/entropy coefficients that make PPO stable on language models.</p>
+<p><strong>DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models.</strong> Z. Shao, P. Wang, Q. Yue, et al. (2024). GRPO: the group-relative advantage with no critic. Extract the variance argument for why a group baseline works, and the training curves.</p>
+<p><strong>DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning.</strong> DeepSeek-AI (2025). Large-scale RLVR with rule-based rewards; extract the recipe (no process reward model, no MCTS) and the reported behaviours that emerge from outcome-only rewards.</p>
+<p><strong>Let's Verify Step by Step.</strong> H. Lightman, V. Kosaraju, Y. Burda, et al. (2023). Process versus outcome supervision: extract the comparison showing process rewards generalise better, along with the PRM800K labelling scheme.</p>
+<p><strong>Chain-of-Thought Prompting Elicits Reasoning in Large Language Models.</strong> J. Wei, X. Wang, D. Schuurmans, et al. (2022). The prompting result that started the reasoning line; note the scale threshold below which CoT hurts, which is itself a scaling claim.</p>
+<p><strong>Self-Consistency Improves Chain of Thought Reasoning in Language Models.</strong> X. Wang, J. Wei, D. Schuurmans, et al. (2023). Majority voting over sampled reasoning paths; extract the cost/accuracy curve, which is the honest way to report a test-time-compute result.</p>
+<h2 id="evaluation-and-method">Evaluation and method</h2>
+<p><strong>Measuring Massive Multitask Language Understanding.</strong> D. Hendrycks, C. Burns, S. Basart, A. Zou, M. Mazeika, D. Song, J. Steinhardt (2021). MMLU, and the subject-level breakdown that makes it useful; read the construction section for how items were collected, which bears directly on contamination.</p>
+<p><strong>Evaluating Large Language Models Trained on Code.</strong> M. Chen, J. Tworek, et al. (2021). HumanEval and the pass@k estimator; extract the unbiased pass@k formula, which is still the standard.</p>
+<p><strong>Lost in the Middle: How Language Models Use Long Contexts.</strong> N. Liu, K. Lin, J. Hewitt, A. Paranjape, M. Bevilacqua, F. Petroni, S. Liang (2024). The position-dependence result; extract the experimental design (same information, varying position) as a template for testing any positional claim.</p>
+<p><strong>Show Your Work: Improved Reporting of Experimental Results.</strong> J. Dodge, S. Gururangan, D. Card, R. Schwartz, N. Smith (2019). The argument for reporting the full compute budget curve rather than the best score; extract the expected-validation-loss-under-a-budget metric.</p>
+<p><strong>Accounting for Variance in Machine Learning Benchmarks.</strong> X. Bouthillier, P. Delaunay, M. Bronzi, et al. (2021). The variance decomposition between runs and studies, and the demonstration that averaging more seeds does not substitute for averaging more studies.</p>
+<p><strong>Improving Reproducibility in Machine Learning Research.</strong> J. Pineau, P. Vincent-Lamarre, K. Sinha, et al. (2021). The NeurIPS reproducibility programme's report, including the checklist itself and the failure statistics per item.</p>
+<p><strong>TruthfulQA: Measuring How Models Mimic Human Falsehoods.</strong> S. Lin, J. Hilton, O. Evans (2022). The benchmark and, more usefully, the analysis of <em>why</em> models fail — imitation of human text rather than lack of knowledge. A model for designing an adversarial benchmark.</p>
+<h2 id="interpretability">Interpretability</h2>
+<p><strong>A Mathematical Framework for Transformer Circuits.</strong> N. Elhage, N. Nanda, C. Olsson, et al. (2021). The residual-stream and virtual-weights formalism; extract the QK/OV circuit decomposition, which is the analytical backbone of the field.</p>
+<p><strong>Toy Models of Superposition.</strong> N. Elhage, T. Hume, C. Olsson, et al. (2022). Why models represent more features than dimensions, with the geometry worked out in two and three dimensions. Read before making any claim about what a neuron "means".</p>
+<p><strong>In-context Learning and Induction Heads.</strong> C. Olsson, N. Elhage, N. Nanda, et al. (2022). The induction-head mechanism and the phase-change evidence linking it to in-context learning; the best worked example of a circuit-level explanation with a behavioural correlate.</p>
+<p><strong>Locating and Editing Factual Associations in GPT.</strong> K. Meng, D. Bau, A. Andonian, Y. Belinkov (2022). ROME: causal tracing plus a rank-one edit. Extract the causal-tracing method, which localises where a fact is stored, and the limits of the edit.</p>
+<p><strong>Sparse Autoencoders Find Highly Interpretable Features in Language Models.</strong> H. Cunningham, A. Ewart, L. Riggs, R. Huben, L. Sharkey (2023). The SAE recipe and the evaluation-by-interpretability protocol; extract the reconstruction-versus-sparsity trade-off, which is where the method's limits live.</p>
+<p><strong>Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet.</strong> A. Templeton et al. (2024). SAEs at production scale, including the safety-relevant feature analysis; read the section on what they could <em>not</em> verify, which is the honest part.</p>
+<h2 id="retrieval-tools-and-agents">Retrieval, tools, and agents</h2>
+<p><strong>Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks.</strong> P. Lewis, E. Perez, A. Piktus, et al. (2020). The original RAG formulation, with the distinction between the retriever and the generator being trained jointly or separately.</p>
+<p><strong>ReAct: Synergizing Reasoning and Acting in Language Models.</strong> S. Yao, J. Zhao, D. Yu, N. Du, I. Shafran, K. Narasimhan, Y. Cao (2023). The interleaved thought/action/observation loop; extract the failure analysis, which shows where the loop degrades and why.</p>
+<p><strong>Toolformer: Language Models Can Teach Themselves to Use Tools.</strong> T. Schick, J. Dwivedi-Yu, R. Dessì, et al. (2023). Self-supervised tool-use annotation; extract the filtering criterion (keep a call only if it lowers the loss) as a general recipe for data selection.</p>
+<p><strong>Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection.</strong> A. Asai, Z. Wu, Y. Wang, A. Sil, H. Hajishirzi (2024). Reflection tokens that let the model decide when to retrieve; extract the control-token design, which is the cleanest published version of "the model decides its own tool use".</p>
+<h2 id="multimodality-and-generative-models">Multimodality and generative models</h2>
+<p><strong>Learning Transferable Visual Models From Natural Language Supervision.</strong> A. Radford, J. Kim, C. Hallacy, et al. (2021). CLIP: contrastive image-text pretraining and zero-shot transfer. Extract the prompt-engineering dependence of zero-shot accuracy, which is a vivid lesson in protocol sensitivity.</p>
+<p><strong>Denoising Diffusion Probabilistic Models.</strong> J. Ho, A. Jain, P. Abbeel (2020). The variational derivation and its simplification to predicting noise; extract the equivalence between the ELBO and the simple $\epsilon$-prediction loss.</p>
+<p><strong>Generative Adversarial Networks.</strong> I. Goodfellow, J. Pouget-Abadie, M. Mirza, et al. (2014). The minimax formulation and its convergence argument; read it now mainly to understand why diffusion displaced it.</p>
+<h2 id="systems-and-inference">Systems and inference</h2>
+<p><strong>Efficient Memory Management for Large Language Model Serving with PagedAttention.</strong> W. Kwon, Z. Li, S. Zhuang, Y. Sheng, L. Zheng, C. Yu, J. Gonzalez, H. Zhang, I. Stoica (2023). vLLM: paged KV blocks and the memory-fragmentation argument. Extract the waste arithmetic, which is the entire motivation.</p>
+<p><strong>Orca: A Distributed Serving System for Transformer-Based Generative Models.</strong> G.-I. Yu, J. Jeong, G.-W. Kim, S. Kim, B.-G. Chun (2022). Continuous batching and iteration-level scheduling; the origin of the batching strategy every serving stack now uses.</p>
+<p><strong>Fast Inference from Transformers via Speculative Decoding.</strong> Y. Leviathan, M. Kalman, Y. Matias (2023). The draft-and-verify algorithm with the exactness argument; extract the expected-tokens-per-step formula.</p>
+<p><strong>GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers.</strong> E. Frantar, S. Ashkboos, T. Hoefler, D. Alistarh (2023). Layer-wise second-order weight quantization; extract the OBQ-derived update rule and the group-size/grid trade-off.</p>
+<p><strong>ZeRO: Memory Optimizations Toward Training Trillion Parameter Models.</strong> S. Rajbhandari, J. Rasley, O. Ruwase, Y. He (2020). The three-stage sharding of optimiser state, gradients, and parameters, with the communication-volume accounting per stage.</p>
+<p><strong>Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism.</strong> M. Shoeybi, M. Patwary, R. Puri, P. LeGresley, J. Casper, B. Catanzaro (2020). The column/row tensor-parallel split with exactly two all-reduces per block; extract why the placement minimises communication.</p>
+<p><strong>GPipe: Efficient Training of Giant Neural Networks using Pipeline Parallelism.</strong> Y. Huang, Y. Cheng, A. Bapna, et al. (2019). Micro-batching to fill the pipeline, and the bubble-fraction arithmetic $(N-1)/(N)$.</p>
+<h2 id="a-reading-order-if-you-have-one-month">A reading order if you have one month</h2>
+<p>Week 1: Vaswani; Radford GPT-2; Su RoFormer. Week 2: Kaplan; Hoffmann; Muennighoff data-constrained. Week 3: Ouyang; Rafailov; Shao GRPO. Week 4: Kwon vLLM; Olsson induction heads; Bouthillier variance. That is one paper per two days, and it covers the load-bearing machinery of everything else in this list.</p><div class="pager"><a id="prevlink" href="../m/apx-b-glossary.html"><small>← previous</small><b>B · Glossary</b></a><a id="nextlink" class="next" href="../m/apx-d-resource-map.html"><small>next →</small><b>D · Resource Map</b></a></div></article>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M29 · Frontiers and Open Problems — From Zero to Frontier</title>
+<meta name="description" content="What is settled, what is contested, and what measurement would settle it.">
+<meta property="og:title" content="M29 · Frontiers and Open Problems — From Zero to Frontier">
+<meta property="og:description" content="What is settled, what is contested, and what measurement would settle it.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Practice / M29</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M29">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M29</span><span class="pill d2">difficulty 2/5</span><span class="pill">1 weeks</span><span class="pill">prereqs: none</span><span class="pill">7,909 words</span></div><h1>Frontiers and Open Problems</h1><p class="tagline">What is settled, what is contested, and what measurement would settle it.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>A curriculum teaches the parts of a field that are understood, which leaves a distorted picture: it makes the field look finished. The parts that are not understood are not footnotes — they are where the work is, and several of them are load-bearing for decisions people are making right now about how much compute to buy, whether to trust a benchmark, and whether a model can be deployed without supervision. This module is a map of those parts, written to a single standard: for each open problem, say what is <strong>established</strong> (with the kind of evidence), what is <strong>contested</strong> (with who disagrees and why), and what <strong>would settle it</strong>. The failure mode it is designed to prevent is not ignorance but confident assertion — the habit of repeating either the hype or the doom version of a claim whose actual evidential status is "one paper, one benchmark, one scale".</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<p>No module is required. These questions test whether you can read an evidential claim at all; if you miss two or more, revise <strong>M20</strong> and <strong>M27</strong> first.</p>
+<ol>
+<li>What distinguishes a claim about a <em>capability</em> from a claim about a <em>benchmark score</em>?</li>
+<li>If a model improves from 40 to 55 percent on a benchmark, what three things must you know before calling that a capability gain?</li>
+<li>What does it mean for a result to be "within noise", and why is the phrase usually misused?</li>
+<li>Name one quantity that a scaling law predicts and one it does not.</li>
+<li>Why does a result at one model scale not automatically transfer to another?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. A capability claim is about what the system can do in the world; a benchmark score is a measurement made under a specific protocol on a specific item set. The second is evidence for the first, and the inference requires an argument about construct validity — that the benchmark measures the capability, which is exactly what **M20** questions.
+2. The confidence interval on both scores; whether the benchmark is contaminated or saturated; and whether the improvement comes from the capability or from the protocol (prompting, sampling budget, answer parsing). A 15-point jump on a saturated or contaminated benchmark can be entirely artefactual.
+3. That the observed difference is small relative to run-to-run and item-sampling variance, so a replication could reverse it. It is misused when applied to a difference whose interval was never computed, or to dismiss a result whose interval does exclude zero.
+4. It predicts loss as a function of parameters, data, and compute within a family. It does not predict which capabilities appear, whether a benchmark will be passed, or whether the curve survives a change of architecture or data distribution.
+5. Because capability is not a smooth function of loss: some behaviours appear abruptly in loss terms, and the mapping from loss to any particular benchmark is family-specific and empirically fitted, not derived.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<p>By the end of this module you can, without notes:</p>
+<ul>
+<li>State, for each of eleven open problems, one thing that is established, one that is contested, and the experiment that would settle it.</li>
+<li>Distinguish a scaling law's interpolation regime from its extrapolation regime, and say what makes extrapolation fragile.</li>
+<li>Explain why a sparse-autoencoder feature is not yet a mechanistic explanation, and what would make it one.</li>
+<li>Describe the mechanisms by which benchmark scores and deployment performance diverge.</li>
+<li>Say what the evidence does and does not show about RL-trained reasoning.</li>
+<li>Quantify the sensitivity of a scaling extrapolation to its fitted exponent.</li>
+<li>Avoid asserting either hype or doom versions of at least five contested claims you previously held.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$L$</td>
+<td>loss (nats per token unless stated)</td>
+</tr>
+<tr>
+<td>$N$, $D$, $C$</td>
+<td>parameters, training tokens, compute; $C\approx 6ND$</td>
+</tr>
+<tr>
+<td>$\alpha_N, \alpha_D$</td>
+<td>scaling exponents on parameters and data</td>
+</tr>
+<tr>
+<td>$E$</td>
+<td>irreducible loss in a Chinchilla-style fit</td>
+</tr>
+<tr>
+<td>$T$</td>
+<td>context length in tokens</td>
+</tr>
+<tr>
+<td>$\delta$</td>
+<td>logit advantage of a relevant token over irrelevant ones</td>
+</tr>
+<tr>
+<td>$a_t$</td>
+<td>attention weight on the relevant position at context length $t$</td>
+</tr>
+<tr>
+<td>$\rho$</td>
+<td>per-generation retention factor in a self-training recursion</td>
+</tr>
+<tr>
+<td>$\text{pass}@k$</td>
+<td>probability at least one of $k$ samples is correct</td>
+</tr>
+<tr>
+<td>CI</td>
+<td>confidence interval, per <strong>M20</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Convention: every claim in this module is tagged <strong>[established]</strong>, <strong>[contested]</strong>, or <strong>[unknown]</strong>. When you cite this module elsewhere, carry the tag with the claim — that is the whole point of it.</p>
+<h2 id="core-concepts">Core concepts</h2>
+<p>Each entry below follows one shape: what the phenomenon is, what is established, what is contested, and what measurement would settle it. The tags are the content — a claim without its tag is the thing this module exists to stop you repeating.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 470" width="100%" role="img" aria-label="The curriculum as a dependency graph" class="fig-svg"><defs><marker id="road-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="102.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="700">Foundations</text><rect x="40.0" y="58.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.4" opacity="0.95"/><text x="102.0" y="76.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="650">M01</text><text x="102.0" y="91.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Linear algebra</text><rect x="40.0" y="112.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.4" opacity="0.95"/><text x="102.0" y="130.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="650">M02</text><text x="102.0" y="145.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Calculus</text><rect x="40.0" y="166.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.4" opacity="0.95"/><text x="102.0" y="184.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="650">M03</text><text x="102.0" y="199.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Probability</text><rect x="40.0" y="220.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.4" opacity="0.95"/><text x="102.0" y="238.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="650">M04</text><text x="102.0" y="253.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Optimization</text><text x="276.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="700">ML bedrock</text><rect x="214.0" y="58.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.4" opacity="0.95"/><text x="276.0" y="76.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="650">M05</text><text x="276.0" y="91.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Classical ML</text><text x="450.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">Neural core</text><rect x="388.0" y="58.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.4" opacity="0.95"/><text x="450.0" y="76.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="650">M06</text><text x="450.0" y="91.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">MLPs</text><rect x="388.0" y="112.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.4" opacity="0.95"/><text x="450.0" y="130.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="650">M07</text><text x="450.0" y="145.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Backprop</text><rect x="388.0" y="166.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.4" opacity="0.95"/><text x="450.0" y="184.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="650">M08</text><text x="450.0" y="199.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Dynamics</text><rect x="388.0" y="220.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.4" opacity="0.95"/><text x="450.0" y="238.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="650">M09</text><text x="450.0" y="253.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Build a framework</text><text x="624.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="700">Architectures</text><rect x="562.0" y="58.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4" opacity="0.95"/><text x="624.0" y="76.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">M10</text><text x="624.0" y="91.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">CNNs</text><rect x="562.0" y="112.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4" opacity="0.95"/><text x="624.0" y="130.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">M11</text><text x="624.0" y="145.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">RNNs</text><rect x="562.0" y="166.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4" opacity="0.95"/><text x="624.0" y="184.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">M12</text><text x="624.0" y="199.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Attention</text><rect x="562.0" y="220.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4" opacity="0.95"/><text x="624.0" y="238.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">M13</text><text x="624.0" y="253.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Modern zoo</text><text x="798.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="700">LLMs</text><rect x="736.0" y="58.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.4" opacity="0.95"/><text x="798.0" y="76.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">M14</text><text x="798.0" y="91.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Tokenization</text><rect x="736.0" y="112.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.4" opacity="0.95"/><text x="798.0" y="130.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">M15</text><text x="798.0" y="145.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Decoding</text><rect x="736.0" y="166.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.4" opacity="0.95"/><text x="798.0" y="184.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">M16</text><text x="798.0" y="199.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Pretraining</text><rect x="736.0" y="220.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.4" opacity="0.95"/><text x="798.0" y="238.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">M17</text><text x="798.0" y="253.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">SFT / PEFT</text><rect x="736.0" y="274.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.4" opacity="0.95"/><text x="798.0" y="292.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">M18</text><text x="798.0" y="307.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Preference RL</text><line x1="164.0" y1="120.0" x2="212.0" y2="120.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#road-ah)"/><line x1="338.0" y1="120.0" x2="386.0" y2="120.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#road-ah)"/><line x1="512.0" y1="120.0" x2="560.0" y2="120.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#road-ah)"/><line x1="686.0" y1="120.0" x2="734.0" y2="120.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#road-ah)"/><line x1="512.0" y1="200.0" x2="560.0" y2="330.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#road-ah)" stroke-dasharray="4 3"/><line x1="686.0" y1="330.0" x2="734.0" y2="300.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#road-ah)" stroke-dasharray="4 3"/><rect x="40.0" y="300.0" width="300.0" height="140.0" rx="10" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="190.0" y="324.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="650">practice track</text><text x="60.0" y="350.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">· M27 Research method</text><text x="60.0" y="372.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">· M28 Capstone ladder</text><text x="60.0" y="394.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">· M29 Frontiers</text><text x="440.0" y="420.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">you can enter anywhere with the prerequisites met; the arrows show what actually blocks progress</text></svg><figcaption>The whole curriculum as a dependency graph. The frontiers below sit at the ends of branches rather than in a box of their own: each open problem is a place where a chain of established results stops being able to answer the next question.</figcaption></figure></p>
+<h3 id="1-why-models-generalise-at-all">1. Why models generalise at all</h3>
+<p><strong>Intuition.</strong> A network with more parameters than the training set has bits is a lookup table with extra capacity, and lookup tables do not generalise. Yet these do. Something in the training procedure is choosing, among all functions that fit the data, one that happens to be right elsewhere.</p>
+<p><strong>Formal statement.</strong> Classical uniform-convergence theory bounds the generalisation gap by $\sqrt{\text{complexity}/n}$, which is vacuous when complexity (parameter count, or a norm bound at initialisation) exceeds $n$. Four families of explanation compete: the <em>implicit bias</em> of gradient descent toward low-norm or max-margin solutions; <em>double descent</em>, where the gap peaks at the interpolation threshold and then falls again; <em>PAC-Bayes</em> bounds with data-dependent priors; and <em>compression</em> arguments, where a network that fits the data with few effective bits is forced to generalise.</p>
+<p><strong>[established]</strong> Overparameterised networks trained by SGD generalise well on many real distributions, and they can also memorise pure noise perfectly — both facts reproduce across architectures. Double descent is a real empirical phenomenon. <strong>[contested]</strong> Which theory explains it, and whether any current bound is quantitatively tight. The random-label experiments establish that capacity alone does not determine generalisation; they do not identify what does. <strong>[unknown]</strong> Whether a single principle covers interpolation, grokking, and the scale at which LLMs sit.</p>
+<p><strong>What would settle it.</strong> A bound that predicts the generalisation gap <em>numerically</em> across architectures and data distributions from quantities measurable before training — not a bound fitted to the test setting it explains.</p>
+<p><strong>Micro-example.</strong> A 1M-parameter network trained on 60,000 MNIST images can drive training error to zero on randomly permuted labels, and still reaches about 98 percent test accuracy on true labels with the same architecture, optimiser, and epoch count. Capacity is identical in the two runs; only the labels differ. Any explanation of generalisation must therefore be a statement about the interaction of data structure and optimisation, not about capacity.</p>
+<h3 id="2-whether-scaling-laws-extrapolate">2. Whether scaling laws extrapolate</h3>
+<p><strong>Intuition.</strong> Four runs at increasing compute lie on a straight line on log-log axes. You have a budget for a run 100× larger. The line says what the loss will be. Whether to believe the line is the entire question of scaling policy.</p>
+<p><strong>Formal statement.</strong> Within a model family the loss is fitted as $L(C) = E + A C^{-\alpha}$, or in the two-variable form $L(N,D) = E + A N^{-\alpha_N} + B D^{-\alpha_D}$. Extrapolation is a claim that $(\alpha, E)$ estimated on the fitted range remain valid outside it.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 372" width="100%" role="img" aria-label="Loss falls as a power law in compute, parameters, and tokens" class="fig-svg"><defs><marker id="scale-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="80.0" y1="284.6" x2="480.0" y2="284.6" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="288.6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">-0.5</text><line x1="80.0" y1="227.4" x2="480.0" y2="227.4" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="231.4" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">0.0</text><line x1="80.0" y1="170.3" x2="480.0" y2="170.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="174.3" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">0.5</text><line x1="80.0" y1="113.1" x2="480.0" y2="113.1" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="117.1" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1.0</text><line x1="80.0" y1="56.0" x2="480.0" y2="56.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="60.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1.5</text><text x="80.0" y="314.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e17</text><text x="168.9" y="314.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e19</text><text x="257.8" y="314.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e21</text><text x="346.7" y="314.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e23</text><text x="435.6" y="314.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e25</text><line x1="80.0" y1="296.0" x2="480.0" y2="296.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><line x1="80.0" y1="56.0" x2="80.0" y2="296.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M80.0,73.1 L82.5,73.9 L85.0,74.6 L87.5,75.4 L90.0,76.1 L92.5,76.8 L95.0,77.6 L97.5,78.3 L100.0,79.1 L102.5,79.8 L105.0,80.5 L107.5,81.3 L110.0,82.0 L112.5,82.8 L115.0,83.5 L117.5,84.2 L120.0,85.0 L122.5,85.7 L125.0,86.4 L127.5,87.2 L130.0,87.9 L132.5,88.7 L135.0,89.4 L137.5,90.1 L140.0,90.9 L142.5,91.6 L145.0,92.4 L147.5,93.1 L150.0,93.8 L152.5,94.6 L155.0,95.3 L157.5,96.1 L160.0,96.8 L162.5,97.5 L165.0,98.3 L167.5,99.0 L170.0,99.8 L172.5,100.5 L175.0,101.2 L177.5,102.0 L180.0,102.7 L182.5,103.5 L185.0,104.2 L187.5,104.9 L190.0,105.7 L192.5,106.4 L195.0,107.1 L197.5,107.9 L200.0,108.6 L202.5,109.4 L205.0,110.1 L207.5,110.8 L210.0,111.6 L212.5,112.3 L215.0,113.1 L217.5,113.8 L220.0,114.5 L222.5,115.3 L225.0,116.0 L227.5,116.8 L230.0,117.5 L232.5,118.2 L235.0,119.0 L237.5,119.7 L240.0,120.5 L242.5,121.2 L245.0,121.9 L247.5,122.7 L250.0,123.4 L252.5,124.2 L255.0,124.9 L257.5,125.6 L260.0,126.4 L262.5,127.1 L265.0,127.9 L267.5,128.6 L270.0,129.3 L272.5,130.1 L275.0,130.8 L277.5,131.5 L280.0,132.3 L282.5,133.0 L285.0,133.8 L287.5,134.5 L290.0,135.2 L292.5,136.0 L295.0,136.7 L297.5,137.5 L300.0,138.2 L302.5,138.9 L305.0,139.7 L307.5,140.4 L310.0,141.2 L312.5,141.9 L315.0,142.6 L317.5,143.4 L320.0,144.1 L322.5,144.9 L325.0,145.6 L327.5,146.3 L330.0,147.1 L332.5,147.8 L335.0,148.6 L337.5,149.3 L340.0,150.0 L342.5,150.8 L345.0,151.5 L347.5,152.2 L350.0,153.0 L352.5,153.7 L355.0,154.5 L357.5,155.2 L360.0,155.9 L362.5,156.7 L365.0,157.4 L367.5,158.2 L370.0,158.9 L372.5,159.6 L375.0,160.4 L377.5,161.1 L380.0,161.9 L382.5,162.6 L385.0,163.3 L387.5,164.1 L390.0,164.8 L392.5,165.6 L395.0,166.3 L397.5,167.0 L400.0,167.8 L402.5,168.5 L405.0,169.2 L407.5,170.0 L410.0,170.7 L412.5,171.5 L415.0,172.2 L417.5,172.9 L420.0,173.7 L422.5,174.4 L425.0,175.2 L427.5,175.9 L430.0,176.6 L432.5,177.4 L435.0,178.1 L437.5,178.9 L440.0,179.6 L442.5,180.3 L445.0,181.1 L447.5,181.8 L450.0,182.6 L452.5,183.3 L455.0,184.0 L457.5,184.8 L460.0,185.5 L462.5,186.3 L465.0,187.0 L467.5,187.7 L470.0,188.5 L472.5,189.2 L475.0,189.9 L477.5,190.7 L480.0,191.4" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M80.0,56.0 L82.5,57.0 L85.0,57.9 L87.5,58.9 L90.0,59.9 L92.5,60.8 L95.0,61.8 L97.5,62.8 L100.0,63.7 L102.5,64.7 L105.0,65.6 L107.5,66.6 L110.0,67.6 L112.5,68.5 L115.0,69.5 L117.5,70.5 L120.0,71.4 L122.5,72.4 L125.0,73.4 L127.5,74.3 L130.0,75.3 L132.5,76.2 L135.0,77.2 L137.5,78.2 L140.0,79.1 L142.5,80.1 L145.0,81.1 L147.5,82.0 L150.0,83.0 L152.5,84.0 L155.0,84.9 L157.5,85.9 L160.0,86.9 L162.5,87.8 L165.0,88.8 L167.5,89.8 L170.0,90.7 L172.5,91.7 L175.0,92.6 L177.5,93.6 L180.0,94.6 L182.5,95.5 L185.0,96.5 L187.5,97.5 L190.0,98.4 L192.5,99.4 L195.0,100.4 L197.5,101.3 L200.0,102.3 L202.5,103.3 L205.0,104.2 L207.5,105.2 L210.0,106.1 L212.5,107.1 L215.0,108.1 L217.5,109.0 L220.0,110.0 L222.5,111.0 L225.0,111.9 L227.5,112.9 L230.0,113.9 L232.5,114.8 L235.0,115.8 L237.5,116.8 L240.0,117.7 L242.5,118.7 L245.0,119.6 L247.5,120.6 L250.0,121.6 L252.5,122.5 L255.0,123.5 L257.5,124.5 L260.0,125.4 L262.5,126.4 L265.0,127.4 L267.5,128.3 L270.0,129.3 L272.5,130.3 L275.0,131.2 L277.5,132.2 L280.0,133.1 L282.5,134.1 L285.0,135.1 L287.5,136.0 L290.0,137.0 L292.5,138.0 L295.0,138.9 L297.5,139.9 L300.0,140.9 L302.5,141.8 L305.0,142.8 L307.5,143.7 L310.0,144.7 L312.5,145.7 L315.0,146.6 L317.5,147.6 L320.0,148.6 L322.5,149.5 L325.0,150.5 L327.5,151.5 L330.0,152.4 L332.5,153.4 L335.0,154.4 L337.5,155.3 L340.0,156.3 L342.5,157.2 L345.0,158.2 L347.5,159.2 L350.0,160.1 L352.5,161.1 L355.0,162.1 L357.5,163.0 L360.0,164.0 L362.5,165.0 L365.0,165.9 L367.5,166.9 L370.0,167.9 L372.5,168.8 L375.0,169.8 L377.5,170.8 L380.0,171.7 L382.5,172.7 L385.0,173.6 L387.5,174.6 L390.0,175.6 L392.5,176.5 L395.0,177.5 L397.5,178.5 L400.0,179.4 L402.5,180.4 L405.0,181.4 L407.5,182.3 L410.0,183.3 L412.5,184.2 L415.0,185.2 L417.5,186.2 L420.0,187.1 L422.5,188.1 L425.0,189.1 L427.5,190.0 L430.0,191.0 L432.5,192.0 L435.0,192.9 L437.5,193.9 L440.0,194.9 L442.5,195.8 L445.0,196.8 L447.5,197.8 L450.0,198.7 L452.5,199.7 L455.0,200.6 L457.5,201.6 L460.0,202.6 L462.5,203.5 L465.0,204.5 L467.5,205.5 L470.0,206.4 L472.5,207.4 L475.0,208.4 L477.5,209.3 L480.0,210.3" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="5 4"/><circle cx="213.3" cy="112.6" r="4.5" fill="var(--fig-amber,#f5b544)"/><circle cx="302.2" cy="138.9" r="4.5" fill="var(--fig-violet,#a78bfa)"/><text x="280.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">loss vs compute (schematic)</text><text x="280.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">FLOPs (log)</text><rect x="520.0" y="70.0" width="254.0" height="176.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="538.0" y="96.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">Chinchilla allocation</text><text x="538.0" y="122.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">N ≈ C^0.5, D ≈ C^0.5</text><text x="538.0" y="142.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">→ about 20 tokens per parameter</text><text x="538.0" y="166.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Kaplan et al. concluded</text><text x="538.0" y="180.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">parameters should grow much</text><text x="538.0" y="194.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">faster than data. Chinchilla</text><text x="538.0" y="208.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">re-ran the sweep with matched</text><text x="538.0" y="222.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">learning-rate schedules and</text><text x="538.0" y="236.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">found the opposite balance.</text><text x="538.0" y="234.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">the axis, not the constant, was the bug</text></svg><figcaption>Loss against compute on log-log axes with the compute-optimal frontier. The fits are tight inside the measured range — the interesting question is what happens where the points stop.</figcaption></figure></p>
+<p><strong>[established]</strong> Within a family, over several orders of magnitude, these fits are remarkably accurate for <em>training and validation loss</em>: published exponents cluster around $\alpha \approx 0.3$–0.35 for compute, and the Chinchilla allocation of roughly 20 tokens per parameter was derived from such a fit and then confirmed by a model trained to that recipe. <strong>[contested]</strong> Whether the exponents survive changes in data quality, architecture, and mixture; whether loss extrapolation implies <em>capability</em> extrapolation (it does not, in general — the mapping from loss to any benchmark is fitted, not derived); and whether "emergent" jumps are real discontinuities or artefacts of all-or-nothing metrics. <strong>[unknown]</strong> Where the curve bends. Every power law eventually breaks, and the break is what a forecast needs most.</p>
+<p><strong>What would settle it.</strong> Pre-registered prospective forecasts: publish the predicted loss at a stated scale before running it, then run it. The handful of these attempted have held within a few percent for loss and much less well for downstream benchmarks.</p>
+<p><strong>Micro-example.</strong> Fit $\alpha = 0.34$ and extrapolate a 100× compute increase. The reducible term scales as $100^{-0.34} = 0.209$, so reducible loss falls to 21 percent of its present value — from 0.6 nats above the floor to 0.125. Now perturb $\alpha$ by $\pm0.05$: the multiplier becomes $100^{-0.29}=0.262$ or $100^{-0.39}=0.167$. The extrapolated reducible loss moves by ±25 percent. <strong>The forecast is far more sensitive to the exponent than the fit's residuals suggest</strong>, which is why quoting a scaling forecast without an exponent interval is not a forecast.</p>
+<h3 id="3-the-interpretability-gap">3. The interpretability gap</h3>
+<p><strong>Intuition.</strong> A sparse autoencoder can decompose an activation into thousands of directions, each of which fires on something a human will name. That is a dictionary of the vocabulary the model uses. It is not yet a grammar — it does not say how the words combine into the computation.</p>
+<p><strong>Formal statement.</strong> An SAE learns $\mathbf{x} \approx \mathbf{W}_d\mathbf{f} + \mathbf{b}$ with $\mathbf{f}$ sparse and non-negative, so that each coordinate of $\mathbf{f}$ is a candidate feature. The claim "this feature is what the model uses" requires three things: <em>stability</em> (the feature recurs across seeds and dictionary sizes), <em>causality</em> (ablating or clamping it changes the behaviour in the predicted direction), and <em>compositionality</em> (the feature participates in an identifiable circuit that produces the output).</p>
+<p><strong>[established]</strong> SAE features are sparser and more human-nameable than individual neurons; some are causally effective when clamped; dictionary learning reveals structure (notably, features for concepts the model was never explicitly trained to represent) that reproduces across model families. <strong>[contested]</strong> Whether SAEs recover <em>the</em> features rather than <em>a</em> useful basis — feature splitting and absorption are documented failure modes, and reconstruction error can hide the features that matter most. Whether human nameability is evidence of mechanism at all. Whether a feature list can predict behaviour better than a linear probe on the residual stream. <strong>[unknown]</strong> How to verify that a claimed circuit is the one the model actually runs, rather than a consistent story about it.</p>
+<p><strong>What would settle it.</strong> A feature set that <em>predicts</em> held-out behaviour — not describes training behaviour — and that composes: a full forward pass explained as feature interactions, with the explanation making a falsifiable prediction about an input the explainers never saw.</p>
+<p><strong>Micro-example.</strong> A "Golden Gate Bridge" feature that fires on the concept and, when clamped on, makes the model talk about the bridge, is strong evidence of a causally effective direction. It does not tell you how the model decides <em>when</em> to mention the bridge, which is the computation. Clamping shows the direction is wired to the output; it does not show the wiring.</p>
+<h3 id="4-the-evaluation-crisis">4. The evaluation crisis</h3>
+<p><strong>Intuition.</strong> A benchmark is a ruler that everyone is allowed to sand down. Once a number becomes a target, the measurement stops measuring.</p>
+<p><strong>Formal statement.</strong> Benchmarks fail in four ways that are now documented rather than hypothetical: <strong>contamination</strong> (test items in pretraining data), <strong>saturation</strong> (scores near the ceiling, so the interval spans the whole interesting range), <strong>under-powering</strong> (too few items to resolve the claimed differences), and <strong>protocol drift</strong> (prompt format, sampling budget, and answer parsing move scores more than the methods do).</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 340" width="100%" role="img" aria-label="Reading a benchmark table critically" class="fig-svg"><defs><marker id="eval-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="120.0" y="36.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">what the number claims</text><rect x="24.0" y="58.0" width="240.0" height="28.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><text x="38.0" y="77.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">accuracy 84.2%</text><text x="276.0" y="77.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">?</text><text x="292.0" y="77.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">which split? how many items?</text><rect x="24.0" y="92.0" width="240.0" height="28.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><text x="38.0" y="111.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">+2.1 over baseline</text><text x="276.0" y="111.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">?</text><text x="292.0" y="111.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">is that inside the confidence interval?</text><rect x="24.0" y="126.0" width="240.0" height="28.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><text x="38.0" y="145.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">SOTA</text><text x="276.0" y="145.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">?</text><text x="292.0" y="145.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">on one benchmark, for one prompt format</text><rect x="24.0" y="160.0" width="240.0" height="28.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><text x="38.0" y="179.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">92% win rate</text><text x="276.0" y="179.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">?</text><text x="292.0" y="179.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">against which judge, in which order?</text><rect x="24.0" y="208.0" width="812.0" height="110.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="42.0" y="232.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="650">the three questions that defuse most benchmark claims</text><text x="42.0" y="258.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">1. Was the test data excluded from pretraining, and how do you know?</text><text x="42.0" y="278.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2. How many items, and therefore how wide is the interval?</text><text x="42.0" y="298.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">3. Does the gain survive a prompt-format change and a different seed?</text></svg><figcaption>The paths by which an evaluation number inflates — contamination, tuning on test, best-of-$k$ selection — together with the confidence-interval arithmetic around the score itself. Any frontier claim you read should be checked against each path in turn.</figcaption></figure></p>
+<p><strong>[established]</strong> Contamination has been demonstrated in widely used benchmarks; several benchmarks are saturated; benchmark scores move by several points under prompt-format changes that do not change the model; leaderboard positions are sensitive to all of the above. <strong>[contested]</strong> The <em>magnitude</em> of contamination's effect on headline numbers, and whether any static benchmark can survive optimisation pressure. Whether "held-out until after the fact" is achievable at all when corpora are scraped continuously. <strong>[unknown]</strong> What a capability measurement that resists Goodharting would look like.</p>
+<p><strong>What would settle it.</strong> Continuously refreshed, post-cutoff, contamination-audited benchmarks with enough items for a ±1 point interval, evaluated under a fixed protocol that is published alongside every score. None of that is technically hard; all of it is institutionally hard.</p>
+<p><strong>Micro-example.</strong> At 85 percent accuracy, a ±1 point 95 percent interval needs $n = 1.96^2(0.85)(0.15)/0.01^2 \approx 4{,}900$ items. Most benchmark <em>subsets</em> used in papers have a few hundred. A 2-point difference on a 500-item subset has a paired standard error around 1.3 points — unmeasurable, and routinely reported as a result.</p>
+<h3 id="5-long-context-recall-limitations">5. Long-context recall limitations</h3>
+<p><strong>Intuition.</strong> Attention is a softmax over positions. As the context grows, every position competes with more competitors, and a single relevant token must win by a larger margin to keep the same share of attention.</p>
+<p><strong>Formal statement.</strong> With one relevant position whose logit exceeds the others by $\delta$ and $T-1$ irrelevant positions at a common baseline, the attention weight on the relevant position is</p>
+<p>$$a_T = \frac{e^{\delta}}{e^{\delta} + (T-1)} = \frac{1}{1 + (T-1)e^{-\delta}}.$$</p>
+<p>To hold $a_T$ constant as $T$ grows, $\delta$ must grow like $\ln T$ — a requirement the model's own computation must meet for free.</p>
+<p><strong>[established]</strong> Recall degrades well before the nominal context window; performance depends strongly on where in the context the information sits (the "lost in the middle" pattern, reproduced across model families); long-context benchmarks that test single-needle retrieval overstate the capability relative to multi-hop tasks. <strong>[contested]</strong> The mechanism: softmax dilution is the cleanest story, but the alternatives — too little long-range dependency in pretraining data, positional encodings that do not extrapolate, and retrieval circuits that are simply not trained on the required pattern — all predict similar symptoms. Whether synthetic needle tests measure anything worth measuring. <strong>[unknown]</strong> How much of the gap is representational versus attentional, and whether architectural fixes (better positional schemes, hybrid state-space layers) close it or move it.</p>
+<p><strong>What would settle it.</strong> Ablations that hold compute fixed and vary one mechanism at a time: retrain with long-range-dependent data but a short window, with the same data and a longer window, and with a changed positional scheme — then check whether the loss of recall tracks the dilution prediction or not.</p>
+<p><strong>Micro-example.</strong> At $T = 1{,}000$ a $\delta$ of 6.9 nats gives $a_T = 1/(1+999e^{-6.9}) = 0.999$. At $T = 100{,}000$ the same $\delta$ gives $a_T = 1/(1+99{,}999 \times 0.001) = 0.0099$. To restore 0.999 the margin must rise to about 11.5 nats — a 4.6 nat increase, exactly $\ln 100$. Whether a transformer trained at 8k develops margins that grow with context is precisely the contested question.</p>
+<h3 id="6-reasoning-versus-memorisation-in-rl-trained-models">6. Reasoning versus memorisation in RL-trained models</h3>
+<p><strong>Intuition.</strong> A model trained with reinforcement learning on verifiable rewards gets much better at the tasks it is trained on. The question is whether it learned to reason or learned where the answers live.</p>
+<p><strong>Formal statement.</strong> Distinguish <strong>pass@1</strong> (one sample) from <strong>pass@k</strong> at large $k$ (whether the correct answer is anywhere in the model's distribution). Learning a new <em>procedure</em> raises both. Sharpening an existing distribution — making correct paths more likely — raises pass@1 while barely moving pass@k at large $k$.</p>
+<p><strong>[established]</strong> RL with verifiable rewards substantially improves pass@1 on math and code benchmarks, and the improvement transfers to same-family benchmarks. Long chain-of-thought training produces the behaviours it is named for (longer traces, self-checking, backtracking). <strong>[contested]</strong> Whether capability outside the training distribution grows at all. Studies comparing pass@1 with pass@k at large $k$ find the base model can often <em>already</em> produce correct solutions that the RL model produces more reliably — consistent with sharpening rather than expansion — though the size of the residual "new" capability is disputed and depends on how OOD is defined. How much of the gain is format, length, or answer-extraction. Whether the "reasoning" traces are faithful descriptions of the computation. <strong>[unknown]</strong> Whether continued RL on harder distributions eventually expands the support, or asymptotes at resharpening.</p>
+<p><strong>What would settle it.</strong> Held-out tasks with matched total sampling budget, measuring both pass@1 and pass@k over a wide range of $k$, with a pre-registered definition of "outside the training distribution" — plus process-level checks (does the intermediate reasoning actually predict the answer?) rather than endpoint scores.</p>
+<p><strong>Micro-example.</strong> If a base model scores 20 percent pass@1 and 55 percent pass@64, and the RL model scores 45 percent pass@1 and 58 percent pass@64, the honest description is that RL made the existing capability <em>reliable</em>, not that it created 25 points of new capability. Two papers can both be right and describe it differently depending on whether they emphasise the left or the right end of the curve.</p>
+<h3 id="7-data-scarcity-and-synthetic-data-recursion">7. Data scarcity and synthetic data recursion</h3>
+<p><strong>Intuition.</strong> There is a finite amount of high-quality human text. Models are already being trained on text that models wrote. Whether that is a stable fuel or a photocopy of a photocopy is an empirical question with a clean toy model and a murky real one.</p>
+<p><strong>Formal statement.</strong> Model a self-training recursion in which each generation keeps a fraction $\alpha$ of real data and replaces the rest with model-generated data that retains, per generation, a fraction $\rho$ of the original distributional diversity. Real-data share after $n$ generations decays as $\alpha^n$ in the pure-replacement case, while retained diversity follows $\rho^n$.</p>
+<p><strong>[established]</strong> High-quality public text is finite; projections of when demand exceeds the usable stock depend on assumptions but the direction is not disputed; synthetic data is in use, and unconditional training on model outputs degrades distributional tails in controlled experiments. <strong>[contested]</strong> Whether the degradation observed in toy recursions ("model collapse") is avoidable at scale by filtering, anchoring on real data, or diversity objectives — several groups report that it is largely avoidable with the right mixture and several report degradation despite it. The <em>rate</em>: how many generations before the effect dominates is unknown and almost certainly task-dependent. <strong>[unknown]</strong> What long-run equilibrium synthetic training reaches.</p>
+<p><strong>What would settle it.</strong> Controlled recursions at matched compute, with the evaluation measuring tail behaviour and sample diversity (not just benchmark accuracy), and with the real-data anchoring fraction varied systematically rather than held at one comfortable value.</p>
+<p><strong>Micro-example.</strong> With $\rho = 0.9$, after 7 generations the retained tail diversity is $0.9^7 = 0.48$: half. After 20 generations it is 0.12. If filtering raises $\rho$ to 0.98, the same seven generations cost 13 percent. The qualitative claim is robust; the <em>policy implication</em> turns entirely on $\rho$, which is exactly the number nobody has measured outside toy settings.</p>
+<h3 id="8-the-alignment-tax-and-whether-it-is-necessary">8. The alignment tax and whether it is necessary</h3>
+<p><strong>Intuition.</strong> Making a model helpful, harmless, and honest is a set of constraints. Constraints usually cost something. The question is whether this particular cost is intrinsic or an artefact of how the constraints are implemented.</p>
+<p><strong>Formal statement.</strong> The tax is the difference $\Delta_{\text{cap}} = \text{capability}(\pi_{\text{aligned}}) - \text{capability}(\pi_{\text{base}})$ measured on held-out capability benchmarks at matched compute, with intervals. It is a tax only if $\Delta_{\text{cap}}$ is negative and outside those intervals <em>and</em> not attributable to data or objective choices that could be changed.</p>
+<p><strong>[established]</strong> Preference tuning changes behaviour measurably; models tuned on human preference data become more verbose, more agreeable, and measurably more likely to hedge; some capability benchmarks dip slightly after preference tuning; refusal behaviour over-generalises in documented cases. <strong>[contested]</strong> Whether these dips are intrinsic to the objective or are consequences of specific design choices — RLHF on a narrow annotator distribution, verbosity differences in preference data, KL penalties that push toward the reference. Several newer results find little or no tax at matched tuning budgets, and others find real losses; the disagreement is partly about how "matched" matching is. <strong>[unknown]</strong> Whether any objective achieves alignment without a preference-induced shift, and what the true lower bound on the tax is.</p>
+<p><strong>What would settle it.</strong> Matched-compute comparisons that fix data, tuning budget, and evaluation protocol, measuring capability on held-out tasks with intervals; plus decomposition studies that separate the tax into data, objective, and optimisation components. Most reported taxes fail one of these controls.</p>
+<p><strong>Micro-example.</strong> A preference-tuned model scores 1.5 points below base on a knowledge benchmark, with a seed-level interval of ±1.8 points. That is not a demonstrated tax. A 6-point drop with ±1.2 points on a reasoning benchmark, reproduced across three tuning recipes, is one — and the next question is which recipe component causes it, which is answerable with a single ablation.</p>
+<h3 id="9-agent-reliability">9. Agent reliability</h3>
+<p><strong>Intuition.</strong> An agent that succeeds 95 percent of the time on each step does not succeed 95 percent of the time on a fifty-step task.</p>
+<p><strong>Formal statement.</strong> With independent per-step success probability $p$ over $n$ steps, task success is $p^n$; with dependence, correlated failures make it worse. Reliability engineering's answer is verification at every step, which turns $p^n$ into $\prod_i p_i v_i$ where $v_i$ is the probability the verifier catches a failure.</p>
+<p><strong>[established]</strong> Success on long-horizon agent benchmarks falls steeply with horizon length; models that perform well on single-step tool use fail on compositions; error compounding is the dominant failure mode, and measured time horizons (the length of task at which an agent succeeds half the time) have been doubling on the order of months, from very short bases. <strong>[contested]</strong> Whether scaffolds, better tooling, and verification close the gap or merely move it; what the right benchmark is; how much of current agent performance is memorised task structure. <strong>[unknown]</strong> Whether reliability can be made to scale like capability, or is an independent axis with its own ceiling.</p>
+<p><strong>What would settle it.</strong> Standardised long-horizon benchmarks with graded horizon lengths and cost accounting, plus error-attribution studies that say <em>which step</em> failed — the absence of that attribution is why "agent reliability" resists quantification.</p>
+<p><strong>Micro-example.</strong> $p = 0.95$ per step: at 10 steps, 0.60; at 50 steps, 0.077; at 100 steps, 0.0059. Getting 50-step tasks to 50 percent requires $p = 0.5^{1/50} = 0.986$ — a per-step reliability improvement of 3.6 percentage points, which is a much larger engineering claim than it sounds.</p>
+<h3 id="10-energy-and-the-hardware-trajectory">10. Energy and the hardware trajectory</h3>
+<p><strong>Intuition.</strong> Two curves move in opposite directions: demand for inference grows with deployment, and energy per FLOP falls with each hardware generation. Which wins is an empirical question about rates, not a philosophical one about sufficiency.</p>
+<p><strong>Formal statement.</strong> Total energy is $E = (\text{useful work}) \times (\text{energy per unit work}) \times (1/\text{efficiency})$. Training is a fixed cost per model; inference scales with usage. The trajectory therefore depends on whether usage grows faster than efficiency improves — the rebound question, which decides whether absolute energy rises even as per-token energy falls.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="Where the money goes" class="fig-svg"><defs><marker id="cost-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="80.0" y1="276.0" x2="480.0" y2="276.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="280.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1×</text><line x1="80.0" y1="207.2" x2="480.0" y2="207.2" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="211.2" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10×</text><line x1="80.0" y1="138.5" x2="480.0" y2="138.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="142.5" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">100×</text><line x1="80.0" y1="69.8" x2="480.0" y2="69.8" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="73.8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1000×</text><line x1="80.0" y1="276.0" x2="480.0" y2="276.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M80.0,276.0 L82.5,276.0 L85.0,275.9 L87.5,275.6 L90.0,275.3 L92.5,274.9 L95.0,274.4 L97.5,273.8 L100.0,273.1 L102.5,272.2 L105.0,271.3 L107.5,270.3 L110.0,269.3 L112.5,268.1 L115.0,266.9 L117.5,265.7 L120.0,264.4 L122.5,263.0 L125.0,261.6 L127.5,260.2 L130.0,258.8 L132.5,257.3 L135.0,255.9 L137.5,254.4 L140.0,253.0 L142.5,251.5 L145.0,250.0 L147.5,248.5 L150.0,247.1 L152.5,245.6 L155.0,244.2 L157.5,242.8 L160.0,241.3 L162.5,239.9 L165.0,238.6 L167.5,237.2 L170.0,235.8 L172.5,234.5 L175.0,233.2 L177.5,231.9 L180.0,230.6 L182.5,229.3 L185.0,228.0 L187.5,226.8 L190.0,225.6 L192.5,224.3 L195.0,223.2 L197.5,222.0 L200.0,220.8 L202.5,219.7 L205.0,218.5 L207.5,217.4 L210.0,216.3 L212.5,215.2 L215.0,214.2 L217.5,213.1 L220.0,212.1 L222.5,211.0 L225.0,210.0 L227.5,209.0 L230.0,208.0 L232.5,207.1 L235.0,206.1 L237.5,205.2 L240.0,204.2 L242.5,203.3 L245.0,202.4 L247.5,201.5 L250.0,200.6 L252.5,199.7 L255.0,198.8 L257.5,198.0 L260.0,197.1 L262.5,196.3 L265.0,195.4 L267.5,194.6 L270.0,193.8 L272.5,193.0 L275.0,192.2 L277.5,191.4 L280.0,190.6 L282.5,189.9 L285.0,189.1 L287.5,188.3 L290.0,187.6 L292.5,186.9 L295.0,186.1 L297.5,185.4 L300.0,184.7 L302.5,184.0 L305.0,183.3 L307.5,182.6 L310.0,181.9 L312.5,181.2 L315.0,180.5 L317.5,179.9 L320.0,179.2 L322.5,178.6 L325.0,177.9 L327.5,177.3 L330.0,176.6 L332.5,176.0 L335.0,175.4 L337.5,174.8 L340.0,174.1 L342.5,173.5 L345.0,172.9 L347.5,172.3 L350.0,171.7 L352.5,171.2 L355.0,170.6 L357.5,170.0 L360.0,169.4 L362.5,168.9 L365.0,168.3 L367.5,167.7 L370.0,167.2 L372.5,166.6 L375.0,166.1 L377.5,165.6 L380.0,165.0 L382.5,164.5 L385.0,164.0 L387.5,163.4 L390.0,162.9 L392.5,162.4 L395.0,161.9 L397.5,161.4 L400.0,160.9 L402.5,160.4 L405.0,159.9 L407.5,159.4 L410.0,158.9 L412.5,158.4 L415.0,157.9 L417.5,157.4 L420.0,157.0 L422.5,156.5 L425.0,156.0 L427.5,155.6 L430.0,155.1 L432.5,154.6 L435.0,154.2 L437.5,153.7 L440.0,153.3 L442.5,152.8 L445.0,152.4 L447.5,151.9 L450.0,151.5 L452.5,151.1 L455.0,150.6 L457.5,150.2 L460.0,149.8 L462.5,149.4 L465.0,148.9 L467.5,148.5 L470.0,148.1 L472.5,147.7 L475.0,147.3 L477.5,146.9 L480.0,146.5" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M80.0,276.0 L82.5,275.5 L85.0,275.1 L87.5,274.6 L90.0,274.2 L92.5,273.8 L95.0,273.3 L97.5,272.9 L100.0,272.5 L102.5,272.1 L105.0,271.7 L107.5,271.3 L110.0,270.9 L112.5,270.5 L115.0,270.1 L117.5,269.7 L120.0,269.3 L122.5,269.0 L125.0,268.6 L127.5,268.2 L130.0,267.9 L132.5,267.5 L135.0,267.2 L137.5,266.8 L140.0,266.5 L142.5,266.2 L145.0,265.8 L147.5,265.5 L150.0,265.2 L152.5,264.8 L155.0,264.5 L157.5,264.2 L160.0,263.9 L162.5,263.6 L165.0,263.3 L167.5,263.0 L170.0,262.7 L172.5,262.4 L175.0,262.1 L177.5,261.8 L180.0,261.5 L182.5,261.2 L185.0,260.9 L187.5,260.7 L190.0,260.4 L192.5,260.1 L195.0,259.8 L197.5,259.6 L200.0,259.3 L202.5,259.0 L205.0,258.8 L207.5,258.5 L210.0,258.2 L212.5,258.0 L215.0,257.7 L217.5,257.5 L220.0,257.2 L222.5,257.0 L225.0,256.7 L227.5,256.5 L230.0,256.3 L232.5,256.0 L235.0,255.8 L237.5,255.5 L240.0,255.3 L242.5,255.1 L245.0,254.8 L247.5,254.6 L250.0,254.4 L252.5,254.2 L255.0,253.9 L257.5,253.7 L260.0,253.5 L262.5,253.3 L265.0,253.1 L267.5,252.8 L270.0,252.6 L272.5,252.4 L275.0,252.2 L277.5,252.0 L280.0,251.8 L282.5,251.6 L285.0,251.4 L287.5,251.2 L290.0,251.0 L292.5,250.8 L295.0,250.6 L297.5,250.4 L300.0,250.2 L302.5,250.0 L305.0,249.8 L307.5,249.6 L310.0,249.4 L312.5,249.2 L315.0,249.0 L317.5,248.8 L320.0,248.6 L322.5,248.5 L325.0,248.3 L327.5,248.1 L330.0,247.9 L332.5,247.7 L335.0,247.5 L337.5,247.4 L340.0,247.2 L342.5,247.0 L345.0,246.8 L347.5,246.7 L350.0,246.5 L352.5,246.3 L355.0,246.1 L357.5,246.0 L360.0,245.8 L362.5,245.6 L365.0,245.5 L367.5,245.3 L370.0,245.1 L372.5,245.0 L375.0,244.8 L377.5,244.6 L380.0,244.5 L382.5,244.3 L385.0,244.1 L387.5,244.0 L390.0,243.8 L392.5,243.7 L395.0,243.5 L397.5,243.4 L400.0,243.2 L402.5,243.0 L405.0,242.9 L407.5,242.7 L410.0,242.6 L412.5,242.4 L415.0,242.3 L417.5,242.1 L420.0,242.0 L422.5,241.8 L425.0,241.7 L427.5,241.5 L430.0,241.4 L432.5,241.2 L435.0,241.1 L437.5,241.0 L440.0,240.8 L442.5,240.7 L445.0,240.5 L447.5,240.4 L450.0,240.2 L452.5,240.1 L455.0,240.0 L457.5,239.8 L460.0,239.7 L462.5,239.5 L465.0,239.4 L467.5,239.3 L470.0,239.1 L472.5,239.0 L475.0,238.9 L477.5,238.7 L480.0,238.6" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><text x="400.0" y="111.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="end" font-weight="400">training</text><text x="400.0" y="227.9" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="end" font-weight="400">inference</text><text x="280.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">relative spend →</text><rect x="520.0" y="76.0" width="280.0" height="180.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="538.0" y="100.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">cost per token</text><text x="538.0" y="124.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">≈ 2 · N · P FLOPs</text><text x="538.0" y="146.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">≈ 2 · P FLOPs / token</text><text x="538.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Training is a one-off; serving</text><text x="538.0" y="185.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">is per token, forever. A model</text><text x="538.0" y="198.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">that is 30% better but 3× more</text><text x="538.0" y="211.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">expensive may simply lose.</text><text x="538.0" y="240.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">this is why small models keep winning</text></svg><figcaption>Training and inference cost as a function of model size, batch, and tokens. The energy question is this figure multiplied by a power number and a utilisation factor — and utilisation is where the largest errors live.</figcaption></figure></p>
+<p><strong>[established]</strong> Training frontier models consumes megawatt-scale power for weeks; inference energy now dominates the lifetime total for widely used models; data-centre electricity demand forecasts have been revised upward repeatedly as AI capacity is built; energy per FLOP has improved by orders of magnitude over the GPU generations and improvements continue. <strong>[contested]</strong> The net trajectory: forecasts of AI's share of grid demand differ by large factors depending on assumptions about utilisation, model size, and query volume, and published estimates of the energy of a single query span more than an order of magnitude. Whether efficiency gains are outpaced by usage growth. <strong>[unknown]</strong> The steady-state energy cost of a deployed assistant per user per year, measured rather than nameplate-estimated.</p>
+<p><strong>What would settle it.</strong> Metered, audited energy per useful task — per query at a stated quality level, per training run at a stated capability — published with the utilisation assumptions, rather than nameplate TDP multiplied by duty cycle.</p>
+<p><strong>Micro-example.</strong> A 70B model served at 3,000 tokens/s aggregate on 8 GPUs at 700 W each draws about 5.6 kW for compute; at 1 kW-per-1,000-tokens-per-second efficiency assumptions the same load is 3 kW. Add cooling at 1.3× and the estimate moves by nearly a factor of two from assumptions alone. Any energy claim quoted to three significant figures without its utilisation assumptions is arithmetic, not measurement.</p>
+<h3 id="11-the-gap-between-benchmark-and-deployment-performance">11. The gap between benchmark and deployment performance</h3>
+<p><strong>Intuition.</strong> A benchmark is one distribution, sampled once, scored by a script. Deployment is every distribution, sampled forever, scored by consequences.</p>
+<p><strong>Formal statement.</strong> The gap decomposes into <em>distribution shift</em> (the deployment inputs differ from the benchmark's), <em>protocol difference</em> (single-turn versus multi-turn, greedy versus sampled, one prompt versus a user's actual prompt), and <em>selection</em> (the benchmark reports a mean over items; users experience a tail of hard inputs, and a tail of catastrophic failures).</p>
+<p><strong>[established]</strong> Performance degrades under distribution shift; prompt format alone moves scores by several points; multi-turn and agentic settings expose failure modes invisible in single-turn benchmarks; the tail of failures matters more than the mean for user experience. <strong>[contested]</strong> How large the gap is, whether it is predictable from benchmark structure, and whether any offline evaluation can be a reliable proxy for deployment. <strong>[unknown]</strong> How to build an evaluation that is both valid (measures what it claims) and representative (samples what deployment sees), without simply deploying.</p>
+<p><strong>What would settle it.</strong> Deployment telemetry with held-out task sampling under matched protocols, reported as distributions rather than means, and published alongside the benchmark so that the mapping between the two can be measured rather than assumed.</p>
+<p><strong>Micro-example.</strong> A model scoring 78 percent on a benchmark can be deployed at an apparent 60 percent success rate, with 5 percent of interactions producing a failure serious enough to require human recovery. The mean moved 18 points; the number that matters for the product is the 5 percent, and it was never in the benchmark.</p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<p>When you meet a frontier claim — in a paper, a blog post, a funding announcement — run this procedure before forming a belief.</p>
+<ol>
+<li><strong>Write the claim in one sentence</strong>, with its scope: what, on what, at what scale, under what protocol.</li>
+<li><strong>Tag it</strong>: established, contested, or unknown. If you cannot find the evidence, the tag is unknown and that is a finding.</li>
+<li><strong>Find the load-bearing measurement.</strong> Every claim has one number that, if it moved, would kill it. Identify it and ask whether the source reports it with an interval.</li>
+<li><strong>Check the comparison class.</strong> Is the baseline the state of the art at the same budget, or something weaker? Is the scale the same? Is the protocol the same?</li>
+<li><strong>Check the extrapolation.</strong> If the claim is about the future or about a larger scale, identify the fitted quantity, its interval, and the distance of the extrapolation in decades.</li>
+<li><strong>Check the counter-evidence.</strong> Search specifically for the paper that disagrees. If you find none, you have not looked, because for every claim in this module there is one.</li>
+<li><strong>Name what would settle it.</strong> If you cannot, the claim is not empirical and should be tagged as such.</li>
+<li><strong>Record the verdict with its tag.</strong> A claim you downgrade from established to contested, with the reason, is the useful output.</li>
+</ol>
+<p>```text
+assess(claim):
+    c <- parse(claim)                       # who, what, on what, at what scale
+    tag <- lookup_evidence(c)               # established | contested | unknown
+    m <- load_bearing_measurement(c)
+    if not has_interval(m): uncertainty <- "unreported"
+    if c.baseline is not matched(c): flag("comparison class")
+    if c.is_extrapolation:
+        decades <- log10(c.target / c.fitted_range.max)
+        fragile <- decades * interval_width(c.exponent)   # relative error in the term
+    counter <- search_for_disagreement(c)
+    if counter is empty: tag <- max(tag, "under-searched")
+    verdict <- (tag, m, uncertainty, fragile, counter)
+    return verdict
+```</p>
+<p><strong>Complexity.</strong> Step 6 dominates: finding the disagreeing paper typically takes 20–60 minutes of search and is the step almost everyone skips, which is why public discussion of these topics converges on whichever version was published first. Steps 1–5 are minutes with <strong>M27</strong>'s interval arithmetic already in hand.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="1-how-fast-a-scaling-extrapolation-degrades">1. How fast a scaling extrapolation degrades</h3>
+<p>Take the compute-optimal form. With $C \approx 6ND$ and an allocation $D = 20N$, we have $C = 120N^2$, so $N(C) = (C/120)^{1/2}$ and $D(C) = 20(C/120)^{1/2}$. Substituting into $L(N,D) = E + AN^{-\alpha} + BD^{-\beta}$:</p>
+<p>$$\begin{aligned}
+AN^{-\alpha} &= A\Big(\frac{C}{120}\Big)^{-\alpha/2} = \underbrace{A\,120^{\alpha/2}}_{K_N} C^{-\alpha/2}, \\
+BD^{-\beta} &= B\,20^{-\beta}\Big(\frac{C}{120}\Big)^{-\beta/2} = \underbrace{B\,20^{-\beta}120^{\beta/2}}_{K_D} C^{-\beta/2},
+\end{aligned}$$</p>
+<p>so along the compute-optimal frontier</p>
+<p>$$L(C) = E + K_N C^{-0.170} + K_D C^{-0.140}$$</p>
+<p>for $\alpha = 0.34$, $\beta = 0.28$. Two consequences follow immediately. First, the <em>slower</em> term ($C^{-0.14}$) dominates at large $C$, so the effective exponent drifts downward as compute grows and a single-exponent fit is always locally right and globally wrong. Second, sensitivity: for a term $K C^{-p}$,</p>
+<p>$$\frac{\partial}{\partial p}\big(K C^{-p}\big) = -K C^{-p}\ln C \quad\Longrightarrow\quad \frac{\delta(\text{term})}{\text{term}} = -\ln C \;\delta p.$$</p>
+<p>At $C = 10^{24}$, $\ln C = 55.3$, so an error of $0.01$ in the exponent is a 55 percent error <em>in that term</em> — and because $E$ dominates the total, a 55 percent error in a 0.23-nat term is only a 6 percent error in $L$. <strong>This is why loss forecasts look reliable and capability forecasts do not</strong>: the forecast's precision comes from the irreducible term, while everything anyone cares about lives in the reducible part, which is exactly the part the exponent controls.</p>
+<h3 id="2-why-long-context-dilutes-a-single-relevant-token">2. Why long context dilutes a single relevant token</h3>
+<p>Let the query see $T$ positions. One is relevant with logit $s_r = \delta$; the other $T-1$ share a baseline logit of $0$. The softmax weight on the relevant position is</p>
+<p>$$a_T = \frac{e^{\delta}}{e^{\delta} + \sum_{j=1}^{T-1} e^{0}} = \frac{e^{\delta}}{e^{\delta} + (T-1)} = \frac{1}{1 + (T-1)e^{-\delta}}.$$</p>
+<p>Requiring $a_T \ge 1-\epsilon$ and solving for $\delta$:</p>
+<p>$$\begin{aligned}
+\frac{1}{1 + (T-1)e^{-\delta}} \ge 1-\epsilon
+&\iff 1 + (T-1)e^{-\delta} \le \frac{1}{1-\epsilon} \\
+&\iff (T-1)e^{-\delta} \le \frac{\epsilon}{1-\epsilon} \\
+&\iff \delta \ge \ln\frac{(T-1)(1-\epsilon)}{\epsilon}.
+\end{aligned}$$</p>
+<p>For $\epsilon = 0.001$ and $T$ growing from $10^3$ to $10^5$, the required margin rises by $\ln 100 = 4.61$ nats. A model whose attention logits are trained at 8k has no reason to produce margins that grow logarithmically with $T$ — the gradient never asked for it — which is one mechanistic reason recall degrades before the nominal window, and one reason a synthetic needle test with a single distinctive token can still pass: the needle's margin is large enough at the tested length.</p>
+<h3 id="3-the-fixed-point-of-synthetic-data-recursion">3. The fixed point of synthetic-data recursion</h3>
+<p>Normalise the diversity of real data to 1 and let model-generated data retain a fraction $\rho$ of the diversity of whatever produced it. Each generation keeps a fraction $\alpha$ of real data and replaces the rest:</p>
+<p>$$Q_{n+1} = \alpha + (1-\alpha)\,\rho\, Q_n, \qquad Q_0 = 1.$$</p>
+<p>The affine recursion $Q_{n+1} = \alpha + \lambda Q_n$ with $\lambda = (1-\alpha)\rho$ has fixed point $Q^{*} = \alpha/(1-\lambda)$ and closed form</p>
+<p>$$Q_n = Q^{*} + (1 - Q^{*})\lambda^{n}.$$</p>
+<p>With $\alpha = 0.3$, $\rho = 0.9$: $\lambda = 0.63$, $Q^{*} = 0.811$, and $Q_7 = 0.811 + 0.189(0.039) = 0.818$. With $\alpha = 0.1$: $\lambda = 0.81$, $Q^{*} = 0.526$, $Q_7 = 0.526 + 0.474(0.229) = 0.635$. The equilibrium is set almost entirely by $\alpha$ and $\rho$, not by the number of generations — which reframes "model collapse" as a claim about <em>equilibrium quality under a mixture policy</em>, not about generation count. That framing is contested in its specifics, but the arithmetic of the recursion is not.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>Fit a power law to noisy points, bootstrap the exponent, and extrapolate with an interval. The output is the point of the module: the interval on the extrapolation is far wider than the residuals suggest.</p>
+<p>```python
+import numpy as np
+
+def fit_power_law(C, L, E=1.69):
+    """Fit L = E + K C^-p by least squares on log(C) vs log(L - E)."""
+    y = np.log(np.asarray(L, float) - E)
+    x = np.log(np.asarray(C, float))
+    p, logK = np.polyfit(x, y, 1)          # slope = -p, intercept = log K
+    return -p, np.exp(logK)
+
+def extrapolate(C, L, C_target, E=1.69, n_boot=2000, seed=0):
+    rng = np.random.default_rng(seed)
+    C, L = np.asarray(C, float), np.asarray(L, float)
+    p_hat, K_hat = fit_power_law(C, L, E)
+    pred = E + K_hat * C_target ** (-p_hat)
+    # residual bootstrap: the errors in log space are roughly homoscedastic
+    resid = np.log(L - E) - (np.log(K_hat) - p_hat * np.log(C))
+    ps = []
+    for _ in range(n_boot):
+        Lb = E + np.exp(np.log(K_hat) - p_hat * np.log(C) + rng.choice(resid, len(C)))
+        try:
+            ps.append(fit_power_law(C, Lb, E)[0])
+        except Exception:
+            pass
+    ps = np.array(ps)
+    lo, hi = np.quantile(E + K_hat * C_target ** (-ps), [0.025, 0.975])
+    return {"p": p_hat, "K": K_hat, "point": pred, "ci": (lo, hi),
+            "p_ci": tuple(np.quantile(ps, [0.025, 0.975])), "n": len(ps)}
+
+# With four points at C = 1e21..1e24, the exponent comes back near 0.15 with a
+# bootstrap interval of roughly +/-0.01, and the 1e26 extrapolation is ~1.80
+# nats with a CI of a few hundredths. Feed it three points instead of four and
+# watch the interval double: the fragility is in the fit, not the forecast.
+```</p>
+<p>Two lessons when you run it. Changing $E$ by 0.02 nats moves every prediction by more than the bootstrap interval, because $E$ is a <em>prior</em> in this fit rather than a parameter — which is why papers that fix $E$ from a small-scale fit and then extrapolate are asserting more than their data supports. And extrapolating two decades out from a four-point fit produces an interval whose width is comparable to the total reducible loss: at that point you are not forecasting, you are fitting a line to a hope.</p>
+<h2 id="worked-example">Worked example</h2>
+<p>A scaling forecast done honestly, with the numbers computed rather than asserted. The generating law is the Chinchilla-style form $L(N,D) = 1.69 + 406.4\,N^{-0.34} + 410.7\,D^{-0.28}$ with the allocation $D = 20N$ and $C = 6ND$, evaluated at four budgets a team could plausibly have measured.</p>
+<table>
+<thead>
+<tr>
+<th>$C$ (FLOPs)</th>
+<th>$N$</th>
+<th>$D$</th>
+<th>$L$</th>
+<th>Reducible $L - 1.69$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$10^{21}$</td>
+<td>$2.89\times10^{9}$</td>
+<td>$5.77\times10^{10}$</td>
+<td>2.335</td>
+<td>0.645</td>
+</tr>
+<tr>
+<td>$10^{22}$</td>
+<td>$9.13\times10^{9}$</td>
+<td>$1.83\times10^{11}$</td>
+<td>2.146</td>
+<td>0.456</td>
+</tr>
+<tr>
+<td>$10^{23}$</td>
+<td>$2.89\times10^{10}$</td>
+<td>$5.77\times10^{11}$</td>
+<td>2.012</td>
+<td>0.322</td>
+</tr>
+<tr>
+<td>$10^{24}$</td>
+<td>$9.13\times10^{10}$</td>
+<td>$1.83\times10^{12}$</td>
+<td>1.918</td>
+<td>0.228</td>
+</tr>
+</tbody>
+</table>
+<p>The reducible loss falls by a factor of 0.706, 0.707, 0.707 per decade — an implied exponent of 0.151, tightly determined by these four points. Extrapolating two decades to $10^{26}$ gives $0.228 \times 10^{-0.302} = 0.1115$, so $L(10^{26}) = 1.802$.</p>
+<p>Now the part that matters. Perturb the exponent by $\pm0.01$, well inside what four noisy points support:</p>
+<table>
+<thead>
+<tr>
+<th>Exponent</th>
+<th>Reducible at $10^{26}$</th>
+<th>Predicted $L$</th>
+<th>Error in $L$</th>
+<th>Error in reducible</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.135</td>
+<td>0.1223</td>
+<td>1.812</td>
+<td>+0.010</td>
+<td>+10%</td>
+</tr>
+<tr>
+<td>0.151</td>
+<td>0.1115</td>
+<td>1.802</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>0.175</td>
+<td>0.1017</td>
+<td>1.792</td>
+<td>−0.010</td>
+<td>−9%</td>
+</tr>
+</tbody>
+</table>
+<p>The 95 percent interval on the <em>loss</em> forecast is roughly $\pm0.01$ nats — tight enough to plan a training run. The interval on the <em>reducible</em> loss is $\pm10$ percent, and reducible loss is the only part that tracks capability. If a benchmark's pass rate is roughly linear in reducible loss near the threshold where it starts to work, a 10 percent uncertainty in reducible loss is a several-point uncertainty in the benchmark — which is exactly the width of the intervals that make capability forecasts unreliable while loss forecasts look excellent.</p>
+<p>Three further perturbations, each of which is a thing a real team faces. Change the allocation ($D = 10N$ instead of $20N$) and every number moves; the fit cannot distinguish an allocation error from an exponent error, which is why Chinchilla's allocation had to be established by training models, not by fitting. Fix $E$ at 1.60 instead of 1.69 and every prediction drops by 0.09 — nine times the bootstrap interval, because $E$ is an assumption in the fit. And extend to a tenth of the compute ($10^{20}$) and the exponent estimate moves by 0.005 because the curve is not a single power law: the fit's exponent is a local derivative of a drifting slope.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="scaling-laws-tell-us-what-models-will-be-able-to-do">"Scaling laws tell us what models will be able to do."</h3>
+<p>They predict loss, within a family, over a range. The mapping from loss to any benchmark is empirically fitted, family-specific, and not monotone in any guaranteed way. A forecast of "GPT-6 will pass benchmark X" is a claim with no scaling law behind it.</p>
+<h3 id="emergent-abilities-prove-that-scale-creates-discontinuous-new-capabilities">"Emergent abilities prove that scale creates discontinuous new capabilities."</h3>
+<p>Contested. The discontinuities are real <em>in the metric</em>; whether they reflect discontinuities in the underlying capability depends on the metric's resolution. All-or-nothing metrics (exact match) produce sharp curves from smooth improvements; continuous metrics on the same models often show smooth curves. A 2023 paper making exactly this argument changed the debate without settling it: some abilities still look sharp under continuous metrics.</p>
+<h3 id="sparse-autoencoders-have-made-the-model-interpretable">"Sparse autoencoders have made the model interpretable."</h3>
+<p>They have made it <em>partially</em> decomposable. A dictionary of features with causal effects is progress; a mechanistic account of a forward pass is not yet available at scale, and the failure modes (feature splitting, absorption, reconstruction hiding the important directions) are documented rather than hypothetical.</p>
+<h3 id="rl-with-verifiable-rewards-teaches-models-to-reason">"RL with verifiable rewards teaches models to reason."</h3>
+<p>Partly contested. Pass@1 improves a great deal; whether the <em>support</em> of the distribution expands is disputed, and at least some of the gain is consistent with making existing correct paths more likely. The honest statement is "RL makes correct solutions more reliable on the training distribution", which is valuable and much weaker than "it learns to reason".</p>
+<h3 id="benchmarks-measure-capability">"Benchmarks measure capability."</h3>
+<p>They measure performance on a sample under a protocol. Contamination, saturation, and protocol sensitivity are all established, and the interval on a typical benchmark subset is wider than the differences being claimed. A benchmark score is evidence, not a measurement of the thing you care about.</p>
+<h3 id="agent-reliability-will-be-solved-by-better-scaffolding">"Agent reliability will be solved by better scaffolding."</h3>
+<p>Contested, and the arithmetic is unforgiving: a fifty-step task at 99 percent per-step reliability succeeds 60 percent of the time. Scaffolding and verification change the exponent's base, but the compounding is structural — which suggests the interesting question is not "how do we get to 99.9 percent" but "which tasks tolerate 60 percent".</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>1.</strong> Tag each claim: (a) "SAE features are causally effective when clamped"; (b) "SAEs recover the model's true features"; (c) "RLVR teaches reasoning".</p>
+<details><summary>Solution</summary>
+
+(a) established — demonstrated by clamping experiments across several models and dictionaries; (b) contested — feature splitting and absorption are documented, and "the true features" is not yet a well-defined target; (c) contested — pass@1 improves, but whether capability expands or is resharpenened is disputed, and the definition of the training distribution is doing a lot of work.
+
+</details>
+
+<p><strong>2.</strong> Why is an interval on a benchmark score usually wider than the reported differences between systems?</p>
+<details><summary>Solution</summary>
+
+Because most benchmark subsets have hundreds of items, not thousands, so the item-sampling standard error is 1–3 points, while methods differ by 0.5–2 points. The measurement's resolution is coarser than the effect it is being used to detect.
+
+</details>
+
+<p><strong>3.</strong> State why a feature that fires on a concept is not yet an explanation of the model's behaviour.</p>
+<details><summary>Solution</summary>
+
+A feature establishes that a direction exists and is causally wired to outputs. An explanation requires the computation: which inputs activate it, how it interacts with other features, and how the combination produces the output. Clamping shows a direction matters; it does not show the circuit.
+
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>4.</strong> With $p = 0.99$ per step, what is the success probability on 20, 50, and 100 steps, and what per-step reliability is needed for 80 percent success at 50 steps?</p>
+<details><summary>Solution</summary>
+
+$0.99^{20} = 0.818$; $0.99^{50} = 0.605$; $0.99^{100} = 0.366$. For 0.8 at 50 steps, $p = 0.8^{1/50} = e^{-0.2231/50} = 0.99554$ — i.e. 99.55 percent per step, which is 0.55 percentage points of per-step improvement translating into 20 points at the task level.
+
+</details>
+
+<p><strong>5.</strong> An attention head must put weight 0.999 on one relevant token among $T$. Give the required logit margin at $T = 10^3$, $10^4$, $10^5$.</p>
+<details><summary>Solution</summary>
+
+$\delta = \ln((T-1)(1-\epsilon)/\epsilon)$ with $\epsilon = 0.001$: at $T=10^3$, $\ln(999 \times 999) = 13.8$; at $10^4$, 16.1; at $10^5$, 18.4. The margin must grow by 2.3 nats per decade of context — pure $\ln T$.
+
+</details>
+
+<p><strong>6.</strong> In the synthetic-data recursion with $\alpha = 0.2$ and $\rho = 0.85$, compute $\lambda$, $Q^{*}$, and $Q_{10}$.</p>
+<details><summary>Solution</summary>
+
+$\lambda = 0.8 \times 0.85 = 0.68$; $Q^{*} = 0.2/0.32 = 0.625$; $Q_{10} = 0.625 + 0.375(0.68^{10} = 0.0211) = 0.633$. The equilibrium is reached within about five generations — the recursion has no long transient, which is why toy studies report collapse quickly and why real studies disagree about rate.
+
+</details>
+
+<p><strong>7.</strong> A 2-point difference is reported between two models on a 1,000-item benchmark at 80 percent accuracy. Compute the unpaired standard error and say what you would need.</p>
+<details><summary>Solution</summary>
+
+$\sqrt{2(0.8)(0.2)/1000} = 0.0179$, so 2 points is 1.12 standard errors — not significant. With pairing at $\rho = 0.6$ the SE falls to $0.0179\sqrt{0.4} = 0.0113$ and the gap is 1.77 SE, still marginal. To resolve 2 points comfortably you need about 3,000 items paired, or a lower-variance metric.
+
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>8.</strong> Take the pass@1/pass@k argument and construct the observation that would falsify "RL resharpens rather than expands". State the experiment, the sample budget, and the result that would settle it either way.</p>
+<details><summary>Hint</summary>
+
+Falsification: RL models showing pass@k *above* the base model's pass@k at large $k$ on genuinely held-out tasks at matched total sampling budget, with the tasks verified absent from training data. Report the crossover $k$ where the curves separate; a crossover at small $k$ with convergence at large $k$ supports resharpening, and a persistent gap at large $k$ supports expansion. The confound to control is the sampling budget: comparing RL pass@1 at 64 samples against base pass@64 at 64 samples is the only fair version.
+
+</details>
+
+<p><strong>9.</strong> Re-run the worked example with only the three largest-compute points and with only the three smallest; report both extrapolations to $10^{26}$ and the distance between them.</p>
+<details><summary>Hint</summary>
+
+Dropping the smallest point changes the fitted exponent by about 0.005 and the extrapolation by a few hundredths of a nat; dropping the largest changes it more, because the fit is now anchored only at low compute where the drift between the two power-law terms is larger. The exercise's value is the size of the disagreement relative to the claimed precision — usually larger.
+
+</details>
+
+<p><strong>10.</strong> Pick a claim from the last six months of AI news, tag it, and write the "what would settle it" sentence. Then find the paper that disagrees and read its abstract only.</p>
+<details><summary>Hint</summary>
+
+Most such claims will tag as contested or under-searched, and the disagreeing paper will usually be findable within twenty minutes. The transferable skill is the search, not the verdict: once you have found one counter-paper for a given topic, you have found the community that produces the others.
+
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>What is the difference between a claim about loss and a claim about capability, in terms of what a scaling law supports?</li>
+<li>Give the two most common failure modes of a benchmark and the arithmetic that reveals each.</li>
+<li>State the three conditions under which a sparse-autoencoder feature counts as evidence of mechanism.</li>
+<li>Why must the attention margin grow logarithmically with context length, and what does that imply for models trained at short context?</li>
+<li>What does pass@k at large $k$ measure that pass@1 does not?</li>
+<li>What determines the equilibrium quality of a synthetic-data recursion, and what does not?</li>
+<li>Name the two curves whose relative growth rate decides whether AI energy consumption rises.</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. A scaling law fits loss within a family over a range; it says nothing about which benchmarks a model passes, because the loss-to-capability mapping is empirical and family-specific. Loss forecasts can be accurate while capability forecasts are not.
+2. Contamination — revealed by comparing scores on pre-cutoff versus post-cutoff items of matched difficulty. Under-powering — revealed by computing the interval, which is typically wider than the claimed effect.
+3. Stability across seeds and dictionary sizes, causal effect in the predicted direction, and participation in an identifiable circuit that composes to the output.
+4. Because $a_T = 1/(1+(T-1)e^{-\delta})$, so holding the attention share requires $\delta \ge \ln((T-1)(1-\epsilon)/\epsilon)$, growing as $\ln T$. Models trained at short context never receive a gradient that asks for margins growing with $T$, so recall degrades before the nominal window.
+5. Whether the correct answer exists anywhere in the model's distribution — a rough proxy for whether capability expanded rather than being made more likely.
+6. The real-data fraction $\alpha$ and the per-generation retention $\rho$; the number of generations matters far less, because the recursion converges within a few steps to $Q^{*} = \alpha/(1-(1-\alpha)\rho)$.
+7. Growth in usage (queries × tokens per query) against improvement in energy per unit of work — the rebound question.
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ol>
+<li><strong>J. Kaplan et al., "Scaling Laws for Neural Language Models" (2020).</strong> The paper that made loss forecasting a discipline; extract the functional form and, more usefully, the section on what the laws do not predict.</li>
+<li><strong>J. Hoffmann et al., "Training Compute-Optimal Large Language Models" (2022).</strong> Chinchilla: the allocation result, the three fitting methods that disagreed, and the fact that the disagreement had to be settled by training models.</li>
+<li><strong>C. Zhang et al., "Understanding Deep Learning Requires Rethinking Generalization" (2017).</strong> The random-label experiment; the cleanest demonstration that capacity does not determine generalisation.</li>
+<li><strong>N. Elhage et al., "Toy Models of Superposition" (2022).</strong> Why features are not neurons: the geometry of representing more features than dimensions. Read it before any interpretability claim.</li>
+<li><strong>R. Schaeffer, B. Miranda, S. Koyejo, "Are Emergent Abilities of Large Language Models a Mirage?" (2023).</strong> The metric-resolution argument, with reanalyses of the original emergent-ability figures. Read alongside the paper it criticises.</li>
+<li><strong>METR's task-completion time-horizon measurements (2024–2025).</strong> The most quantitative public attempt to measure agent reliability as a function of task length; extract the methodology and its assumptions, not just the doubling time.</li>
+<li><strong>Y. Yue et al. (2025) on pass@k and RL-trained reasoning.</strong> The empirical case that RL resharpens rather than expands; read the sampling-budget controls carefully, because the conclusion turns on them.</li>
+</ol>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when, without notes:</p>
+<ul>
+<li>You can tag any frontier claim established, contested, or unknown, and say what evidence would move it between tags.</li>
+<li>You can explain why loss extrapolates and capability does not, using the reducible-versus-irreducible decomposition.</li>
+<li>You can state the dilution formula for long-context attention and the $\ln T$ requirement it implies.</li>
+<li>You can describe what an SAE establishes and what it does not.</li>
+<li>You can state the reliability arithmetic for agents and the mixture arithmetic for synthetic data.</li>
+<li>You can name, for at least six of these eleven problems, the experiment that would settle it — and you notice when you cannot.</li>
+</ul><div class="pager"><a id="prevlink" href="../m/28-capstone-ladder.html"><small>← previous</small><b>M28 · The Capstone Ladder</b></a><a id="nextlink" class="next" href="../m/apx-a-formula-sheet.html"><small>next →</small><b>A · Formula Sheet</b></a></div></article>
+</main>
+</div>
+</body></html>

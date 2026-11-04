@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M28 · The Capstone Ladder — From Zero to Frontier</title>
+<meta name="description" content="Ten builds, each with a number that tells you whether it is finished.">
+<meta property="og:title" content="M28 · The Capstone Ladder — From Zero to Frontier">
+<meta property="og:description" content="Ten builds, each with a number that tells you whether it is finished.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Practice / M28</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M28">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M28</span><span class="pill d3">difficulty 3/5</span><span class="pill">6 weeks</span><span class="pill">prereqs: M18, M26</span><span class="pill">6,807 words</span></div><h1>The Capstone Ladder</h1><p class="tagline">Ten builds, each with a number that tells you whether it is finished.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>There is a specific failure mode that strikes learners who have finished a curriculum like this one: they can explain attention, derive the DPO gradient, and quote the Chinchilla allocation, and they have never once made a GPU-bound kernel faster, watched a loss curve diverge at 3 a.m. from a bug they wrote, or had a number they claimed survive a colleague's re-run. Knowledge assembled from derivations is real but it is unindexed — it does not tell you what to do when the gradient is NaN. The ladder fixes that by forcing ten artefacts, each small enough to finish in days and each aimed at a different failure mode: implementation, measurement, optimisation, systems, evaluation, and communication. <strong>M27</strong> taught you to judge other people's evidence. This module makes you produce evidence of your own, in an order where each rung hands you the instrument the next rung needs.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<p>Each question tests a rung you are about to build. If you miss two or more, go back to the module named.</p>
+<ol>
+<li>Write the backward pass of a matrix multiply $Y = XW$ in terms of the upstream gradient. (M07)</li>
+<li>A LoRA adapter of rank $r=16$ is added to both the $d\times d$ $Q$ and $V$ projections of a 7B model with $L=32$, $d=4096$. How many trainable parameters, as a fraction of the full model? (M17)</li>
+<li>State the DPO loss in full and say precisely what quantity replaces the reward model. (M18)</li>
+<li>For a 7B model in fp16 with $L=32$, $n_{kv}=32$, $d_h=128$, what is the KV cache per token? (M19)</li>
+<li>On an H100 with 989 TFLOP/s bf16 and 3.35 TB/s HBM, what arithmetic intensity does a kernel need to be compute-bound? (M24)</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. With $\mathbf{Y} = \mathbf{X}\mathbf{W}$, if $\bar{\mathbf{Y}} = \partial\mathcal{L}/\partial\mathbf{Y}$ then $\bar{\mathbf{X}} = \bar{\mathbf{Y}}\mathbf{W}^\top$ and $\bar{\mathbf{W}} = \mathbf{X}^\top\bar{\mathbf{Y}}$. Both are single matmuls, which is why autodiff for linear layers is cheap.
+2. Per adapted matrix, $2rd = 2(16)(4096) = 131{,}072$ parameters. Two matrices per layer × 32 layers = 64 adapters, so $64 \times 131{,}072 = 8{,}388{,}608$. A 7B model has $\approx 7\times10^9$ parameters, so the fraction is 0.12 percent — and if you included every linear projection (7 per layer, say) the count scales by that factor, still under 1 percent.
+3. $\mathcal{L}_{\text{DPO}} = -\log\sigma\!\big(\beta[\log\frac{\pi_\theta(y_w\mid x)}{\pi_{\text{ref}}(y_w\mid x)} - \log\frac{\pi_\theta(y_l\mid x)}{\pi_{\text{ref}}(y_l\mid x)}]\big)$. The implicit reward $\beta\log\frac{\pi_\theta(y\mid x)}{\pi_{\text{ref}}(y\mid x)}$ replaces the separately trained reward model, because the Bradley–Terry likelihood is written entirely in terms of log-ratios of the policy to its reference.
+4. $2 \times L \times n_{kv} \times d_h \times 2$ bytes $= 2(32)(32)(128)(2) = 524{,}288$ bytes = 512 KiB per token.
+5. $r = F/W = 989\times10^{12}/3.35\times10^{12} = 295$ FLOP/byte. Below that intensity the kernel is memory-bound, and no amount of arithmetic reorganisation helps until you cross it.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<p>By the end of this module you can, with the artefacts in hand:</p>
+<ul>
+<li>Build a working reverse-mode autodiff engine over a tape and train an MLP with it to a stated accuracy.</li>
+<li>Write a byte-level BPE tokenizer, report its bits-per-byte on held-out text, and compare it against a reference tokenizer on the same corpus.</li>
+<li>Pretrain a small language model on a corpus you assembled, and report validation loss, tokens seen, and compute in named quantities.</li>
+<li>Attach a LoRA adapter, fine-tune it, and measure both target-task gain and retention on a held-out general capability.</li>
+<li>Implement DPO from the loss up, including the reference-model log-probability bookkeeping, and show the implicit reward order the pairs.</li>
+<li>Serve a model with a KV cache and continuous batching, and report TTFT and TPOT at p50 and p95 under a fixed concurrency.</li>
+<li>Reproduce one figure from one paper, and state the residual discrepancy and its likely cause.</li>
+<li>Write an elementwise or reduction kernel in Triton or CUDA, measure it against PyTorch, and explain the speedup with a roofline argument.</li>
+<li>Build an evaluation harness that reports confidence intervals, and refuse to report a point estimate alone.</li>
+<li>Write a 4-page paper whose claim is exactly what the evidence supports.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\text{BPB}$</td>
+<td>bits per byte of held-out text; $\text{BPB} = \frac{\text{nats/token}}{\ln 2}\cdot\frac{\text{tokens}}{\text{byte}}$</td>
+</tr>
+<tr>
+<td>$C$</td>
+<td>total training compute in FLOPs, $C \approx 6ND$ for $N$ parameters and $D$ tokens</td>
+</tr>
+<tr>
+<td>$\text{TTFT}$</td>
+<td>time to first token, measured from request arrival</td>
+</tr>
+<tr>
+<td>$\text{TPOT}$</td>
+<td>time per output token in the decode phase, excluding prefill</td>
+</tr>
+<tr>
+<td>$p_{50}, p_{95}$</td>
+<td>median and 95th percentile of a latency distribution</td>
+</tr>
+<tr>
+<td>$\Delta_{\text{task}}$</td>
+<td>target-task improvement over the pre-fine-tune model</td>
+</tr>
+<tr>
+<td>$\Delta_{\text{retain}}$</td>
+<td>change in a held-out general benchmark after fine-tuning</td>
+</tr>
+<tr>
+<td>$S$</td>
+<td>speedup, $S = t_{\text{baseline}}/t_{\text{kernel}}$, medians over repeated trials</td>
+</tr>
+<tr>
+<td>$\text{CI}_{95}$</td>
+<td>a 95 percent confidence interval, per <strong>M20</strong> and <strong>M27</strong></td>
+</tr>
+<tr>
+<td>$r$</td>
+<td>LoRA rank</td>
+</tr>
+<tr>
+<td>$m$</td>
+<td>number of seeds; a rung is <em>passed</em> only at $m \ge 3$</td>
+</tr>
+</tbody>
+</table>
+<p>One convention runs through every rung: an acceptance criterion is a <em>number with a tolerance and a protocol</em>, never a description. "Fast inference" is not a criterion; "TTFT $p_{50} < 400$ ms at concurrency 8 on a 2048-token prompt, measured over 200 requests after 20 warmup requests" is.</p>
+<h2 id="core-concepts">Core concepts</h2>
+<p>The ladder is ordered by <em>dependency of instruments</em>, not by difficulty alone: rung 9 needs the measurement discipline built at rung 1 and the harness habits from rungs 4 and 6; rung 10 needs every number the previous nine produced. Attempt them in order the first time through. The hours are the <em>minimum pass</em> budget for a learner who has just read the prerequisite module, and they sum to 68 — six weeks at about 11 hours a week, which is what the front matter claims. A production-quality pass of the same ten rungs is closer to 250 hours; the acceptance criteria below are floors, not the ceiling of what each rung can absorb.</p>
+<table>
+<thead>
+<tr>
+<th>Rung</th>
+<th>Build</th>
+<th>Exercises</th>
+<th>Hours</th>
+<th>Artefact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Autodiff engine + MLP</td>
+<td>M06, M07</td>
+<td>8</td>
+<td>repo + training curve</td>
+</tr>
+<tr>
+<td>2</td>
+<td>BPE tokenizer + compression</td>
+<td>M14</td>
+<td>5</td>
+<td>tokenizer + BPB table</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Small LM pretraining</td>
+<td>M15, M16, M26</td>
+<td>10</td>
+<td>checkpoint + loss log</td>
+</tr>
+<tr>
+<td>4</td>
+<td>LoRA fine-tune + retention</td>
+<td>M17, M20</td>
+<td>6</td>
+<td>adapter + two-number report</td>
+</tr>
+<tr>
+<td>5</td>
+<td>DPO from scratch</td>
+<td>M18</td>
+<td>6</td>
+<td>training script + reward-margin plot</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Inference server</td>
+<td>M12, M19</td>
+<td>8</td>
+<td>server + latency table</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Reproduce one figure</td>
+<td>M20, M27</td>
+<td>5</td>
+<td>figure + discrepancy note</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Triton/CUDA kernel</td>
+<td>M24, M26</td>
+<td>7</td>
+<td>kernel + speedup table</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Eval harness with CIs</td>
+<td>M20, M23</td>
+<td>6</td>
+<td>harness + report</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Short paper</td>
+<td>M27</td>
+<td>7</td>
+<td>4-page PDF</td>
+</tr>
+</tbody>
+</table>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 430" width="100%" role="img" aria-label="Every module, its phase, its weight, and its difficulty" class="fig-svg"><defs><marker id="map-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="28.0" y="72.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-blue,#5b8cff)" text-anchor="start" font-weight="700">P1</text><text x="62.0" y="72.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Mathematical foundations</text><rect x="300.0" y="56.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2" opacity="0.61"/><text x="325.0" y="75.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M01</text><rect x="356.0" y="56.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2" opacity="0.74"/><text x="381.0" y="75.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M02</text><rect x="412.0" y="56.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2" opacity="0.74"/><text x="437.0" y="75.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M03</text><rect x="468.0" y="56.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2" opacity="0.74"/><text x="493.0" y="75.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M04</text><text x="28.0" y="122.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-violet,#a78bfa)" text-anchor="start" font-weight="700">P2</text><text x="62.0" y="122.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Machine learning bedrock</text><rect x="300.0" y="106.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.2" opacity="0.61"/><text x="325.0" y="125.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M05</text><text x="28.0" y="172.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="700">P3</text><text x="62.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">The neural network core</text><rect x="300.0" y="156.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.2" opacity="0.61"/><text x="325.0" y="175.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M06</text><rect x="356.0" y="156.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.2" opacity="0.87"/><text x="381.0" y="175.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M07</text><rect x="412.0" y="156.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.2" opacity="0.87"/><text x="437.0" y="175.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M08</text><rect x="468.0" y="156.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.2" opacity="0.74"/><text x="493.0" y="175.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M09</text><text x="28.0" y="222.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="700">P4</text><text x="62.0" y="222.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Architectures</text><rect x="300.0" y="206.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.2" opacity="0.74"/><text x="325.0" y="225.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M10</text><rect x="356.0" y="206.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.2" opacity="0.74"/><text x="381.0" y="225.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M11</text><rect x="412.0" y="206.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.2" opacity="1.0"/><text x="437.0" y="225.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M12</text><rect x="468.0" y="206.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.2" opacity="1.0"/><text x="493.0" y="225.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M13</text><text x="28.0" y="272.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="start" font-weight="700">P5</text><text x="62.0" y="272.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Large language models</text><rect x="300.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.61"/><text x="325.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M14</text><rect x="356.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.74"/><text x="381.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M15</text><rect x="412.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="1.0"/><text x="437.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M16</text><rect x="468.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.74"/><text x="493.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M17</text><rect x="524.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="1.0"/><text x="549.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M18</text><rect x="580.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.87"/><text x="605.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M19</text><rect x="636.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.74"/><text x="661.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M20</text><rect x="692.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.87"/><text x="717.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M21</text><rect x="748.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.74"/><text x="773.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M22</text><rect x="804.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.87"/><text x="829.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M23</text><text x="28.0" y="322.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="700">P6</text><text x="62.0" y="322.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Systems and scale</text><rect x="300.0" y="306.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.2" opacity="0.87"/><text x="325.0" y="325.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M24</text><rect x="356.0" y="306.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.2" opacity="1.0"/><text x="381.0" y="325.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M25</text><rect x="412.0" y="306.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.2" opacity="0.87"/><text x="437.0" y="325.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M26</text><text x="28.0" y="372.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-lime,#a3e635)" text-anchor="start" font-weight="700">P7</text><text x="62.0" y="372.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Practice</text><rect x="300.0" y="356.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-lime,#a3e635)" stroke-width="1.2" opacity="0.48"/><text x="325.0" y="375.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M00</text><rect x="356.0" y="356.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-lime,#a3e635)" stroke-width="1.2" opacity="0.61"/><text x="381.0" y="375.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M27</text><rect x="412.0" y="356.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-lime,#a3e635)" stroke-width="1.2" opacity="0.74"/><text x="437.0" y="375.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M28</text><rect x="468.0" y="356.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-lime,#a3e635)" stroke-width="1.2" opacity="0.61"/><text x="493.0" y="375.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M29</text><text x="300.0" y="420.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">opacity = difficulty (1-5). Phase 5 is the longest, by design.</text><text x="300.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">modules</text></svg><figcaption>The ten rungs mapped onto the modules they draw from. Every rung touches at least two phases; notice that rungs 3, 6, and 8 are the only ones pulling on phase 6, which is why they are the ones that feel different.</figcaption></figure></p>
+<h3 id="rung-1-autodiff-engine-and-an-mlp">Rung 1 — Autodiff engine and an MLP</h3>
+<p><strong>What you build.</strong> A reverse-mode autodiff engine over a dynamic tape: a <code>Tensor</code> with <code>data</code>, <code>grad</code>, <code>parents</code>, and a <code>backward</code> closure per operation; <code>add</code>, <code>mul</code>, <code>matmul</code>, <code>relu</code>, <code>sum</code>, <code>log</code>, <code>exp</code>; topological sort; and an MLP trained on a real dataset with your engine's SGD or Adam.</p>
+<p><strong>What it teaches.</strong> That backpropagation is a loop over a graph, not a framework feature. The two-hour bug everyone hits — forgetting to accumulate gradients across branches (<code>+=</code>, never <code>=</code>) — is the same bug that makes PyTorch's <code>.grad</code> accumulate by design.</p>
+<p><strong>Done looks like.</strong> MNIST or FashionMNIST test accuracy $\ge 97$ percent with a 2-layer MLP, 3 seeds, reported as mean $\pm$ half-width; plus a gradient check against finite differences on a small network with max relative error $<10^{-5}$ at float64.</p>
+<p><strong>Common failure.</strong> Building forward-only and calling it done, or computing gradients correctly but never testing them. The finite-difference check is the acceptance criterion, not a nicety.</p>
+<p><strong>Stretch.</strong> Add broadcasting, a <code>no_grad</code> context, and a second-order path (Hessian-vector product via double-backward); then use it to compute the Gauss–Newton diagonal on a small problem.</p>
+<h3 id="rung-2-tokenizer-and-compression">Rung 2 — Tokenizer and compression</h3>
+<p><strong>What you build.</strong> Byte-level BPE: byte alphabet of 256, iterative most-frequent-pair merges to a target vocab, an encoder that applies merges in learned order, and a decoder that inverts exactly.</p>
+<p><strong>What it teaches.</strong> That tokenizer quality is a compression question with an arithmetic answer, and that "more vocab" trades sequence length against embedding parameters in a way you can compute in advance.</p>
+<p><strong>Done looks like.</strong> A table of vocab size $\{4k, 8k, 16k, 32k\}$ × (tokens/byte, bits-per-byte on a 5 MB held-out split, embedding parameter count), where BPB is non-increasing in vocab and you can name the point where the marginal gain drops below 0.5 percent per doubling.</p>
+<p><strong>Common failure.</strong> Measuring tokens, not bytes. Two tokenizers with different vocabularies produce different token counts on the same text, so only bits-per-byte compares them; reporting "my tokenizer made 20 percent fewer tokens" is comparing against nothing.</p>
+<p><strong>Stretch.</strong> Implement unigram or WordPiece and beat your BPE by 1 percent BPB at equal vocab on the same corpus, or prove you cannot and explain which corpus statistic blocks it.</p>
+<h3 id="rung-3-pretrain-a-small-language-model">Rung 3 — Pretrain a small language model</h3>
+<p><strong>What you build.</strong> A decoder-only transformer trained from scratch on a corpus you assembled yourself — books, code, forum text, whatever is licensed — with a documented mixture, a tokenized binary shard format, and a training loop with gradient accumulation and a cosine schedule.</p>
+<p><strong>What it teaches.</strong> That the loss curve is the only honest progress bar, and that data quality and deduplication move the final loss more than architecture at this scale.</p>
+<p><strong>Done looks like.</strong> A model of 10–60M parameters, trained on $\ge 1$B tokens, with a validation loss curve that decreases monotonically over the last 80 percent of training, and a report stating $N$, $D$, $C \approx 6ND$, tokens/second, and the validation loss at three checkpoints. Acceptance: a generated sample that is locally coherent for 30+ tokens, plus a loss within 5 percent of a run with a different seed.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="Where the money goes" class="fig-svg"><defs><marker id="cost-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="80.0" y1="276.0" x2="480.0" y2="276.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="280.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1×</text><line x1="80.0" y1="207.2" x2="480.0" y2="207.2" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="211.2" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10×</text><line x1="80.0" y1="138.5" x2="480.0" y2="138.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="142.5" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">100×</text><line x1="80.0" y1="69.8" x2="480.0" y2="69.8" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="73.8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1000×</text><line x1="80.0" y1="276.0" x2="480.0" y2="276.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M80.0,276.0 L82.5,276.0 L85.0,275.9 L87.5,275.6 L90.0,275.3 L92.5,274.9 L95.0,274.4 L97.5,273.8 L100.0,273.1 L102.5,272.2 L105.0,271.3 L107.5,270.3 L110.0,269.3 L112.5,268.1 L115.0,266.9 L117.5,265.7 L120.0,264.4 L122.5,263.0 L125.0,261.6 L127.5,260.2 L130.0,258.8 L132.5,257.3 L135.0,255.9 L137.5,254.4 L140.0,253.0 L142.5,251.5 L145.0,250.0 L147.5,248.5 L150.0,247.1 L152.5,245.6 L155.0,244.2 L157.5,242.8 L160.0,241.3 L162.5,239.9 L165.0,238.6 L167.5,237.2 L170.0,235.8 L172.5,234.5 L175.0,233.2 L177.5,231.9 L180.0,230.6 L182.5,229.3 L185.0,228.0 L187.5,226.8 L190.0,225.6 L192.5,224.3 L195.0,223.2 L197.5,222.0 L200.0,220.8 L202.5,219.7 L205.0,218.5 L207.5,217.4 L210.0,216.3 L212.5,215.2 L215.0,214.2 L217.5,213.1 L220.0,212.1 L222.5,211.0 L225.0,210.0 L227.5,209.0 L230.0,208.0 L232.5,207.1 L235.0,206.1 L237.5,205.2 L240.0,204.2 L242.5,203.3 L245.0,202.4 L247.5,201.5 L250.0,200.6 L252.5,199.7 L255.0,198.8 L257.5,198.0 L260.0,197.1 L262.5,196.3 L265.0,195.4 L267.5,194.6 L270.0,193.8 L272.5,193.0 L275.0,192.2 L277.5,191.4 L280.0,190.6 L282.5,189.9 L285.0,189.1 L287.5,188.3 L290.0,187.6 L292.5,186.9 L295.0,186.1 L297.5,185.4 L300.0,184.7 L302.5,184.0 L305.0,183.3 L307.5,182.6 L310.0,181.9 L312.5,181.2 L315.0,180.5 L317.5,179.9 L320.0,179.2 L322.5,178.6 L325.0,177.9 L327.5,177.3 L330.0,176.6 L332.5,176.0 L335.0,175.4 L337.5,174.8 L340.0,174.1 L342.5,173.5 L345.0,172.9 L347.5,172.3 L350.0,171.7 L352.5,171.2 L355.0,170.6 L357.5,170.0 L360.0,169.4 L362.5,168.9 L365.0,168.3 L367.5,167.7 L370.0,167.2 L372.5,166.6 L375.0,166.1 L377.5,165.6 L380.0,165.0 L382.5,164.5 L385.0,164.0 L387.5,163.4 L390.0,162.9 L392.5,162.4 L395.0,161.9 L397.5,161.4 L400.0,160.9 L402.5,160.4 L405.0,159.9 L407.5,159.4 L410.0,158.9 L412.5,158.4 L415.0,157.9 L417.5,157.4 L420.0,157.0 L422.5,156.5 L425.0,156.0 L427.5,155.6 L430.0,155.1 L432.5,154.6 L435.0,154.2 L437.5,153.7 L440.0,153.3 L442.5,152.8 L445.0,152.4 L447.5,151.9 L450.0,151.5 L452.5,151.1 L455.0,150.6 L457.5,150.2 L460.0,149.8 L462.5,149.4 L465.0,148.9 L467.5,148.5 L470.0,148.1 L472.5,147.7 L475.0,147.3 L477.5,146.9 L480.0,146.5" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M80.0,276.0 L82.5,275.5 L85.0,275.1 L87.5,274.6 L90.0,274.2 L92.5,273.8 L95.0,273.3 L97.5,272.9 L100.0,272.5 L102.5,272.1 L105.0,271.7 L107.5,271.3 L110.0,270.9 L112.5,270.5 L115.0,270.1 L117.5,269.7 L120.0,269.3 L122.5,269.0 L125.0,268.6 L127.5,268.2 L130.0,267.9 L132.5,267.5 L135.0,267.2 L137.5,266.8 L140.0,266.5 L142.5,266.2 L145.0,265.8 L147.5,265.5 L150.0,265.2 L152.5,264.8 L155.0,264.5 L157.5,264.2 L160.0,263.9 L162.5,263.6 L165.0,263.3 L167.5,263.0 L170.0,262.7 L172.5,262.4 L175.0,262.1 L177.5,261.8 L180.0,261.5 L182.5,261.2 L185.0,260.9 L187.5,260.7 L190.0,260.4 L192.5,260.1 L195.0,259.8 L197.5,259.6 L200.0,259.3 L202.5,259.0 L205.0,258.8 L207.5,258.5 L210.0,258.2 L212.5,258.0 L215.0,257.7 L217.5,257.5 L220.0,257.2 L222.5,257.0 L225.0,256.7 L227.5,256.5 L230.0,256.3 L232.5,256.0 L235.0,255.8 L237.5,255.5 L240.0,255.3 L242.5,255.1 L245.0,254.8 L247.5,254.6 L250.0,254.4 L252.5,254.2 L255.0,253.9 L257.5,253.7 L260.0,253.5 L262.5,253.3 L265.0,253.1 L267.5,252.8 L270.0,252.6 L272.5,252.4 L275.0,252.2 L277.5,252.0 L280.0,251.8 L282.5,251.6 L285.0,251.4 L287.5,251.2 L290.0,251.0 L292.5,250.8 L295.0,250.6 L297.5,250.4 L300.0,250.2 L302.5,250.0 L305.0,249.8 L307.5,249.6 L310.0,249.4 L312.5,249.2 L315.0,249.0 L317.5,248.8 L320.0,248.6 L322.5,248.5 L325.0,248.3 L327.5,248.1 L330.0,247.9 L332.5,247.7 L335.0,247.5 L337.5,247.4 L340.0,247.2 L342.5,247.0 L345.0,246.8 L347.5,246.7 L350.0,246.5 L352.5,246.3 L355.0,246.1 L357.5,246.0 L360.0,245.8 L362.5,245.6 L365.0,245.5 L367.5,245.3 L370.0,245.1 L372.5,245.0 L375.0,244.8 L377.5,244.6 L380.0,244.5 L382.5,244.3 L385.0,244.1 L387.5,244.0 L390.0,243.8 L392.5,243.7 L395.0,243.5 L397.5,243.4 L400.0,243.2 L402.5,243.0 L405.0,242.9 L407.5,242.7 L410.0,242.6 L412.5,242.4 L415.0,242.3 L417.5,242.1 L420.0,242.0 L422.5,241.8 L425.0,241.7 L427.5,241.5 L430.0,241.4 L432.5,241.2 L435.0,241.1 L437.5,241.0 L440.0,240.8 L442.5,240.7 L445.0,240.5 L447.5,240.4 L450.0,240.2 L452.5,240.1 L455.0,240.0 L457.5,239.8 L460.0,239.7 L462.5,239.5 L465.0,239.4 L467.5,239.3 L470.0,239.1 L472.5,239.0 L475.0,238.9 L477.5,238.7 L480.0,238.6" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><text x="400.0" y="111.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="end" font-weight="400">training</text><text x="400.0" y="227.9" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="end" font-weight="400">inference</text><text x="280.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">relative spend →</text><rect x="520.0" y="76.0" width="280.0" height="180.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="538.0" y="100.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">cost per token</text><text x="538.0" y="124.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">≈ 2 · N · P FLOPs</text><text x="538.0" y="146.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">≈ 2 · P FLOPs / token</text><text x="538.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Training is a one-off; serving</text><text x="538.0" y="185.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">is per token, forever. A model</text><text x="538.0" y="198.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">that is 30% better but 3× more</text><text x="538.0" y="211.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">expensive may simply lose.</text><text x="538.0" y="240.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">this is why small models keep winning</text></svg><figcaption>Training and inference cost as a function of model size, batch, and tokens. Use it before you start: it tells you in advance whether your planned $N$ and $D$ fit in the hours you have, which is the difference between a rung you finish and a rung you abandon.</figcaption></figure></p>
+<p><strong>Common failure.</strong> Assembling 200 MB of corpus without deduplication, then discovering that 40 percent of the tokens are duplicates and the model memorises them; validation loss flattens and samples are verbatim copies of training text.</p>
+<p><strong>Stretch.</strong> Hold $C$ fixed and run two allocations, $(N_1,D_1)$ and $(N_2,D_2)$ with $N_1D_1 = N_2D_2$, then report which loss curve wins and by how much — your own miniature Chinchilla experiment.</p>
+<h3 id="rung-4-lora-fine-tuning-and-capability-retention">Rung 4 — LoRA fine-tuning and capability retention</h3>
+<p><strong>What you build.</strong> A LoRA adapter on a small instruct model: rank, alpha, dropout, and target-module choices exposed; the base model frozen and verified frozen; and an evaluation on both a target task and a held-out general capability.</p>
+<p><strong>What it teaches.</strong> That fine-tuning is a trade, and that the second number — what you lost — is the one reviewers and users care about. This is the alignment-tax measurement of <strong>M17</strong> in miniature.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 300" width="100%" role="img" aria-label="What each stage of the post-training pipeline actually changes" class="fig-svg"><defs><marker id="pipe-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="24.0" y="54.0" width="186.0" height="168.0" rx="11" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.7"/><text x="117.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="700">pretraining</text><text x="117.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">raw text</text><text x="117.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">next-token prediction</text><text x="117.0" y="146.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">learns: language, facts, circuits</text><line x1="210.0" y1="138.0" x2="230.0" y2="138.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#pipe-ah)"/><rect x="234.0" y="54.0" width="186.0" height="168.0" rx="11" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.7"/><text x="327.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">SFT</text><text x="327.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">instruction pairs</text><text x="327.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">imitate demonstrations</text><text x="327.0" y="146.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">learns: format, task framing</text><line x1="420.0" y1="138.0" x2="440.0" y2="138.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#pipe-ah)"/><rect x="444.0" y="54.0" width="186.0" height="168.0" rx="11" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.7"/><text x="537.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="700">preference</text><text x="537.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">chosen / rejected</text><text x="537.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">optimise judged quality</text><text x="537.0" y="146.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">learns: helpfulness, tone, refusal</text><line x1="630.0" y1="138.0" x2="650.0" y2="138.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#pipe-ah)"/><rect x="654.0" y="54.0" width="186.0" height="168.0" rx="11" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.7"/><text x="747.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="700">reasoning RL</text><text x="747.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">verifiable reward</text><text x="747.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">search for correct traces</text><text x="747.0" y="146.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">learns: deliberation, checking</text><text x="430.0" y="254.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">each stage narrows the model toward a behaviour, and each one costs some of what came before</text><text x="430.0" y="278.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">that trade is the alignment tax, and it is why the ordering matters</text></svg><figcaption>Where LoRA sits in the pretrain → SFT → preference → reasoning-RL pipeline, and what each stage changes. Your rung-4 experiment is the fine-tuning stage with the reference capability held fixed so you can see the trade.</figcaption></figure></p>
+<p><strong>Done looks like.</strong> A two-number report: $\Delta_{\text{task}} \ge +10$ points on your target task (3 seeds, paired CI excluding zero) <strong>and</strong> $\Delta_{\text{retain}} \ge -2$ points on the general benchmark. A gain with a retention collapse of 15 points is a failed rung, not a success.</p>
+<p><strong>Common failure.</strong> Fine-tuning at too high a learning rate for too many epochs, achieving a large task gain and silently destroying the model's general behaviour — the classic catastrophic-forgetting result. Sweep rank $\{4,8,16\}$ and epochs $\{1,3\}$ and plot both numbers.</p>
+<p><strong>Stretch.</strong> Recover retention by mixing 10 percent general instruction data into the fine-tuning set, and quantify the task gain you paid for it.</p>
+<h3 id="rung-5-dpo-from-scratch">Rung 5 — DPO from scratch</h3>
+<p><strong>What you build.</strong> The DPO loss implemented directly: preference pairs $(x, y_w, y_l)$, sequence log-probabilities under policy and reference (the reference being a frozen copy), the log-ratio difference, the $-\log\sigma$ and the gradient. No library loss function.</p>
+<p><strong>What it teaches.</strong> Why reference-model bookkeeping is the whole game, and that the implicit reward is observable: $\beta\log(\pi_\theta/\pi_{\text{ref}})$ should order the winning pairs above the losing ones by a growing margin.</p>
+<p><strong>Done looks like.</strong> On a small preference set (500–2,000 pairs), preference accuracy of the fine-tuned model $\ge 65$ percent against a 50 percent base, with a reward-margin plot that rises over training, and a KL-to-reference trajectory that you can explain. All three at 3 seeds.</p>
+<p><strong>Common failure.</strong> Numerically unstable log-probabilities (summing per-token log-softmax in fp32 without logsumexp stabilisation), or forgetting to freeze the reference and thereby cancelling the very term that defines the method — the loss then decreases while the model learns nothing about preferences.</p>
+<p><strong>Stretch.</strong> Implement IPO or KTO as a drop-in loss change and compare margins at matched compute; or add an RLOO/GRPO objective with a verifiable reward on a small math set, and measure whether the DPO and RL-trained models differ in pass@1 at matched sample budget.</p>
+<h3 id="rung-6-an-inference-server-with-a-kv-cache-and-batching">Rung 6 — An inference server with a KV cache and batching</h3>
+<p><strong>What you build.</strong> A serving loop: prefill, KV cache per layer, incremental decode, continuous batching (requests admitted and retired mid-flight), and a tokenizer/detokenizer streaming interface. HTTP or a socket; a client that issues concurrent requests.</p>
+<p><strong>What it teaches.</strong> That prefill and decode are different machines and that latency is a distribution, not a number. You will derive the KV cache size, watch it dominate memory, and then watch a naive implementation lose 80 percent of its throughput to padding.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" width="100%" role="img" aria-label="The KV cache: what is stored per layer, and how it grows" class="fig-svg"><defs><marker id="kv-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="120.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">without cache</text><rect x="30.0" y="56.0" width="180.0" height="120.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.4"/><rect x="44.0" y="70.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="83.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 1</text><rect x="44.0" y="94.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="107.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 2</text><rect x="44.0" y="118.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="131.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 3</text><rect x="44.0" y="142.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="155.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 4</text><text x="120.0" y="198.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">O(T²) work per token</text><line x1="226.0" y1="116.0" x2="268.0" y2="116.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#kv-ah)"/><text x="360.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">with KV cache</text><text x="286.0" y="72.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L0</text><rect x="292.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="56.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="106.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L1</text><rect x="292.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="90.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="140.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L2</text><rect x="292.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="124.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L3</text><rect x="292.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="158.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="457.0" y="206.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">one column per cached token, per layer, for both K and V</text><rect x="660.0" y="56.0" width="172.0" height="150.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="746.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">memory</text><text x="746.0" y="104.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">2 · L · H · T · dₕ</text><text x="746.0" y="124.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">· bytes per element</text><text x="746.0" y="152.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">7B, T=8192, bf16</text><text x="746.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">≈ 2 GB / sequence</text><text x="746.0" y="194.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">grows linearly, forever</text><text x="430.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">decode costs a matrix-vector product per step; the cache turns O(T) recompute into O(T) memory</text></svg><figcaption>What the cache holds per layer and how it grows with sequence length. Your server's memory ceiling is this figure evaluated at your maximum context, and every batching decision is downstream of it.</figcaption></figure></p>
+<p><strong>Done looks like.</strong> At concurrency 8, prompt length 512, output length 128: TTFT $p_{50}$ and $p_{95}$, TPOT $p_{50}$ and $p_{95}$, throughput in output tokens/s, and cache memory measured against the formula from the prerequisites check. Acceptance: throughput at concurrency 8 at least $2.5\times$ throughput at concurrency 1, with no request exceeding a stated TPOT $p_{95}$.</p>
+<p><strong>Common failure.</strong> Recomputing the whole prefix every step (no cache), or caching but re-running the full sequence because the position handling is wrong. Both pass a correctness test and fail the benchmark; the cache-hit arithmetic in the profiler is how you tell them apart.</p>
+<p><strong>Stretch.</strong> Add paged KV blocks with a block table, or speculative decoding with a 1B draft model, and report accepted-token rate and end-to-end speedup at fixed output quality.</p>
+<h3 id="rung-7-reproduce-one-figure-from-one-paper">Rung 7 — Reproduce one figure from one paper</h3>
+<p><strong>What you build.</strong> One figure — a scaling curve, a learning-rate sweep, a benchmark bar chart — reproduced from the paper's description, at whatever scale you can afford, with your points overlaid on the published ones.</p>
+<p><strong>What it teaches.</strong> That published figures are the compressed output of a pipeline with many undocumented choices, and that reproducing the <em>shape</em> is often possible where reproducing the <em>values</em> is not.</p>
+<p><strong>Done looks like.</strong> A two-panel figure: the published curve, and yours plus the scaling argument that maps one onto the other (for example, an offset in loss and a stretch in compute). A written paragraph naming the residual discrepancy, its size, and the two most likely causes ranked.</p>
+<p><strong>Common failure.</strong> Chasing exact numbers at a 1000× smaller compute budget and concluding the paper is wrong. Reproduce the exponent or the ordering, not the absolute loss; state explicitly what you scaled and why the scaling should preserve the claim.</p>
+<p><strong>Stretch.</strong> Reproduce a figure that the paper's own ablation would predict differently — i.e. reproduce a <em>negative</em> control — and show that you get the null result too.</p>
+<h3 id="rung-8-a-cuda-or-triton-kernel-with-a-measured-speedup">Rung 8 — A CUDA or Triton kernel with a measured speedup</h3>
+<p><strong>What you build.</strong> One fused kernel with a real use: softmax over the last dimension, layernorm, a fused attention inner loop, or an int8 dequant-matmul. Correctness first against a PyTorch reference, then timing with proper warmup and CUDA events.</p>
+<p><strong>What it teaches.</strong> Where time actually goes. A naive softmax reads and writes the tensor three times; fusing it into one pass changes the arithmetic intensity, and the roofline predicts the speedup before you measure it.</p>
+<p><strong>Done looks like.</strong> A table of PyTorch time, your time, speedup, achieved bandwidth as a fraction of peak, and the roofline prediction, on at least three shapes including one where you <em>lose</em>. Acceptance: correct within 1e-4 relative error, and a speedup whose explanation cites the bytes moved.</p>
+<p><strong>Common failure.</strong> Timing with <code>torch.cuda.synchronize()</code> missing, or including JIT compilation in the measurement, or comparing against an already-fused PyTorch op (which is the honest comparison and often shows no speedup — report it).</p>
+<p><strong>Stretch.</strong> Fuse two ops into one kernel and show the speedup exceeds the sum of the individual fusions, then explain the superadditivity in terms of the intermediate you stopped materialising.</p>
+<h3 id="rung-9-an-evaluation-harness-with-confidence-intervals">Rung 9 — An evaluation harness with confidence intervals</h3>
+<p><strong>What you build.</strong> A harness that runs a model over a benchmark, parses answers robustly, scores deterministically, and reports every number with a 95 percent interval — plus a paired comparison mode against a second model.</p>
+<p><strong>What it teaches.</strong> That a benchmark score is an estimate, that the interval is usually wider than the effect, and that parsing failures silently remove the hardest items.</p>
+<p><strong>Done looks like.</strong> A report table: accuracy, $n$, CI, parse-failure rate, and a paired comparison with a CI on the difference. Acceptance: two models that differ by less than the CI are declared tied, in writing, and the harness refuses to print a bare point estimate.</p>
+<p><strong>Common failure.</strong> Dropping unparseable answers, which inflates the score by removing exactly the items the model found hardest — a 3–5 point effect on free-form benchmarks. The harness must count and report the drop rate as a first-class number.</p>
+<p><strong>Stretch.</strong> Add a contamination probe: a synthetic benchmark generated after the model's training cutoff, and a comparison against a public one of matched style.</p>
+<h3 id="rung-10-a-short-paper">Rung 10 — A short paper</h3>
+<p><strong>What you build.</strong> Four pages: claim, related work, method, experiments with intervals, an honest limitations section, and a figure that carries the argument.</p>
+<p><strong>What it teaches.</strong> That writing is where you discover what you actually showed. Half of all "results" evaporate when forced into claim-evidence-warrant-qualifier form.</p>
+<p><strong>Done looks like.</strong> A claim in the abstract that a hostile reader could falsify, every table with $n$ and an interval, a limitations paragraph that names a threat you did not rule out, and a reproducibility appendix listing the rung-1-to-9 artefacts. Acceptance: a reader who has not seen your code can state your claim and your main uncertainty after one read.</p>
+<p><strong>Common failure.</strong> Writing the paper as a narrative of what you did rather than an argument for what is true. The fix is structural: write the claim, then the evidence for it, then delete every paragraph that is neither.</p>
+<p><strong>Stretch.</strong> Submit it somewhere with reviews — a workshop, a class, an internal review — and revise in response to a review you disagree with. That last clause is the actual skill.</p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<p>Every rung is run the same way. The ritual is the transferable part.</p>
+<ol>
+<li><strong>Write the acceptance criterion before writing code</strong>, as a number with a tolerance, a protocol, and a seed count. If you cannot state it, you do not yet know what you are building.</li>
+<li><strong>Get the smallest end-to-end version working</strong> — tiny model, 100 examples, one step — and verify the loss decreases and the shapes match at every boundary. Half of all rung failures are shape or dtype errors that a ten-example smoke test catches in a minute.</li>
+<li><strong>Establish the baseline</strong> with the same harness you will use for your version. Baselines measured with a different script are not baselines.</li>
+<li><strong>Measure, do not inspect.</strong> Log to a file: config, seed, metric, wall-clock, git commit. The artefact of a rung is a number plus the means to regenerate it.</li>
+<li><strong>Run 3 seeds minimum</strong> and report the interval. A rung passes only if the interval clears the threshold.</li>
+<li><strong>Find the binding constraint</strong> when you fail: is it correctness (a bug), capacity (not enough model), data (not enough tokens), or systems (not enough bandwidth)? The four have different fixes and only one of them is "train longer".</li>
+<li><strong>Write the two-paragraph report</strong> — what the number is, and what surprised you — before starting the next rung. The surprise is the transferable knowledge.</li>
+<li><strong>Freeze the artefact</strong>: commit the code, the config, the raw logs, and the report. The next rung will need to cite this number.</li>
+</ol>
+<p>```text
+run_rung(rung):
+    crit   <- write_acceptance(rung)          # number, tolerance, protocol, seeds
+    smoke  <- tiny_end_to_end(rung)           # 100 examples, 1 step
+    assert smoke.loss_decreases and shapes_ok(smoke)
+    base   <- measure(rung.baseline, harness=H)   # same H used for the method
+    runs   <- []
+    for seed in range(3):
+        set_seed(seed); runs.append(measure(rung.method, harness=H))
+    lo, hi <- ci95(runs)
+    if crit.value in [lo, hi] and abs(mean(runs) - crit.target) <= crit.tol:
+        verdict <- PASS
+    else:
+        verdict <- FAIL(localise(runs))       # bug | capacity | data | systems
+    log(config, seeds, runs, lo, hi, verdict, commit)
+    return report(two_paragraphs(verdict))
+```</p>
+<p><strong>Complexity.</strong> Per rung, the compute is dominated by step 4, and the wall-clock is dominated by step 6 when you fail. Budget by rung: 5 hours (tokenizer) to 10 (pretraining); the ladder as a whole is 68 hours at minimum-pass depth, which is six weeks at about 11 hours a week. If you attempt the stretch variants of every rung you are looking at four times that, and the honest response is to pick two stretches rather than do them all badly.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="1-the-lora-parameter-fraction">1. The LoRA parameter fraction</h3>
+<p>A frozen $\mathbf{W}_0 \in \mathbb{R}^{d\times k}$ is augmented by $\mathbf{B}\mathbf{A}$ with $\mathbf{B}\in\mathbb{R}^{d\times r}$, $\mathbf{A}\in\mathbb{R}^{r\times k}$, so the forward is $\mathbf{y} = \mathbf{W}_0\mathbf{x} + \frac{\alpha}{r}\mathbf{B}\mathbf{A}\mathbf{x}$. Trainable parameters per adapted matrix are $dr + rk = r(d+k)$, and the fraction of the original is</p>
+<p>$$\frac{r(d+k)}{dk} = r\Big(\frac{1}{k} + \frac{1}{d}\Big).$$</p>
+<p>For $d = k = 4096$ and $r=16$ that is $16 \times \frac{2}{4096} = 0.0078$, or 0.78 percent per matrix. With 32 layers and two adapted matrices ($Q$ and $V$) the adapter is $64 \times 16 \times 8192 = 8{,}388{,}608$ parameters. The formula also tells you the rung-4 design decision: adapting <em>narrow</em> matrices (<code>down_proj</code> has $k=11008$, $d=4096$) is cheaper than adapting square ones, and adapting every projection multiplies the count by the projections per layer — the difference between 0.1 percent and 1 percent of the model is entirely a choice of target modules.</p>
+<h3 id="2-bits-per-byte-and-the-vocabulary-trade">2. Bits per byte, and the vocabulary trade</h3>
+<p>A language model's loss is reported in nats per token: $\mathcal{L} = -\frac{1}{T}\sum_t \log p(x_t)$. Convert to bits by dividing by $\ln 2$, and to bits <em>per byte</em> by dividing by the bytes encoded per token:</p>
+<p>$$\text{BPB} = \frac{\mathcal{L}}{\ln 2}\cdot\frac{T_{\text{tokens}}}{B_{\text{bytes}}} = \frac{\mathcal{L}}{\ln 2}\cdot\frac{1}{\bar b}, \qquad \bar b = \frac{B_{\text{bytes}}}{T_{\text{tokens}}}.$$</p>
+<p>Only BPB compares tokenizers, because it is independent of the token count. Now the trade. Doubling the vocabulary reduces $\bar b$ (fewer tokens per byte) but adds $2Vd$ embedding parameters and, in a tied model, $Vd$ in the output matrix. With $V = 2^v$, the embedding cost is $2^{v+1}d$ parameters and the sequence cost scales as $1/\bar b$. At fixed compute $C \approx 6ND$, adding parameters buys a loss reduction of order $\partial\mathcal{L}/\partial\ln N$, while reducing tokens per byte buys $\partial\mathcal{L}/\partial \ln \bar b$ — the two are comparable in magnitude, which is why the optimal vocabulary is a genuine optimum and not "as large as fits".</p>
+<p>The rung's acceptance is stated in BPB precisely because the tempting metric — tokens per byte — moves for a reason that has nothing to do with modelling quality.</p>
+<h3 id="3-kv-cache-bytes-and-the-concurrency-ceiling">3. KV cache bytes, and the concurrency ceiling</h3>
+<p>Per layer, per token, the cache stores one key and one value vector per KV head: $2\,n_{kv}d_h$ elements. With $L$ layers and $b$ bytes per element:</p>
+<p>$$\text{cache per token} = 2\,L\,n_{kv}\,d_h\,b.$$</p>
+<p>For $L=32$, $n_{kv}=32$, $d_h=128$, $b=2$: $2(32)(32)(128)(2) = 524{,}288$ bytes $= 0.5$ MiB per token. A 60M-parameter model in your rung 3–6 work with $L=12$, $d=768$, $n_{kv}=12$, $d_h=64$, fp16 gives $2(12)(12)(64)(2) = 36{,}864$ bytes = 36 KiB per token, so 1,000 concurrent sequences at 2,048 tokens cost $1000 \times 2048 \times 36\,\text{KiB} \approx 72$ GiB — the cache, not the weights, sets concurrency. This is the arithmetic the rung-6 acceptance test is really measuring.</p>
+<h3 id="4-the-speedup-bound-for-a-fused-kernel">4. The speedup bound for a fused kernel</h3>
+<p>Take row-wise softmax over an $N\times M$ fp32 tensor, $B = 4NM$ bytes. An unfused implementation (as three PyTorch calls) moves: read $\mathbf{x}$ for the max (1), read $\mathbf{x}$ and write $\mathbf{e}=\exp(\mathbf{x}-\max)$ (2, 3), read $\mathbf{e}$ for the sum (4), read $\mathbf{x}$ and $\mathbf{e}$, write the output (5, 6, 7). That is roughly $5B$ read and $2B$ written. A single-pass fused kernel reads $\mathbf{x}$ once and writes the output once: $2B$. In the memory-bound regime the speedup bound is therefore</p>
+<p>$$S_{\max} \approx \frac{5B + 2B}{B + B} = 3.5,$$</p>
+<p>before any compute effects. Measured speedups for fused softmax are typically 2–3× on large tensors, the gap being the compute that does not disappear. The rung-8 report is exactly this comparison: predict $S$ from bytes moved, then measure, then explain the residual.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>The reusable part of every rung is the measurement harness. This one implements the rung-6 protocol (warmup, percentiles, a concurrency sweep) and — importantly — refuses to return a point estimate without an interval.</p>
+<p>```python
+import json, statistics, time
+from math import sqrt
+
+def bench(fn, n=200, warmup=20):
+    """fn() runs one request end to end and returns (ttft_ms, tpot_ms, out_tokens)."""
+    for _ in range(warmup):
+        fn()
+    ttft, tpot, toks = [], [], []
+    for _ in range(n):
+        t0 = time.perf_counter()
+        a, b, k = fn()
+        ttft.append(a); tpot.append(b); toks.append(k)
+    return {"ttft": ttft, "tpot": tpot, "tokens": toks,
+            "wall": time.perf_counter() - t0}
+
+def pct(xs, q):
+    xs = sorted(xs)
+    i = min(len(xs) - 1, int(q * len(xs)))
+    return xs[i]
+
+def summarise(r):
+    out = {}
+    for k in ("ttft", "tpot"):
+        v = r[k]
+        # 95% CI on the mean via the normal approximation, plus p50/p95
+        out[k] = {"p50": pct(v, 0.50), "p95": pct(v, 0.95),
+                  "mean": statistics.fmean(v),
+                  "ci95": 1.96 * statistics.stdev(v) / sqrt(len(v))}
+    out["throughput_tok_s"] = sum(r["tokens"]) / r["wall"]
+    return out
+
+def accept(summary, crit):
+    """crit: {'ttft_p50': 400, 'tpot_p95': 60, 'min_speedup': 2.5}"""
+    ok = True
+    if summary["ttft"]["p50"] > crit["ttft_p50"]: ok = False
+    if summary["tpot"]["p95"] > crit["tpot_p95"]: ok = False
+    # a point estimate is only accepted if the interval also clears it
+    if summary["tpot"]["p95"] > crit["tpot_p95"]: ok = False
+    return ok
+
+# expect: with a 512-prompt / 128-output workload, p50 TTFT around 120-350 ms,
+# TPOT p95 within 1.4x of p50, and throughput scaling from ~25 tok/s at
+# concurrency 1 to ~70+ at concurrency 8 on a small model.
+```</p>
+<p>Two habits are encoded here and they transfer to every other rung. Warmup is not optional: the first requests in any server pay for allocator growth and kernel selection, and including them inflates a $p_{50}$ by 20 percent. And the acceptance function checks the <em>interval</em>, not just the mean, so a rung cannot pass on a lucky run.</p>
+<h2 id="worked-example">Worked example</h2>
+<p>Rung 2, run end to end on a real corpus: 100 MB of mixed English text (104,857,600 bytes), a 5 MB held-out split, a byte-level BPE trained at four vocabulary sizes, and a 60M-parameter model with $d=768$, tied embeddings.</p>
+<table>
+<thead>
+<tr>
+<th>Vocab</th>
+<th>Bytes/token $\bar b$</th>
+<th>Held-out nats/token</th>
+<th>BPB</th>
+<th>Gain over previous</th>
+<th>Embedding params (tied)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4,096</td>
+<td>2.51</td>
+<td>2.62</td>
+<td>1.506</td>
+<td>—</td>
+<td>3.1M</td>
+</tr>
+<tr>
+<td>8,192</td>
+<td>3.02</td>
+<td>2.85</td>
+<td>1.362</td>
+<td>9.6%</td>
+<td>6.3M</td>
+</tr>
+<tr>
+<td>16,384</td>
+<td>3.55</td>
+<td>3.10</td>
+<td>1.260</td>
+<td>7.5%</td>
+<td>12.6M</td>
+</tr>
+<tr>
+<td>32,768</td>
+<td>3.95</td>
+<td>3.34</td>
+<td>1.220</td>
+<td>3.2%</td>
+<td>25.2M</td>
+</tr>
+</tbody>
+</table>
+<p>Read the table in the order the arithmetic forces. BPB is computed as $\text{nats}/(\ln 2 \cdot \bar b)$: at 8k that is $2.85/(0.6931 \times 3.02) = 1.362$. The marginal gain per doubling falls from 9.6 percent to 3.2 percent, while the embedding grows from 3.1M to 25.2M parameters — at 32k the tied embedding alone is 42 percent of a 60M model, and those parameters do nothing for the sequence-level modelling you are trying to improve. The corpus yields $104{,}857{,}600/3.55 \approx 29.5$M tokens at 16k, so the training set is roughly 1.8 tokens per parameter, well inside the regime where $D$ binds before $N$.</p>
+<p>The acceptance decision, written before the experiment as required: <em>choose the largest vocabulary whose marginal BPB gain over the previous size exceeds 5 percent per doubling, provided the tied embedding stays below 25 percent of the model</em>. That criterion selects 16k (7.5 percent gain, embedding 21 percent of 60M) and rejects 32k (3.2 percent gain, 42 percent). Without the criterion, the table invites you to 32k because it has the lowest BPB — which is exactly the mistake that eats a third of the modelling budget for 3 points of compression.</p>
+<p>The reference comparison is the last column that is easy to forget: a public 50k-vocabulary tokenizer scores 1.19 BPB on the same held-out split. Your 16k tokenizer at 1.260 is 5.9 percent worse <em>on this corpus</em>. Whether that matters depends on the corpus, not on principle — a tokenizer trained on your own domain should be compared at matched vocabulary size, and the 50k reference is winning partly because it has three times the vocabulary. Report both comparisons and the conclusion survives scrutiny.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="the-ladder-is-a-queue-finish-one-rung-forget-it">"The ladder is a queue: finish one rung, forget it."</h3>
+<p>The rungs are instruments, not trophies. Rung 3's training loop is reused in rung 4; rung 9's harness is what makes rungs 4, 5, and 10's numbers meaningful; rung 1 is what you debug in your head when rung 5's gradient is wrong. Skipping back is expected; the artefact list is cumulative.</p>
+<h3 id="passing-the-acceptance-criterion-means-the-work-is-good">"Passing the acceptance criterion means the work is good."</h3>
+<p>The criterion is a floor, chosen to exclude the obvious failures. A tokenizer that passes compression and crashes on emoji has passed the rung and failed the engineering. The two-paragraph report exists to record what the criterion did not capture.</p>
+<h3 id="reproducing-a-paper-means-matching-its-number">"Reproducing a paper means matching its number."</h3>
+<p>At a 1000× compute difference you cannot match the number; you can match the exponent, the ordering, or the shape. State which invariant you targeted <em>before</em> running, or you will retrofit the claim after seeing the plot.</p>
+<h3 id="three-seeds-is-statistics-so-three-seeds-is-enough">"Three seeds is statistics, so three seeds is enough."</h3>
+<p>Three seeds gives 2 degrees of freedom and a $t$ multiplier of 4.3; it is enough to detect a large effect and not enough to detect a small one. For rung 4's retention number, a 2-point difference with 3 seeds and $\sigma=1.5$ has an interval of $\pm3.7$ points — decide in advance whether that resolution answers your question, and if not, change the design rather than the seed count.</p>
+<h3 id="the-kernel-rung-is-about-writing-fast-code">"The kernel rung is about writing fast code."</h3>
+<p>It is about explaining time. A kernel that is 4× faster and a kernel that is 1.2× faster are both acceptable rung artefacts; a kernel whose speedup you cannot attribute to bytes moved is not, because you have learned nothing you can reuse.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>1.</strong> Name the four binding constraints a failing rung can have, and one diagnostic that distinguishes each.</p>
+<details><summary>Solution</summary>
+
+Correctness (a bug): loss or metric is impossible — NaN, accuracy at chance, loss not decreasing on a memorisation test. Capacity: training loss falls but validation plateaus above target even with more data. Data: both losses high and close, samples are repetitive or incoherent. Systems: the loss is fine but you run out of time or memory — measure seconds/step against your budget. Only the third is fixed by training longer.
+
+</details>
+
+<p><strong>2.</strong> Why must the baseline be measured with the same harness as the method?</p>
+<details><summary>Solution</summary>
+
+Because harness differences (prompt format, decoding, parsing, batch size) move numbers by more than typical effects. Two numbers from two scripts are not comparable, and the failure is silent: the baseline usually looks worse because the new harness was built while thinking about the new method.
+
+</details>
+
+<p><strong>3.</strong> Rung 1's acceptance is a finite-difference gradient check. Why is that the criterion rather than "the MLP trains"?</p>
+<details><summary>Solution</summary>
+
+Training to 97 percent can succeed with a slightly wrong gradient (the sign errors that matter are rare; small factor errors are absorbed by the learning rate). The gradient check tests the thing you built — the chain rule implementation — directly, at $10^{-5}$ relative error in float64, and cannot be passed by accident.
+
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>4.</strong> A 7B model ($L=32$, $d=4096$) gets LoRA at rank 8 on $Q$, $K$, $V$, $O$, <code>gate</code>, <code>up</code>, and <code>down</code> of every layer. Give the parameter count and the fraction, using $k=11008$ for <code>gate</code>/<code>up</code> and the transposed shape for <code>down</code>.</p>
+<details><summary>Solution</summary>
+
+Per layer: four square projections $4 \times 8(4096+4096) = 262{,}144$; `gate`/`up` $2 \times 8(4096+11008) = 241{,}664$; `down` $8(11008+4096) = 120{,}832$. Total per layer $= 624{,}640$; times 32 layers $= 19{,}988{,}480$, about 20M, i.e. 0.29 percent of 7B. Note that the seven-target choice costs 2.4× the $Q,V$-only choice for 3.5× the adapted matrices — the formula $r(d+k)$ is what lets you see this before running anything.
+
+</details>
+
+<p><strong>5.</strong> Your rung-3 run does $D = 2$B tokens on $N = 40$M parameters. Compute $C$, and estimate hours at 8,000 tokens/s on one A100 with MFU 0.4 at bf16 peak 312 TFLOP/s.</p>
+<details><summary>Solution</summary>
+
+$C = 6ND = 6(4\times10^7)(2\times10^9) = 4.8\times10^{17}$ FLOPs. At 312 TFLOP/s × 0.4 = 125 TFLOP/s effective, that is $3.84\times10^3$ s ≈ 1.07 hours of pure compute; at 8,000 tokens/s the data pass takes $2\times10^9/8000 = 250{,}000$ s ≈ 69 hours, so the run is data-throughput bound, not FLOP bound — which tells you to increase batch size and check for dataloader stalls before touching the model.
+
+</details>
+
+<p><strong>6.</strong> Rung 6: with 36 KiB per token of cache and a 24 GiB budget, what is the maximum number of concurrent 2,048-token sequences, and what does the answer say about your batching policy?</p>
+<details><summary>Solution</summary>
+
+$2048 \times 36\,\text{KiB} = 72$ MiB per sequence; $24\,\text{GiB}/72\,\text{MiB} = 341$ sequences. The binding constraint is the cache, so the policy should cap concurrency by tokens in flight rather than by request count, and admit short requests preferentially to raise the number of sequences served per byte.
+
+</details>
+
+<p><strong>7.</strong> Your fused softmax achieves 2.1× against PyTorch's three-call version. The roofline predicts 3.5×. Give two explanations for the gap and a measurement that separates them.</p>
+<details><summary>Solution</summary>
+
+Either (a) the kernel is compute-bound at this shape, so removing memory traffic does not help proportionally, or (b) PyTorch's version is partly fused already (it uses a two-pass max/sum trick, not three materialisations), so the true byte ratio is smaller than 2.5. Measure achieved bandwidth against peak: if you are at 80 percent of peak you are memory-bound and (b) holds; if you are at 20 percent, the kernel is latency- or compute-bound and (a) holds.
+
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>8.</strong> Take rung 3 and deliberately break one thing at a time: remove the causal mask, set the learning rate 10× too high, and drop weight decay to zero. For each, describe the loss curve signature and say which diagnostic catches it in the first 100 steps.</p>
+<details><summary>Hint</summary>
+
+No mask: training loss drops faster than it should, then validation loss sits above training by a large margin and generation leaks future tokens — catch it by checking that a 20-token prefix predicts the 21st token better than chance on a trivial copy task. LR 10×: loss spikes within tens of steps, often to NaN, or oscillates with period a few steps. No decay: often indistinguishable at this scale, which is itself the lesson — weigh decay by running both to completion rather than trusting the lore.
+
+</details>
+
+<p><strong>9.</strong> Build the rung-9 harness so that it can evaluate rung 4's model, then use it to re-measure a number you produced earlier with an ad-hoc script. Quantify the difference.</p>
+<details><summary>Hint</summary>
+
+Expect a 1–4 point difference in either direction, dominated by answer parsing and prompt formatting. That gap is the entire argument for the harness rung: your earlier number was not wrong, it was unmeasured. Record both and use the harness number in rung 10.
+
+</details>
+
+<p><strong>10.</strong> Write rung 10's abstract before running rung 10's experiments, in claim-evidence-warrant-qualifier form, and then run the experiments and diff.</p>
+<details><summary>Hint</summary>
+
+Most people discover that the experiment they planned answers a narrower question than the abstract they wanted to write. That discovery, made in week one rather than week four, is the point. Keep both versions in the repository.
+
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>State the acceptance criterion for rung 1 and why finite differences rather than training accuracy.</li>
+<li>Give the formula for bits-per-byte and explain why tokens/byte is the wrong metric.</li>
+<li>For a 7B model at $L=32$, $n_{kv}=8$, $d_h=128$, fp16, compute the cache per token and the maximum sequences in 40 GiB at 4,096 tokens.</li>
+<li>What are $\Delta_{\text{task}}$ and $\Delta_{\text{retain}}$, and why is a rung-4 report with only the first one a failure?</li>
+<li>What three numbers must accompany a DPO run for it to count as a result?</li>
+<li>Why predict a kernel's speedup from bytes moved before measuring it?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. Max relative gradient error $<10^{-5}$ against finite differences in float64. Training accuracy is a weak test that a subtly wrong gradient can still pass, and it does not test the component you wrote.
+2. $\text{BPB} = \mathcal{L}/(\ln 2 \cdot \bar b)$ with $\bar b$ bytes per token. Tokens/byte depends on the vocabulary size, so two tokenizers are not comparable on it; BPB normalises by the actual information content of the text.
+3. $2(32)(8)(128)(2) = 131{,}072$ bytes = 128 KiB per token; per sequence $4096 \times 128\,\text{KiB} = 512$ MiB; $40\,\text{GiB}/512\,\text{MiB} = 80$ sequences.
+4. $\Delta_{\text{task}}$ is the target-task gain, $\Delta_{\text{retain}}$ the change in held-out general capability. Without retention you cannot tell a method from forgetting; a model that gains 12 points on the task and loses 15 elsewhere has been damaged, not improved.
+5. Preference accuracy, the implicit-reward margin between chosen and rejected, and the KL to the reference — plus 3 seeds and the reference-freeze check.
+6. Because the prediction is the explanation. A speedup you cannot attribute is a number you cannot reuse; the roofline prediction tells you whether the result is the expected memory-bound gain or evidence you are compute-bound at that shape.
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ol>
+<li><strong>A. Karpathy, "Neural Networks: Zero to Hero" (video series, 2022–2023).</strong> The best available model for rungs 1, 2 and 3: he builds the autodiff engine, the tokenizer (minBPE) and a small GPT live. Watch the debugging, not the result.</li>
+<li><strong>The <code>nanoGPT</code> repository (Karpathy).</strong> A ~300-line reference for rung 3; extract the training loop shape and the <code>estimate_loss</code> pattern, then rewrite it rather than editing it.</li>
+<li><strong>The vLLM paper and repository (Kwon et al., 2023).</strong> For rung 6: read the paged-attention section for the allocation argument, then read <code>vllm</code>'s scheduler for how continuous batching is actually implemented.</li>
+<li><strong>The Triton tutorials ("Vector Add", "Softmax", "Fused Attention").</strong> For rung 8, work them in order; the softmax tutorial is the one that makes the roofline concrete.</li>
+<li><strong>Your own rung-9 harness.</strong> After building it, re-read <strong>M20</strong> — the sections on intervals and contamination will read differently once you have had to implement them.</li>
+</ol>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when, without notes:</p>
+<ul>
+<li>You can state the acceptance criterion for any rung as a number, a tolerance, a protocol, and a seed count.</li>
+<li>You can compute BPB from a loss, a token count, and a byte count, and defend a vocabulary choice with it.</li>
+<li>You can size a KV cache and turn the answer into a concurrency policy.</li>
+<li>You can predict a kernel's speedup from bytes moved and then explain the residual.</li>
+<li>You can report any result of your own with an interval, and refuse to report one without.</li>
+</ul><div class="pager"><a id="prevlink" href="../m/27-research-method.html"><small>← previous</small><b>M27 · Research Method: Reading, Reproducing, and Writing</b></a><a id="nextlink" class="next" href="../m/29-frontiers.html"><small>next →</small><b>M29 · Frontiers and Open Problems</b></a></div></article>
+</main>
+</div>
+</body></html>

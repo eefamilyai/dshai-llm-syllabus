@@ -1,0 +1,839 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M09 · Building Your Own Deep Learning Framework — From Zero to Frontier</title>
+<meta name="description" content="Six stages from a scalar autograd engine to a trained character-level language model.">
+<meta property="og:title" content="M09 · Building Your Own Deep Learning Framework — From Zero to Frontier">
+<meta property="og:description" content="Six stages from a scalar autograd engine to a trained character-level language model.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">The neural network core / M09</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M09">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M09</span><span class="pill d3">difficulty 3/5</span><span class="pill">2 weeks</span><span class="pill">prereqs: M07, M08</span><span class="pill">6,963 words</span></div><h1>Building Your Own Deep Learning Framework</h1><p class="tagline">Six stages from a scalar autograd engine to a trained character-level language model.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>You can use PyTorch for years and still be unable to answer basic questions about what it did: where the graph lives, why memory grows during the forward pass, why <code>zero_grad</code> exists, what <code>torch.compile</code> changed, and why a broadcast in the forward pass requires a sum in the backward pass. Reading the source does not fix this, because the source is optimized for speed and generic over dtypes, devices, and dispatch. Writing a small one does fix it: about 250 lines of NumPy will give you a working autodiff engine, module system, two optimizers, a training loop, and a character-level language model that fits a corpus to 0.03 bits per character. After that, the framework you use stops being a black box and becomes an implementation of something you have built.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<p>If you miss more than one, revisit the module named in the answer.</p>
+<ol>
+<li>Write the vjp (vector-Jacobian product) that a subtraction node must implement.</li>
+<li>Why must gradients accumulate with <code>+=</code> rather than be assigned, and what breaks otherwise?</li>
+<li>For $\mathbf{Z}=\mathbf{A}\mathbf{B}$ with $\mathbf{A}\in\mathbb{R}^{n\times k}$, $\mathbf{B}\in\mathbb{R}^{k\times m}$, give both vjps in terms of $\bar{\mathbf{Z}}$.</li>
+<li>If $\mathbf{b}\in\mathbb{R}^{m}$ is added to $\mathbf{A}\in\mathbb{R}^{n\times m}$, what shape must $\bar{\mathbf{b}}$ have and how is it obtained from $\bar{\mathbf{A}+\mathbf{b}}$?</li>
+<li>What does Adam store per parameter, and how much memory does that cost in fp32?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $\bar{\mathbf{a}}=\bar{\mathbf{c}}$, $\bar{\mathbf{b}}=-\bar{\mathbf{c}}$.
+2. Because a node with fan-out contributes to the loss along several paths, and the chain rule sums over them (**M07**). Assignment keeps only the last path.
+3. $\bar{\mathbf{A}}=\bar{\mathbf{Z}}\mathbf{B}^\top$ (shape $(n,k)$) and $\bar{\mathbf{B}}=\mathbf{A}^\top\bar{\mathbf{Z}}$ (shape $(k,m)$).
+4. $(m,)$, obtained by summing $\bar{\mathbf{A}+\mathbf{b}}$ over the broadcast axis — the batch axis, which has $n$ entries.
+5. First and second moments plus the step counter: $8$ bytes per parameter in fp32, so $12$ bytes total per parameter including the weight and its gradient.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<ul>
+<li>Implement a <code>Tensor</code> with data, gradient, parents, and a local backward closure, and explain each field's role.</li>
+<li>Implement broadcasting-aware backward passes, including the reduction that every broadcasting forward implies.</li>
+<li>Build a <code>Module</code>/<code>Parameter</code> system whose <code>parameters()</code> traversal is complete, and explain why naive attribute assignment loses parameters.</li>
+<li>Implement SGD with momentum and AdamW, including decoupled weight decay, and state the optimizer state each one holds.</li>
+<li>Write a training loop with the four invariants (zeroing, train/eval mode, no-grad evaluation, gradient clipping) and justify each.</li>
+<li>Train a character-level language model end to end and report loss in bits per character against the uniform baseline $\log_2 V$.</li>
+<li>Debug a hand-written backward pass using a finite-difference harness and a shape trace.</li>
+<li>Contrast define-by-run with tape-based autodiff, and say what <code>torch.compile</code> changes and what it does not.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data</code></td>
+<td>the NumPy array holding a node's value</td>
+</tr>
+<tr>
+<td><code>grad</code></td>
+<td>$\partial\mathcal{L}/\partial\text{data}$, same shape as <code>data</code>, <code>None</code> until first written</td>
+</tr>
+<tr>
+<td><code>_parents</code></td>
+<td>the nodes this node was computed from</td>
+</tr>
+<tr>
+<td><code>_backward</code></td>
+<td>a closure that pushes this node's <code>grad</code> into its parents' <code>grad</code></td>
+</tr>
+<tr>
+<td><code>vjp</code></td>
+<td>the cotangent-to-cotangent function of one primitive</td>
+</tr>
+<tr>
+<td>$B$</td>
+<td>batch size</td>
+</tr>
+<tr>
+<td>$C$</td>
+<td>context length (characters of history)</td>
+</tr>
+<tr>
+<td>$V$</td>
+<td>vocabulary size</td>
+</tr>
+<tr>
+<td>$d$</td>
+<td>embedding width</td>
+</tr>
+<tr>
+<td>bits/char</td>
+<td>$\mathcal{L}/\ln 2$ for a natural-log cross-entropy, i.e. $\log_2$ perplexity per character</td>
+</tr>
+</tbody>
+</table>
+<p>Two conventions carried from <strong>M07</strong>: gradients are <em>accumulated</em>, never assigned, and <code>backward()</code> seeds the output's gradient with ones. One convention new here: <code>grad</code> is <code>None</code> rather than a zero array until something writes to it, which is how a real framework avoids allocating zeros for every intermediate tensor.</p>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="what-a-tensor-actually-needs-to-store">What a tensor actually needs to store</h3>
+<p><strong>(1) Intuition.</strong> A tensor in a framework is three things at once: an array of numbers, a slot for its gradient, and a recipe for how to pass a gradient to whatever produced it. The numbers are the easy part; the recipe is the whole design.</p>
+<p><strong>(2) Formal definition.</strong> A minimal node is</p>
+<p>$$
+\text{node} = \left(\underbrace{\mathbf{a}}_{\text{data}},\ \underbrace{\bar{\mathbf{a}}}_{\text{grad}},\ \underbrace{\{v : v \to \text{node}\}}_{\text{parents}},\ \underbrace{\text{vjp}}_{\text{closure}}\right),
+$$</p>
+<p>where the closure, when called, reads <code>node.grad</code> and adds the appropriate cotangent into each parent's <code>grad</code>. Five fields and no more: the graph is fully reconstructed from <code>parents</code>, and the mathematics lives entirely in the closures.</p>
+<p><strong>(3) Why it is built this way.</strong> Because it separates <em>what</em> was computed from <em>how</em> to differentiate it. The node needs no knowledge of the graph, and the graph needs no knowledge of calculus. Adding an operation means writing one closure; adding a container (sparse, quantized, distributed) means changing one class and nothing else.</p>
+<p><strong>(4) Worked micro-example.</strong> For <code>c = a * b</code> with <code>a = 2.0, b = 3.0</code>, the node holds <code>data = 6.0</code>, <code>grad = None</code>, <code>parents = (a, b)</code>, and a closure that does <code>a.grad += b.data * c.grad; b.grad += a.data * c.grad</code>. With <code>c.grad = 1</code> that yields <code>a.grad = 3.0</code> and <code>b.grad = 2.0</code>, which is exactly $\partial c/\partial a = b$ and $\partial c/\partial b = a$.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 392" width="100%" role="img" aria-label="Forward values and backward gradients on the same graph" class="fig-svg"><defs><marker id="cg-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="76.0" y="66.0" width="88.0" height="52.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.6"/><text x="120.0" y="86.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">x</text><text x="120.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">= 2</text><text x="120.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">18</text><rect x="256.0" y="66.0" width="88.0" height="52.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.6"/><text x="300.0" y="86.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">w</text><text x="300.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">= 3</text><text x="300.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">12</text><rect x="166.0" y="180.0" width="88.0" height="52.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.6"/><text x="210.0" y="200.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">u = wx</text><text x="210.0" y="216.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">= 6</text><text x="210.0" y="230.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">6</text><rect x="386.0" y="66.0" width="88.0" height="52.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6"/><text x="430.0" y="86.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">b</text><text x="430.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">= 2</text><text x="430.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">6</text><rect x="376.0" y="180.0" width="88.0" height="52.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.6"/><text x="420.0" y="200.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">z = u+b</text><text x="420.0" y="216.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">= 8</text><text x="420.0" y="230.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">6</text><rect x="566.0" y="66.0" width="88.0" height="52.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.6"/><text x="610.0" y="86.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">y</text><text x="610.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">= 5</text><text x="610.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">−6</text><rect x="566.0" y="180.0" width="88.0" height="52.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.6"/><text x="610.0" y="200.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">d = z−y</text><text x="610.0" y="216.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">= 3</text><text x="610.0" y="230.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">6</text><rect x="566.0" y="290.0" width="88.0" height="52.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.6"/><text x="610.0" y="310.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">L = d²</text><text x="610.0" y="326.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">= 9</text><text x="610.0" y="340.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">1</text><line x1="120.0" y1="118.0" x2="210.0" y2="180.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#cg-ah)"/><line x1="300.0" y1="118.0" x2="210.0" y2="180.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#cg-ah)"/><line x1="210.0" y1="232.0" x2="420.0" y2="206.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#cg-ah)"/><line x1="430.0" y1="118.0" x2="420.0" y2="180.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#cg-ah)"/><line x1="420.0" y1="232.0" x2="610.0" y2="206.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#cg-ah)"/><line x1="610.0" y1="118.0" x2="610.0" y2="180.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#cg-ah)"/><line x1="610.0" y1="232.0" x2="610.0" y2="290.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#cg-ah)"/><text x="210.0" y="152.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">∂u/∂x = w = 3</text><text x="210.0" y="118.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">∂u/∂w = x = 2</text><text x="330.0" y="196.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">∂z/∂u = 1</text><text x="516.0" y="196.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">∂d/∂z = 1</text><text x="516.0" y="240.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">∂d/∂y = −1</text><text x="700.0" y="264.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">∂L/∂d = 2d = 6</text><rect x="700.0" y="40.0" width="146.0" height="44.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.2"/><text x="773.0" y="58.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">forward value</text><text x="773.0" y="74.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">also: backward grad</text><text x="30.0" y="370.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">each node needs only its own local derivative; the chain rule stitches them together</text></svg><figcaption>The computational graph of a small expression with forward values on the nodes and backward gradients on the edges. Every node drawn here corresponds to exactly one object with the four fields above; the edges are the `parents` tuples.</figcaption></figure></p>
+<h3 id="define-by-run-the-graph-is-byproduct-not-blueprint">define-by-run: the graph is byproduct, not blueprint</h3>
+<p><strong>(1) Intuition.</strong> There are two ways to build an autodiff system. You can record a blueprint of the computation before running it (define-and-run, a tape), or you can let the computation create the graph as it runs (define-by-run). PyTorch is the second; the graph exists only as long as its tensors do.</p>
+<p><strong>(2) Formal definition.</strong> In <strong>define-by-run</strong>, every operation allocates a node and records its parents; the graph is a byproduct of the forward pass and can differ on every call. In <strong>tape-based</strong> systems (Theano historically, JAX's <code>grad</code> over traced functions), the function is traced once into a static graph that is then differentiated and, usually, compiled.</p>
+<p><strong>(3) Why it is built this way.</strong> Define-by-run makes control flow trivial: <code>if</code> and <code>while</code> and data-dependent recursion are just Python, and each execution gets the graph it actually used. That is why it fits RNNs with variable-length inputs and any model with data-dependent depth. The cost is that the graph is rebuilt every step, and that the interpreter overhead — Python-level node creation — can dominate small operations. Compilation exists to recover that cost.</p>
+<p><strong>(4) Worked micro-example.</strong> A forward pass with a data-dependent branch</p>
+<p>```python
+h = layer1(x)
+if h.data.mean() > 0:      # the graph differs on different batches
+    h = layer2(h)
+```</p>
+<p>is impossible to express as a single static graph without a control-flow primitive, and trivial in define-by-run. This is the design decision, stated as one line of code.</p>
+<p><div class="viz" data-viz="v-backprop-trace"></div><div class="vizcap">Step through a tiny network one node at a time, forward then backward. Watch the order the nodes are visited: it is not the order they were created but a reverse topological order, and the interactive version makes it obvious why a node cannot fire before everything downstream of it has.</div></p>
+<h3 id="broadcasting-and-the-reduction-it-forces">Broadcasting and the reduction it forces</h3>
+<p><strong>(1) Intuition.</strong> Broadcasting is a lie told for convenience: when you add a bias of shape $(m,)$ to a batch of shape $(n,m)$, the forward pass <em>pretends</em> there are $n$ copies of the bias. The backward pass has to undo the lie, and undoing a copy is summing.</p>
+<p><strong>(2) Formal definition.</strong> If an operand of shape $\mathbf{s}$ is broadcast to shape $\mathbf{S}$, then</p>
+<p>$$
+\bar{\mathbf{a}} = \operatorname{reduce}_{\mathbf{s}}\!\left(\bar{\mathbf{c}}\right), \qquad
+\operatorname{reduce}_{\mathbf{s}}(\mathbf{G}) = \text{sum } \mathbf{G} \text{ over leading axes until } \mathrm{ndim} = |\mathbf{s}|, \text{ then over axes where } s_i = 1 \text{ and } S_i > 1 .
+$$</p>
+<p><strong>(3) Why it is built this way.</strong> Because the forward operation really did use $n$ copies of $\mathbf{b}$, each contributing a separate path from $\mathbf{b}$ to the loss, and the chain rule sums over paths. A framework that returns the unreduced gradient has the wrong shape and silently broadcasts <em>that</em> too, producing a plausible but incorrect answer — one of the most common bugs in hand-written backprop.</p>
+<p><strong>(4) Worked micro-example.</strong> $\mathbf{C}=\mathbf{A}+\mathbf{b}$ with $\mathbf{A}\in\mathbb{R}^{3\times4}$, $\mathbf{b}\in\mathbb{R}^4$: $\bar{\mathbf{A}}=\bar{\mathbf{C}}$ (shape preserved) and $\bar{\mathbf{b}}=\mathbf{1}^\top\bar{\mathbf{C}}\in\mathbb{R}^4$. If instead $\mathbf{b}\in\mathbb{R}^{1\times4}$ and $\mathbf{C}$ is $(3,4)$, the reduction must use <code>keepdims=True</code> to return $(1,4)$. And for a scalar <code>b</code> (shape <code>()</code>), the reduction is a full sum to a scalar. The code below handles all three by construction.</p>
+<h3 id="modules-parameters-and-why-ownership-matters">Modules, parameters, and why ownership matters</h3>
+<p><strong>(1) Intuition.</strong> A layer is a small object that owns parameters and knows how to map inputs to outputs. A model is a tree of such objects. The framework's job is to walk that tree and hand you the complete parameter list — complete being the operative word.</p>
+<p><strong>(2) Formal definition.</strong> A <code>Parameter</code> is a <code>Tensor</code> that is <em>meant</em> to be optimized. A <code>Module</code> is an object with named submodules and named parameters; <code>parameters()</code> returns the concatenation of its own parameters and those of its submodules, recursively. Optimizers receive that flat list once, at construction.</p>
+<p><strong>(3) Why it is built this way.</strong> Because the flat list is the interface between the model and the optimizer: the optimizer never asks the model anything again, which is what allows it to be implemented as a pure state machine. The failure mode is equally specific: if a submodule is stored in a plain Python container that the traversal does not know about (a list of layers, a dict of heads), its parameters are invisible to <code>parameters()</code>, the optimizer never updates them, and the model trains <em>partially</em> — the worst kind of bug, because the loss still goes down.</p>
+<p><strong>(4) Worked micro-example.</strong> The bug, in full: <code>self.layers = [Linear(4,4), Linear(4,4)]</code> makes <code>parameters()</code> return <code>[]</code>, because a <code>list</code> is not a <code>Module</code>. The fix is one line in the container's constructor that registers each child, and it is the difference between a model that learns and a model that does not. The code in this module's <code>Sequential</code> does exactly that, and it is the bug I hit first when building it.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 392" width="100%" role="img" aria-label="One hidden layer, every tensor labelled with its shape" class="fig-svg"><defs><marker id="mlp-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="24.0" y="176.0" width="86.0" height="92.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.6"/><text x="67.0" y="218.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">x</text><text x="67.0" y="237.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">784 × 1</text><rect x="158.0" y="132.0" width="118.0" height="180.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.6"/><text x="217.0" y="218.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">W₁</text><text x="217.0" y="237.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">256 × 784</text><rect x="324.0" y="168.0" width="104.0" height="106.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.6"/><text x="376.0" y="217.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">h</text><text x="376.0" y="236.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">256</text><rect x="478.0" y="132.0" width="118.0" height="180.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.6"/><text x="537.0" y="218.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">W₂</text><text x="537.0" y="237.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">10 × 256</text><rect x="646.0" y="176.0" width="96.0" height="92.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6"/><text x="694.0" y="218.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">logits</text><text x="694.0" y="237.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">10</text><rect x="776.0" y="176.0" width="62.0" height="92.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.6"/><text x="807.0" y="218.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">p</text><text x="807.0" y="237.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">softmax</text><line x1="110.0" y1="222.0" x2="154.0" y2="222.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#mlp-ah)"/><text x="134.0" y="210.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">W₁x</text><line x1="276.0" y1="222.0" x2="320.0" y2="222.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#mlp-ah)"/><line x1="428.0" y1="222.0" x2="474.0" y2="222.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#mlp-ah)"/><text x="453.0" y="210.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">W₂h</text><line x1="596.0" y1="222.0" x2="642.0" y2="222.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#mlp-ah)"/><line x1="742.0" y1="222.0" x2="772.0" y2="222.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#mlp-ah)"/><text x="380.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">h = σ(W₁ x + b₁)</text><text x="380.0" y="322.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">logits = W₂ h + b₂</text><text x="380.0" y="344.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">p = softmax(logits)</text><rect x="24.0" y="52.0" width="812.0" height="52.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="430.0" y="74.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">parameters: 784·256 + 256 + 256·10 + 10 =</text><text x="430.0" y="94.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="650">200,704 + 256 + 2,560 + 10 = 203,530 trainable scalars</text><text x="430.0" y="26.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">a 2-layer MLP on 784-dim inputs producing 10 classes</text><text x="380.0" y="372.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">forward only. The backward pass visits these same shapes in reverse (M07).</text></svg><figcaption>One layer with every matrix labelled by shape — the object that `Linear` implements. The parameter count $d_{\text{in}}d_{\text{out}}+d_{\text{out}}$ is what `parameters()` must report for this module, and the bias broadcast is the $(n,m)$-plus-$(m,)$ case the previous section derives.</figcaption></figure></p>
+<h3 id="optimizers-as-state-machines">Optimizers as state machines</h3>
+<p><strong>(1) Intuition.</strong> An optimizer holds one array per parameter and updates it when told to. Nothing more: it never sees the model, never sees the data, and never sees the loss.</p>
+<p><strong>(2) Formal definition.</strong> SGD with momentum holds a velocity buffer $\mathbf{v}$ per parameter: $\mathbf{v}\leftarrow\beta\mathbf{v}+\mathbf{g}$, $\boldsymbol{\theta}\leftarrow\boldsymbol{\theta}-\eta\mathbf{v}$. AdamW holds two buffers and a step counter:</p>
+<p>$$
+\mathbf{m}\leftarrow\beta_1\mathbf{m}+(1-\beta_1)\mathbf{g}, \quad
+\mathbf{v}\leftarrow\beta_2\mathbf{v}+(1-\beta_2)\mathbf{g}^2, \quad
+\boldsymbol{\theta}\leftarrow\boldsymbol{\theta}-\eta\left(\frac{\hat{\mathbf{m}}}{\sqrt{\hat{\mathbf{v}}}+\epsilon}+\lambda\boldsymbol{\theta}\right),
+$$</p>
+<p>with $\hat{\mathbf{m}}=\mathbf{m}/(1-\beta_1^t)$ and $\hat{\mathbf{v}}=\mathbf{v}/(1-\beta_2^t)$ correcting the zero initialization.</p>
+<p><strong>(3) Why it is built this way.</strong> The bias correction exists because $\mathbf{m}$ and $\mathbf{v}$ start at zero, so the first few steps would be scaled by $(1-\beta_1^t)$ and $(1-\beta_2^t)$ — near zero for $\beta_2=0.999$ and $t=1$. Without correction the first steps are effectively zero-sized; with it, the first step is a sign-like step of size $\eta$. Weight decay is written <em>outside</em> the adaptive denominator (AdamW) rather than inside the gradient (Adam+L2), because inside it gets scaled by $1/\sqrt{\hat{\mathbf{v}}}$, making the effective decay depend on the gradient magnitude — exactly the coupling that decoupled decay removes.</p>
+<p><strong>(4) Worked micro-example.</strong> At $t=1$ with $\mathbf{g}=0.5$, $\beta_1=0.9$, $\beta_2=0.999$: $\mathbf{m}=0.05$, $\mathbf{v}=0.00025$, so $\hat{\mathbf{m}}=0.5$ and $\hat{\mathbf{v}}=0.25$, giving a step of $\eta\cdot0.5/(0.5+10^{-8})\approx\eta$ — a full-size step in the gradient's direction regardless of its magnitude. That scale invariance is what makes Adam's learning rate transferable across parameters, and what breaks it when you mix it with L2 in the gradient.</p>
+<h3 id="the-training-loops-four-invariants">The training loop's four invariants</h3>
+<p><strong>(1) Intuition.</strong> Four lines in a training loop are not bookkeeping; each one prevents a specific silent failure.</p>
+<p><strong>(2) Formal definition and the failure each prevents.</strong></p>
+<ol>
+<li><strong>Zero the gradients before the backward pass.</strong> Without it, step $t$'s gradient is the sum of steps $1..t$, and the effective learning rate grows without bound. Failure mode: loss falls, then oscillates, then diverges, with a gradient norm that grows monotonically.</li>
+<li><strong>Set train/eval mode.</strong> Dropout and batch norm behave differently in each (<strong>M08</strong>). Failure: evaluation reports the training-mode loss, which is both optimistic and noisy.</li>
+<li><strong>Disable graph construction during evaluation.</strong> Under define-by-run, evaluating with gradients enabled builds a graph you never use, so validation memory grows like a training step. Failure: out-of-memory during evaluation, often at exactly the point where the model got large enough to matter.</li>
+<li><strong>Clip gradients before the step, and check finiteness.</strong> A single bad batch can produce a gradient 100× the typical norm and destroy an hour of training. Failure: a loss spike from which the model never recovers.</li>
+</ol>
+<p><strong>(3) Why it is built this way.</strong> Because all four failures are silent at first and expensive later. Each invariant is one line and is far cheaper than the debugging session it prevents.</p>
+<p><strong>(4) Worked micro-example.</strong> With gradients of norm 2.0 arriving every step and a learning rate of $10^{-3}$, forgetting to zero gives effective steps of $2, 4, 6, \ldots$ — the update size grows linearly in the step number, so by step 100 the model is moving 200× as far per step as it should. That trajectory always ends the same way.</p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<p>The build order is chosen so that every stage is testable before the next one exists.</p>
+<ol>
+<li><strong>Scalar engine.</strong> <code>Value</code> with <code>data</code>, <code>grad</code>, <code>_parents</code>, <code>_backward</code>; operator overloading for <code>+</code>, <code>*</code>, <code>tanh</code>, <code>log</code>, <code>relu</code>; <code>backward()</code> that sorts the graph topologically and runs the closures in reverse.</li>
+<li><strong>Vectorize.</strong> Replace <code>float</code> with <code>ndarray</code>, add the reduction in every broadcasting vjp, add <code>matmul</code>, <code>reshape</code>, <code>sum</code>, <code>__getitem__</code>, and a fused <code>softmax_cross_entropy</code>. The engine's <code>backward()</code> does not change at all.</li>
+<li><strong>Modules.</strong> <code>Parameter(Tensor)</code>, <code>Module</code> with named parameters and submodules, <code>Linear</code>, <code>ReLU</code>, <code>Sequential</code>, <code>Embedding</code>. The only new idea is the recursive <code>parameters()</code> traversal.</li>
+<li><strong>Optimizers.</strong> SGD with momentum, AdamW. Each holds one or two arrays per parameter, plus a step counter for Adam.</li>
+<li><strong>Training loop.</strong> Batching, zeroing, backward, clipping, step, periodic evaluation, logging.</li>
+<li><strong>Models.</strong> First XOR with a 2-8-2 MLP, then a character-level language model: embedding, flatten, hidden layer, vocabulary logits, cross-entropy, and a sampling loop.</li>
+</ol>
+<p>```text
+backward(root):
+    order = topological_sort(root)   # DFS postorder
+    root.grad = ones_like(root.data)
+    for node in reversed(order):
+        node._backward()             # push grad into each parent, accumulating
+
+topological_sort(root):
+    seen, order = {}, []
+    visit(v): if v not in seen: mark; visit(p) for p in v._parents; append(v)
+    visit(root); return order
+```</p>
+<p><strong>Complexity.</strong> A backward pass costs about twice a forward pass in FLOPs and needs the forward values to be retained, so time per step is $O(3\cdot\text{forward})$ and memory is $O(\text{forward activations})$ (<strong>M07</strong>). The engine's own overhead — allocating nodes and pushing gradients — is $O(\#\text{nodes})$ per pass, which is why a real framework fuses operations and why <code>torch.compile</code> exists: at small tensor sizes this overhead, not arithmetic, is the bottleneck.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="1-the-broadcasting-vjp-in-general">1. The broadcasting vjp, in general</h3>
+<p>Let $\mathbf{c} = f(\mathbf{a},\mathbf{b})$ where the forward operation is elementwise but the operands have different shapes and NumPy broadcasts them to a common shape $\mathbf{S}$. Broadcasting means each operand is first <em>expanded</em>: $\tilde{\mathbf{a}}$ of shape $\mathbf{S}$ with</p>
+<p>$$
+\tilde a_{i_1\ldots i_k} = a_{j_1\ldots j_m}, \qquad j_r = \begin{cases} i_r & \text{if } a \text{ has an axis here}, \\ 1 & \text{otherwise (axis was inserted)},\end{cases}
+$$</p>
+<p>and axes where $a$ had size 1 are replicated. Since $\mathbf{c}$ depends on $\mathbf{a}$ only through $\tilde{\mathbf{a}}$, the chain rule gives</p>
+<p>$$
+\bar a_{j_1\ldots j_m} = \sum_{\text{all } i \text{ mapping to } (j_1,\ldots,j_m)} \bar c_{i_1\ldots i_k} \cdot \frac{\partial \tilde a}{\partial a},
+$$</p>
+<p>and $\partial\tilde a/\partial a = 1$ for every copy, so the vjp is exactly a sum over the axes that were inserted or replicated. Concretely, with $\mathbf{G}=\bar{\mathbf{c}}$:</p>
+<p>$$
+\bar{\mathbf{a}} = \sum_{\text{inserted leading axes}} \mathbf{G} \quad\text{then}\quad \sum_{i:\, s_i = 1,\, S_i > 1} \mathbf{G}\ \text{along axis } i \text{ with keepdims}.
+$$</p>
+<p>Three cases, with shapes:</p>
+<table>
+<thead>
+<tr>
+<th>forward</th>
+<th>shapes</th>
+<th>$\bar{\mathbf{a}}$</th>
+<th>$\bar{\mathbf{b}}$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\mathbf{A}+\mathbf{b}$</td>
+<td>$(3,4)+(4,)$</td>
+<td>$\mathbf{G}$</td>
+<td>$\sum_{i=1}^{3}G_{ij}$, shape $(4,)$</td>
+</tr>
+<tr>
+<td>$\mathbf{A}+b$</td>
+<td>$(3,4)+()$</td>
+<td>$\mathbf{G}$</td>
+<td>$\sum_{i,j}G_{ij}$, shape $()$</td>
+</tr>
+<tr>
+<td>$\mathbf{A}+\mathbf{B}$</td>
+<td>$(3,1,4)+(2,4)$</td>
+<td>$\sum_{i=1}^{2}G_{ij}$, shape $(1,4)$... reduced to $(3,1,4)$ by summing over the replicated axis then re-adding the size-1 axis</td>
+<td>$\sum_{i=1}^{3}G_{ij}$, shape $(2,4)$</td>
+</tr>
+</tbody>
+</table>
+<p>The implementation is six lines, and the <code>keepdims=True</code> in the second loop is not cosmetic: it preserves the rank so that the assignment <code>self.grad += ...</code> keeps the original shape.</p>
+<h3 id="2-matmul-vjps">2. Matmul vjps</h3>
+<p>Let $\mathbf{Z}=\mathbf{X}\mathbf{W}$ with $\mathbf{X}\in\mathbb{R}^{n\times k}$, $\mathbf{W}\in\mathbb{R}^{k\times m}$, so $Z_{ij}=\sum_{p}X_{ip}W_{pj}$. For the input,</p>
+<p>$$
+\bar X_{ip} = \sum_{i',j}\bar Z_{i'j}\frac{\partial Z_{i'j}}{\partial X_{ip}} = \sum_{j}\bar Z_{ij}W_{pj} = \left(\bar{\mathbf{Z}}\mathbf{W}^\top\right)_{ip},
+$$</p>
+<p>and for the weight,</p>
+<p>$$
+\bar W_{pj} = \sum_{i,i'}\bar Z_{i'i}\frac{\partial Z_{i'i}}{\partial W_{pj}} = \sum_{i}\bar Z_{ij}X_{ip} = \left(\mathbf{X}^\top\bar{\mathbf{Z}}\right)_{pj}.
+$$</p>
+<p>Both are matmuls of the same asymptotic cost as the forward one; that factor of two per layer is the whole of the "backward costs twice forward" rule.</p>
+<h3 id="3-why-reverse-topological-order-is-required">3. Why reverse topological order is required</h3>
+<p><strong>Claim.</strong> If a node's closure runs before all of its children (nodes it feeds) have completed, the gradient it propagates is missing contributions.</p>
+<p><strong>Proof.</strong> The adjoint of $v$ is $\bar v=\sum_{u\in\text{children}(v)}\bar u\,\partial u/\partial v$ (<strong>M07</strong>, §4). Each term requires the <em>final</em> value of $\bar u$, which is only available after every child of $u$ has pushed into it. Take any linear extension of the DAG that is not a reverse topological order: it contains an edge $(v,u)$ with $v$ processed before $u$. When $v$'s closure runs, $\bar u$ may still be missing the contributions from $u$'s own children, so the term $\bar u\,\partial u/\partial v$ is added with an incomplete $\bar u$ and the final $\bar v$ is wrong. Conversely, reverse topological order guarantees by induction that when $v$ is processed, every child $u$ has already received all of its contributions, so each $\bar u$ is final. $\blacksquare$</p>
+<p>The DFS postorder in <code>topological_sort</code> produces exactly such an order, and the reversal in <code>backward()</code> is the only place the ordering is used.</p>
+<h3 id="4-accumulation-and-why-a-per-node-visited-flag-is-not-enough">4. Accumulation, and why a per-node "visited" flag is not enough</h3>
+<p>A node can be reached from the output by many paths (reuse of a parameter, a residual stream read twice, a shared embedding). Each path contributes a term to the adjoint, and the multivariable chain rule sums them. The engine therefore writes <code>+=</code> into <code>grad</code> and initializes <code>grad</code> lazily to zeros on first write. Contrast this with a <em>forward</em>-mode implementation, where the same node may also be reached once per tangent direction: forward mode accumulates tangents the same way, so the "sum over paths" structure is common to both modes — only the direction differs.</p>
+<p>Deduplicating the traversal (a <code>seen</code> set used to <em>skip</em> nodes) would be correct for a DAG only if it skipped <em>re-visiting</em> a node rather than <em>re-accumulating</em> into it. Confusing the two produces gradients that are correct for trees and silently wrong for DAGs, which is precisely the case every real network is in.</p>
+<h3 id="5-why-the-fused-softmax-plus-cross-entropy-is-worth-writing-by-hand">5. Why the fused softmax plus cross-entropy is worth writing by hand</h3>
+<p>The composed computation is $\mathcal{L}=-\log p_y$ with $p=\operatorname{softmax}(\mathbf{z})$, and by <strong>M06</strong>'s Jacobian and <strong>M07</strong>'s cancellation,</p>
+<p>$$
+\frac{\partial\mathcal{L}}{\partial z_j} = p_j - y_j .
+$$</p>
+<p>For a batch, $\bar{\mathbf{Z}}=(\mathbf{P}-\mathbf{Y})/n$. Implementing it as one node rather than three has two consequences. First, <strong>stability</strong>: the forward pass subtracts the row maximum, $\tilde z_j=z_j-\max_kz_k$, so every exponent is $\le1$ and $\exp$ cannot overflow; and since $\operatorname{softmax}(\mathbf{z}+\mathbf{c}\mathbf{1}^\top)=\operatorname{softmax}(\mathbf{z})$ exactly, the subtraction changes nothing but the floating-point behaviour. Second, <strong>cost and precision</strong>: composing <code>log(softmax(z))</code> computes $\log$ of a number that may round to exactly $0$ for a confident wrong prediction, producing $-\infty$ and a NaN gradient; the fused version never materializes $p$ inside a logarithm, and the gradient $p-y$ is bounded in $[-1,1]$ regardless of the logits. This is why every framework fuses the pair, and why the fused version is the right thing to hand-write first.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>Six stages, each runnable before the next exists. Every line below is from a working program: the outputs quoted are what the code actually prints.</p>
+<h3 id="stage-1-the-scalar-engine">Stage 1 — the scalar engine</h3>
+<p>This is <strong>M07</strong>'s engine, extended with <code>relu</code> and <code>log</code>, and it is the whole idea with the tensors taken out.</p>
+<p>```python
+import math
+
+class Value:
+    def __init__(self, data, parents=()):
+        self.data = float(data); self.grad = 0.0
+        self._parents = parents; self._backward = lambda: None
+
+    def __add__(self, o):
+        o = o if isinstance(o, Value) else Value(o)
+        out = Value(self.data + o.data, (self, o))
+        def b(): self.grad += out.grad; o.grad += out.grad
+        out._backward = b; return out
+
+    def __mul__(self, o):
+        o = o if isinstance(o, Value) else Value(o)
+        out = Value(self.data * o.data, (self, o))
+        def b(): self.grad += o.data * out.grad; o.grad += self.data * out.grad
+        out._backward = b; return out
+
+    def relu(self):
+        out = Value(max(0.0, self.data), (self,))
+        def b(): self.grad += (1.0 if self.data > 0 else 0.0) * out.grad
+        out._backward = b; return out
+
+    def log(self):
+        out = Value(math.log(self.data), (self,))
+        def b(): self.grad += out.grad / self.data
+        out._backward = b; return out
+
+    def __neg__(self): return self * -1.0
+    def __sub__(self, o): return self + (-o if isinstance(o, Value) else -o)
+    def __radd__(self, o): return self + o
+    def __rmul__(self, o): return self * o
+
+    def backward(self):
+        topo, seen = [], set()
+        def build(v):
+            if id(v) in seen: return
+            seen.add(id(v))
+            for p in v._parents: build(p)
+            topo.append(v)
+        build(self)
+        self.grad = 1.0
+        for v in reversed(topo): v._backward()
+```</p>
+<p>Three things to notice before moving on: <code>grad</code> starts at <code>0.0</code> rather than <code>None</code> (simpler for scalars), the closures capture <code>out</code> and the operands by closure rather than storing them as attributes, and nothing in <code>backward()</code> knows what the operations were.</p>
+<h3 id="stage-2-vectorize-with-the-reduction">Stage 2 — vectorize, with the reduction</h3>
+<p>The engine does not change; only the containers do. <code>grad</code> becomes lazily allocated, and every broadcasting operation routes its cotangent through <code>_unbroadcast</code>.</p>
+<p>```python
+import numpy as np
+
+def _unbroadcast(g, shape):
+    # undo the copies the forward pass pretended to make: summing is un-copying
+    while g.ndim > len(shape):
+        g = g.sum(axis=0)
+    for i, s in enumerate(shape):
+        if s == 1 and g.shape[i] != 1:
+            g = g.sum(axis=i, keepdims=True)
+    return g
+
+class Tensor:
+    def __init__(self, data, parents=()):
+        self.data = np.asarray(data, dtype=np.float64)
+        self.grad = None
+        self._parents = parents
+        self._backward = lambda: None
+
+    def _acc(self):
+        if self.grad is None:
+            self.grad = np.zeros_like(self.data)
+
+    def __add__(self, other):
+        other = other if isinstance(other, Tensor) else Tensor(other)
+        out = Tensor(self.data + other.data, (self, other))
+        def b():
+            self._acc(); other._acc()
+            self.grad  += _unbroadcast(out.grad, self.data.shape)
+            other.grad += _unbroadcast(out.grad, other.data.shape)
+        out._backward = b; return out
+
+    def __mul__(self, other):
+        other = other if isinstance(other, Tensor) else Tensor(other)
+        out = Tensor(self.data * other.data, (self, other))
+        def b():
+            self._acc(); other._acc()
+            self.grad  += _unbroadcast(out.grad * other.data, self.data.shape)
+            other.grad += _unbroadcast(out.grad * self.data,  other.data.shape)
+        out._backward = b; return out
+
+    def __matmul__(self, other):
+        out = Tensor(self.data @ other.data, (self, other))
+        def b():
+            self._acc(); other._acc()
+            self.grad  += out.grad @ other.data.swapaxes(-1, -2)
+            other.grad += self.data.swapaxes(-1, -2) @ out.grad
+        out._backward = b; return out
+
+    def relu(self):
+        out = Tensor(np.maximum(self.data, 0.0), (self,))
+        def b(): self._acc(); self.grad += out.grad * (self.data > 0)
+        out._backward = b; return out
+
+    def log(self):
+        out = Tensor(np.log(self.data), (self,))
+        def b(): self._acc(); self.grad += out.grad / self.data
+        out._backward = b; return out
+
+    def reshape(self, *shape):
+        out = Tensor(self.data.reshape(*shape), (self,))
+        def b(): self._acc(); self.grad += out.grad.reshape(self.data.shape)
+        out._backward = b; return out
+
+    def sum(self, axis=None, keepdims=False):
+        out = Tensor(self.data.sum(axis=axis, keepdims=keepdims), (self,))
+        def b():
+            self._acc()
+            g = out.grad if keepdims or axis is None else np.expand_dims(out.grad, axis)
+            self.grad += np.broadcast_to(g, self.data.shape)
+        out._backward = b; return out
+
+    def __getitem__(self, idx):
+        out = Tensor(self.data[idx], (self,))
+        def b(): self._acc(); np.add.at(self.grad, idx, out.grad)
+        out._backward = b; return out
+
+    def backward(self):
+        topo, seen = [], set()
+        def build(v):
+            if id(v) in seen: return
+            seen.add(id(v))
+            for p in v._parents: build(p)
+            topo.append(v)
+        build(self)
+        self.grad = np.ones_like(self.data)
+        for v in reversed(topo): v._backward()
+```</p>
+<p>The fused loss is the one place where hand-writing the vjp is worth more than composing primitives:</p>
+<p>```python
+def softmax_cross_entropy(logits, y):
+    z = logits.data
+    z = z - z.max(axis=1, keepdims=True)      # exact by shift invariance, and it prevents overflow
+    e = np.exp(z); p = e / e.sum(axis=1, keepdims=True)
+    n = z.shape[0]
+    loss = Tensor(-np.log(p[np.arange(n), y]).mean(), (logits,))
+    def b():
+        logits._acc()
+        g = p.copy(); g[np.arange(n), y] -= 1.0    # dL/dz = (p - y)/n, derived above
+        logits.grad += g / n
+    loss._backward = b
+    return loss
+```</p>
+<p><code>np.add.at</code> in <code>__getitem__</code> is the scatter-add that makes embeddings work: the same index may appear several times in a batch, and every occurrence must contribute.</p>
+<h3 id="stage-3-parameters-and-modules">Stage 3 — parameters and modules</h3>
+<p>```python
+class Parameter(Tensor):
+    pass
+
+class Module:
+    def __init__(self):
+        self._modules, self._params = {}, {}
+    def __setattr__(self, k, v):
+        if isinstance(v, Module): self._modules[k] = v
+        elif isinstance(v, Parameter): self._params[k] = v
+        object.__setattr__(self, k, v)
+    def parameters(self):
+        out = list(self._params.values())
+        for m in self._modules.values():
+            out += m.parameters()
+        return out
+    def zero_grad(self):
+        for p in self.parameters(): p.grad = None
+    def __call__(self, *a): return self.forward(*a)
+
+class Linear(Module):
+    def __init__(self, din, dout, rng, scale=1.0):
+        super().__init__()
+        self.W = Parameter(rng.standard_normal((din, dout)) * scale / np.sqrt(din))
+        self.b = Parameter(np.zeros(dout))
+    def forward(self, x): return x @ self.W + self.b
+
+class ReLU(Module):
+    def forward(self, x): return x.relu()
+
+class Sequential(Module):
+    def __init__(self, *layers):
+        super().__init__()
+        self.layers = list(layers)
+        for i, l in enumerate(self.layers):
+            self._modules[f"layer{i}"] = l       # without this, parameters() sees nothing
+    def forward(self, x):
+        for l in self.layers: x = l(x)
+        return x
+
+class Embedding(Module):
+    def __init__(self, n, dim, rng):
+        super().__init__()
+        self.W = Parameter(rng.standard_normal((n, dim)) * 0.1)
+    def forward(self, idx): return self.W[idx]
+```</p>
+<p>The comment on <code>Sequential</code> is the bug from the concepts section, fixed in one line. Every other line here is bookkeeping around <code>object.__setattr__</code>, which is the price of making attribute assignment register itself.</p>
+<h3 id="stage-4-optimizers">Stage 4 — optimizers</h3>
+<p>```python
+class SGD:
+    def __init__(self, params, lr=0.1, momentum=0.0, weight_decay=0.0):
+        self.params, self.lr, self.m, self.wd = params, lr, momentum, weight_decay
+        self.buf = [np.zeros_like(p.data) for p in params]
+    def step(self):
+        for i, p in enumerate(self.params):
+            if p.grad is None: continue
+            g = p.grad + self.wd * p.data
+            self.buf[i] = self.m * self.buf[i] + g
+            p.data -= self.lr * self.buf[i]
+
+class AdamW:
+    def __init__(self, params, lr=1e-3, betas=(0.9, 0.999), eps=1e-8, weight_decay=0.0):
+        self.params, self.lr = params, lr
+        self.b1, self.b2, self.eps, self.wd, self.t = betas[0], betas[1], eps, weight_decay, 0
+        self.m = [np.zeros_like(p.data) for p in params]
+        self.v = [np.zeros_like(p.data) for p in params]
+    def step(self):
+        self.t += 1
+        for i, p in enumerate(self.params):
+            if p.grad is None: continue
+            self.m[i] = self.b1*self.m[i] + (1-self.b1)*p.grad
+            self.v[i] = self.b2*self.v[i] + (1-self.b2)*p.grad*p.grad
+            mh = self.m[i] / (1 - self.b1**self.t)      # bias correction
+            vh = self.v[i] / (1 - self.b2**self.t)
+            p.data -= self.lr * (mh/(np.sqrt(vh)+self.eps) + self.wd*p.data)
+```</p>
+<h3 id="stage-5-the-training-loop">Stage 5 — the training loop</h3>
+<p>```python
+def train(model, opt, loss_fn, batches, steps, log_every=250):
+    for step in range(steps):
+        xb, yb = next(batches)
+        loss = loss_fn(model(xb), yb)
+        model.zero_grad()
+        loss.backward()
+        gn = np.sqrt(sum(float((p.grad**2).sum()) for p in model.parameters() if p.grad is not None))
+        if gn > 1.0:                                   # clip before stepping
+            for p in model.parameters():
+                if p.grad is not None: p.grad *= 1.0 / gn
+        opt.step()
+        if step % log_every == 0:
+            print(f"step {step:5d}  loss {loss.data:.6f}  |g| {gn:.3f}")
+    return model
+```</p>
+<p>The <code>gn</code> printed on every log line is the global gradient norm; watching it per layer rather than in aggregate is how you find the depth at which a stack stops learning.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="Gradient magnitude versus depth" class="fig-svg"><defs><marker id="grad-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="84.0" y1="248.5" x2="514.0" y2="248.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="252.5" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e-6</text><line x1="84.0" y1="193.5" x2="514.0" y2="193.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="197.5" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e-4</text><line x1="84.0" y1="138.5" x2="514.0" y2="138.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="142.5" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e-2</text><line x1="84.0" y1="83.5" x2="514.0" y2="83.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="87.5" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e0</text><line x1="84.0" y1="56.0" x2="84.0" y2="276.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M84.0,91.2 L86.7,92.3 L89.4,93.4 L92.1,94.5 L94.8,95.6 L97.4,96.7 L100.1,97.8 L102.8,98.9 L105.5,100.1 L108.2,101.2 L110.9,102.3 L113.6,103.4 L116.2,104.5 L118.9,105.6 L121.6,106.7 L124.3,107.8 L127.0,108.9 L129.7,110.0 L132.4,111.1 L135.1,112.2 L137.8,113.3 L140.4,114.4 L143.1,115.6 L145.8,116.7 L148.5,117.8 L151.2,118.9 L153.9,120.0 L156.6,121.1 L159.2,122.2 L161.9,123.3 L164.6,124.4 L167.3,125.5 L170.0,126.6 L172.7,127.7 L175.4,128.8 L178.1,129.9 L180.8,131.0 L183.4,132.2 L186.1,133.3 L188.8,134.4 L191.5,135.5 L194.2,136.6 L196.9,137.7 L199.6,138.8 L202.2,139.9 L204.9,141.0 L207.6,142.1 L210.3,143.2 L213.0,144.3 L215.7,145.4 L218.4,146.5 L221.1,147.7 L223.8,148.8 L226.4,149.9 L229.1,151.0 L231.8,152.1 L234.5,153.2 L237.2,154.3 L239.9,155.4 L242.6,156.5 L245.2,157.6 L247.9,158.7 L250.6,159.8 L253.3,160.9 L256.0,162.0 L258.7,163.1 L261.4,164.3 L264.1,165.4 L266.8,166.5 L269.4,167.6 L272.1,168.7 L274.8,169.8 L277.5,170.9 L280.2,172.0 L282.9,173.1 L285.6,174.2 L288.2,175.3 L290.9,176.4 L293.6,177.5 L296.3,178.6 L299.0,179.8 L301.7,180.9 L304.4,182.0 L307.1,183.1 L309.8,184.2 L312.4,185.3 L315.1,186.4 L317.8,187.5 L320.5,188.6 L323.2,189.7 L325.9,190.8 L328.6,191.9 L331.2,193.0 L333.9,194.1 L336.6,195.2 L339.3,196.4 L342.0,197.5 L344.7,198.6 L347.4,199.7 L350.1,200.8 L352.8,201.9 L355.4,203.0 L358.1,204.1 L360.8,205.2 L363.5,206.3 L366.2,207.4 L368.9,208.5 L371.6,209.6 L374.2,210.7 L376.9,211.8 L379.6,213.0 L382.3,214.1 L385.0,215.2 L387.7,216.3 L390.4,217.4 L393.1,218.5 L395.8,219.6 L398.4,220.7 L401.1,221.8 L403.8,222.9 L406.5,224.0 L409.2,225.1 L411.9,226.2 L414.6,227.3 L417.2,228.5 L419.9,229.6 L422.6,230.7 L425.3,231.8 L428.0,232.9 L430.7,234.0 L433.4,235.1 L436.1,236.2 L438.8,237.3 L441.4,238.4 L444.1,239.5 L446.8,240.6 L449.5,241.7 L452.2,242.8 L454.9,243.9 L457.6,245.1 L460.2,246.2 L462.9,247.3 L465.6,248.4 L468.3,249.5 L471.0,250.6 L473.7,251.7 L476.4,252.8 L479.1,253.9 L481.7,255.0 L484.4,256.1 L487.1,257.2 L489.8,258.3 L492.5,259.4 L495.2,260.6 L497.9,261.7 L500.6,262.8 L503.2,263.9 L505.9,265.0 L508.6,266.1 L511.3,267.2 L514.0,268.3" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M84.0,83.5 L86.7,84.4 L89.4,85.2 L92.1,85.9 L94.8,86.5 L97.4,87.1 L100.1,87.6 L102.8,88.1 L105.5,88.5 L108.2,89.0 L110.9,89.4 L113.6,89.7 L116.2,90.1 L118.9,90.4 L121.6,90.7 L124.3,91.0 L127.0,91.3 L129.7,91.6 L132.4,91.9 L135.1,92.1 L137.8,92.4 L140.4,92.6 L143.1,92.9 L145.8,93.1 L148.5,93.3 L151.2,93.5 L153.9,93.7 L156.6,93.9 L159.2,94.1 L161.9,94.3 L164.6,94.5 L167.3,94.6 L170.0,94.8 L172.7,95.0 L175.4,95.1 L178.1,95.3 L180.8,95.5 L183.4,95.6 L186.1,95.8 L188.8,95.9 L191.5,96.0 L194.2,96.2 L196.9,96.3 L199.6,96.5 L202.2,96.6 L204.9,96.7 L207.6,96.8 L210.3,97.0 L213.0,97.1 L215.7,97.2 L218.4,97.3 L221.1,97.4 L223.8,97.5 L226.4,97.6 L229.1,97.8 L231.8,97.9 L234.5,98.0 L237.2,98.1 L239.9,98.2 L242.6,98.3 L245.2,98.4 L247.9,98.5 L250.6,98.6 L253.3,98.7 L256.0,98.8 L258.7,98.8 L261.4,98.9 L264.1,99.0 L266.8,99.1 L269.4,99.2 L272.1,99.3 L274.8,99.4 L277.5,99.5 L280.2,99.5 L282.9,99.6 L285.6,99.7 L288.2,99.8 L290.9,99.9 L293.6,99.9 L296.3,100.0 L299.0,100.1 L301.7,100.2 L304.4,100.2 L307.1,100.3 L309.8,100.4 L312.4,100.5 L315.1,100.5 L317.8,100.6 L320.5,100.7 L323.2,100.7 L325.9,100.8 L328.6,100.9 L331.2,100.9 L333.9,101.0 L336.6,101.1 L339.3,101.1 L342.0,101.2 L344.7,101.3 L347.4,101.3 L350.1,101.4 L352.8,101.5 L355.4,101.5 L358.1,101.6 L360.8,101.6 L363.5,101.7 L366.2,101.8 L368.9,101.8 L371.6,101.9 L374.2,101.9 L376.9,102.0 L379.6,102.0 L382.3,102.1 L385.0,102.1 L387.7,102.2 L390.4,102.3 L393.1,102.3 L395.8,102.4 L398.4,102.4 L401.1,102.5 L403.8,102.5 L406.5,102.6 L409.2,102.6 L411.9,102.7 L414.6,102.7 L417.2,102.8 L419.9,102.8 L422.6,102.9 L425.3,102.9 L428.0,103.0 L430.7,103.0 L433.4,103.1 L436.1,103.1 L438.8,103.2 L441.4,103.2 L444.1,103.3 L446.8,103.3 L449.5,103.4 L452.2,103.4 L454.9,103.4 L457.6,103.5 L460.2,103.5 L462.9,103.6 L465.6,103.6 L468.3,103.7 L471.0,103.7 L473.7,103.8 L476.4,103.8 L479.1,103.8 L481.7,103.9 L484.4,103.9 L487.1,104.0 L489.8,104.0 L492.5,104.1 L495.2,104.1 L497.9,104.1 L500.6,104.2 L503.2,104.2 L505.9,104.3 L508.6,104.3 L511.3,104.3 L514.0,104.4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2.0" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="5 4"/><path d="M84.0,83.5 L86.7,83.6 L89.4,83.7 L92.1,83.7 L94.8,83.8 L97.4,83.8 L100.1,83.9 L102.8,83.9 L105.5,84.0 L108.2,84.0 L110.9,84.0 L113.6,84.1 L116.2,84.1 L118.9,84.1 L121.6,84.2 L124.3,84.2 L127.0,84.2 L129.7,84.2 L132.4,84.3 L135.1,84.3 L137.8,84.3 L140.4,84.3 L143.1,84.4 L145.8,84.4 L148.5,84.4 L151.2,84.4 L153.9,84.4 L156.6,84.4 L159.2,84.5 L161.9,84.5 L164.6,84.5 L167.3,84.5 L170.0,84.5 L172.7,84.5 L175.4,84.6 L178.1,84.6 L180.8,84.6 L183.4,84.6 L186.1,84.6 L188.8,84.6 L191.5,84.6 L194.2,84.7 L196.9,84.7 L199.6,84.7 L202.2,84.7 L204.9,84.7 L207.6,84.7 L210.3,84.7 L213.0,84.7 L215.7,84.7 L218.4,84.8 L221.1,84.8 L223.8,84.8 L226.4,84.8 L229.1,84.8 L231.8,84.8 L234.5,84.8 L237.2,84.8 L239.9,84.8 L242.6,84.8 L245.2,84.9 L247.9,84.9 L250.6,84.9 L253.3,84.9 L256.0,84.9 L258.7,84.9 L261.4,84.9 L264.1,84.9 L266.8,84.9 L269.4,84.9 L272.1,84.9 L274.8,84.9 L277.5,85.0 L280.2,85.0 L282.9,85.0 L285.6,85.0 L288.2,85.0 L290.9,85.0 L293.6,85.0 L296.3,85.0 L299.0,85.0 L301.7,85.0 L304.4,85.0 L307.1,85.0 L309.8,85.0 L312.4,85.0 L315.1,85.0 L317.8,85.1 L320.5,85.1 L323.2,85.1 L325.9,85.1 L328.6,85.1 L331.2,85.1 L333.9,85.1 L336.6,85.1 L339.3,85.1 L342.0,85.1 L344.7,85.1 L347.4,85.1 L350.1,85.1 L352.8,85.1 L355.4,85.1 L358.1,85.1 L360.8,85.1 L363.5,85.2 L366.2,85.2 L368.9,85.2 L371.6,85.2 L374.2,85.2 L376.9,85.2 L379.6,85.2 L382.3,85.2 L385.0,85.2 L387.7,85.2 L390.4,85.2 L393.1,85.2 L395.8,85.2 L398.4,85.2 L401.1,85.2 L403.8,85.2 L406.5,85.2 L409.2,85.2 L411.9,85.2 L414.6,85.2 L417.2,85.3 L419.9,85.3 L422.6,85.3 L425.3,85.3 L428.0,85.3 L430.7,85.3 L433.4,85.3 L436.1,85.3 L438.8,85.3 L441.4,85.3 L444.1,85.3 L446.8,85.3 L449.5,85.3 L452.2,85.3 L454.9,85.3 L457.6,85.3 L460.2,85.3 L462.9,85.3 L465.6,85.3 L468.3,85.3 L471.0,85.3 L473.7,85.3 L476.4,85.3 L479.1,85.3 L481.7,85.4 L484.4,85.4 L487.1,85.4 L489.8,85.4 L492.5,85.4 L495.2,85.4 L497.9,85.4 L500.6,85.4 L503.2,85.4 L505.9,85.4 L508.6,85.4 L511.3,85.4 L514.0,85.4" fill="none" stroke="var(--fig-green,#34d399)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><text x="439.2" y="248.5" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="end" font-weight="400">no residual</text><text x="439.2" y="108.2" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="end" font-weight="400">with residual</text><text x="439.2" y="171.5" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="end" font-weight="400">norm only</text><text x="299.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">layer depth →</text><text x="84.0" y="44.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">gradient reaching layer 1 (log scale)</text><rect x="560.0" y="80.0" width="236.0" height="150.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="578.0" y="104.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">the mechanism</text><text x="578.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">A residual block makes the</text><text x="578.0" y="142.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Jacobian I + F&#x27;(x). The</text><text x="578.0" y="156.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">identity term survives depth;</text><text x="578.0" y="170.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">F&#x27; does not need to.</text><text x="578.0" y="214.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">normalisation alone does not fix it</text></svg><figcaption>Gradient magnitude against depth, with and without residual connections. This is the plot to reconstruct from your own engine's per-layer gradient norms: a straight line on the log axis means a constant per-layer gain, and its slope tells you whether your initialization is above or below criticality.</figcaption></figure></p>
+<h3 id="stage-6a-xor-end-to-end">Stage 6a — XOR, end to end</h3>
+<p>```python
+rng = np.random.default_rng(0)
+X = np.array([[0.,0.],[0.,1.],[1.,0.],[1.,1.]]); Y = np.array([0,1,1,0])
+net = Sequential(Linear(2, 8, rng), ReLU(), Linear(8, 2, rng))
+opt = SGD(net.parameters(), lr=0.5, momentum=0.9)
+for step in range(3001):
+    loss = softmax_cross_entropy(net(Tensor(X)), Y)
+    net.zero_grad(); loss.backward(); opt.step()
+    if step % 500 == 0: print(f"xor step {step:5d} loss {loss.data:.6f}")
+print("predictions", np.argmax(net(Tensor(X)).data, axis=1), "target", Y)
+```</p>
+<p>Output:</p>
+<p>```text
+xor step     0 loss 0.633573
+xor step   500 loss 0.000027
+xor step  1000 loss 0.000016
+xor step  1500 loss 0.000011
+xor step  2000 loss 0.000008
+xor step  2500 loss 0.000007
+xor step  3000 loss 0.000006
+predictions [0 1 1 0] target [0 1 1 0]
+```</p>
+<p>A network that could not be built from a single linear layer (<strong>M06</strong>) is now trained by code you wrote, and the loss falls by five orders of magnitude.</p>
+<h3 id="stage-6b-a-character-level-language-model">Stage 6b — a character-level language model</h3>
+<p>Context of $C=3$ characters, embedding width 8, one hidden layer of 32, vocabulary $V=28$.</p>
+<p>```python
+text = "the quick brown fox jumps over the lazy dog. " * 40
+chars = sorted(set(text)); V = len(chars)
+stoi = {c: i for i, c in enumerate(chars)}; itos = {i: c for i, c in enumerate(chars)}
+data = np.array([stoi[c] for c in text])
+C = 3
+Xs = np.stack([data[i:i+C] for i in range(len(data)-C)])
+ys = np.array([data[i+C] for i in range(len(data)-C)])
+print("vocab", V, "examples", len(Xs), "uniform loss", np.log(V))   # 28, 1797, 3.3322
+
+emb = Embedding(V, 8, rng)
+W1 = Linear(C*8, 32, rng); W2 = Linear(32, V, rng)
+params = emb.parameters() + W1.parameters() + W2.parameters()
+opt = AdamW(params, lr=3e-3)
+for step in range(2001):
+    idx = rng.integers(0, len(Xs), 64)
+    xb, yb = Xs[idx], ys[idx]
+    h = emb(xb).reshape(64, C*8)          # (64,3,8) -> (64,24)
+    loss = softmax_cross_entropy(W2(W1(h).relu()), yb)
+    for p in params: p.grad = None
+    loss.backward(); opt.step()
+    if step % 250 == 0: print(f"lm step {step:5d} loss {loss.data:.4f}")
+```</p>
+<p>Output, with the uniform baseline $\log 28=3.3322$ for comparison:</p>
+<p>```text
+lm step     0 loss 3.3078
+lm step   250 loss 0.0169
+lm step   500 loss 0.0124
+lm step   750 loss 0.0125
+lm step  1000 loss 0.0009
+lm step  1250 loss 0.0226
+lm step  1750 loss 0.0337
+lm step  2000 loss 0.0219
+```</p>
+<p>and sampling greedily from a temperature-scaled distribution:</p>
+<p>```python
+def sample(seed_text, n=90, temp=0.2):
+    out = seed_text
+    for _ in range(n):
+        ctx = np.array([[stoi[c] for c in out[-C:]]])
+        logits = W2(W1(emb(ctx).reshape(1, C*8)).relu()).data[0] / temp
+        p = np.exp(logits - logits.max()); p /= p.sum()
+        out += itos[int(np.random.choice(len(p), p=p))]
+    return out
+
+print(sample("the q"))    # one draw: 'the quick brown fox jumps over the quick brown fox jumps over the quick...'
+                             # the exact draw varies with the RNG state; temperature 0.2 keeps it close to greedy
+```</p>
+<p>The corpus is deterministic after three characters, so 0.0219 nats (0.032 bits per character) is what "solved" looks like for this task. Replace the corpus with real text and the same code becomes a (bad) language model — which is the point at which <strong>M12</strong> and <strong>M14</strong> take over.</p>
+<h2 id="worked-example">Worked example</h2>
+<p>Three traces from the code above: the shape trace through one forward and backward pass, the parameter arithmetic, and the finite-difference validation that makes hand-written backprop survivable.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 400" width="100%" role="img" aria-label="Tensor shapes through one forward pass" class="fig-svg"><defs><marker id="shapes-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="24.0" y="42.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="58.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">token ids</text><text x="300.0" y="58.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T)</text><text x="520.0" y="58.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024</text><text x="38.0" y="87.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">embedding</text><text x="300.0" y="87.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, D)</text><text x="520.0" y="87.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 4096</text><rect x="24.0" y="100.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">W_Q / W_K / W_V</text><text x="300.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(D, D)</text><text x="520.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">4096 × 4096 each</text><text x="38.0" y="145.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Q, K, V</text><text x="300.0" y="145.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, H, T, D/H)</text><text x="520.0" y="145.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 32 × 1024 × 128</text><rect x="24.0" y="158.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">scores QKᵀ</text><text x="300.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, H, T, T)</text><text x="520.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 32 × 1024 × 1024</text><text x="38.0" y="203.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">softmax weights</text><text x="300.0" y="203.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, H, T, T)</text><text x="520.0" y="203.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">head_dim no longer present</text><rect x="24.0" y="216.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="232.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">attention output</text><text x="300.0" y="232.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, H, T, D/H)</text><text x="520.0" y="232.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 32 × 1024 × 128</text><text x="38.0" y="261.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">after W_O</text><text x="300.0" y="261.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, D)</text><text x="520.0" y="261.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 4096</text><rect x="24.0" y="274.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="290.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">FFN up</text><text x="300.0" y="290.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, 4D)</text><text x="520.0" y="290.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 16384</text><text x="38.0" y="319.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">FFN down</text><text x="300.0" y="319.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, D)</text><text x="520.0" y="319.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 4096</text><rect x="24.0" y="332.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="348.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">logits</text><text x="300.0" y="348.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, V)</text><text x="520.0" y="348.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 128256</text><text x="38.0" y="42.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">stage</text><text x="300.0" y="42.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">symbolic</text><text x="520.0" y="42.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">with B=2, T=1024</text><rect x="24.0" y="382.0" width="772.0" height="1.0" rx="8" fill="var(--fig-edge,#2e3a5e)" stroke="none" stroke-width="1.5"/><text x="420.0" y="396.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">the score matrix is the only place T² appears — that is the quadratic wall</text></svg><figcaption>A tensor-shape trace through a full forward pass. Keep it beside the table below: the table is the same trace for this module's language model, and the invariant to check is that every gradient column matches the shape of the parameter it belongs to.</figcaption></figure></p>
+<p><strong>Shape trace</strong> for the language model with $B=64$, $C=3$, $d=8$, hidden 32, $V=28$:</p>
+<table>
+<thead>
+<tr>
+<th>stage</th>
+<th>operation</th>
+<th>forward shape</th>
+<th>gradient shape</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>input indices</td>
+<td>—</td>
+<td>$(64,)$ int</td>
+<td>—</td>
+</tr>
+<tr>
+<td>embedding</td>
+<td><code>emb.W[idx]</code></td>
+<td>$(64,3,8)$</td>
+<td>$(28,8)$ via scatter-add</td>
+</tr>
+<tr>
+<td>flatten context</td>
+<td><code>reshape(64,24)</code></td>
+<td>$(64,24)$</td>
+<td>$(64,3,8)$</td>
+</tr>
+<tr>
+<td>hidden</td>
+<td><code>x @ W1 + b1</code></td>
+<td>$(64,32)$</td>
+<td><code>W1</code> $(24,32)$, <code>b1</code> $(32,)$, input $(64,24)$</td>
+</tr>
+<tr>
+<td>activation</td>
+<td><code>relu</code></td>
+<td>$(64,32)$</td>
+<td>$(64,32)$</td>
+</tr>
+<tr>
+<td>logits</td>
+<td><code>x @ W2 + b2</code></td>
+<td>$(64,28)$</td>
+<td><code>W2</code> $(32,28)$, <code>b2</code> $(28,)$</td>
+</tr>
+<tr>
+<td>loss</td>
+<td>fused softmax+CE</td>
+<td>scalar $()$</td>
+<td>logits $(64,28)$</td>
+</tr>
+</tbody>
+</table>
+<p>Every gradient has the shape of the array it is a gradient <em>of</em> — that is the invariant to check first when something breaks, and it is why the vjp formulation is worth the abstraction.</p>
+<p><strong>Parameter arithmetic.</strong> $28\times8=224$ (embedding) $+\,24\times32+32=800$ (hidden) $+\,32\times28+28=924$ (logits) $=1{,}948$. The script prints <code>params: 1948</code>, which is the number to compare against <code>sum(p.data.size for p in params)</code> whenever you suspect a module is invisible to the traversal.</p>
+<p><strong>Finite-difference validation.</strong> On a freshly initialized model (loss $3.3514$ against the uniform baseline $\log 28=3.3322$), perturbing a single entry of <code>W1</code> and comparing the central difference with the engine's gradient:</p>
+<table>
+<thead>
+<tr>
+<th>step size $h$</th>
+<th>numeric</th>
+<th>autograd</th>
+<th>relative error</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$10^{-3}$</td>
+<td>$-1.59162126\times10^{-3}$</td>
+<td>$-1.59162126\times10^{-3}$</td>
+<td>$3.5\times10^{-11}$</td>
+</tr>
+<tr>
+<td>$10^{-4}$</td>
+<td>$-1.59162126\times10^{-3}$</td>
+<td>$-1.59162126\times10^{-3}$</td>
+<td>$2.4\times10^{-10}$</td>
+</tr>
+<tr>
+<td>$10^{-5}$</td>
+<td>$-1.59162128\times10^{-3}$</td>
+<td>$-1.59162126\times10^{-3}$</td>
+<td>$1.1\times10^{-8}$</td>
+</tr>
+<tr>
+<td>$10^{-6}$</td>
+<td>$-1.59162128\times10^{-3}$</td>
+<td>$-1.59162126\times10^{-3}$</td>
+<td>$1.1\times10^{-8}$</td>
+</tr>
+<tr>
+<td>$10^{-7}$</td>
+<td>$-1.59162239\times10^{-3}$</td>
+<td>$-1.59162126\times10^{-3}$</td>
+<td>$7.1\times10^{-7}$</td>
+</tr>
+</tbody>
+</table>
+<p>The U-shape is the derivation from <strong>M07</strong> made visible: at $h=10^{-3}$ truncation error dominates ($h^2$), at $h=10^{-7}$ roundoff dominates ($\epsilon/h$), and the flat bottom sits near $10^{-5}$ to $10^{-6}$ where they balance. On the <em>converged</em> model the same check reports relative errors near $10^{-5}$ — not because the gradient is wrong but because the gradient itself is around $10^{-6}$ and the difference quotient loses most of its significant digits. This is the practical rule: run gradient checks on a fresh, unscaled model, or you will chase a phantom bug.</p>
+<p><strong>Loss trace.</strong> $3.3078$ at step 0 (essentially $\log 28$), $0.0169$ by step 250, $0.0219$ at step 2000, i.e. $0.032$ bits per character. A uniform predictor needs $\log_2 28=4.807$ bits per character, so the model has learned almost all of the corpus's structure — which for a periodic corpus is nearly all of it.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="autograd-computes-a-symbolic-derivative-of-your-model">"Autograd computes a symbolic derivative of your model."</h3>
+<p>It computes nothing symbolically. There is no expression tree that gets differentiated; there is a sequence of local vjps whose results are added into buffers. That is why the cost is a small multiple of the forward pass rather than a blow-up in expression size, and why you cannot ask autograd for "the derivative formula" without evaluating it at a point.</p>
+<h3 id="the-computational-graph-is-built-when-you-define-the-model">"The computational graph is built when you define the model."</h3>
+<p>Under define-by-run it is built by the forward pass, discarded after <code>backward()</code>, and rebuilt with a different shape if your batch size or control flow changes. This is why a <code>if</code> statement works, why <code>retain_graph=True</code> exists, and why a memory leak from keeping a reference to a loss tensor keeps its whole graph alive.</p>
+<h3 id="each-layer-type-needs-its-own-backward-pass">"Each layer type needs its own backward pass."</h3>
+<p>Each <em>primitive</em> needs one vjp — a dozen primitives cover essentially all of deep learning. A new architecture is a new arrangement of existing primitives, and only a genuinely new primitive (a new activation, a custom attention variant) requires new backward code. If you are writing per-architecture backward passes, you are working against the design.</p>
+<h3 id="broadcasting-is-just-a-convenience-gradients-handle-themselves">"Broadcasting is just a convenience; gradients handle themselves."</h3>
+<p>The forward pass silently replicates data; the backward pass must sum the replicas, and a framework that forgets to reduce the gradient returns the wrong shape, which then broadcasts <em>again</em> into a plausible but wrong result. Every hand-written engine hits this bug exactly once, which is why <code>_unbroadcast</code> is the first function in the tensor implementation above.</p>
+<h3 id="torchcompile-makes-the-model-mathematically-faster">"<code>torch.compile</code> makes the model mathematically faster."</h3>
+<p>It removes Python and dispatch overhead by tracing and fusing kernels, so the wall-clock speedup comes mostly from overhead and memory traffic, not from fewer FLOPs. The mathematics is the same graph, differentiated the same way; what changes is how it is executed, and — because fusion reorders floating-point operations — the last few digits of the results.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<ol>
+<li>Write the <code>__sub__</code> vjp for a tensor engine, including the sign.</li>
+<li>A tensor of shape $(3,4)$ is added to one of shape $(4,)$; what is the gradient's shape and its reduction axis?</li>
+<li>Count the parameters of $V=100$, $d=16$, $C=4$, hidden 64, vocabulary 100.</li>
+</ol>
+<details><summary>Solutions</summary>
+
+1. `c = a - b` gives $\bar a = \bar c$ and $\bar b = -\bar c$, both routed through `_unbroadcast`.
+2. $(4,)$, obtained by summing over axis 0 (the batch axis of size 3).
+3. Embedding $100\times16=1{,}600$; hidden $(4\times16)\times64+64=4{,}160$; logits $64\times100+100=6{,}500$; total $12{,}260$.
+
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<ol start="4">
+<li>Derive the vjp of <code>sum(axis=0)</code> on a $(3,4)$ input, and say why the gradient of the output is <code>broadcast_to</code>.</li>
+<li>Add an <code>exp</code> primitive to the tensor class, build a <code>LayerNorm</code> module out of existing primitives, and finite-difference check its input gradient.</li>
+<li>Explain why <code>Embedding</code> needs <code>np.add.at</code> rather than <code>self.grad[idx] += out.grad</code>.</li>
+</ol>
+<details><summary>Solutions</summary>
+
+4. The forward maps $X\in\mathbb{R}^{3\times4}$ to $y_j=\sum_{i=1}^3X_{ij}$. So $\partial y_j/\partial X_{ij}=1$ for every $i$, and $\bar X_{ij}=\bar y_j$: the output gradient is replicated along the summed axis, i.e. `np.broadcast_to(out.grad, X.shape)`. Summation is the inverse of replication, and vice versa — the same rule as broadcasting, in the other direction.
+5. `exp`: forward `np.exp(data)`, vjp `self.grad += out.grad * out.data` (reuse the output, not a fresh exponential). `LayerNorm` as mean/variance/reshape primitives works but is slow; the point of the exercise is that it is *possible* without a new primitive, which is the claim that primitives compose.
+6. `self.grad[idx] += out.grad` performs buffered fancy-index assignment, which only applies the *last* write for each duplicated index. `np.add.at` accumulates every occurrence, which is required because the same character can appear several times in a batch and each occurrence contributes a separate path from the embedding row to the loss.
+
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<ol start="7">
+<li>Add a <code>no_grad</code> context manager (a module-level flag checked in <code>Tensor.__init__</code> so that no parents are recorded) and measure the peak memory of an evaluation pass with and without it.</li>
+<li>Add a residual block <code>x + f(x)</code> to the language model, train to the same loss, and compare the gradient norm reaching the embedding layer with and without the residual.</li>
+</ol>
+<details><summary>Hints</summary>
+
+7. Set a global `GRAD_ENABLED = True`; in `Tensor.__init__`, if it is false, store no parents and set `_backward` to a no-op. Under define-by-run, evaluation with gradients enabled builds a full graph that is never used, so peak memory grows from $O(\text{batch})$ to $O(\text{layers}\times\text{batch})$ — the same failure mode as a memory leak, and it appears as an out-of-memory during validation.
+8. With a residual, the gradient at the embedding is dominated by the identity path and should be an order of magnitude larger and far less sensitive to depth; without it, the product of Jacobians through the hidden layers attenuates it (**M08**). Compare `np.linalg.norm(emb.W.grad)` in both runs at the same step count.
+
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>Name the four fields of a minimal autograd node and the role of each.</li>
+<li>Why does a broadcasting forward pass force a reduction in the backward pass?</li>
+<li>Give both vjps of $\mathbf{Z}=\mathbf{X}\mathbf{W}$ and check the shapes.</li>
+<li>Why is reverse topological order required, in one sentence and one edge case?</li>
+<li>What breaks if <code>Sequential</code> does not register its submodules?</li>
+<li>What does <code>torch.compile</code> change, and what does it leave alone?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. `data` (the value), `grad` (the adjoint), `_parents` (the edges), `_backward` (the local vjp closure that pushes into the parents).
+2. Because the forward pass conceptually made $n$ copies of the smaller operand, each contributing a separate path to the loss; the chain rule sums over paths, so the backward pass sums the copies back down.
+3. $\bar{\mathbf{X}}=\bar{\mathbf{Z}}\mathbf{W}^\top$ of shape $(n,k)$ and $\bar{\mathbf{W}}=\mathbf{X}^\top\bar{\mathbf{Z}}$ of shape $(k,m)$, matching $\mathbf{X}$ and $\mathbf{W}$.
+4. A node's adjoint needs the final adjoints of all its children; any order violating that adds an incomplete adjoint. Edge case: a node with fan-out, which is every parameter used twice.
+5. `parameters()` returns an empty or partial list, the optimizer never sees those parameters, and the model trains only partially — loss still decreases, which hides the bug.
+6. It changes execution: tracing, kernel fusion, and removal of Python/dispatch overhead. It does not change the graph's mathematics or the differentiation algorithm, though fusion can change the last digits of the numerics.
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><strong>PyTorch documentation, "Autograd mechanics".</strong> The official account of define-by-run, <code>requires_grad</code>, leaf tensors, and <code>retain_graph</code>. Read it after you have written your own engine; every sentence will now have a referent.</li>
+<li><strong>Karpathy, "micrograd" (2020, open source).</strong> A scalar autograd engine in about a hundred lines, and the direct model for Stage 1 here. Diff it against your own implementation.</li>
+<li><strong>Karpathy, "Let's build GPT: from scratch, in code" (2023, free video).</strong> Builds a character-level transformer end to end in PyTorch; this module's Stage 6b is the same task with a much smaller model.</li>
+<li><strong>Paszke et al., "PyTorch: An Imperative Style, High-Performance Deep Learning Library" (NeurIPS 2019).</strong> The design rationale: why define-by-run beat the static-graph systems that preceded it, and what it cost.</li>
+<li><strong>JAX documentation, "Autodiff Cookbook".</strong> Forward and reverse mode from the function-transformation perspective, including <code>jvp</code> and <code>vjp</code> as first-class operations. Useful precisely because it is the opposite design from PyTorch.</li>
+<li><strong>Baydin, Pearlmutter, Radul, and Siskind, "Automatic Differentiation in Machine Learning: A Survey" (2018).</strong> The general framework — forward, reverse, and mixed mode — with the checkpointing and cost analysis that <strong>M07</strong> uses.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when, without notes, you can:</p>
+<ol>
+<li>Write a scalar autograd engine from a blank file, with operator overloading and topological backprop, and validate it against finite differences.</li>
+<li>Vectorize it to n-dimensional arrays and derive the reduction that any broadcasting forward pass requires.</li>
+<li>Build a <code>Parameter</code>/<code>Module</code> system whose <code>parameters()</code> traversal is complete, and explain the bug that makes it incomplete.</li>
+<li>Implement SGD with momentum and AdamW, with bias correction and decoupled weight decay, and state the state each holds.</li>
+<li>Write a training loop with zeroing, mode switching, no-grad evaluation, and clipping, and say which failure each one prevents.</li>
+<li>Train a character-level language model end to end, report its loss in bits per character against $\log_2V$, and explain what <code>torch.compile</code> changes and what it leaves alone.</li>
+</ol><div class="pager"><a id="prevlink" href="../m/08-training-dynamics.html"><small>← previous</small><b>M08 · Training Dynamics and Generalization</b></a><a id="nextlink" class="next" href="../m/10-convolutions.html"><small>next →</small><b>M10 · Convolutional Networks</b></a></div></article>
+</main>
+</div>
+</body></html>

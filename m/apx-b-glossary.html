@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>B · Glossary — From Zero to Frontier</title>
+<meta name="description" content="One crisp sentence per term, for the words papers use without defining.">
+<meta property="og:title" content="B · Glossary — From Zero to Frontier">
+<meta property="og:description" content="One crisp sentence per term, for the words papers use without defining.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Appendices / B</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="B">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">B</span><span class="pill d2">difficulty 2/5</span><span class="pill">0 weeks</span><span class="pill">prereqs: none</span><span class="pill">4,804 words</span></div><h1>Glossary</h1><p class="tagline">One crisp sentence per term, for the words papers use without defining.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="how-to-use-this-glossary">How to use this glossary</h2>
+<p>Terms are alphabetical within each letter. Where a term has a contested meaning, the entry says so in the second clause — a definition that hides a dispute is worse than no definition. Module ids in parentheses point to the derivation.</p>
+<h2 id="a">A</h2>
+<p><strong>Ablation</strong> — An experiment that removes one component of a method and re-measures, in order to attribute the result to that component. (M27)
+<strong>Absmax quantization</strong> — A symmetric quantization scheme whose scale is set by the largest absolute value in the tensor or group, so that no code is wasted on unreachable values but a single outlier compresses everything else. (M26)
+<strong>Activation checkpointing</strong> — Recomputing a layer's forward activations during the backward pass instead of storing them, trading roughly 30 percent more compute for a large reduction in memory. (M26)
+<strong>Activation function</strong> — The pointwise nonlinearity applied after an affine layer; without one, a stack of layers collapses to a single matrix. (M06)
+<strong>AdaGrad</strong> — An optimiser that divides each coordinate's learning rate by the square root of its accumulated squared gradient, which is monotone and therefore stalls on long runs. (M04)
+<strong>Adam</strong> — An optimiser combining momentum on the gradient (first moment) with a per-coordinate normalisation by the square root of the second moment, plus bias correction for the zero initialisation. (M04)
+<strong>AdamW</strong> — Adam with decoupled weight decay, applied as a direct shrinkage of the parameters rather than folded into the gradient, which is what makes the decay strength independent of the adaptive denominator. (M04)
+<strong>Affine quantization</strong> — Quantization with both a scale and a zero-point, mapping a float range onto integer codes so that zero is exactly representable. (M26)
+<strong>Agent</strong> — A system that interleaves model calls with actions in an environment, using observations to choose the next action, rather than producing a single response. (M22)
+<strong>Alignment tax</strong> — The claimed capability cost of making a model helpful and harmless; genuinely contested, because most reported taxes are not measured at matched tuning budgets. (M18, M29)
+<strong>Attention head</strong> — One of several parallel attention problems in a layer, each with its own query, key, and value projections into a lower-dimensional subspace. (M12)
+<strong>Attention mask</strong> — An additive matrix of $0$ and $-\infty$ applied to attention logits before the softmax, used to forbid positions (causal) or pad tokens. (M12)
+<strong>Attention sink</strong> — The empirical phenomenon in which the first few tokens absorb a large share of attention regardless of content, which is why they cannot be dropped from a cache without breaking the model. (M19)
+<strong>Autoregressive</strong> — Generating a sequence one token at a time, conditioning each token on all previous ones. (M15)
+<strong>Auxiliary loss</strong> — An extra term added to the training objective to shape intermediate behaviour, such as a mixture-of-experts load-balancing penalty. (M13)</p>
+<h2 id="b">B</h2>
+<p><strong>Backbone</strong> — The shared trunk of a model that task-specific heads are attached to. (M13)
+<strong>Base model</strong> — A pretrained model before instruction tuning or preference tuning; it continues text rather than following instructions. (M17)
+<strong>Batch normalisation</strong> — Standardising each feature across the batch, then rescaling with learned parameters; batch-dependent, and therefore rarely used in sequence models. (M08)
+<strong>Beam search</strong> — A decoding procedure that keeps the $k$ highest-scoring partial sequences at each step, which maximises likelihood and often produces bland text. (M15)
+<strong>Bfloat16</strong> — A 16-bit float with the exponent range of fp32 and 8 mantissa bits; the default for training because range matters more than precision there. (M26)
+<strong>Bits per byte (BPB)</strong> — A loss normalisation that divides by the bytes of underlying text, making it comparable across tokenizers with different vocabularies. (M14)
+<strong>Bradley–Terry model</strong> — A model of pairwise comparison in which the probability that one item beats another is a sigmoid of their score difference; the assumption behind reward models. (M18)
+<strong>Byte-pair encoding (BPE)</strong> — A tokenizer that starts from bytes and repeatedly merges the most frequent adjacent pair, growing the vocabulary one token per merge. (M14)</p>
+<h2 id="c">C</h2>
+<p><strong>Calibration</strong> — The agreement between a model's stated confidence and its empirical accuracy; a model that says 80 percent and is right 80 percent of the time is calibrated. (M20)
+<strong>Capacity factor</strong> — In a mixture-of-experts layer, the multiplier on the average number of tokens per expert that sets each expert's buffer size; tokens beyond capacity are dropped. (M13)
+<strong>Catastrophic forgetting</strong> — The loss of previously acquired capability when a model is trained on a new distribution, the standard risk of narrow fine-tuning. (M17)
+<strong>Causal mask</strong> — The lower-triangular mask that prevents position $i$ from attending to positions $j>i$, enforcing that generation cannot see the future. (M12)
+<strong>Chain-of-thought</strong> — Prompting or training a model to produce intermediate reasoning steps before its answer, which improves accuracy on multi-step tasks. (M18)
+<strong>Chinchilla scaling</strong> — The compute-optimal allocation result that parameters and training tokens should grow together, at roughly 20 tokens per parameter. (M16)
+<strong>Compute-optimal</strong> — The $(N, D)$ pair that minimises loss for a fixed training compute budget. (M16)
+<strong>Continuous batching</strong> — A serving scheduler that admits and retires requests at every decoding step rather than in fixed batches, keeping the GPU busy at variable sequence lengths. (M19)
+<strong>Contrastive learning</strong> — Training by pulling representations of related pairs together and unrelated pairs apart, as in infoNCE. (M23)
+<strong>Convolution</strong> — A linear operation applying the same learned kernel at every spatial position, giving translation equivariance and parameter sharing. (M10)
+<strong>Cosine schedule</strong> — A learning-rate schedule that anneals from peak to near-zero along a half cosine, the default for language-model pretraining. (M04)
+<strong>Cross-entropy</strong> — The expected surprisal of the true distribution when coded with the model's predicted distribution; the standard classification and language-modelling loss. (M03)</p>
+<h2 id="d">D</h2>
+<p><strong>Data contamination</strong> — The presence of benchmark items, or text from which they are reconstructible, in a model's pretraining data, which inflates the score without improving capability. (M20)
+<strong>Data parallelism</strong> — Replicating the model on every device and splitting each batch across them, synchronising gradients with an all-reduce. (M25)
+<strong>Dataset mixture</strong> — The weighting of domains or sources in a training corpus, which measurably changes downstream capability at fixed compute. (M16)
+<strong>Decoding</strong> — The procedure that turns a model's next-token distribution into a sequence: greedy, sampled, beam, or speculative. (M15)
+<strong>Deep double descent</strong> — The empirical curve in which test error rises, peaks at the interpolation threshold, and then falls again as model size increases. (M08)
+<strong>Diffusion model</strong> — A generative model trained to reverse a gradual noising process, learning to predict the noise added at each step. (M23)
+<strong>Distillation</strong> — Training a smaller model to match a larger model's output distribution rather than hard labels, transferring soft information as well as answers. (M26)
+<strong>DPO (Direct Preference Optimisation)</strong> — A preference-learning objective that reparameterises the RLHF reward in terms of the policy's log-ratio to a reference model, removing the separate reward model and the RL loop. (M18)
+<strong>Dropout</strong> — Randomly zeroing activations during training as a regulariser, which approximates an ensemble over subnetworks. (M08)</p>
+<h2 id="e">E</h2>
+<p><strong>Early stopping</strong> — Halting training when validation loss stops improving, which is both a regulariser and a practical necessity. (M08)
+<strong>Effective batch size</strong> — The total number of examples contributing to one parameter update, including gradient accumulation, as distinct from the micro-batch that fits in memory. (M25)
+<strong>ELBO (evidence lower bound)</strong> — A tractable lower bound on the log-likelihood, equal to a reconstruction term minus a KL term to the prior; the objective behind VAEs and a template for variational methods. (M23)
+<strong>Embedding</strong> — A learned lookup table mapping discrete tokens to dense vectors, usually the largest single parameter block in a small language model. (M14)
+<strong>Emergent abilities</strong> — Capabilities that appear to appear abruptly as scale increases; the discontinuity is contested, since it depends on whether the metric is all-or-nothing or continuous. (M16, M29)
+<strong>Empirical risk minimisation</strong> — Choosing parameters that minimise average loss on the training sample, as a proxy for minimising expected loss. (M05)
+<strong>Entropy</strong> — The expected surprisal of a distribution, $-\sum_i p_i\log p_i$; for a language model's next-token distribution, a measure of its uncertainty. (M03)
+<strong>Epoch</strong> — One full pass over the training set. (M05)
+<strong>Evaluation harness</strong> — The code that runs a model over a benchmark, extracts answers, scores them, and reports uncertainty; differences between harnesses move scores by more than most methods. (M20)
+<strong>Expert</strong> — One of several independently parameterised feed-forward sub-networks in a mixture-of-experts layer, of which each token activates only a few. (M13)
+<strong>Exponential moving average (EMA)</strong> — A running average of parameters or gradients with geometric weights, used for momentum, adaptive optimisers, and evaluation-time weight averaging. (M04)</p>
+<h2 id="f">F</h2>
+<p><strong>Feature (SAE feature)</strong> — A direction in activation space that a sparse autoencoder identifies as firing on a coherent concept; interpretable and often causally effective, but not thereby a mechanism. (M21)
+<strong>Few-shot prompting</strong> — Providing a handful of worked examples in the prompt, which lets a model perform a task without weight updates. (M15)
+<strong>Fine-tuning</strong> — Further training of a pretrained model on a narrower dataset or objective. (M17)
+<strong>FlashAttention</strong> — A fused, exact attention kernel that tiles the computation to keep intermediate matrices in on-chip memory, removing the quadratic memory traffic rather than the quadratic FLOPs. (M24)
+<strong>Floating point format</strong> — The exponent and mantissa split that determines range and precision; fp32 trains, bf16 is the training default, fp16 needs loss scaling, and fp8 is emerging for inference and some training. (M26)
+<strong>Forward pass</strong> — The computation from inputs to loss that stores the activations the backward pass will need. (M07)
+<strong>FSDP (fully sharded data parallel)</strong> — A data-parallel scheme that shards parameters, gradients, and optimiser state across devices and gathers each layer only when needed. (M25)</p>
+<h2 id="g">G</h2>
+<p><strong>GAE (generalised advantage estimation)</strong> — An exponentially weighted sum of temporal-difference residuals, interpolating between low-variance/biased and high-variance/unbiased advantage estimates via $\lambda$. (M18)
+<strong>Generalisation gap</strong> — The difference between training and held-out loss or error; the quantity every capacity and regularisation decision ultimately targets. (M08)
+<strong>Global batch size</strong> — The number of examples across all devices in one optimiser step. (M25)
+<strong>GQA (grouped-query attention)</strong> — An attention variant in which several query heads share one key/value head, shrinking the KV cache by the group factor at a small quality cost. (M13)
+<strong>Gradient accumulation</strong> — Summing gradients over several micro-batches before stepping, which emulates a larger batch without the memory. (M26)
+<strong>Gradient clipping</strong> — Rescaling the gradient when its norm exceeds a threshold, preserving direction; the standard defence against loss spikes in language-model training. (M04)
+<strong>Grokking</strong> — Delayed generalisation, in which a model's training loss reaches zero long before its validation accuracy jumps, sometimes thousands of steps later; a small-scale phenomenon whose relevance at scale is contested. (M08)
+<strong>GRPO (Group Relative Policy Optimisation)</strong> — An RL objective that computes each sampled response's advantage relative to the mean and standard deviation of its own group, eliminating the critic model. (M18)</p>
+<h2 id="h">H</h2>
+<p><strong>Hallucination</strong> — Fluent output that is not grounded in fact or in the provided context; a behaviour of the training objective, which rewards plausibility rather than truth. (M22)
+<strong>He initialisation</strong> — Weight initialisation with variance $2/n_{\text{in}}$, which preserves activation variance through ReLU layers by compensating for the half of units that are zeroed. (M08)
+<strong>Head</strong> — A task-specific output module attached to a backbone, such as a classification head or a language-modelling head. (M13)
+<strong>Held-out set</strong> — Data never used for any fitting decision, including hyperparameter selection, so that its error estimates something other than memorisation. (M20)
+<strong>Hidden state</strong> — A layer's internal activation, or in a recurrent network the summary of the sequence seen so far. (M11)
+<strong>Hyperparameter</strong> — A training setting not learned by gradient descent: learning rate, batch size, schedule, rank, and so on. (M04)</p>
+<h2 id="i">I</h2>
+<p><strong>Implicit reward</strong> — In DPO, the quantity $\beta\log(\pi_\theta/\pi_{\text{ref}})$, which plays the role a reward model plays in RLHF. (M18)
+<strong>In-context learning</strong> — A model's ability to perform a task from examples in its prompt without any weight update. (M15)
+<strong>Induction head</strong> — An attention circuit that completes a pattern by attending to the token that followed a previous occurrence of the current token; the mechanism behind much of in-context copying. (M21)
+<strong>Inference</strong> — Running a trained model to produce outputs, in contrast to training. (M19)
+<strong>infoNCE</strong> — The contrastive objective that treats identifying the true paired sample among $K$ candidates as a $K$-way classification problem. (M23)
+<strong>Instruction tuning</strong> — Supervised fine-tuning on instruction-response pairs, which converts a text continuer into a responder. (M17)
+<strong>Interpolation threshold</strong> — The model capacity at which training error first reaches zero, the peak of the double-descent curve. (M08)
+<strong>Interpretability</strong> — The project of explaining a model's computation in human terms; the field distinguishes description (what correlates) from mechanism (what computes). (M21)
+<strong>IPO (Identity Preference Optimisation)</strong> — A preference objective that replaces DPO's log-sigmoid with a squared loss on the log-ratio difference, motivated by avoiding overfitting to deterministic preferences. (M18)</p>
+<h2 id="j">J</h2>
+<p><strong>Jensen's inequality</strong> — For a concave function $f$, $\mathbb{E}[f(X)] \le f(\mathbb{E}[X])$; applied to $\log$ it produces the ELBO by moving the expectation inside. (M23)</p>
+<h2 id="k">K</h2>
+<p><strong>Kernel (convolution)</strong> — The small learned weight tensor slid across an input, whose size defines the receptive field contributed per layer. (M10)
+<strong>Kernel (CUDA)</strong> — A function executed in parallel across many GPU threads; the unit of GPU work and the unit of GPU optimisation. (M24)
+<strong>Key-value cache (KV cache)</strong> — The stored keys and values of all previous tokens in a layer, which makes autoregressive decoding $O(T)$ per token instead of $O(T^2)$, at a memory cost linear in context and batch. (M19)
+<strong>KL divergence</strong> — A non-negative, asymmetric measure of how much one distribution costs relative to another; zero only when they are identical. (M03)
+<strong>KL penalty</strong> — A term pricing the divergence of the policy from a reference model, which is what keeps RL fine-tuning from drifting into degenerate high-reward text. (M18)
+<strong>Knowledge distillation</strong> — see distillation. (M26)</p>
+<h2 id="l">L</h2>
+<p><strong>Label smoothing</strong> — Training against a softened target distribution instead of a one-hot vector, which limits overconfidence and improves calibration. (M05)
+<strong>Latency</strong> — The wall-clock time to complete a request, reported as a distribution (p50, p95, p99) rather than a mean. (M19)
+<strong>Layer normalisation</strong> — Standardising each example across its own feature dimension, then rescaling; batch-independent, which is why it dominates in transformers. (M08)
+<strong>Learning rate</strong> — The step size multiplier on the gradient; the single most consequential hyperparameter. (M04)
+<strong>Likelihood</strong> — The probability the model assigns to the observed data under its parameters; maximising it is equivalent to minimising cross-entropy. (M03)
+<strong>Linear attention</strong> — Any attention variant that avoids materialising the $T\times T$ score matrix, reducing cost from quadratic to linear in sequence length at some cost in expressiveness. (M13)
+<strong>Linear probing</strong> — Training a linear classifier on frozen representations to test what information they carry. (M21)
+<strong>Logit</strong> — The pre-softmax output of the final linear layer; a real number whose <em>differences</em> determine probability, not its magnitude. (M15)
+<strong>Logit lens</strong> — Reading intermediate residual-stream states by projecting them through the final unembedding, which shows how the model's prediction evolves across layers. (M21)
+<strong>LoRA (low-rank adaptation)</strong> — Freezing the base weights and learning a low-rank update $\mathbf{B}\mathbf{A}$ per adapted matrix, cutting trainable parameters by two to three orders of magnitude. (M17)
+<strong>Loss landscape</strong> — The geometry of the loss as a function of parameters; its curvature, saddle points, and sharp versus flat minima shape what optimisation can do. (M04)</p>
+<h2 id="m">M</h2>
+<p><strong>Masked language modelling</strong> — Pretraining by predicting randomly masked tokens from their context, the objective behind BERT-style encoders. (M15)
+<strong>Master weights</strong> — The fp32 copy of parameters kept alongside the bf16 training copy so that small updates are not lost to rounding. (M26)
+<strong>Matrix multiplication</strong> — The dominant operation in every layer, and the reason GPUs and tensor cores exist; its cost is $2mnk$ FLOPs for an $m\times n$ by $n\times k$ product. (M24)
+<strong>Max-pooling</strong> — Downsampling by taking the maximum over each window, giving local translation invariance and a smaller feature map. (M10)
+<strong>MFU (model FLOPs utilisation)</strong> — Achieved model FLOPs per second divided by the hardware's peak; well-tuned large-scale training typically lands between 30 and 50 percent. (M25)
+<strong>Micro-batch</strong> — The subset of a global batch that fits in memory for one forward-backward pass. (M25)
+<strong>Mixed precision</strong> — Training with low-precision compute and higher-precision accumulation, which is faster and, with loss scaling, numerically safe. (M26)
+<strong>MLP (multilayer perceptron)</strong> — A stack of affine layers with nonlinearities; in a transformer, the feed-forward block that holds roughly two thirds of the parameters. (M06)
+<strong>Model collapse</strong> — Degradation of a model's output distribution after repeated training on its own generated data, most clearly demonstrated in toy recursions and contested in its severity at scale. (M29)
+<strong>MoE (mixture of experts)</strong> — A layer that routes each token to a subset of expert sub-networks, raising parameter count without raising per-token compute. (M13)
+<strong>Momentum</strong> — An exponential moving average of past gradients added to the update, which damps oscillation along steep directions and accelerates along consistent ones. (M04)
+<strong>Multi-head attention</strong> — Running several attention computations in parallel subspaces and concatenating their outputs, letting one layer attend to different relations at once. (M12)
+<strong>Multi-query attention</strong> — Attention in which all query heads share a single key/value head, the most aggressive KV-cache reduction before going cacheless. (M13)</p>
+<h2 id="n">N</h2>
+<p><strong>NaN loss</strong> — A non-finite loss, almost always from a division by zero, an overflow in the softmax, or a learning rate that has destabilised the second moment. (M04)
+<strong>Negative sample</strong> — A non-matching item used to train a contrastive or retrieval objective. (M23)
+<strong>Next-token prediction</strong> — The pretraining objective: maximise the log-probability of each token given its prefix. (M15)
+<strong>NF4 (4-bit normal float)</strong> — A 4-bit quantization grid whose levels are quantiles of a normal distribution, so that the codes are equally likely under normally distributed weights. (M26)
+<strong>NLL (negative log-likelihood)</strong> — $-\log p(y\mid x)$; the loss whose average over a corpus, exponentiated, is perplexity. (M03)
+<strong>Noise schedule</strong> — In diffusion, the sequence of variance levels $\beta_t$ that governs how quickly signal is destroyed. (M23)
+<strong>Nucleus sampling (top-p)</strong> — Sampling from the smallest set of tokens whose cumulative probability exceeds $p$, which adapts the candidate count to the distribution's shape. (M15)</p>
+<h2 id="o">O</h2>
+<p><strong>Off-policy</strong> — Learning from data generated by a policy other than the one being optimised, which is what makes experience replay and PPO's multiple epochs possible. (M18)
+<strong>One-hot vector</strong> — A vector with a single $1$ and zeros elsewhere, the hard target against which cross-entropy is computed. (M03)
+<strong>Online RLHF</strong> — Preference learning in which the policy is updated and re-sampled during training, as opposed to offline DPO on a fixed pair set. (M18)
+<strong>Optimiser</strong> — The update rule that turns gradients into parameter changes: SGD, momentum, AdaGrad, RMSProp, Adam, AdamW. (M04)
+<strong>Out-of-distribution (OOD)</strong> — Inputs drawn from a different distribution than the training data, where performance and calibration both degrade. (M20)
+<strong>Overfitting</strong> — Fitting the training sample's noise rather than its structure, visible as a widening gap between training and held-out loss. (M08)</p>
+<h2 id="p">P</h2>
+<p><strong>Padding</strong> — Filling variable-length sequences to a common length so they can be batched; the reason naive batching wastes compute and paged caches exist. (M19)
+<strong>Paged attention</strong> — Storing the KV cache in fixed-size blocks indexed by a per-sequence block table, like virtual-memory paging, so that memory is allocated on demand and fragmentation disappears. (M19)
+<strong>PEFT (parameter-efficient fine-tuning)</strong> — Adapting a frozen pretrained model with a small number of new or selected parameters: LoRA, adapters, prefixes. (M17)
+<strong>Perplexity</strong> — The exponentiated mean negative log-likelihood, interpretable as the effective number of equally likely choices the model is deciding among. (M03)
+<strong>Pipeline parallelism</strong> — Splitting a model's layers across devices so that different micro-batches occupy different stages simultaneously, at the cost of a pipeline bubble. (M25)
+<strong>Policy</strong> — In RL, the distribution over actions given states; for a language model, the distribution over the next token. (M18)
+<strong>Policy gradient</strong> — The family of methods that estimate the gradient of expected reward with respect to policy parameters via the log-derivative trick. (M18)
+<strong>Positional encoding</strong> — Any mechanism that injects order into a permutation-invariant attention operation: sinusoidal, learned, relative, RoPE, ALiBi. (M12)
+<strong>Post-training</strong> — Everything after pretraining: supervised fine-tuning, preference tuning, reasoning RL. (M17)
+<strong>PPO (proximal policy optimisation)</strong> — A policy-gradient method whose clipped surrogate limits how far the new policy may move from the old one per update. (M18)
+<strong>Precision</strong> — The number of bits used to represent a number; distinct from range, and the distinction is why bf16 beats fp16 for training. (M26)
+<strong>Prefill</strong> — The compute-bound phase that processes the prompt and populates the KV cache, as distinct from the bandwidth-bound decode phase. (M19)
+<strong>Pretraining</strong> — Training on a large general corpus with a self-supervised objective, which produces the base model's capabilities. (M16)
+<strong>Projection</strong> — A learned linear map, usually between representation spaces, as in the $Q$, $K$, $V$, and output projections of attention. (M12)
+<strong>Prompt</strong> — The conditioning text supplied to a model at inference time. (M15)</p>
+<h2 id="q">Q</h2>
+<p><strong>QLoRA</strong> — LoRA on top of a base model whose frozen weights are stored in 4-bit NF4 with per-block scaling, which puts fine-tuning of large models on a single GPU. (M17)
+<strong>Quantization</strong> — Representing weights or activations with fewer bits, trading numerical precision for memory and bandwidth. (M26)
+<strong>Quantization-aware training (QAT)</strong> — Simulating quantization during training so that weights adapt to the rounding they will experience at inference. (M26)
+<strong>Query, key, value</strong> — The three projections in attention: the query asks what is relevant, the key advertises what each position offers, and the value is what gets aggregated. (M12)</p>
+<h2 id="r">R</h2>
+<p><strong>RAG (retrieval-augmented generation)</strong> — Supplying retrieved documents in the context so that generation can condition on external knowledge rather than parameters alone. (M22)
+<strong>Reference model</strong> — The frozen copy of the policy against which KL divergence is measured in RLHF and DPO. (M18)
+<strong>Rejection sampling</strong> — Generating several candidates and keeping the best-scoring one, a simple alternative to policy optimisation for preference tuning. (M18)
+<strong>Reranking</strong> — Re-scoring retrieved candidates with a stronger model before generation, which usually improves relevance more cheaply than a better retriever. (M22)
+<strong>Residual connection</strong> — Adding a sublayer's input to its output, which gives gradients an identity path and makes deep stacks trainable. (M08)
+<strong>Residual stream</strong> — The running sum that residual connections accumulate, viewed as a shared communication bus that every sublayer reads from and writes to. (M21)
+<strong>Reward hacking</strong> — Optimising a proxy reward in ways the designer did not intend, the central failure mode of RLHF and of any learned objective. (M18)
+<strong>Reward model</strong> — A model trained on preference pairs to score responses, used as the objective in RLHF. (M18)
+<strong>RLHF (reinforcement learning from human feedback)</strong> — Training a policy against a learned reward model with a KL constraint to a reference model. (M18)
+<strong>RLVR (RL with verifiable rewards)</strong> — Reinforcement learning in which the reward is computed by a checker, such as a unit test or an exact-answer comparison, rather than learned from preferences. (M18)
+<strong>RMSNorm</strong> — Normalisation by the root mean square of the features, without mean subtraction or bias; cheaper than layer norm and empirically equivalent in transformers. (M08)
+<strong>RMSProp</strong> — An optimiser that normalises each coordinate by a decaying average of squared gradients, fixing AdaGrad's monotone decay. (M04)
+<strong>Rollout</strong> — A sequence of actions and observations sampled from a policy, used as training data in RL. (M18)
+<strong>RoPE (rotary position embedding)</strong> — Encoding position by rotating query and key vectors in 2-D subspaces at position-dependent angles, so that dot products depend only on relative offset. (M12)</p>
+<h2 id="s">S</h2>
+<p><strong>SAE (sparse autoencoder)</strong> — A model trained to reconstruct activations from a sparse, overcomplete dictionary of learned directions, used to extract candidate features. (M21)
+<strong>Sampling</strong> — Drawing the next token from the model's distribution rather than taking the argmax; the source of both diversity and error. (M15)
+<strong>Scaling law</strong> — An empirical power-law relationship between loss and parameters, data, or compute within a model family. (M16)
+<strong>Scheduler</strong> — The function mapping training step to learning rate: warmup, cosine, linear, inverse-square-root, WSD. (M04)
+<strong>Self-attention</strong> — Attention in which queries, keys, and values all come from the same sequence, letting positions interact. (M12)
+<strong>Self-consistency</strong> — Sampling several reasoning paths and taking a majority vote over final answers, which improves accuracy at proportional cost. (M18)
+<strong>SFT (supervised fine-tuning)</strong> — Training on demonstrations of desired behaviour, the step that turns a base model into an assistant. (M17)
+<strong>SGD (stochastic gradient descent)</strong> — Updating parameters with the gradient of a minibatch, the simplest optimiser and still the baseline. (M04)
+<strong>Softmax</strong> — The normalised exponential map from logits to probabilities; shift-invariant, so the max can be subtracted for stability. (M03)
+<strong>Speculative decoding</strong> — Drafting several tokens with a small model and verifying them in one pass of the large model, which accelerates decoding when the draft is often right. (M19)
+<strong>Superposition</strong> — Representing more features than there are dimensions by using nearly-orthogonal directions and tolerating interference; the geometric reason individual neurons are not features. (M21)
+<strong>Synthetic data</strong> — Training data generated by a model rather than collected from the world; useful, and contested in its long-run effect on distributional diversity. (M29)
+<strong>System prompt</strong> — Instructions supplied outside the user's turn, which shape behaviour across an entire conversation. (M22)</p>
+<h2 id="t">T</h2>
+<p><strong>Temperature</strong> — A divisor on logits before the softmax: below 1 sharpens the distribution, above 1 flattens it, and 0 is equivalent to greedy. (M15)
+<strong>Tensor parallelism</strong> — Splitting individual weight matrices across devices, so each device computes a slice of every layer and the partial results are combined with all-reduce. (M25)
+<strong>Throughput</strong> — Work completed per unit time, usually tokens per second across all concurrent requests; distinct from latency, and the two trade against each other. (M19)
+<strong>Token</strong> — The unit of text a tokenizer produces: a subword, a byte, or a character, depending on the scheme. (M14)
+<strong>Tokenizer</strong> — The deterministic function mapping text to token ids and back, learned from a corpus and fixed at pretraining time. (M14)
+<strong>Top-k sampling</strong> — Restricting sampling to the $k$ most probable tokens, a fixed-width truncation that ignores the distribution's shape. (M15)
+<strong>Top-p sampling</strong> — see nucleus sampling. (M15)
+<strong>TPOT (time per output token)</strong> — The mean inter-token latency during decode, excluding the prefill; what a streaming user perceives as speed. (M19)
+<strong>Transformer</strong> — The architecture built from alternating attention and feed-forward sublayers with residual connections and normalisation, which processes a whole sequence in parallel. (M12)
+<strong>TTFT (time to first token)</strong> — The latency from request arrival to the first streamed token, dominated by queueing plus prefill. (M19)</p>
+<h2 id="u">U</h2>
+<p><strong>Uncertainty</strong> — In evaluation, the interval around a measured quantity; in modelling, the distinction between aleatoric (data) and epistemic (knowledge) uncertainty. (M20)
+<strong>Underfitting</strong> — Failing to fit the training data, usually from insufficient capacity or excessive regularisation. (M08)
+<strong>Unembedding matrix</strong> — The final linear map from the residual stream to vocabulary logits, often tied to the input embedding. (M12)</p>
+<h2 id="v">V</h2>
+<p><strong>VAE (variational autoencoder)</strong> — A generative model trained by maximising the ELBO, with an encoder approximating the posterior and a decoder reconstructing. (M23)
+<strong>Validation set</strong> — Data used for model selection and early stopping, distinct from the test set, which must be touched once. (M20)
+<strong>Value head</strong> — The critic's output estimating expected return from a state, used to compute advantages in PPO. (M18)
+<strong>Vanishing gradient</strong> — Exponential decay of gradients through depth or time, caused by repeated multiplication by Jacobians with spectral radius below one. (M11)
+<strong>ViT (vision transformer)</strong> — An image model that splits the image into patches and treats them as a token sequence for a standard transformer. (M23)
+<strong>Vocabulary size</strong> — The number of distinct tokens a tokenizer can emit, trading sequence length against embedding parameters. (M14)</p>
+<h2 id="w">W</h2>
+<p><strong>Warmup</strong> — A short initial ramp of the learning rate, which stabilises adaptive optimisers whose second-moment estimates are unreliable in the first steps. (M04)
+<strong>Weight decay</strong> — An L2-like penalty shrinking parameters toward zero; decoupled from the gradient in AdamW. (M04)
+<strong>Weight tying</strong> — Sharing parameters between the input embedding and the output unembedding, which saves $Vd$ parameters and usually improves small models. (M14)</p>
+<h2 id="x">X</h2>
+<p><strong>Xavier initialisation</strong> — Weight initialisation with variance $2/(n_{\text{in}}+n_{\text{out}})$, which preserves activation variance for symmetric activations such as tanh. (M08)</p>
+<h2 id="y">Y</h2>
+<p><strong>YaRN</strong> — A context-extension method that combines NTK-aware frequency scaling of RoPE with an attention-temperature correction, extending usable context with limited fine-tuning. (M13)</p>
+<h2 id="z">Z</h2>
+<p><strong>ZeRO (zero redundancy optimiser)</strong> — A family of sharding schemes that partition optimiser state, then gradients, then parameters across data-parallel devices so that no state is replicated. (M25)
+<strong>Zero-point</strong> — The integer code that represents exactly zero in affine quantization, which is what allows asymmetric ranges to be represented without waste. (M26)
+<strong>Zero-shot</strong> — Performing a task with no examples in the prompt, relying only on instructions and pretraining. (M15)</p><div class="pager"><a id="prevlink" href="../m/apx-a-formula-sheet.html"><small>← previous</small><b>A · Formula Sheet</b></a><a id="nextlink" class="next" href="../m/apx-c-paper-list.html"><small>next →</small><b>C · Annotated Paper List</b></a></div></article>
+</main>
+</div>
+</body></html>

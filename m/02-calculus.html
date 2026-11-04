@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M02 · Multivariable and Matrix Calculus — From Zero to Frontier</title>
+<meta name="description" content="Derivatives as local linear maps, and the vector-Jacobian product that makes backprop one sweep.">
+<meta property="og:title" content="M02 · Multivariable and Matrix Calculus — From Zero to Frontier">
+<meta property="og:description" content="Derivatives as local linear maps, and the vector-Jacobian product that makes backprop one sweep.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Mathematical foundations / M02</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M02">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M02</span><span class="pill d3">difficulty 3/5</span><span class="pill">2 weeks</span><span class="pill">prereqs: M01</span><span class="pill">6,716 words</span></div><h1>Multivariable and Matrix Calculus</h1><p class="tagline">Derivatives as local linear maps, and the vector-Jacobian product that makes backprop one sweep.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>Reverse-mode autodiff is one idea executed well, and the idea is a vector-Jacobian product. If you cannot write the Jacobian of a softmax, derive why the cross-entropy gradient collapses to $(\mathbf{p}-\mathbf{y})$, or say which layout convention PyTorch uses, then backpropagation (<strong>M07</strong>) is code you recite rather than a computation you can debug. The failure mode is specific and expensive: a transposed matrix still runs, produces a finite loss, and trains nothing — or trains slowly in a direction that is not the steepest. This module removes the ambiguity: every identity below is derived, not quoted, and the layout convention is fixed once, in writing.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<ol>
+<li>Differentiate $x^3$, $\log x$, $e^{x}$, $\frac{1}{x}$.</li>
+<li>Apply the chain rule to $f(x) = \sin(x^2)$.</li>
+<li>For $\mathbf{x} \in \mathbb{R}^{3}$, what is the shape of $\partial f/\partial\mathbf{x}$ when $f$ is a scalar?</li>
+<li>Express $\operatorname{tr}(\mathbf{A}\mathbf{B})$ in terms of entries.</li>
+<li>For $f(\mathbf{x}) = \mathbf{x}^\top\mathbf{A}\mathbf{x}$ with $\mathbf{A}$ symmetric, what is $\nabla f$?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $3x^2$, $1/x$, $e^x$, $-1/x^2$.
+2. $f'(x) = \cos(x^2)\cdot 2x$.
+3. A vector of shape $(3,)$ — one partial derivative per input.
+4. $\operatorname{tr}(\mathbf{A}\mathbf{B}) = \sum_i\sum_j \mathbf{A}_{ij}\mathbf{B}_{ji}$.
+5. $2\mathbf{A}\mathbf{x}$ — but only because $\mathbf{A}$ is symmetric; the general answer is $(\mathbf{A}+\mathbf{A}^\top)\mathbf{x}$, derived as identity 2 below.
+
+If you miss 1 or 2, revise single-variable differentiation. If you miss 5, do not worry — it is the first thing derived. Everything else here assumes **M01**: matrices as maps, rank, the SVD, and orthogonal invariance of the Frobenius norm.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<ul>
+<li>Explain why the derivative is the best local linear approximation, and use that definition to derive the multivariable chain rule.</li>
+<li>Write the Jacobian of any composition, and say what shape it has and which convention that shape encodes.</li>
+<li>Derive $\nabla_{\mathbf{x}}(\mathbf{x}^\top\mathbf{A}\mathbf{x})$, $\nabla_{\mathbf{A}}\operatorname{tr}(\mathbf{A}\mathbf{B})$, $\nabla_{\mathbf{A}}\det\mathbf{A}$, and $\nabla_{\mathbf{A}}\mathbf{A}^{-1}$ from the definitions, with indices.</li>
+<li>Distinguish VJPs from JVPs and say which one reverse-mode autodiff computes and why that is the cheap direction for a scalar loss.</li>
+<li>Derive the softmax Jacobian $\operatorname{diag}(\mathbf{s})-\mathbf{s}\mathbf{s}^\top$ and the softmax-cross-entropy gradient $\mathbf{p}-\mathbf{y}$ in full.</li>
+<li>Implement a numerically stable softmax and log-sum-exp, and explain what breaks without the shift.</li>
+<li>Compute the second-order Taylor expansion of a loss and state the per-step cost of Newton's method in named quantities.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\partial f/\partial x$, $\nabla_{\mathbf{x}} f$</td>
+<td>partial derivative; gradient (same shape as $\mathbf{x}$)</td>
+</tr>
+<tr>
+<td>$\mathbf{J} = \partial\mathbf{y}/\partial\mathbf{x}$</td>
+<td>Jacobian, $\mathbf{J}_{ij} = \partial y_i/\partial x_j$</td>
+</tr>
+<tr>
+<td>$\mathbf{H} = \nabla^2 f$</td>
+<td>Hessian, $\mathbf{H}_{ij} = \partial^2 f/\partial x_i\partial x_j$</td>
+</tr>
+<tr>
+<td>$\mathbf{v}^\top\mathbf{J}$</td>
+<td>vector-Jacobian product (VJP)</td>
+</tr>
+<tr>
+<td>$\mathbf{J}\mathbf{v}$</td>
+<td>Jacobian-vector product (JVP)</td>
+</tr>
+<tr>
+<td>$\operatorname{tr}$, $\det$</td>
+<td>trace, determinant</td>
+</tr>
+<tr>
+<td>$\odot$</td>
+<td>elementwise (Hadamard) product</td>
+</tr>
+<tr>
+<td>$\operatorname{diag}(\mathbf{s})$</td>
+<td>diagonal matrix with $\mathbf{s}$ on the diagonal</td>
+</tr>
+<tr>
+<td>$\mathbf{1}$</td>
+<td>vector of ones of the implied length</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Layout convention, fixed here and used throughout.</strong> Convention: <strong>denominator layout</strong> — the derivative of a scalar with respect to a tensor has the <em>same shape as that tensor</em>. So $f:\mathbb{R}^n\to\mathbb{R}$ has $\nabla_{\mathbf{x}} f \in \mathbb{R}^{n}$ (a column), and a Jacobian $\partial\mathbf{y}/\partial\mathbf{x}$ with $\mathbf{y}\in\mathbb{R}^m$, $\mathbf{x}\in\mathbb{R}^n$ has shape $m\times n$, entry $(i,j) = \partial y_i/\partial x_j$. This is what PyTorch, JAX, and TensorFlow do: <code>torch.autograd.grad</code> returns a tensor shaped like the input. The competing <em>numerator layout</em> puts $\partial y_i/\partial x_j$ at row $j$, column $i$ — the transpose. Both are self-consistent; mixing them is what produces silent bugs.</p>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="the-derivative-as-the-best-local-linear-approximation">The derivative as the best local linear approximation</h3>
+<p><strong>(1) Intuition.</strong> The derivative is not "the slope" so much as "the linear map that matches the function best near a point". Zoom in far enough on any smooth curve and it becomes its tangent line; the derivative is the slope of that line, and the second derivative measures how fast the line stops fitting.</p>
+<p><strong>(2) Formal.</strong> For $f:\mathbb{R}^n\to\mathbb{R}$, the gradient $\nabla f(\mathbf{x})$ is the unique vector such that</p>
+<p>$$f(\mathbf{x}+\boldsymbol{\delta}) = f(\mathbf{x}) + \nabla f(\mathbf{x})^\top\boldsymbol{\delta} + o(\|\boldsymbol{\delta}\|).$$</p>
+<p>For $\mathbf{f}:\mathbb{R}^n\to\mathbb{R}^m$ replace the vector by the matrix $\mathbf{J}(\mathbf{x}) \in \mathbb{R}^{m\times n}$: $\mathbf{f}(\mathbf{x}+\boldsymbol{\delta}) = \mathbf{f}(\mathbf{x}) + \mathbf{J}\boldsymbol{\delta} + o(\|\boldsymbol{\delta}\|)$.</p>
+<p><strong>(3) Why.</strong> This definition is the one that generalises. It makes the chain rule automatic — compose the linear approximations and their matrices multiply — and it explains why a derivative is a matrix <em>of the right shape</em>, not a scalar you paste onto a picture.</p>
+<p><strong>(4) Micro-example.</strong> $f(x,y) = x^2y$ at $(2,3)$. $f = 12$, $\nabla f = (2xy, x^2) = (12,4)$. Move by $\boldsymbol{\delta} = (0.01,-0.02)$: the linear model predicts $12 + 12(0.01) + 4(-0.02) = 12.04$; the truth is $2.01^2\cdot 2.98 = 12.0398$. The $0.0002$ gap is the $o(\|\boldsymbol{\delta}\|)$ term.</p>
+<h3 id="the-chain-rule-in-three-forms">The chain rule in three forms</h3>
+<p><strong>(1) Intuition.</strong> Rates multiply along a path: if $z$ changes twice as fast as $y$ and $y$ three times as fast as $x$, then $z$ changes six times as fast as $x$. With many inputs and outputs, "multiply" means "multiply the matrices".</p>
+<p><strong>(2) Formal.</strong> Scalar: $\frac{d}{dx}f(g(x)) = f'(g(x))g'(x)$. Multivariable: $\frac{\partial f}{\partial x_j} = \sum_k \frac{\partial f}{\partial y_k}\frac{\partial y_k}{\partial x_j}$, a sum over every path. Vector: with $\mathbf{y} = \mathbf{g}(\mathbf{x})$ and $\mathbf{z} = \mathbf{f}(\mathbf{y})$,</p>
+<p>$$\mathbf{J}_{\mathbf{z}\mathbf{x}} = \mathbf{J}_{\mathbf{z}\mathbf{y}}\,\mathbf{J}_{\mathbf{y}\mathbf{x}} .$$</p>
+<p><strong>(3) Why.</strong> The matrix form is the composition of linear maps from <strong>M01</strong>, and the <em>order</em> matters: $\mathbf{J}_{\mathbf{z}\mathbf{y}}\mathbf{J}_{\mathbf{y}\mathbf{x}}$ is not $\mathbf{J}_{\mathbf{y}\mathbf{x}}\mathbf{J}_{\mathbf{z}\mathbf{y}}$. The sum over $k$ in the multivariable form is the "sum over paths" — which becomes the sum over uses in a computational graph (<strong>M07</strong>).</p>
+<p><strong>(4) Micro-example.</strong> $u = x+y$, $v = xy$, $f = u^2 v$ at $(x,y) = (1,2)$: $u = 3$, $v = 2$, $f = 18$. $\partial f/\partial u = 2uv = 12$, $\partial f/\partial v = u^2 = 9$; $\partial u/\partial x = 1$, $\partial v/\partial x = y = 2$. Then $\partial f/\partial x = 12\cdot1 + 9\cdot2 = 30$. Check directly: $f = (x+y)^2xy = x^3y + 2x^2y^2+xy^3$, so $\partial_x f = 3x^2y+4xy^2+y^3 = 6+16+8 = 30$.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 324" width="100%" role="img" aria-label="The chain rule as a walk along a graph" class="fig-svg"><defs><marker id="chains-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><circle cx="120.0" cy="176.0" r="40.0" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="2"/><text x="120.0" y="182.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="17" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="700">x</text><circle cx="420.0" cy="176.0" r="40.0" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="2"/><text x="420.0" y="182.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="17" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="700">u</text><circle cx="720.0" cy="176.0" r="40.0" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2"/><text x="720.0" y="182.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="17" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="700">y</text><line x1="162.0" y1="176.0" x2="378.0" y2="176.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="2" stroke-linecap="round" marker-end="url(#chains-ah)"/><text x="270.0" y="162.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="650">du/dx = 2x</text><text x="270.0" y="200.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">u = f(x)</text><line x1="462.0" y1="176.0" x2="678.0" y2="176.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="2" stroke-linecap="round" marker-end="url(#chains-ah)"/><text x="570.0" y="162.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="650">dy/du = 3u²</text><text x="570.0" y="200.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">y = g(u)</text><text x="24.0" y="84.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-green,#34d399)" text-anchor="start" font-weight="700">forward</text><text x="120.0" y="118.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="600">x = 2</text><text x="420.0" y="118.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="600">u = 4</text><text x="720.0" y="118.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="600">y = 64</text><text x="24.0" y="250.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="700">backward</text><text x="120.0" y="268.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="600">dy/dx = 48</text><text x="420.0" y="268.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="600">dy/du = 12</text><text x="720.0" y="268.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="600">dy/dy = 1</text><text x="420.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">dy/dx = (dy/du)(du/dx) = 12 × 4 = 48</text></svg><figcaption>Each edge carries its local derivative, and the chain rule multiplies along every path from input to output; count the paths for the diamond-shaped node and you have counted the terms in the sum.</figcaption></figure></p>
+<h3 id="jacobian-hessian-gradient-directional-derivative">Jacobian, Hessian, gradient, directional derivative</h3>
+<p><strong>(1) Intuition.</strong> The gradient says which way is uphill and how steeply; the directional derivative asks how steeply along <em>your</em> chosen direction; the Jacobian is the gradient's generalisation to vector outputs; the Hessian is the derivative of the gradient, so it describes the curvature — the bowl, the valley, or the saddle.</p>
+<p><strong>(2) Formal.</strong> $\mathbf{J}_{ij} = \partial y_i/\partial x_j$; $\mathbf{H}_{ij} = \partial^2 f/\partial x_i\partial x_j$ (symmetric when the mixed partials are continuous); the directional derivative along a unit $\mathbf{u}$ is $D_{\mathbf{u}}f = \nabla f^\top\mathbf{u}$, and it is largest when $\mathbf{u} \parallel \nabla f$.</p>
+<p><strong>(3) Why.</strong> The Hessian is what distinguishes the pathologies of <strong>M04</strong>: a valley is a Hessian with eigenvalues spanning orders of magnitude, a saddle is one with mixed signs, a plateau is one with all eigenvalues near zero. And $\mathbf{H}$ symmetric is not a technicality — it is what lets you diagonalise it and read off independent curvatures per direction (<strong>M01</strong>).</p>
+<p><strong>(4) Micro-example.</strong> $f(x_1,x_2) = x_1^2 + 3x_1x_2 + x_2^2$. Then $\nabla f = (2x_1+3x_2, 3x_1+2x_2)$ and $\mathbf{H} = \begin{pmatrix}2&3\\3&2\end{pmatrix}$ with eigenvalues $5$ and $-1$: a saddle at the origin, curving up along $(1,1)$ and down along $(1,-1)$.</p>
+<h3 id="total-versus-partial-derivative">Total versus partial derivative</h3>
+<p><strong>(1) Intuition.</strong> A partial derivative holds the other variables fixed; a total derivative allows everything that depends on $x$ to move when $x$ moves.</p>
+<p><strong>(2) Formal.</strong> If $f = f(x, y(x))$ then $\frac{df}{dx} = \frac{\partial f}{\partial x} + \frac{\partial f}{\partial y}\frac{dy}{dx}$. The symbol $\partial f/\partial x$ means "vary the first slot only".</p>
+<p><strong>(3) Why.</strong> In a computational graph the same parameter appears in many places (a weight used in every timestep of an RNN, a bias added at several layers). Downstream, gradients <em>accumulate</em> over all uses — that accumulation is the total derivative, and forgetting it is the classic "why is my gradient exactly the last term" bug.</p>
+<p><strong>(4) Micro-example.</strong> $f(x,y) = x^2y$ with $y = 3x$. Partial: $\partial f/\partial x = 2xy = 6x^2$. Total: $\frac{df}{dx} = 2xy + x^2\cdot3 = 6x^2+3x^2 = 9x^2$, which matches differentiating $f = 3x^3$. Using the partial where the total was meant underestimates the derivative by a third.</p>
+<h3 id="the-layout-convention-problem">The layout convention problem</h3>
+<p><strong>(1) Intuition.</strong> A derivative with respect to a matrix is a four-index object; flattening it into a matrix forces a choice of which index goes where, and the two natural choices are transposes of each other.</p>
+<p><strong>(2) Formal.</strong> Numerator layout puts $\partial y_i/\partial x_j$ at position $(j,i)$; denominator layout puts it at $(i,j)$. Consequently, for $f(\mathbf{x}) = \mathbf{x}^\top\mathbf{A}\mathbf{x}$:</p>
+<p>$$\text{denominator layout: } \nabla_{\mathbf{x}}f = (\mathbf{A}+\mathbf{A}^\top)\mathbf{x} \in \mathbb{R}^{n}, \qquad \text{numerator layout: } \nabla_{\mathbf{x}}f = \mathbf{x}^\top(\mathbf{A}+\mathbf{A}^\top) \in \mathbb{R}^{1\times n}.$$</p>
+<p><strong>(3) Why.</strong> Every formula in the literature is stated in one of the two, and half the published tables are in numerator layout. Mixing them transposes a matrix in a product, which turns a descent direction into something that may increase the loss. The concrete damage, with numbers, is in the worked example.</p>
+<p><strong>(4) Micro-example.</strong> $\mathbf{A} = \begin{pmatrix}1&2\\0&3\end{pmatrix}$ (not symmetric), $\mathbf{x} = (1,2)$. The correct denominator-layout gradient is $(\mathbf{A}+\mathbf{A}^\top)\mathbf{x} = \begin{pmatrix}2&2\\2&6\end{pmatrix}\begin{pmatrix}1\\2\end{pmatrix} = \begin{pmatrix}6\\14\end{pmatrix}$. The common wrong answer $2\mathbf{A}\mathbf{x} = (10,12)$ assumes symmetry. A step of $0.1$ from $(1,2)$ goes to $(0.4,0.6)$ with the correct gradient and to $(0.0,0.8)$ with the wrong one — different direction, still descending, silently worse.</p>
+<h3 id="vjps-and-jvps-the-two-primitive-operations">VJPs and JVPs: the two primitive operations</h3>
+<p><strong>(1) Intuition.</strong> You almost never need the whole Jacobian. You need its product with a vector, from the left or from the right, and each product can be computed without ever forming the matrix.</p>
+<p><strong>(2) Formal.</strong> For $\mathbf{f}:\mathbb{R}^n\to\mathbb{R}^m$ with Jacobian $\mathbf{J}\in\mathbb{R}^{m\times n}$: a <strong>JVP</strong> is $\mathbf{J}\mathbf{v}$ with $\mathbf{v}\in\mathbb{R}^n$, cost $O(\text{cost of } \mathbf{f})$; a <strong>VJP</strong> is $\mathbf{u}^\top\mathbf{J}$ with $\mathbf{u}\in\mathbb{R}^m$, also $O(\text{cost of } \mathbf{f})$. A VJP is the transpose action: $\mathbf{u}^\top\mathbf{J}$ has the shape of $\mathbf{x}$, which is why it is the gradient for a scalar loss.</p>
+<p><strong>(3) Why.</strong> A scalar loss has $m=1$, so its Jacobian is a single row and the whole gradient is one VJP — one backward sweep costs about the same as one forward pass, independent of the number of parameters. Forming $\mathbf{J}$ explicitly would cost $n$ sweeps. JVPs are the cheap primitive when $m$ is huge and $n$ small (forward mode), which is why forward-mode autodiff suits functions with few inputs and many outputs.</p>
+<p><strong>(4) Micro-example.</strong> $\mathbf{f}(\mathbf{x}) = \mathbf{W}\mathbf{x}$ with $\mathbf{W}\in\mathbb{R}^{3\times2}$: $\mathbf{J} = \mathbf{W}$. A JVP is $\mathbf{W}\mathbf{v}$ (cheap). A VJP with $\mathbf{u}\in\mathbb{R}^3$ is $\mathbf{u}^\top\mathbf{W}$, which is $\mathbf{W}^\top\mathbf{u}$ as a column, in $\mathbb{R}^2$ — the transposed matrix appearing exactly once, which is where "backprop is the forward pass with transposed weights" comes from.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 392" width="100%" role="img" aria-label="Forward values and backward gradients on the same graph" class="fig-svg"><defs><marker id="cg-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="76.0" y="66.0" width="88.0" height="52.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.6"/><text x="120.0" y="86.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">x</text><text x="120.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">= 2</text><text x="120.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">18</text><rect x="256.0" y="66.0" width="88.0" height="52.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.6"/><text x="300.0" y="86.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">w</text><text x="300.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">= 3</text><text x="300.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">12</text><rect x="166.0" y="180.0" width="88.0" height="52.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.6"/><text x="210.0" y="200.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">u = wx</text><text x="210.0" y="216.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">= 6</text><text x="210.0" y="230.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">6</text><rect x="386.0" y="66.0" width="88.0" height="52.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6"/><text x="430.0" y="86.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">b</text><text x="430.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">= 2</text><text x="430.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">6</text><rect x="376.0" y="180.0" width="88.0" height="52.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.6"/><text x="420.0" y="200.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">z = u+b</text><text x="420.0" y="216.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">= 8</text><text x="420.0" y="230.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">6</text><rect x="566.0" y="66.0" width="88.0" height="52.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.6"/><text x="610.0" y="86.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">y</text><text x="610.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">= 5</text><text x="610.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">−6</text><rect x="566.0" y="180.0" width="88.0" height="52.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.6"/><text x="610.0" y="200.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">d = z−y</text><text x="610.0" y="216.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">= 3</text><text x="610.0" y="230.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">6</text><rect x="566.0" y="290.0" width="88.0" height="52.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.6"/><text x="610.0" y="310.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">L = d²</text><text x="610.0" y="326.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">= 9</text><text x="610.0" y="340.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">1</text><line x1="120.0" y1="118.0" x2="210.0" y2="180.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#cg-ah)"/><line x1="300.0" y1="118.0" x2="210.0" y2="180.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#cg-ah)"/><line x1="210.0" y1="232.0" x2="420.0" y2="206.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#cg-ah)"/><line x1="430.0" y1="118.0" x2="420.0" y2="180.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#cg-ah)"/><line x1="420.0" y1="232.0" x2="610.0" y2="206.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#cg-ah)"/><line x1="610.0" y1="118.0" x2="610.0" y2="180.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#cg-ah)"/><line x1="610.0" y1="232.0" x2="610.0" y2="290.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#cg-ah)"/><text x="210.0" y="152.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">∂u/∂x = w = 3</text><text x="210.0" y="118.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">∂u/∂w = x = 2</text><text x="330.0" y="196.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">∂z/∂u = 1</text><text x="516.0" y="196.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">∂d/∂z = 1</text><text x="516.0" y="240.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">∂d/∂y = −1</text><text x="700.0" y="264.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">∂L/∂d = 2d = 6</text><rect x="700.0" y="40.0" width="146.0" height="44.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.2"/><text x="773.0" y="58.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">forward value</text><text x="773.0" y="74.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">also: backward grad</text><text x="30.0" y="370.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">each node needs only its own local derivative; the chain rule stitches them together</text></svg><figcaption>Forward values flow left to right and backward gradients right to left on the same graph; notice that each backward edge multiplies by the local derivative already computed in the forward pass, which is what makes the backward sweep cost the same order as the forward one.</figcaption></figure></p>
+<h3 id="the-softmax-jacobian">The softmax Jacobian</h3>
+<p><strong>(1) Intuition.</strong> Softmax couples every output to every input: raising one logit lowers all the others, because the outputs must sum to one. So its Jacobian is not diagonal — it has a dense negative block everywhere.</p>
+<p><strong>(2) Formal.</strong> With $\mathbf{s} = \operatorname{softmax}(\mathbf{z})$, $s_i = e^{z_i}/\sum_j e^{z_j}$,</p>
+<p>$$\mathbf{J} = \frac{\partial\mathbf{s}}{\partial\mathbf{z}} = \operatorname{diag}(\mathbf{s}) - \mathbf{s}\mathbf{s}^\top .$$</p>
+<p><strong>(3) Why.</strong> The rank-$(n-1)$ structure is forced: the Jacobian's rows sum to zero, because $\sum_i s_i = 1$ identically, so a direction that adds a constant to every logit changes nothing. That single fact explains why softmax gradients live on a hyperplane, why temperature is a scale on $\mathbf{z}$ rather than a bias, and why logit offsets are unidentifiable.</p>
+<p><strong>(4) Micro-example.</strong> $\mathbf{z} = (2,1,0)$: $\mathbf{s} = (0.6652, 0.2447, 0.0900)$. Then $\mathbf{J}_{11} = s_1 - s_1^2 = 0.2227$ and $\mathbf{J}_{12} = -s_1s_2 = -0.1628$, giving the matrix whose rows each sum to zero:</p>
+<p>$$\mathbf{J} = \begin{pmatrix}0.2227 & -0.1628 & -0.0599\\ -0.1628 & 0.1848 & -0.0220\\ -0.0599 & -0.0220 & 0.0819\end{pmatrix}.$$</p>
+<h3 id="log-sum-exp-and-numerical-stability">Log-sum-exp and numerical stability</h3>
+<p><strong>(1) Intuition.</strong> Softmax divides one huge number by another huge number. In float32, $e^{100}$ is already infinite and $e^{-100}$ underflows to zero, so the naive formula returns <code>nan</code> or <code>0/0</code> on perfectly ordinary logits.</p>
+<p><strong>(2) Formal.</strong> $\operatorname{logsumexp}(\mathbf{z}) = \log\sum_j e^{z_j} = m + \log\sum_j e^{z_j - m}$ where $m = \max_j z_j$. This is an identity, not an approximation, and the right-hand form has every exponent $\le 0$, so no overflow and the largest term is exactly 1.</p>
+<p><strong>(3) Why.</strong> Training a language model means logits in the tens with a 50,000-way softmax; the naive form overflows in fp16 above about 11 and in fp32 above about 88. Every framework computes cross-entropy in log-space for this reason, and it costs one max-reduction.</p>
+<p><strong>(4) Micro-example.</strong> $\mathbf{z} = (1000, 1001, 1002)$: <code>np.exp(1000)</code> is <code>inf</code>. With the shift, $m = 1002$, the shifted vector is $(-2,-1,0)$, and $\operatorname{logsumexp} = 1002 + \log(1 + e^{-1} + e^{-2}) = 1002 + 0.4076 = 1002.4076$. The true value is finite; only the shift recovers it.</p>
+<h3 id="elementwise-nonlinearities-have-diagonal-jacobians">Elementwise nonlinearities have diagonal Jacobians</h3>
+<p><strong>(1) Intuition.</strong> A nonlinearity applied elementwise never mixes coordinates, so each output depends on exactly one input — its Jacobian is diagonal.</p>
+<p><strong>(2) Formal.</strong> If $y_i = \phi(x_i)$ then $\partial y_i/\partial x_j = \phi'(x_i)\delta_{ij}$, so $\mathbf{J} = \operatorname{diag}(\phi'(\mathbf{x}))$ and the VJP is an elementwise product $\mathbf{u}\odot\phi'(\mathbf{x})$.</p>
+<p><strong>(3) Why.</strong> This is why activations are cheap in the backward pass (one multiply per element, no matmul) and why their <em>derivative's shape</em> matters: a function with $\phi' \le 1$ everywhere (sigmoid, tanh) attenuates gradients at every layer, which is the mechanism behind vanishing gradients (<strong>M07</strong>). ReLU's derivative is 0 or 1 — no attenuation, but a dead zone.</p>
+<p><strong>(4) Micro-example.</strong> $\phi = \tanh$ at $\mathbf{x} = (0, 1)$: $\phi(\mathbf{x}) = (0, 0.7616)$, $\phi'(\mathbf{x}) = (1, 0.4199)$. A VJP with $\mathbf{u} = (2,2)$ gives $(2, 0.8397)$: the saturated unit passes less than half the gradient the linear one does.</p>
+<p><div class="viz" data-viz="v-activation"></div><div class="vizcap">Switch between sigmoid, tanh, ReLU, GELU, and SiLU with $f$ and $f'$ on a shared axis. Watch where each derivative saturates or vanishes, and compare how much of the input range passes gradient undiminished.</div></p>
+<h3 id="taylor-series-and-the-cost-of-second-order-methods">Taylor series and the cost of second-order methods</h3>
+<p><strong>(1) Intuition.</strong> Taylor expansion says every smooth function is locally a polynomial: a plane (first order), then a bowl (second order), then corrections.</p>
+<p><strong>(2) Formal.</strong> For $f:\mathbb{R}^n\to\mathbb{R}$,</p>
+<p>$$f(\mathbf{x}+\boldsymbol{\delta}) = f(\mathbf{x}) + \nabla f^\top\boldsymbol{\delta} + \frac12\boldsymbol{\delta}^\top\mathbf{H}\boldsymbol{\delta} + o(\|\boldsymbol{\delta}\|^2).$$</p>
+<p>Minimising the quadratic model over $\boldsymbol{\delta}$ gives Newton's step $\boldsymbol{\delta} = -\mathbf{H}^{-1}\nabla f$.</p>
+<p><strong>(3) Why.</strong> The first-order model gives gradient descent; the second-order model gives Newton, which is invariant to the conditioning that cripples gradient descent (<strong>M04</strong>). The price is exact: forming $\mathbf{H}$ costs $O(n^2)$ memory and $O(n^2)$ backward passes (one per Hessian-vector product), and inverting it costs $O(n^3)$ — impossible at $n = 10^9$ parameters, and the reason practical methods approximate $\mathbf{H}$ with a diagonal (Adam) or a Kronecker factorisation (K-FAC).</p>
+<p><strong>(4) Micro-example.</strong> $f(x) = \frac12 x^2$, $x_0 = 1$: $\nabla f = 1$, $\mathbf{H} = 1$, Newton step $-1$ lands exactly on the minimum in one step; gradient descent with $\eta = 0.5$ takes $0.5, 0.25, 0.125,\ldots$ and needs about 20 steps for six digits. For $f = 2x^4$ at $x = 1$: $\nabla f = 8$, $\mathbf{H} = 24$, Newton step $-1/3$ instead of the $-\eta\cdot8$ a fixed step would take — the curvature sets the scale.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 404" width="100%" role="img" aria-label="Gradient descent on an ill-conditioned quadratic" class="fig-svg"><defs><marker id="gd-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><path d="M282.3,205.0 L282.3,204.4 L282.2,203.7 L282.0,203.1 L281.8,202.4 L281.5,201.8 L281.1,201.2 L280.7,200.6 L280.2,200.0 L279.7,199.4 L279.1,198.8 L278.4,198.2 L277.7,197.7 L276.9,197.1 L276.1,196.6 L275.2,196.1 L274.2,195.6 L273.2,195.1 L272.2,194.7 L271.1,194.2 L270.0,193.8 L268.8,193.4 L267.6,193.1 L266.4,192.7 L265.1,192.4 L263.8,192.1 L262.4,191.9 L261.1,191.6 L259.7,191.4 L258.3,191.2 L256.9,191.1 L255.5,191.0 L254.0,190.9 L252.6,190.8 L251.1,190.8 L249.6,190.8 L248.2,190.8 L246.7,190.8 L245.3,190.9 L243.8,191.0 L242.4,191.2 L241.0,191.3 L239.6,191.5 L238.2,191.7 L236.9,192.0 L235.6,192.3 L234.3,192.6 L233.0,192.9 L231.8,193.2 L230.6,193.6 L229.5,194.0 L228.3,194.4 L227.3,194.9 L226.3,195.3 L225.3,195.8 L224.4,196.3 L223.5,196.8 L222.7,197.4 L222.0,197.9 L221.3,198.5 L220.6,199.1 L220.0,199.7 L219.5,200.3 L219.1,200.9 L218.7,201.5 L218.4,202.1 L218.1,202.8 L217.9,203.4 L217.8,204.0 L217.7,204.7 L217.7,205.3 L217.8,206.0 L217.9,206.6 L218.1,207.2 L218.4,207.9 L218.7,208.5 L219.1,209.1 L219.5,209.7 L220.0,210.3 L220.6,210.9 L221.3,211.5 L222.0,212.1 L222.7,212.6 L223.5,213.2 L224.4,213.7 L225.3,214.2 L226.3,214.7 L227.3,215.1 L228.3,215.6 L229.5,216.0 L230.6,216.4 L231.8,216.8 L233.0,217.1 L234.3,217.4 L235.6,217.7 L236.9,218.0 L238.2,218.3 L239.6,218.5 L241.0,218.7 L242.4,218.8 L243.8,219.0 L245.3,219.1 L246.7,219.2 L248.2,219.2 L249.6,219.2 L251.1,219.2 L252.6,219.2 L254.0,219.1 L255.5,219.0 L256.9,218.9 L258.3,218.8 L259.7,218.6 L261.1,218.4 L262.4,218.1 L263.8,217.9 L265.1,217.6 L266.4,217.3 L267.6,216.9 L268.8,216.6 L270.0,216.2 L271.1,215.8 L272.2,215.3 L273.2,214.9 L274.2,214.4 L275.2,213.9 L276.1,213.4 L276.9,212.9 L277.7,212.3 L278.4,211.8 L279.1,211.2 L279.7,210.6 L280.2,210.0 L280.7,209.4 L281.1,208.8 L281.5,208.2 L281.8,207.6 L282.0,206.9 L282.2,206.3 L282.3,205.6 L282.3,205.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="round" opacity="0.55"/><path d="M328.3,205.0 L328.2,203.4 L328.0,201.9 L327.6,200.3 L327.0,198.8 L326.3,197.3 L325.4,195.8 L324.4,194.3 L323.2,192.8 L321.9,191.4 L320.4,189.9 L318.8,188.5 L317.1,187.2 L315.2,185.9 L313.1,184.6 L311.0,183.4 L308.7,182.2 L306.3,181.0 L303.8,179.9 L301.2,178.9 L298.4,177.9 L295.6,177.0 L292.7,176.1 L289.7,175.3 L286.6,174.5 L283.4,173.8 L280.2,173.2 L276.9,172.6 L273.5,172.1 L270.1,171.7 L266.7,171.3 L263.2,171.0 L259.7,170.8 L256.2,170.6 L252.7,170.5 L249.1,170.5 L245.6,170.6 L242.0,170.7 L238.5,170.9 L235.0,171.1 L231.6,171.5 L228.2,171.9 L224.8,172.3 L221.5,172.9 L218.2,173.5 L215.0,174.1 L211.9,174.9 L208.8,175.7 L205.9,176.5 L203.0,177.4 L200.2,178.4 L197.5,179.4 L194.9,180.5 L192.5,181.6 L190.1,182.8 L187.9,184.0 L185.8,185.2 L183.9,186.5 L182.0,187.9 L180.3,189.2 L178.8,190.6 L177.4,192.1 L176.1,193.5 L175.0,195.0 L174.1,196.5 L173.3,198.0 L172.7,199.6 L172.2,201.1 L171.9,202.7 L171.7,204.2 L171.7,205.8 L171.9,207.3 L172.2,208.9 L172.7,210.4 L173.3,212.0 L174.1,213.5 L175.0,215.0 L176.1,216.5 L177.4,217.9 L178.8,219.4 L180.3,220.8 L182.0,222.1 L183.9,223.5 L185.8,224.8 L187.9,226.0 L190.1,227.2 L192.5,228.4 L194.9,229.5 L197.5,230.6 L200.2,231.6 L203.0,232.6 L205.9,233.5 L208.8,234.3 L211.9,235.1 L215.0,235.9 L218.2,236.5 L221.5,237.1 L224.8,237.7 L228.2,238.1 L231.6,238.5 L235.0,238.9 L238.5,239.1 L242.0,239.3 L245.6,239.4 L249.1,239.5 L252.7,239.5 L256.2,239.4 L259.7,239.2 L263.2,239.0 L266.7,238.7 L270.1,238.3 L273.5,237.9 L276.9,237.4 L280.2,236.8 L283.4,236.2 L286.6,235.5 L289.7,234.7 L292.7,233.9 L295.6,233.0 L298.4,232.1 L301.2,231.1 L303.8,230.1 L306.3,229.0 L308.7,227.8 L311.0,226.6 L313.1,225.4 L315.2,224.1 L317.1,222.8 L318.8,221.5 L320.4,220.1 L321.9,218.6 L323.2,217.2 L324.4,215.7 L325.4,214.2 L326.3,212.7 L327.0,211.2 L327.6,209.7 L328.0,208.1 L328.2,206.6 L328.3,205.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="round" opacity="0.55"/><path d="M355.9,205.0 L355.8,202.9 L355.5,200.8 L355.0,198.7 L354.2,196.6 L353.2,194.5 L352.1,192.5 L350.7,190.5 L349.1,188.5 L347.3,186.5 L345.3,184.6 L343.1,182.7 L340.7,180.9 L338.2,179.1 L335.4,177.4 L332.5,175.7 L329.4,174.1 L326.2,172.6 L322.8,171.1 L319.2,169.7 L315.5,168.3 L311.7,167.1 L307.7,165.9 L303.7,164.8 L299.5,163.7 L295.2,162.8 L290.8,161.9 L286.4,161.2 L281.8,160.5 L277.2,159.9 L272.6,159.4 L267.9,159.0 L263.1,158.7 L258.4,158.5 L253.6,158.4 L248.8,158.3 L244.0,158.4 L239.2,158.6 L234.5,158.8 L229.8,159.2 L225.1,159.6 L220.5,160.2 L215.9,160.8 L211.4,161.5 L207.0,162.4 L202.7,163.3 L198.4,164.2 L194.3,165.3 L190.3,166.5 L186.4,167.7 L182.6,169.0 L179.0,170.4 L175.5,171.8 L172.2,173.3 L169.0,174.9 L166.0,176.6 L163.2,178.3 L160.5,180.0 L158.1,181.8 L155.8,183.7 L153.7,185.6 L151.8,187.5 L150.1,189.5 L148.6,191.5 L147.3,193.5 L146.3,195.6 L145.4,197.6 L144.7,199.7 L144.3,201.8 L144.1,203.9 L144.1,206.1 L144.3,208.2 L144.7,210.3 L145.4,212.4 L146.3,214.4 L147.3,216.5 L148.6,218.5 L150.1,220.5 L151.8,222.5 L153.7,224.4 L155.8,226.3 L158.1,228.2 L160.5,230.0 L163.2,231.7 L166.0,233.4 L169.0,235.1 L172.2,236.7 L175.5,238.2 L179.0,239.6 L182.6,241.0 L186.4,242.3 L190.3,243.5 L194.3,244.7 L198.4,245.8 L202.7,246.7 L207.0,247.6 L211.4,248.5 L215.9,249.2 L220.5,249.8 L225.1,250.4 L229.8,250.8 L234.5,251.2 L239.2,251.4 L244.0,251.6 L248.8,251.7 L253.6,251.6 L258.4,251.5 L263.1,251.3 L267.9,251.0 L272.6,250.6 L277.2,250.1 L281.8,249.5 L286.4,248.8 L290.8,248.1 L295.2,247.2 L299.5,246.3 L303.7,245.2 L307.7,244.1 L311.7,242.9 L315.5,241.7 L319.2,240.3 L322.8,238.9 L326.2,237.4 L329.4,235.9 L332.5,234.3 L335.4,232.6 L338.2,230.9 L340.7,229.1 L343.1,227.3 L345.3,225.4 L347.3,223.5 L349.1,221.5 L350.7,219.5 L352.1,217.5 L353.2,215.5 L354.2,213.4 L355.0,211.3 L355.5,209.2 L355.8,207.1 L355.9,205.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="round" opacity="0.55"/><path d="M377.7,205.0 L377.6,202.5 L377.2,199.9 L376.5,197.4 L375.6,194.9 L374.5,192.4 L373.0,189.9 L371.4,187.5 L369.4,185.1 L367.3,182.7 L364.9,180.4 L362.2,178.2 L359.4,176.0 L356.3,173.8 L353.0,171.7 L349.5,169.7 L345.7,167.8 L341.8,165.9 L337.7,164.1 L333.4,162.4 L329.0,160.8 L324.4,159.3 L319.6,157.8 L314.7,156.5 L309.6,155.3 L304.5,154.1 L299.2,153.1 L293.8,152.2 L288.4,151.3 L282.8,150.6 L277.2,150.0 L271.5,149.6 L265.8,149.2 L260.1,148.9 L254.3,148.8 L248.6,148.8 L242.8,148.8 L237.0,149.0 L231.3,149.4 L225.6,149.8 L220.0,150.3 L214.4,151.0 L208.9,151.7 L203.5,152.6 L198.1,153.6 L192.9,154.7 L187.8,155.9 L182.8,157.2 L178.0,158.5 L173.3,160.0 L168.8,161.6 L164.4,163.3 L160.2,165.0 L156.2,166.8 L152.4,168.7 L148.8,170.7 L145.3,172.8 L142.1,174.9 L139.2,177.1 L136.4,179.3 L133.9,181.6 L131.6,183.9 L129.6,186.3 L127.8,188.7 L126.2,191.2 L124.9,193.6 L123.9,196.1 L123.1,198.7 L122.6,201.2 L122.3,203.7 L122.3,206.3 L122.6,208.8 L123.1,211.3 L123.9,213.9 L124.9,216.4 L126.2,218.8 L127.8,221.3 L129.6,223.7 L131.6,226.1 L133.9,228.4 L136.4,230.7 L139.2,232.9 L142.1,235.1 L145.3,237.2 L148.8,239.3 L152.4,241.3 L156.2,243.2 L160.2,245.0 L164.4,246.7 L168.8,248.4 L173.3,250.0 L178.0,251.5 L182.8,252.8 L187.8,254.1 L192.9,255.3 L198.1,256.4 L203.5,257.4 L208.9,258.3 L214.4,259.0 L220.0,259.7 L225.6,260.2 L231.3,260.6 L237.0,261.0 L242.8,261.2 L248.6,261.2 L254.3,261.2 L260.1,261.1 L265.8,260.8 L271.5,260.4 L277.2,260.0 L282.8,259.4 L288.4,258.7 L293.8,257.8 L299.2,256.9 L304.5,255.9 L309.6,254.7 L314.7,253.5 L319.6,252.2 L324.4,250.7 L329.0,249.2 L333.4,247.6 L337.7,245.9 L341.8,244.1 L345.7,242.2 L349.5,240.3 L353.0,238.3 L356.3,236.2 L359.4,234.0 L362.2,231.8 L364.9,229.6 L367.3,227.3 L369.4,224.9 L371.4,222.5 L373.0,220.1 L374.5,217.6 L375.6,215.1 L376.5,212.6 L377.2,210.1 L377.6,207.5 L377.7,205.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="round" opacity="0.55"/><path d="M396.3,205.0 L396.1,202.1 L395.7,199.2 L394.9,196.3 L393.9,193.4 L392.6,190.6 L390.9,187.7 L389.0,185.0 L386.8,182.2 L384.3,179.5 L381.6,176.9 L378.6,174.3 L375.3,171.7 L371.7,169.3 L368.0,166.9 L363.9,164.6 L359.7,162.4 L355.2,160.2 L350.5,158.2 L345.6,156.2 L340.5,154.4 L335.2,152.6 L329.7,151.0 L324.1,149.4 L318.3,148.0 L312.4,146.7 L306.4,145.5 L300.2,144.5 L293.9,143.5 L287.6,142.7 L281.2,142.0 L274.7,141.5 L268.1,141.1 L261.6,140.8 L255.0,140.6 L248.3,140.6 L241.7,140.7 L235.1,140.9 L228.6,141.3 L222.1,141.8 L215.6,142.4 L209.2,143.1 L202.9,144.0 L196.7,145.0 L190.6,146.1 L184.6,147.4 L178.8,148.7 L173.1,150.2 L167.5,151.8 L162.2,153.5 L157.0,155.3 L152.0,157.2 L147.2,159.2 L142.6,161.3 L138.2,163.5 L134.0,165.7 L130.1,168.1 L126.5,170.5 L123.0,173.0 L119.9,175.6 L117.0,178.2 L114.4,180.8 L112.0,183.6 L110.0,186.3 L108.2,189.1 L106.7,192.0 L105.5,194.8 L104.7,197.7 L104.1,200.6 L103.8,203.5 L103.8,206.5 L104.1,209.4 L104.7,212.3 L105.5,215.2 L106.7,218.0 L108.2,220.9 L110.0,223.7 L112.0,226.4 L114.4,229.2 L117.0,231.8 L119.9,234.4 L123.0,237.0 L126.5,239.5 L130.1,241.9 L134.0,244.3 L138.2,246.5 L142.6,248.7 L147.2,250.8 L152.0,252.8 L157.0,254.7 L162.2,256.5 L167.5,258.2 L173.1,259.8 L178.8,261.3 L184.6,262.6 L190.6,263.9 L196.7,265.0 L202.9,266.0 L209.2,266.9 L215.6,267.6 L222.1,268.2 L228.6,268.7 L235.1,269.1 L241.7,269.3 L248.3,269.4 L255.0,269.4 L261.6,269.2 L268.1,268.9 L274.7,268.5 L281.2,268.0 L287.6,267.3 L293.9,266.5 L300.2,265.5 L306.4,264.5 L312.4,263.3 L318.3,262.0 L324.1,260.6 L329.7,259.0 L335.2,257.4 L340.5,255.6 L345.6,253.8 L350.5,251.8 L355.2,249.8 L359.7,247.6 L363.9,245.4 L368.0,243.1 L371.7,240.7 L375.3,238.3 L378.6,235.7 L381.6,233.1 L384.3,230.5 L386.8,227.8 L389.0,225.0 L390.9,222.3 L392.6,219.4 L393.9,216.6 L394.9,213.7 L395.7,210.8 L396.1,207.9 L396.3,205.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="round" opacity="0.55"/><path d="M412.7,205.0 L412.6,201.8 L412.1,198.5 L411.3,195.3 L410.1,192.1 L408.6,188.9 L406.8,185.8 L404.7,182.7 L402.2,179.6 L399.5,176.6 L396.4,173.7 L393.0,170.8 L389.4,168.0 L385.4,165.3 L381.2,162.6 L376.7,160.0 L372.0,157.6 L367.0,155.2 L361.8,152.9 L356.3,150.7 L350.6,148.7 L344.8,146.7 L338.7,144.9 L332.4,143.2 L326.0,141.6 L319.4,140.2 L312.7,138.9 L305.9,137.7 L298.9,136.6 L291.8,135.7 L284.7,135.0 L277.5,134.3 L270.2,133.9 L262.9,133.5 L255.5,133.4 L248.2,133.3 L240.8,133.4 L233.5,133.7 L226.2,134.1 L218.9,134.6 L211.7,135.3 L204.6,136.2 L197.6,137.1 L190.7,138.2 L183.9,139.5 L177.3,140.9 L170.8,142.4 L164.4,144.0 L158.2,145.8 L152.3,147.7 L146.5,149.7 L140.9,151.8 L135.6,154.0 L130.5,156.4 L125.6,158.8 L121.0,161.3 L116.6,163.9 L112.6,166.6 L108.8,169.4 L105.2,172.2 L102.0,175.2 L99.1,178.1 L96.5,181.2 L94.2,184.2 L92.3,187.4 L90.6,190.5 L89.3,193.7 L88.3,196.9 L87.6,200.1 L87.3,203.4 L87.3,206.6 L87.6,209.9 L88.3,213.1 L89.3,216.3 L90.6,219.5 L92.3,222.6 L94.2,225.8 L96.5,228.8 L99.1,231.9 L102.0,234.8 L105.2,237.8 L108.8,240.6 L112.6,243.4 L116.6,246.1 L121.0,248.7 L125.6,251.2 L130.5,253.6 L135.6,256.0 L140.9,258.2 L146.5,260.3 L152.3,262.3 L158.2,264.2 L164.4,266.0 L170.8,267.6 L177.3,269.1 L183.9,270.5 L190.7,271.8 L197.6,272.9 L204.6,273.8 L211.7,274.7 L218.9,275.4 L226.2,275.9 L233.5,276.3 L240.8,276.6 L248.2,276.7 L255.5,276.6 L262.9,276.5 L270.2,276.1 L277.5,275.7 L284.7,275.0 L291.8,274.3 L298.9,273.4 L305.9,272.3 L312.7,271.1 L319.4,269.8 L326.0,268.4 L332.4,266.8 L338.7,265.1 L344.8,263.3 L350.6,261.3 L356.3,259.3 L361.8,257.1 L367.0,254.8 L372.0,252.4 L376.7,250.0 L381.2,247.4 L385.4,244.7 L389.4,242.0 L393.0,239.2 L396.4,236.3 L399.5,233.4 L402.2,230.4 L404.7,227.3 L406.8,224.2 L408.6,221.1 L410.1,217.9 L411.3,214.7 L412.1,211.5 L412.6,208.2 L412.7,205.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="round" opacity="0.55"/><path d="M427.7,205.0 L427.5,201.5 L427.0,197.9 L426.1,194.4 L424.8,190.9 L423.2,187.5 L421.2,184.0 L418.9,180.6 L416.2,177.3 L413.2,174.0 L409.8,170.8 L406.2,167.7 L402.2,164.6 L397.9,161.6 L393.3,158.7 L388.4,155.9 L383.2,153.2 L377.8,150.6 L372.0,148.1 L366.1,145.7 L359.9,143.5 L353.5,141.4 L346.8,139.4 L340.0,137.5 L333.0,135.8 L325.8,134.2 L318.5,132.8 L311.0,131.5 L303.4,130.3 L295.7,129.4 L287.9,128.5 L280.0,127.9 L272.0,127.3 L264.0,127.0 L256.0,126.8 L248.0,126.7 L240.0,126.9 L232.0,127.1 L224.0,127.6 L216.1,128.2 L208.2,128.9 L200.5,129.8 L192.8,130.9 L185.3,132.1 L177.8,133.5 L170.6,135.0 L163.5,136.6 L156.6,138.4 L149.8,140.4 L143.3,142.4 L137.0,144.6 L130.9,146.9 L125.1,149.3 L119.5,151.9 L114.2,154.5 L109.1,157.3 L104.4,160.1 L99.9,163.1 L95.8,166.1 L91.9,169.2 L88.4,172.4 L85.3,175.7 L82.4,179.0 L79.9,182.3 L77.8,185.7 L76.0,189.2 L74.5,192.7 L73.4,196.2 L72.7,199.7 L72.4,203.2 L72.4,206.8 L72.7,210.3 L73.4,213.8 L74.5,217.3 L76.0,220.8 L77.8,224.3 L79.9,227.7 L82.4,231.0 L85.3,234.3 L88.4,237.6 L91.9,240.8 L95.8,243.9 L99.9,246.9 L104.4,249.9 L109.1,252.7 L114.2,255.5 L119.5,258.1 L125.1,260.7 L130.9,263.1 L137.0,265.4 L143.3,267.6 L149.8,269.6 L156.6,271.6 L163.5,273.4 L170.6,275.0 L177.8,276.5 L185.3,277.9 L192.8,279.1 L200.5,280.2 L208.2,281.1 L216.1,281.8 L224.0,282.4 L232.0,282.9 L240.0,283.1 L248.0,283.3 L256.0,283.2 L264.0,283.0 L272.0,282.7 L280.0,282.1 L287.9,281.5 L295.7,280.6 L303.4,279.7 L311.0,278.5 L318.5,277.2 L325.8,275.8 L333.0,274.2 L340.0,272.5 L346.8,270.6 L353.5,268.6 L359.9,266.5 L366.1,264.3 L372.0,261.9 L377.8,259.4 L383.2,256.8 L388.4,254.1 L393.3,251.3 L397.9,248.4 L402.2,245.4 L406.2,242.3 L409.8,239.2 L413.2,236.0 L416.2,232.7 L418.9,229.4 L421.2,226.0 L423.2,222.5 L424.8,219.1 L426.1,215.6 L427.0,212.1 L427.5,208.5 L427.7,205.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="round" opacity="0.55"/><path d="M441.5,205.0 L441.3,201.2 L440.7,197.4 L439.7,193.6 L438.4,189.8 L436.6,186.1 L434.5,182.4 L432.0,178.8 L429.1,175.2 L425.8,171.6 L422.2,168.2 L418.3,164.8 L414.0,161.5 L409.4,158.2 L404.4,155.1 L399.1,152.1 L393.5,149.2 L387.7,146.4 L381.5,143.7 L375.1,141.1 L368.4,138.7 L361.5,136.4 L354.3,134.3 L347.0,132.3 L339.4,130.4 L331.7,128.7 L323.8,127.2 L315.7,125.8 L307.5,124.6 L299.2,123.5 L290.8,122.6 L282.3,121.9 L273.7,121.3 L265.1,120.9 L256.5,120.7 L247.8,120.7 L239.2,120.8 L230.6,121.1 L222.0,121.6 L213.4,122.2 L205.0,123.0 L196.6,124.0 L188.4,125.1 L180.2,126.5 L172.3,127.9 L164.4,129.6 L156.8,131.3 L149.3,133.3 L142.1,135.3 L135.0,137.6 L128.2,139.9 L121.7,142.4 L115.4,145.0 L109.4,147.8 L103.6,150.6 L98.2,153.6 L93.1,156.7 L88.3,159.8 L83.8,163.1 L79.7,166.5 L75.9,169.9 L72.5,173.4 L69.4,177.0 L66.7,180.6 L64.4,184.2 L62.5,188.0 L60.9,191.7 L59.7,195.5 L59.0,199.3 L58.6,203.1 L58.6,206.9 L59.0,210.7 L59.7,214.5 L60.9,218.3 L62.5,222.0 L64.4,225.8 L66.7,229.4 L69.4,233.0 L72.5,236.6 L75.9,240.1 L79.7,243.5 L83.8,246.9 L88.3,250.2 L93.1,253.3 L98.2,256.4 L103.6,259.4 L109.4,262.2 L115.4,265.0 L121.7,267.6 L128.2,270.1 L135.0,272.4 L142.1,274.7 L149.3,276.7 L156.8,278.7 L164.4,280.4 L172.3,282.1 L180.2,283.5 L188.4,284.9 L196.6,286.0 L205.0,287.0 L213.4,287.8 L222.0,288.4 L230.6,288.9 L239.2,289.2 L247.8,289.3 L256.5,289.3 L265.1,289.1 L273.7,288.7 L282.3,288.1 L290.8,287.4 L299.2,286.5 L307.5,285.4 L315.7,284.2 L323.8,282.8 L331.7,281.3 L339.4,279.6 L347.0,277.7 L354.3,275.7 L361.5,273.6 L368.4,271.3 L375.1,268.9 L381.5,266.3 L387.7,263.6 L393.5,260.8 L399.1,257.9 L404.4,254.9 L409.4,251.8 L414.0,248.5 L418.3,245.2 L422.2,241.8 L425.8,238.4 L429.1,234.8 L432.0,231.2 L434.5,227.6 L436.6,223.9 L438.4,220.2 L439.7,216.4 L440.7,212.6 L441.3,208.8 L441.5,205.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="round" opacity="0.55"/><path d="M454.3,205.0 L454.1,200.9 L453.5,196.9 L452.5,192.8 L451.0,188.8 L449.1,184.8 L446.9,180.9 L444.2,177.0 L441.1,173.2 L437.7,169.4 L433.8,165.7 L429.6,162.1 L425.0,158.5 L420.1,155.1 L414.8,151.8 L409.1,148.5 L403.2,145.4 L396.9,142.4 L390.3,139.6 L383.5,136.9 L376.4,134.3 L369.0,131.8 L361.4,129.5 L353.5,127.4 L345.4,125.4 L337.2,123.6 L328.7,121.9 L320.1,120.5 L311.4,119.2 L302.5,118.0 L293.5,117.1 L284.5,116.3 L275.3,115.7 L266.1,115.3 L256.9,115.0 L247.7,115.0 L238.5,115.1 L229.3,115.5 L220.1,116.0 L211.0,116.7 L202.0,117.5 L193.0,118.6 L184.2,119.8 L175.6,121.2 L167.0,122.8 L158.7,124.5 L150.5,126.4 L142.5,128.4 L134.8,130.7 L127.3,133.0 L120.0,135.5 L113.0,138.2 L106.3,141.0 L99.9,143.9 L93.8,147.0 L88.0,150.1 L82.5,153.4 L77.4,156.8 L72.7,160.3 L68.3,163.9 L64.2,167.5 L60.6,171.3 L57.3,175.1 L54.4,178.9 L52.0,182.9 L49.9,186.8 L48.2,190.8 L47.0,194.9 L46.1,198.9 L45.7,203.0 L45.7,207.0 L46.1,211.1 L47.0,215.1 L48.2,219.2 L49.9,223.2 L52.0,227.1 L54.4,231.1 L57.3,234.9 L60.6,238.7 L64.2,242.5 L68.3,246.1 L72.7,249.7 L77.4,253.2 L82.5,256.6 L88.0,259.9 L93.8,263.0 L99.9,266.1 L106.3,269.0 L113.0,271.8 L120.0,274.5 L127.3,277.0 L134.8,279.3 L142.5,281.6 L150.5,283.6 L158.7,285.5 L167.0,287.2 L175.6,288.8 L184.2,290.2 L193.0,291.4 L202.0,292.5 L211.0,293.3 L220.1,294.0 L229.3,294.5 L238.5,294.9 L247.7,295.0 L256.9,295.0 L266.1,294.7 L275.3,294.3 L284.5,293.7 L293.5,292.9 L302.5,292.0 L311.4,290.8 L320.1,289.5 L328.7,288.1 L337.2,286.4 L345.4,284.6 L353.5,282.6 L361.4,280.5 L369.0,278.2 L376.4,275.7 L383.5,273.1 L390.3,270.4 L396.9,267.6 L403.2,264.6 L409.1,261.5 L414.8,258.2 L420.1,254.9 L425.0,251.5 L429.6,247.9 L433.8,244.3 L437.7,240.6 L441.1,236.8 L444.2,233.0 L446.9,229.1 L449.1,225.2 L451.0,221.2 L452.5,217.2 L453.5,213.1 L454.1,209.1 L454.3,205.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="round" opacity="0.55"/><path d="M64.2,79.2 L99.5,270.4 L128.1,171.0 L151.3,222.7 L170.0,195.8 L185.2,209.8 L197.5,202.5 L207.5,206.3 L215.6,204.3 L222.1,205.3 L227.4,204.8 L231.7,205.1 L235.2,205.0 L238.0,205.0 L240.3,205.0 L242.1,205.0 L243.6,205.0 L244.8,205.0 L245.8,205.0 L246.6,205.0 L247.3,205.0 L247.8,205.0 L248.2,205.0 L248.5,205.0 L248.8,205.0 L249.0,205.0 L249.2,205.0" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/><circle cx="64.2" cy="79.2" r="2.6" fill="var(--fig-rose,#fb7185)"/><circle cx="151.3" cy="222.7" r="2.6" fill="var(--fig-rose,#fb7185)"/><circle cx="197.5" cy="202.5" r="2.6" fill="var(--fig-rose,#fb7185)"/><circle cx="222.1" cy="205.3" r="2.6" fill="var(--fig-rose,#fb7185)"/><circle cx="235.2" cy="205.0" r="2.6" fill="var(--fig-rose,#fb7185)"/><circle cx="242.1" cy="205.0" r="2.6" fill="var(--fig-rose,#fb7185)"/><circle cx="245.8" cy="205.0" r="2.6" fill="var(--fig-rose,#fb7185)"/><circle cx="247.8" cy="205.0" r="2.6" fill="var(--fig-rose,#fb7185)"/><circle cx="248.8" cy="205.0" r="2.6" fill="var(--fig-rose,#fb7185)"/><path d="M64.2,79.2 L75.4,139.6 L85.9,171.0 L95.7,187.3 L105.0,195.8 L113.7,200.2 L121.8,202.5 L129.5,203.7 L136.8,204.3 L143.6,204.7 L149.9,204.8 L155.9,204.9 L161.6,205.0 L166.9,205.0 L171.9,205.0 L176.6,205.0 L181.0,205.0 L185.1,205.0 L189.0,205.0 L192.7,205.0 L196.1,205.0 L199.3,205.0 L202.4,205.0 L205.2,205.0 L207.9,205.0 L210.4,205.0 L212.8,205.0" fill="none" stroke="var(--fig-green,#34d399)" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/><circle cx="64.2" cy="79.2" r="2.6" fill="var(--fig-green,#34d399)"/><circle cx="95.7" cy="187.3" r="2.6" fill="var(--fig-green,#34d399)"/><circle cx="121.8" cy="202.5" r="2.6" fill="var(--fig-green,#34d399)"/><circle cx="143.6" cy="204.7" r="2.6" fill="var(--fig-green,#34d399)"/><circle cx="161.6" cy="205.0" r="2.6" fill="var(--fig-green,#34d399)"/><circle cx="176.6" cy="205.0" r="2.6" fill="var(--fig-green,#34d399)"/><circle cx="189.0" cy="205.0" r="2.6" fill="var(--fig-green,#34d399)"/><circle cx="199.3" cy="205.0" r="2.6" fill="var(--fig-green,#34d399)"/><circle cx="207.9" cy="205.0" r="2.6" fill="var(--fig-green,#34d399)"/><circle cx="250.0" cy="205.0" r="4.0" fill="var(--fig-amber,#f5b544)"/><text x="40.0" y="392.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">contours of L(x) = ½ xᵀ diag(1,8) x. Conditioning, not the gradient formula, decides the zigzag.</text><rect x="494.0" y="44.0" width="322.0" height="322.0" rx="12" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="512.0" y="74.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="13.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="700">why the zigzag</text><rect x="512.0" y="90.0" width="286.0" height="72.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="526.0" y="114.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">xₜ₊₁ = xₜ − η∇L</text><text x="526.0" y="133.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400"> = xₜ − ηA xₜ</text><text x="526.0" y="152.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400"> = (I − ηA) xₜ</text><text x="512.0" y="186.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">A fixed linear map with eigenvalues 1 −</text><text x="512.0" y="201.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">ηλᵢ. Every one must sit inside the unit</text><text x="512.0" y="216.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">disk.</text><text x="512.0" y="236.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-blue,#5b8cff)" text-anchor="start" font-weight="650">λᵢ = 1</text><text x="584.0" y="236.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">1 − ηλᵢ = +0.81</text><text x="512.0" y="270.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="650">λᵢ = 8</text><text x="584.0" y="270.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">1 − ηλᵢ = -0.52</text><text x="700.0" y="270.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">flips</text><text x="512.0" y="312.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">The steep direction overshoots and</text><text x="512.0" y="327.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">reverses each step while the flat</text><text x="512.0" y="342.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">direction crawls.</text></svg><figcaption>The loss surface with a trajectory on it: the local tangent plane is the first-order model and the local bowl is the second-order one, so a well-scaled step follows the bowl while a badly scaled one overshoots across the valley and climbs the far wall.</figcaption></figure></p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<p>The algorithm is <strong>reverse-mode autodiff by VJPs</strong>. It is what <code>loss.backward()</code> executes, and everything the rest of the curriculum does rests on this loop.</p>
+<ol>
+<li>Build the graph: each node $v_k$ holds a value $x_k$ produced by an operation from earlier nodes, $x_k = \phi_k(x_{i_1},\ldots,x_{i_p})$. Inputs and parameters are leaves.</li>
+<li>Forward sweep in topological order: compute every $x_k$ and cache whatever the local derivative needs — for $\exp$ the output, for matmul the operand, for $\operatorname{softmax}$ the output $\mathbf{s}$.</li>
+<li>Seed the adjoint of the output: $\bar{x}_{\text{out}} = \partial \mathcal{L}/\partial\mathcal{L} = 1$ (for a vector output, the seed is the incoming gradient $\mathbf{u}$).</li>
+<li>Backward sweep in reverse topological order. For each node with output $k$ and inputs $i$, accumulate the VJP: $\bar{x}_i \leftarrow \bar{x}_i + \bar{x}_k\, \partial x_k/\partial x_i$, where the partial is the <em>local</em> Jacobian of that one operation.</li>
+<li>The <code>+=</code> is the sum over uses. A node consumed by three downstream nodes receives three contributions; that total is the multivariable chain rule's sum over paths.</li>
+<li>Emit gradients at the leaves: $\partial\mathcal{L}/\partial\boldsymbol{\theta}$ for each parameter tensor, and optionally $\partial\mathcal{L}/\partial\mathbf{x}$ for the input.</li>
+<li>For a Hessian-vector product, differentiate <em>through</em> the VJP itself: $\nabla^2 f\,\mathbf{v} = \nabla(\langle\nabla f, \mathbf{v}\rangle)$, one extra sweep at about twice the cost of a gradient.</li>
+<li>Update parameters outside the graph (<strong>M04</strong>); detach, or the second backward pass accumulates into the first.</li>
+</ol>
+<p>```text
+INPUT  graph G, output node L, seed grad g = dL/dL = 1
+forward: for k in topo_order(G):
+             x[k] = phi_k(x[inputs_of(k)])       # cache what backward needs
+backward: adj[L] = g
+          for k in reverse(topo_order(G)):
+             for i in inputs_of(k):
+                 adj[i] += adj[k] @ local_VJP(k, i)   # VJP, never the full Jacobian
+RETURN adj[leaf] for every leaf (parameters and inputs)
+```</p>
+<p><strong>Complexity.</strong> Time: $O(\text{cost of the forward pass})$ up to a small constant — typically 2–3×, because each node runs one extra vector-multiply. Memory: $O(\text{number of cached activations})$, which is proportional to graph size and independent of the parameter count; this is why activation memory, not parameter memory, dominates long-context training. Forming the full Jacobian instead would cost $n_{\text{out}}$ backward sweeps.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="1-i243-and-i244">1. $\partial(\mathbf{A}\mathbf{x})/\partial\mathbf{x} = \mathbf{A}$ and $\partial(\mathbf{x}^\top\mathbf{A}\mathbf{x})/\partial\mathbf{x} = (\mathbf{A}+\mathbf{A}^\top)\mathbf{x}$</h3>
+<p>First the linear one, in indices. With $y_i = \sum_j \mathbf{A}_{ij}x_j$,</p>
+<p>$$\frac{\partial y_i}{\partial x_j} = \mathbf{A}_{ij} \quad\Longrightarrow\quad \mathbf{J} = \mathbf{A} \in \mathbb{R}^{m\times n},$$</p>
+<p>which is the definition of "linear map" restated: the Jacobian of a linear map is itself, everywhere.</p>
+<p>Now the quadratic form. Expand:</p>
+<p>$$f(\mathbf{x}) = \mathbf{x}^\top\mathbf{A}\mathbf{x} = \sum_{i}\sum_{j}\mathbf{A}_{ij}x_ix_j .$$</p>
+<p>Differentiate with respect to one coordinate $x_k$. The derivative hits $x_i$ for $i = k$, giving $\sum_j \mathbf{A}_{kj}x_j$, and it hits $x_j$ for $j = k$, giving $\sum_i \mathbf{A}_{ik}x_i$. The diagonal term $i = j = k$ is $\mathbf{A}_{kk}x_k^2$, whose derivative is $2\mathbf{A}_{kk}x_k$; the two sums each contribute $\mathbf{A}_{kk}x_k$, so together they give exactly that and nothing is double counted. Hence</p>
+<p>$$\frac{\partial f}{\partial x_k} = \sum_j\mathbf{A}_{kj}x_j + \sum_i\mathbf{A}_{ik}x_i = \left[(\mathbf{A}+\mathbf{A}^\top)\mathbf{x}\right]_k .$$</p>
+<p>In matrix form, $\nabla_{\mathbf{x}}f = (\mathbf{A}+\mathbf{A}^\top)\mathbf{x}$. If $\mathbf{A}$ is symmetric this is $2\mathbf{A}\mathbf{x}$ — the special case everyone quotes, and the reason "$2\mathbf{A}\mathbf{x}$" is a bug when $\mathbf{A}$ is not symmetric. Note also $\mathbf{x}^\top\mathbf{A}\mathbf{x} = \mathbf{x}^\top\left(\frac{\mathbf{A}+\mathbf{A}^\top}{2}\right)\mathbf{x}$: only the symmetric part of $\mathbf{A}$ is observable through this quadratic form, so an asymmetric $\mathbf{A}$ and its symmetrisation describe the same function.</p>
+<h3 id="2-three-matrix-derivatives-trace-determinant-inverse">2. Three matrix derivatives: trace, determinant, inverse</h3>
+<p><strong>(a) $\partial\operatorname{tr}(\mathbf{A}\mathbf{B})/\partial\mathbf{A} = \mathbf{B}^\top$.</strong> Write the scalar in indices:</p>
+<p>$$\operatorname{tr}(\mathbf{A}\mathbf{B}) = \sum_i (\mathbf{A}\mathbf{B})_{ii} = \sum_i\sum_k\mathbf{A}_{ik}\mathbf{B}_{ki},$$</p>
+<p>so $\partial/\partial\mathbf{A}_{ij} = \mathbf{B}_{ji} = (\mathbf{B}^\top)_{ij}$, giving $\nabla_{\mathbf{A}} = \mathbf{B}^\top$. Placing the derivative in the same slot as $\mathbf{A}_{ij}$ is exactly the denominator-layout choice.</p>
+<p><strong>(b) $\partial\det\mathbf{A}/\partial\mathbf{A} = \det(\mathbf{A})\,\mathbf{A}^{-\top}$ for invertible $\mathbf{A}$.</strong> Expand along row $i$: $\det\mathbf{A} = \sum_j \mathbf{A}_{ij}C_{ij}$ where $C_{ij} = (-1)^{i+j}M_{ij}$ is the cofactor and $M_{ij}$ the minor obtained by deleting row $i$ and column $j$. The cofactor does not involve row $i$, so</p>
+<p>$$\frac{\partial\det\mathbf{A}}{\partial\mathbf{A}_{ij}} = C_{ij}, \qquad\text{i.e.}\quad \nabla_{\mathbf{A}}\det\mathbf{A} = \mathbf{C}^\top .$$</p>
+<p>The cofactor identity $\mathbf{C}^\top = \det(\mathbf{A})\mathbf{A}^{-\top}$ (from $\mathbf{A}^{-1} = \mathbf{C}^\top/\det\mathbf{A}$) gives the stated form. The non-obvious content is that the derivative is <em>not</em> $\det(\mathbf{A})\mathbf{I}$: for $\mathbf{A} = \begin{pmatrix}1&2\\3&4\end{pmatrix}$, $\det = -2$ and $\det(\mathbf{A})\mathbf{A}^{-\top} = \begin{pmatrix}4&-3\\-2&1\end{pmatrix}$, which matches the cofactors term by term. This identity is the engine of the change-of-variables formula in <strong>M03</strong> and of normalising flows.</p>
+<p><strong>(c) $\partial\mathbf{A}^{-1} = -\mathbf{A}^{-1}(\partial\mathbf{A})\mathbf{A}^{-1}$.</strong> Differentiate the identity $\mathbf{A}\mathbf{A}^{-1} = \mathbf{I}$ by the product rule:</p>
+<p>$$(d\mathbf{A})\mathbf{A}^{-1} + \mathbf{A}\,d(\mathbf{A}^{-1}) = \mathbf{0} \;\Longrightarrow\; d(\mathbf{A}^{-1}) = -\mathbf{A}^{-1}(d\mathbf{A})\mathbf{A}^{-1}.$$</p>
+<p>Two sanity checks: the left side has the shape of $\mathbf{A}^{-1}$, and for scalars it reduces to $d(1/a) = -da/a^2$. In the VJP form used by autodiff, the pullback is $\bar{\mathbf{A}} = -\mathbf{A}^{-\top}\bar{\mathbf{A}^{-1}}\mathbf{A}^{-\top}$.</p>
+<h3 id="3-the-chain-rule-for-compositions-and-where-vjp-and-jvp-come-from">3. The chain rule for compositions, and where VJP and JVP come from</h3>
+<p>Let $\mathbf{z} = \mathbf{f}(\mathbf{y})$, $\mathbf{y} = \mathbf{g}(\mathbf{x})$, so $\mathbf{h} = \mathbf{f}(\mathbf{g}(\cdot))$. By the local-linear-approximation definition,</p>
+<p>$$\mathbf{h}(\mathbf{x}+\boldsymbol{\delta}) = \mathbf{f}(\mathbf{g}(\mathbf{x}) + \mathbf{J}_{\mathbf{g}}\boldsymbol{\delta} + o(\|\boldsymbol{\delta}\|)) = \mathbf{f}(\mathbf{g}(\mathbf{x})) + \mathbf{J}_{\mathbf{f}}(\mathbf{J}_{\mathbf{g}}\boldsymbol{\delta}) + o(\|\boldsymbol{\delta}\|),$$</p>
+<p>where the second equality uses the local-linear form of $\mathbf{f}$ at $\mathbf{g}(\mathbf{x})$ and absorbs its $o(\cdot)$ into the existing one. Comparing with $\mathbf{h}(\mathbf{x}) + \mathbf{J}_{\mathbf{h}}\boldsymbol{\delta}$ gives $\mathbf{J}_{\mathbf{h}} = \mathbf{J}_{\mathbf{f}}\mathbf{J}_{\mathbf{g}}$ — the chain rule, with no index manipulation at all.</p>
+<p>Now read that product two ways.</p>
+<ul>
+<li><strong>JVP (forward mode).</strong> Multiply from the right: $\mathbf{J}_{\mathbf{h}}\mathbf{v} = \mathbf{J}_{\mathbf{f}}(\mathbf{J}_{\mathbf{g}}\mathbf{v})$. Start with $\mathbf{v}\in\mathbb{R}^{n}$, push it forward through the graph. Cost: one pass per input direction, and the whole Jacobian costs $n$ passes.</li>
+<li><strong>VJP (reverse mode).</strong> Multiply from the left: $\mathbf{u}^\top\mathbf{J}_{\mathbf{h}} = (\mathbf{u}^\top\mathbf{J}_{\mathbf{f}})\mathbf{J}_{\mathbf{g}}$. Start with $\mathbf{u}\in\mathbb{R}^{m}$ (for a scalar loss, $\mathbf{u} = 1$) and push it backward. Cost: one pass, and the whole gradient of a scalar costs a single pass regardless of $n$.</li>
+</ul>
+<p>The asymmetry is the whole reason deep learning uses reverse mode: losses are scalar ($m = 1$) and parameters are numerous ($n$ in the billions). Both modes compute the same product, in opposite orders, and the order determines the cost.</p>
+<h3 id="4-the-softmax-jacobian-derived-in-full">4. The softmax Jacobian, derived in full</h3>
+<p>With $s_i = e^{z_i}/Z$ and $Z = \sum_k e^{z_k}$, differentiate. Two cases.</p>
+<p><strong>Case $i = j$:</strong> apply the quotient rule, or the product rule on $s_i = e^{z_i}Z^{-1}$:</p>
+<p>$$\frac{\partial s_i}{\partial z_i} = \frac{e^{z_i}}{Z} + e^{z_i}\cdot\left(-\frac{1}{Z^2}\right)\frac{\partial Z}{\partial z_i} = \frac{e^{z_i}}{Z} - \frac{e^{z_i}}{Z}\cdot\frac{e^{z_i}}{Z} = s_i - s_i^2 ,$$</p>
+<p>using $\partial Z/\partial z_i = e^{z_i}$.</p>
+<p><strong>Case $i \ne j$:</strong> the numerator does not depend on $z_j$,</p>
+<p>$$\frac{\partial s_i}{\partial z_j} = e^{z_i}\cdot\left(-\frac{1}{Z^2}\right)e^{z_j} = -s_is_j .$$</p>
+<p>Both cases are the single expression $\partial s_i/\partial z_j = s_i(\delta_{ij} - s_j)$, i.e.</p>
+<p>$$\mathbf{J} = \operatorname{diag}(\mathbf{s}) - \mathbf{s}\mathbf{s}^\top .$$</p>
+<p>Two structural facts fall out. First, $\mathbf{J}\mathbf{1} = \mathbf{s} - \mathbf{s}(\mathbf{s}^\top\mathbf{1}) = \mathbf{s} - \mathbf{s} = \mathbf{0}$: the Jacobian annihilates the all-ones direction, because adding a constant to every logit leaves softmax unchanged. Second, $\operatorname{rank}\mathbf{J} = n-1$: softmax is not invertible, and its image is the simplex of dimension $n-1$. Both facts are needed for identity 5, and both are why a softmax output has one redundant degree of freedom.</p>
+<h3 id="5-the-gradient-of-softmax-cross-entropy-is-i317">5. The gradient of softmax-cross-entropy is $\mathbf{p}-\mathbf{y}$</h3>
+<p>Cross-entropy with a one-hot target $y_k = 1$ for the true class $k$:</p>
+<p>$$\mathcal{L} = -\log s_k = -z_k + \log\sum_j e^{z_j} .$$</p>
+<p>Differentiate directly, which is the short route:</p>
+<p>$$\frac{\partial\mathcal{L}}{\partial z_i} = -\delta_{ik} + \frac{e^{z_i}}{\sum_j e^{z_j}} = s_i - y_i,$$</p>
+<p>i.e. $\nabla_{\mathbf{z}}\mathcal{L} = \mathbf{s}-\mathbf{y}$. That is the collapse: the $1/Z$ terms cancel exactly.</p>
+<p>Now the same result the long way, through the Jacobian, to show the chain rule agrees. With $\mathcal{L} = -\sum_j y_j\log s_j$,</p>
+<p>$$\frac{\partial\mathcal{L}}{\partial z_i} = \sum_j \frac{\partial\mathcal{L}}{\partial s_j}\frac{\partial s_j}{\partial z_i} = \sum_j\left(-\frac{y_j}{s_j}\right)\left(s_j\delta_{ji} - s_js_i\right) = -\sum_j y_j\delta_{ji} + s_i\sum_j y_j .$$</p>
+<p>The first sum is $-y_i$; the second is $s_i\sum_j y_j = s_i\cdot 1$ because $\mathbf{y}$ is one-hot (or sums to one for soft targets). Hence $\partial\mathcal{L}/\partial z_i = s_i - y_i$, agreeing with the direct route. For soft targets the conclusion holds unchanged as long as $\sum_j y_j = 1$ — worth knowing, because label smoothing and distillation both use soft targets.</p>
+<p><strong>Why the collapse happens.</strong> The $\log$ in the loss and the $\exp$ in the softmax cancel. This is not a coincidence to memorise; it is the design reason softmax is paired with log-loss, and it is why the gradient never contains a $1/s_k$ that would explode when the model is confidently wrong — the worst case is a gradient of magnitude 1 per class.</p>
+<h3 id="6-log-sum-exp-is-exact-bounded-and-necessary">6. Log-sum-exp is exact, bounded, and necessary</h3>
+<p>Let $m = \max_j z_j$ and write</p>
+<p>$$\log\sum_j e^{z_j} = \log\left(e^{m}\sum_j e^{z_j - m}\right) = m + \log\sum_j e^{z_j-m}.$$</p>
+<p>Every exponent $z_j - m \le 0$, so every term lies in $(0,1]$ and the inner sum lies in $[1, n]$; therefore the correction term lies in $[0,\log n]$, a bounded quantity. The naive form computes $e^{z_j}$ first, which is <code>inf</code> for $z_j$ above about $88$ in float32 and for $z_j$ above about $11$ in fp16, after which <code>inf/inf</code> is <code>nan</code>.</p>
+<p>Combined with identity 5, the full stable loss for a one-hot target $k$ is</p>
+<p>$$\mathcal{L} = -z_k + m + \log\sum_j e^{z_j-m},$$</p>
+<p>which never exponentiates a positive number. The same shift makes the softmax itself stable: $\operatorname{softmax}(\mathbf{z}) = \operatorname{softmax}(\mathbf{z}-m)$, because the numerator and denominator both acquire $e^{-m}$; so a stable implementation subtracts the max before exponentiating and never forms the ratio of two huge numbers.</p>
+<h3 id="7-the-layout-flip-with-numbers">7. The layout flip, with numbers</h3>
+<p>Take $\mathbf{A} = \begin{pmatrix}1&2\\0&3\end{pmatrix}$ and $\mathbf{x} = (1,2)$, so $f = \mathbf{x}^\top\mathbf{A}\mathbf{x} = 1 + 4 + 12 = 17$.</p>
+<ul>
+<li>Denominator layout, correct: $\nabla f = (\mathbf{A}+\mathbf{A}^\top)\mathbf{x} = \begin{pmatrix}2&2\\2&6\end{pmatrix}\begin{pmatrix}1\\2\end{pmatrix} = \begin{pmatrix}6\\14\end{pmatrix}$.</li>
+<li>Numerator layout of the same expression: the row vector $(6,14) = \mathbf{x}^\top(\mathbf{A}+\mathbf{A}^\top)$; its transpose is the same gradient. Transposing a <em>result</em> is harmless.</li>
+<li>The fatal version is transposing a <em>factor</em>: using $\mathbf{A}^\top$ instead of $\mathbf{A}$ inside the product gives $(\mathbf{A}^\top+\mathbf{A})\mathbf{x}$ — accidentally identical here, because the symmetrised form is what appears. That is why the quadratic form hides the bug. Use a genuinely asymmetric expression instead: for $g(\mathbf{x}) = \mathbf{c}^\top\mathbf{A}\mathbf{x}$ with $\mathbf{c} = (1,0)$, the gradient is $\mathbf{A}^\top\mathbf{c} = (1,0)$; writing $\mathbf{A}\mathbf{c}$ gives $(1,3)$. The two differ, both have shape $(2,)$, and only one is the gradient. Take a step with the wrong one and you move $\mathbf{x}$ in a direction that is not the steepest — the loss may still fall, which is what makes the bug survive a smoke test.</li>
+</ul>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>A reverse-mode engine in about forty lines: <code>Node</code> holds a value, an adjoint, and a closure that maps an outgoing gradient to the parents' gradients — a VJP per operation. The graph is a 3-class linear classifier with softmax cross-entropy, and the analytic gradient is checked against finite differences.</p>
+<p>```python
+import numpy as np
+
+class Node:
+    """A graph node: a value plus a closure that pushes its adjoint to its parents."""
+    def __init__(self, value, parents=(), vjp=None):
+        self.value = np.asarray(value, dtype=float)
+        self.grad = np.zeros_like(self.value)    # adjoint; accumulated with +=
+        self.parents = parents
+        self.vjp = vjp                           # out_grad -> tuple of parent grads
+
+    def backward(self):
+        order, seen, stack = [], set(), [(self, False)]      # iterative DFS
+        while stack:
+            node, done = stack.pop()
+            if done:
+                order.append(node); continue
+            if id(node) in seen:
+                continue
+            seen.add(id(node)); stack.append((node, True))
+            for p in node.parents:
+                stack.append((p, False))
+        self.grad = np.ones_like(self.value)                 # seed dL/dL = 1
+        for node in reversed(order):
+            if node.vjp is None:
+                continue
+            for parent, g in zip(node.parents, node.vjp(node.grad)):
+                parent.grad = parent.grad + g                # += is the sum over uses
+
+def matmul(A, x):
+    """(3,2) @ (2,) -> (3,)"""
+    return Node(A.value @ x.value, (A, x),
+                lambda g: (np.outer(g, x.value), A.value.T @ g))
+
+def softmax(z):
+    e = np.exp(z.value - z.value.max())                     # stability shift
+    s = e / e.sum()
+    return Node(s, (z,), lambda g: (s * (g - g @ s),))      # J^T g for diag(s) - s s^T
+
+def cross_entropy(s, y):
+    loss = -np.sum(y * np.log(s.value + 1e-300))
+    return Node(loss, (s,), lambda g: (-g * y / (s.value + 1e-300),))
+
+W = Node(np.array([[0.5, -0.2], [0.1, 0.3], [0.8, -0.4]]))  # (3,2) weights
+x = Node(np.array([1.0, 2.0]))                              # (2,)  input
+y = np.array([1.0, 0.0, 0.0])                               # one-hot target
+
+z = matmul(W, x); s = softmax(z); L = cross_entropy(s, y)
+L.backward()
+print("logits :", z.value)          # [0.1 0.7 0. ]
+print("softmax:", s.value)          # [0.2683 0.4889 0.2428]
+print("loss   :", L.value)          # 1.3156
+print("dL/dz  :", z.grad)           # equals p - y: [-0.7317  0.4889  0.2428]
+print("dL/dW  :\n", W.grad)         # equals outer(dL/dz, x)
+```</p>
+<p><strong>What to expect.</strong> The loss is $1.3156$ and <code>dL/dz</code> matches <code>s.value - y</code> to machine precision — identity 5 in one line of output. <code>dL/dW</code> comes out as the outer product of the incoming gradient with the input, because the VJP of a matmul is exactly that; this is the "gradient of a layer is an outer product of its input and its output error" fact you meet in <strong>M07</strong>. The finite-difference check (add four lines comparing against $\pm\epsilon$ perturbations) agrees to about $10^{-10}$ for $\epsilon = 10^{-6}$; if it disagrees, a VJP is transposed.</p>
+<h2 id="worked-example">Worked example</h2>
+<p><strong>Softmax Jacobian, by hand and in code, for $\mathbf{z} = (2,1,0)$.</strong> $e^{\mathbf{z}} = (7.3891, 2.7183, 1.0)$, sum $= 11.1073$, so $\mathbf{s} = (0.6652, 0.2447, 0.0900)$.</p>
+<table>
+<thead>
+<tr>
+<th>Entry</th>
+<th>Formula</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\partial s_1/\partial z_1$</td>
+<td>$s_1 - s_1^2$</td>
+<td>$0.2227$</td>
+</tr>
+<tr>
+<td>$\partial s_1/\partial z_2$</td>
+<td>$-s_1s_2$</td>
+<td>$-0.1628$</td>
+</tr>
+<tr>
+<td>$\partial s_2/\partial z_2$</td>
+<td>$s_2 - s_2^2$</td>
+<td>$0.1848$</td>
+</tr>
+<tr>
+<td>$\partial s_3/\partial z_3$</td>
+<td>$s_3 - s_3^2$</td>
+<td>$0.0819$</td>
+</tr>
+<tr>
+<td>row sums</td>
+<td>$\mathbf{J}\mathbf{1}$</td>
+<td>$0, 0, 0$</td>
+</tr>
+<tr>
+<td>$\operatorname{tr}\mathbf{J}$</td>
+<td>$\sum_i s_i(1-s_i)$</td>
+<td>$0.4894$</td>
+</tr>
+</tbody>
+</table>
+<p>With target class 1, $\mathbf{p}-\mathbf{y} = (0.6652-1, 0.2447, 0.0900) = (-0.3348, 0.2447, 0.0900)$, and central finite differences of $-\log s_1$ with $\epsilon = 10^{-6}$ reproduce $(-0.3348, 0.2447, 0.0900)$ to seven digits. The gradient's entries sum to zero, as they must: $\mathbf{1}^\top(\mathbf{p}-\mathbf{y}) = 1-1 = 0$, the same conservation law the Jacobian obeys.</p>
+<p><strong>The layout flip, with numbers.</strong> $\mathbf{A} = \begin{pmatrix}1&2\\0&3\end{pmatrix}$, $\mathbf{x} = (1,2)$: $f = \mathbf{x}^\top\mathbf{A}\mathbf{x} = 17$, and the correct gradient is $(\mathbf{A}+\mathbf{A}^\top)\mathbf{x} = (6,14)$. The plausible-looking $2\mathbf{A}\mathbf{x} = (10,12)$ is wrong because $\mathbf{A}$ is not symmetric. A step of $\eta = 0.1$ takes $\mathbf{x}$ to $(0.4,0.6)$ with the correct gradient; the loss there is $0.16 + 0.24 + 1.08 = 1.48$, down from 17. With the wrong gradient, $\mathbf{x}$ goes to $(0,0.8)$ for a loss of $0.64$ — <em>lower</em>. The bug helps on this step and misdirects every subsequent one, which is exactly why it survives a smoke test and why you check gradients, not losses.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="the-gradient-is-just-the-vector-of-partials-so-layout-cannot-matter">"The gradient is just the vector of partials, so layout cannot matter"</h3>
+<p>Shape is part of the definition. $\partial f/\partial\mathbf{x}$ for a scalar $f$ is a vector with $n$ entries under denominator layout and a row under numerator layout; the numbers are identical, the object is not. Where it bites is inside a product — $n$ transpositions are not just cosmetic, and mixing conventions silently transposes a factor.</p>
+<h3 id="i406">"$\nabla_{\mathbf{x}}(\mathbf{x}^\top\mathbf{A}\mathbf{x}) = 2\mathbf{A}\mathbf{x}$"</h3>
+<p>Only when $\mathbf{A}$ is symmetric. The general answer is $(\mathbf{A}+\mathbf{A}^\top)\mathbf{x}$, and the difference is measurable: with $\mathbf{A} = \begin{pmatrix}1&2\\0&3\end{pmatrix}$ and $\mathbf{x} = (1,2)$ the two answers are $(6,14)$ and $(10,12)$. Autodiff gets it right; hand-written code that assumes symmetry does not.</p>
+<h3 id="the-softmax-jacobian-is-diagonal-because-softmax-acts-elementwise">"The softmax Jacobian is diagonal, because softmax acts elementwise"</h3>
+<p>Softmax does not act elementwise — the denominator couples every output to every input. Its Jacobian is $\operatorname{diag}(\mathbf{s})-\mathbf{s}\mathbf{s}^\top$, dense, with rank $n-1$ and rows summing to zero. Only the <em>numerator</em> is elementwise; the normalisation is a global operation and the Jacobian records it.</p>
+<h3 id="numerical-differentiation-is-a-fine-substitute-for-autodiff">"Numerical differentiation is a fine substitute for autodiff"</h3>
+<p>Finite differences cost $2n$ forward passes for $n$ parameters (billions), and their error is a compromise: too large a step truncates, too small a step is dominated by cancellation — around $\sqrt{\epsilon_{\text{mach}}} \approx 10^{-8}$ accuracy in float64 at best, and worse in float32 where the whole scheme is unusable. Autodiff is exact up to floating-point rounding at the cost of one extra pass. Use finite differences only to <em>check</em> a hand-derived gradient, never to train.</p>
+<h3 id="the-hessian-is-just-the-jacobian-applied-twice-so-it-costs-the-same">"The Hessian is just the Jacobian applied twice, so it costs the same"</h3>
+<p>For $n$ parameters the Jacobian of the gradient has $n^2$ entries. Forming it costs $n$ backward passes and $O(n^2)$ memory, and inverting it costs $O(n^3)$ — for $n = 10^8$ that is $10^{24}$ operations. Hessian-<em>vector</em> products, by contrast, cost about two gradients each, which is why the practical second-order methods in <strong>M04</strong> are all approximations of $\mathbf{H}$ rather than the object itself.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>2.1</strong> State the shape of the Jacobian of $\mathbf{f}:\mathbb{R}^{5}\to\mathbb{R}^{3}$ under denominator layout, and the shape of a VJP with $\mathbf{u}\in\mathbb{R}^{3}$.</p>
+<details><summary>Solution</summary>
+
+$3\times5$, entry $(i,j) = \partial f_i/\partial x_j$. The VJP $\mathbf{u}^\top\mathbf{J}$ has shape $(5,)$ — the same shape as the input, which is what a gradient must have. A JVP $\mathbf{J}\mathbf{v}$ with $\mathbf{v}\in\mathbb{R}^5$ has shape $(3,)$, the shape of the output.
+</details>
+
+<p><strong>2.2</strong> Differentiate $f(\mathbf{x}) = \mathbf{c}^\top\mathbf{A}\mathbf{x}$ with respect to $\mathbf{x}$.</p>
+<details><summary>Solution</summary>
+
+$f = \sum_i\sum_j c_i\mathbf{A}_{ij}x_j$, so $\partial f/\partial x_j = \sum_i c_i\mathbf{A}_{ij} = (\mathbf{A}^\top\mathbf{c})_j$, giving $\nabla_{\mathbf{x}}f = \mathbf{A}^\top\mathbf{c}$. The transpose is not optional: with $\mathbf{c} = (1,0)$ and $\mathbf{A} = \begin{pmatrix}1&2\\0&3\end{pmatrix}$, $\mathbf{A}^\top\mathbf{c} = (1,0)$ but $\mathbf{A}\mathbf{c} = (1,3)$.
+</details>
+
+<p><strong>2.3</strong> Why does $\mathbf{J}_{\text{softmax}}\mathbf{1} = \mathbf{0}$, and what does that imply about logits?</p>
+<details><summary>Solution</summary>
+
+Because $\operatorname{softmax}(\mathbf{z}+c\mathbf{1}) = \operatorname{softmax}(\mathbf{z})$: adding a constant to every logit changes nothing, so the derivative along $\mathbf{1}$ vanishes. It implies logits are identifiable only up to an additive constant, which is why parameter-count arguments about softmax layers overcount by one per example, and why a bias on the logits of a classifier is redundant.
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>2.4</strong> Derive $\partial\det\mathbf{A}/\partial\mathbf{A}$ for $\mathbf{A} = \begin{pmatrix}1&2\\3&4\end{pmatrix}$ from the cofactor expansion and check against $\det(\mathbf{A})\mathbf{A}^{-\top}$.</p>
+<details><summary>Solution</summary>
+
+$\det\mathbf{A} = \mathbf{A}_{11}\mathbf{A}_{22} - \mathbf{A}_{12}\mathbf{A}_{21}$. Differentiating entry by entry: $\partial/\partial\mathbf{A}_{11} = \mathbf{A}_{22} = 4$; $\partial/\partial\mathbf{A}_{12} = -\mathbf{A}_{21} = -3$; $\partial/\partial\mathbf{A}_{21} = -\mathbf{A}_{12} = -2$; $\partial/\partial\mathbf{A}_{22} = \mathbf{A}_{11} = 1$. So $\nabla_{\mathbf{A}}\det = \begin{pmatrix}4&-3\\-2&1\end{pmatrix}$. Now $\det = -2$ and $\mathbf{A}^{-1} = \frac{1}{-2}\begin{pmatrix}4&-2\\-3&1\end{pmatrix}$, so $\mathbf{A}^{-\top} = \frac{1}{-2}\begin{pmatrix}4&-3\\-2&1\end{pmatrix}$ and $\det(\mathbf{A})\mathbf{A}^{-\top} = \begin{pmatrix}4&-3\\-2&1\end{pmatrix}$. Agreement. Note the derivative is not $\det(\mathbf{A})\mathbf{I} = -2\mathbf{I}$.
+</details>
+
+<p><strong>2.5</strong> Derive the gradient of $\mathcal{L} = -\sum_j y_j\log s_j$ for a <em>soft</em> target with $\sum_j y_j = 1$, $y_j > 0$.</p>
+<details><summary>Solution</summary>
+
+$\partial\mathcal{L}/\partial z_i = -\sum_j (y_j/s_j)(s_j\delta_{ij} - s_js_i) = -y_i + s_i\sum_j y_j = s_i - y_i$. The last step uses $\sum_j y_j = 1$, which holds for any distribution, not just one-hot. So label smoothing and distillation change the loss value but not the gradient's form — a fact that makes $\mathbf{p}-\mathbf{y}$ the single most reused gradient in the curriculum.
+</details>
+
+<p><strong>2.6</strong> Compute the Hessian of $\mathcal{L}(\mathbf{z}) = -\log\operatorname{softmax}(\mathbf{z})_k$ and show it equals the softmax Jacobian.</p>
+<details><summary>Solution</summary>
+
+$\nabla\mathcal{L} = \mathbf{s}-\mathbf{y}$ with $\mathbf{y} = \mathbf{e}_k$. Differentiating again: $\partial(\mathbf{s}-\mathbf{y})/\partial\mathbf{z} = \mathbf{J}_{\text{softmax}} = \operatorname{diag}(\mathbf{s})-\mathbf{s}\mathbf{s}^\top$. So the cross-entropy Hessian is exactly the softmax Jacobian — positive semi-definite, rank $n-1$, one zero eigenvalue along $\mathbf{1}$. That single fact gives the Gauss–Newton step for a softmax classifier and shows the loss is convex in $\mathbf{z}$ (though not in the weights, where the composition with $\mathbf{W}\mathbf{x}$ destroys convexity).
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>2.7</strong> Implement the VJP for a <code>log</code> node and a <code>sum</code> node, and use them to reproduce $\partial\mathcal{L}/\partial\mathbf{z} = \mathbf{p}-\mathbf{y}$ through the graph rather than in closed form.</p>
+<details><summary>Solution</summary>
+
+`log`: $y = \log x$, so the VJP is $\bar x = \bar y/x$ elementwise — one divide per element. `sum`: $y = \sum_i x_i$, so $\bar x_i = \bar y$ for every $i$, i.e. broadcast the scalar back to the input's shape. Composing: seed 1 at the loss, `sum` broadcasts it to a vector of ones, `log` divides by $\mathbf{s}$ giving $-1/\mathbf{s}$ (for the $-y$ factor, multiply by $\mathbf{y}$ first), then the softmax VJP applies $\mathbf{J}^\top$: $\mathbf{s}\odot(\mathbf{g} - \mathbf{g}\cdot\mathbf{s})$ with $\mathbf{g} = -\mathbf{y}/\mathbf{s}$. That evaluates to $\mathbf{s}\odot(-\mathbf{y}/\mathbf{s} + \sum_j y_j) = -\mathbf{y} + \mathbf{s}\sum_j y_j = \mathbf{s}-\mathbf{y}$. The cancellation that looked like magic in closed form appears here as the $1/\mathbf{s}$ and the $\mathbf{s}$ cancelling inside the VJP.
+</details>
+
+<p><strong>2.8</strong> Show that a VJP through a chain of $L$ linear layers with weight matrices $\mathbf{W}_1,\ldots,\mathbf{W}_L$ costs the same as the forward pass, and say what the transpose structure implies for memory.</p>
+<details><summary>Solution</summary>
+
+Forward: $\mathbf{h}_L = \mathbf{W}_L\cdots\mathbf{W}_1\mathbf{x}$, cost $L$ matvecs, with each $\mathbf{h}_i$ cached. Backward: $\bar{\mathbf{h}}_L = \mathbf{u}$, then $\bar{\mathbf{h}}_{i-1} = \mathbf{W}_i^\top\bar{\mathbf{h}}_i$ — $L$ matvecs with the transposed matrices, the same count and the same order of cost. The gradient with respect to a weight is $\bar{\mathbf{W}}_i = \bar{\mathbf{h}}_i\mathbf{h}_{i-1}^\top$, an outer product. The memory consequence is that all $L$ activations must be retained unless you recompute them (gradient checkpointing, **M26**), so activation memory scales with depth and batch, not with parameter count.
+</details>
+
+<p><strong>2.9</strong> The naive log-sum-exp overflows at $\mathbf{z} = (1000,1001,1002)$ in float32. Demonstrate the failure and the fix, and give the largest safe logit for fp16.</p>
+<details><summary>Solution</summary>
+
+`exp(1000)` in float32 is `inf`; the sum is `inf`; `inf/inf` is `nan`. With $m = 1002$: shifted $\mathbf{z}-m = (-2,-1,0)$, sum of exponentials $= 0.1353+0.3679+1 = 1.5032$, so $\operatorname{logsumexp} = 1002 + \log 1.5032 = 1002.4076$, and softmax $= (0.0900,0.2447,0.6652)$ — the same distribution, shifted. For fp16 the max representable is $65504 \approx e^{11.09}$, so logits above about 11 overflow unshifted; the shift makes the method safe for any logit that is representable at all.
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>State the local-linear-approximation definition of the derivative and use it to derive the chain rule.</li>
+<li>Give the shapes of the Jacobian, a VJP, and a JVP for $\mathbf{f}:\mathbb{R}^n\to\mathbb{R}^m$ under denominator layout.</li>
+<li>Why is reverse mode the right choice for a scalar loss with $10^9$ parameters?</li>
+<li>Derive $\partial s_i/\partial z_j$ for both $i = j$ and $i \ne j$, and state the resulting matrix.</li>
+<li>What exactly does the max-shift in log-sum-exp change, and what does it leave unchanged?</li>
+<li>Give the two-term Taylor expansion of $f$ and the Newton step it implies.</li>
+<li>Why is $\partial\det\mathbf{A}/\partial\mathbf{A} = \det(\mathbf{A})\mathbf{A}^{-\top}$ and not $\det(\mathbf{A})\mathbf{I}$?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $f(\mathbf{x}+\boldsymbol{\delta}) = f(\mathbf{x}) + \nabla f^\top\boldsymbol{\delta} + o(\|\boldsymbol{\delta}\|)$; composing two such expansions and matching the linear term gives $\mathbf{J}_{\mathbf{h}} = \mathbf{J}_{\mathbf{f}}\mathbf{J}_{\mathbf{g}}$.
+2. Jacobian $m\times n$; VJP $\mathbf{u}^\top\mathbf{J}$ with shape $(n,)$; JVP $\mathbf{J}\mathbf{v}$ with shape $(m,)$.
+3. Cost is one backward sweep regardless of $n$, versus $n$ forward sweeps to build the Jacobian column by column, and the loss being scalar means the full gradient *is* a single VJP.
+4. $i = j$: $s_i - s_i^2$; $i \ne j$: $-s_is_j$; so $\mathbf{J} = \operatorname{diag}(\mathbf{s}) - \mathbf{s}\mathbf{s}^\top$.
+5. It changes the intermediate exponents and the constant added back, cancelling exactly: the value is identical, the floating-point overflow is removed.
+6. $f(\mathbf{x}+\boldsymbol{\delta}) \approx f + \nabla f^\top\boldsymbol{\delta} + \frac12\boldsymbol{\delta}^\top\mathbf{H}\boldsymbol{\delta}$; minimising gives $\boldsymbol{\delta} = -\mathbf{H}^{-1}\nabla f$.
+7. Because the derivative of a determinant with respect to an entry is its cofactor, and the cofactor matrix's transpose is $\det(\mathbf{A})\mathbf{A}^{-\top}$; the identity matrix answer would come from differentiating $\det(\mathbf{A})\cdot$constant.
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><strong>Parr and Howard, "The Matrix Calculus You Need For Deep Learning" (arXiv:1802.01528, free).</strong> Extract the layout-convention section and their derivation of the softmax Jacobian; it is the clearest published treatment of why the conventions clash.</li>
+<li><strong>Petersen and Pedersen, <em>The Matrix Cookbook</em> (free PDF, maintained at DTU).</strong> Extract identities 2 and 3 above and use the rest as a lookup — but read the convention statement at the top first, or half the table will be transposed relative to this module.</li>
+<li><strong>Baydin, Pearlmutter, Radul, Siskind, "Automatic Differentiation in Machine Learning: a Survey," Journal of Machine Learning Research, 2018 (free).</strong> Extract the forward/reverse cost table and the discussion of why reverse mode wins when $n$ is far larger than $m$.</li>
+<li><strong>Goodfellow, Bengio, Courville, <em>Deep Learning</em> (2016), sections 4.3 and 6.5</strong> (free at deeplearningbook.org). Extract the conditioning-and-overflow discussion in 4.3 and the backpropagation derivation in 6.5 for a second pass at the same chain rule.</li>
+<li><strong>Griewank and Walther, <em>Evaluating Derivatives</em> (SIAM, 2008).</strong> Extract the reverse-mode algorithm and the checkpointing trade-off; the book is the reference for what <code>backward()</code> guarantees.</li>
+<li><strong>Karpathy, "Yes you should understand backprop" (blog, free).</strong> Extract the worked example of a sigmoid saturation killing gradients — the practical counterpart to the diagonal-Jacobian section.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when you can, without notes:</p>
+<ol>
+<li>Derive $\nabla_{\mathbf{x}}(\mathbf{x}^\top\mathbf{A}\mathbf{x}) = (\mathbf{A}+\mathbf{A}^\top)\mathbf{x}$ from the index definition, including why the diagonal term is not double counted.</li>
+<li>Write the Jacobian of a softmax and use it to derive the cross-entropy gradient, arriving at $\mathbf{p}-\mathbf{y}$ by both routes.</li>
+<li>Say which layout convention PyTorch uses and give a concrete expression where the other convention flips a result.</li>
+<li>Explain what a VJP is, why it is the primitive of reverse-mode autodiff, and why the whole gradient costs one sweep.</li>
+<li>Implement a numerically stable softmax and log-sum-exp, and say what breaks without the shift.</li>
+<li>Estimate the cost of a Newton step in $n$, and say why nobody forms $\mathbf{H}$ at scale.</li>
+</ol><div class="pager"><a id="prevlink" href="../m/01-linear-algebra.html"><small>← previous</small><b>M01 · Linear Algebra for Deep Learning</b></a><a id="nextlink" class="next" href="../m/03-probability.html"><small>next →</small><b>M03 · Probability, Statistics, and Information Theory</b></a></div></article>
+</main>
+</div>
+</body></html>

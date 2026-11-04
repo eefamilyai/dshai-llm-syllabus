@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M03 · Probability, Statistics, and Information Theory — From Zero to Frontier</title>
+<meta name="description" content="Uncertainty, estimation, and the three quantities every loss function is built from.">
+<meta property="og:title" content="M03 · Probability, Statistics, and Information Theory — From Zero to Frontier">
+<meta property="og:description" content="Uncertainty, estimation, and the three quantities every loss function is built from.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Mathematical foundations / M03</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M03">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M03</span><span class="pill d3">difficulty 3/5</span><span class="pill">2 weeks</span><span class="pill">prereqs: M01</span><span class="pill">7,024 words</span></div><h1>Probability, Statistics, and Information Theory</h1><p class="tagline">Uncertainty, estimation, and the three quantities every loss function is built from.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>Every loss in this curriculum is a negative log-likelihood wearing a different hat: mean squared error is Gaussian MLE, cross-entropy is categorical MLE, and the KL penalty in preference learning is a divergence between distributions. Without this module those are formulas to memorise, and several things later become unreadable: why the softmax is paired with log-loss (<strong>M02</strong>), what a language model's perplexity of 12 actually claims (<strong>M15</strong>), why dropout and weight decay are Bayesian in disguise (<strong>M08</strong>), how a variational autoencoder's ELBO is derived rather than asserted (<strong>M23</strong>), and what the KL term in DPO is penalising (<strong>M18</strong>). The failure mode is subtle: you can train models for a year without this material, but you cannot say what their numbers mean.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<ol>
+<li>A fair six-sided die: what is $\mathbb{P}(X = 4)$ and $\mathbb{E}[X]$?</li>
+<li>Define $\mathrm{Var}[X]$ and compute it for a Bernoulli$(p)$ variable.</li>
+<li>State the definition of $\mathbb{P}(A \mid B)$.</li>
+<li>Simplify $\log(a/b)$ and $\log(ab)$.</li>
+<li>$\sum_{i=1}^{4} p_i = 1$ with $p_i > 0$: what is the largest possible $\sum_i p_i^2$?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $1/6$; $\mathbb{E}[X] = (1+2+3+4+5+6)/6 = 3.5$.
+2. $\mathrm{Var}[X] = \mathbb{E}[(X-\mathbb{E}X)^2] = \mathbb{E}[X^2] - (\mathbb{E}X)^2$; for Bernoulli$(p)$, $\mathbb{E}[X^2] = p$, so $\mathrm{Var} = p - p^2 = p(1-p)$.
+3. $\mathbb{P}(A\mid B) = \mathbb{P}(A\cap B)/\mathbb{P}(B)$ for $\mathbb{P}(B) > 0$.
+4. $\log a - \log b$; $\log a + \log b$.
+5. $1$, at the degenerate distribution $(1,0,0,0)$ — a fact that drives the whole entropy story.
+
+If you miss 2 or 3, revise before continuing: the variance algebra and Bayes' rule are used in every section. **M01** is assumed for covariance matrices, projections, and the spectral theorem.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<ul>
+<li>Derive $\mathrm{Var}[aX+b] = a^2\mathrm{Var}[X]$ and the variance of a sum, including the covariance term.</li>
+<li>Derive the Gaussian as the maximum-entropy distribution under a fixed variance, using Lagrange multipliers.</li>
+<li>Compute MLE and MAP estimates for Bernoulli and Gaussian models, and show that their negative log-likelihoods are cross-entropy and mean squared error.</li>
+<li>Prove $\operatorname{KL}(p\|q) \ge 0$ via Jensen's inequality, and give a numeric example where swapping the arguments changes the answer.</li>
+<li>Relate entropy, cross-entropy, KL divergence, mutual information, and perplexity, and convert between nats and bits.</li>
+<li>Derive the ELBO from $\log p(x)$ and identify the gap as a KL divergence.</li>
+<li>Implement inverse-CDF sampling, rejection sampling, and a reparameterized gradient estimator; explain why the reparameterized estimator has lower variance.</li>
+<li>Derive the variance of a sample mean and state the bias of the MLE variance estimator.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$X$, $x$</td>
+<td>random variable; a value it takes</td>
+</tr>
+<tr>
+<td>$p(x)$, $p(x,y)$, $p(x\mid y)$</td>
+<td>pmf or pdf; joint; conditional</td>
+</tr>
+<tr>
+<td>$\mathbb{E}[\cdot]$, $\mathrm{Var}[\cdot]$, $\mathrm{Cov}[\cdot,\cdot]$</td>
+<td>expectation, variance, covariance</td>
+</tr>
+<tr>
+<td>$H(p)$</td>
+<td>Shannon entropy, in nats unless stated</td>
+</tr>
+<tr>
+<td>$H(p,q)$</td>
+<td>cross-entropy $-\mathbb{E}_p[\log q]$</td>
+</tr>
+<tr>
+<td>$\operatorname{KL}(p\|q)$</td>
+<td>Kullback–Leibler divergence</td>
+</tr>
+<tr>
+<td>$I(X;Y)$</td>
+<td>mutual information</td>
+</tr>
+<tr>
+<td>$\theta$</td>
+<td>model parameters; $\hat{\theta}$ an estimate</td>
+</tr>
+<tr>
+<td>$z$</td>
+<td>latent variable; $q(z)$ its variational approximation</td>
+</tr>
+<tr>
+<td>$\mathcal{N}(\mu,\sigma^2)$</td>
+<td>Gaussian with mean $\mu$, variance $\sigma^2$</td>
+</tr>
+<tr>
+<td>$\phi$</td>
+<td>variational parameters</td>
+</tr>
+<tr>
+<td>$\lambda$</td>
+<td>a Lagrange multiplier (and, elsewhere, a regularisation strength)</td>
+</tr>
+</tbody>
+</table>
+<p>Logarithms are natural unless a unit is named; $1$ nat $= 1/\log 2 \approx 1.4427$ bits. Probabilities are written $p(x)$ for both discrete and continuous variables; contexts where the distinction matters say "pmf" or "pdf".</p>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="random-variables-pmf-pdf-cdf">Random variables, pmf, pdf, cdf</h3>
+<p><strong>(1) Intuition.</strong> A random variable is a number produced by a process you do not control, and a distribution describes which numbers are likely. Discrete variables assign probability to points; continuous ones assign probability to intervals, because a single point has none.</p>
+<p><strong>(2) Formal.</strong> A pmf satisfies $p(x)\ge0$, $\sum_x p(x) = 1$. A pdf satisfies $p(x)\ge0$, $\int p(x)\,dx = 1$, and probabilities are $\mathbb{P}(a\le X\le b) = \int_a^b p(x)dx$. The cdf is $F(x) = \mathbb{P}(X\le x)$, which is monotone and satisfies $F(-\infty) = 0$, $F(\infty) = 1$.</p>
+<p><strong>(3) Why.</strong> The pdf is a <em>density</em>, not a probability: it can exceed 1, and $p(x)$ at a point means nothing on its own. This is why a continuous likelihood can be greater than 1 and why likelihoods are only compared at the same point across models, never interpreted as probabilities of the data.</p>
+<p><strong>(4) Micro-example.</strong> $\mathcal{N}(0, 0.01)$ has density $1/(\sqrt{2\pi}\cdot0.1) \approx 3.99$ at $x=0$ — greater than 1, as densities may be. The probability of landing in $[-0.01,0.01]$ is about $0.008$.</p>
+<h3 id="joint-conditional-marginal">Joint, conditional, marginal</h3>
+<p><strong>(1) Intuition.</strong> The joint records everything at once; the marginal forgets one variable by summing it out; the conditional asks what the world looks like once you know part of it.</p>
+<p><strong>(2) Formal.</strong> $p(x) = \sum_y p(x,y)$ (marginalisation); $p(x\mid y) = p(x,y)/p(y)$ (conditioning); and the product rule $p(x,y) = p(x\mid y)p(y)$.</p>
+<p><strong>(3) Why.</strong> Marginalisation is the operation behind every "nuisance parameter" argument, every mixture model, and every latent-variable model: the data likelihood is the joint summed over the hidden variables, $p(x) = \int p(x,z)\,dz$, and that integral is usually intractable — which is the entire reason for variational inference later in this module.</p>
+<p><strong>(4) Micro-example.</strong> $p(x,y)$ given by $p(0,0) = 0.4$, $p(0,1) = 0.1$, $p(1,0) = 0.1$, $p(1,1) = 0.4$. Marginals: $p(x=0) = 0.5$, $p(y=0) = 0.5$. Conditional: $p(x=0\mid y=0) = 0.4/0.5 = 0.8$.</p>
+<h3 id="independence-and-conditional-independence">Independence and conditional independence</h3>
+<p><strong>(1) Intuition.</strong> Independent means knowing one variable tells you nothing about the other. Conditionally independent means that is true <em>within each value of a third variable</em>, even though marginally it is false.</p>
+<p><strong>(2) Formal.</strong> $X \perp Y$ iff $p(x,y) = p(x)p(y)$ for all $x,y$, equivalently $p(x\mid y) = p(x)$. $X \perp Y \mid Z$ iff $p(x,y\mid z) = p(x\mid z)p(y\mid z)$.</p>
+<p><strong>(3) Why.</strong> Conditional independence is the assumption that makes graphical models and naive Bayes work: features are usually dependent marginally and conditionally independent given the class. It is also the assumption a language model violates most dramatically — tokens are dependent on each other by construction — which is why "the model assumes i.i.d. data" is a statement about the <em>training set</em>, never about the sequence.</p>
+<p><strong>(4) Micro-example.</strong> In the table above, $p(0,0) = 0.4 \ne 0.5\cdot0.5 = 0.25$, so $X$ and $Y$ are dependent. But conditionally on $Z = X\oplus Y$, knowing $X$ fixes $Y$: they are dependent given $Z$ too. Independence can be created or destroyed by conditioning, and both directions occur.</p>
+<h3 id="expectation-and-variance-algebra">Expectation and variance algebra</h3>
+<p><strong>(1) Intuition.</strong> Expectation is the probability-weighted average; variance is the average squared distance from it. Expectation is linear always; variance is linear only for independent (or uncorrelated) variables.</p>
+<p><strong>(2) Formal.</strong> $\mathbb{E}[X] = \sum_x x\,p(x)$, $\mathrm{Var}[X] = \mathbb{E}[(X-\mathbb{E}X)^2] = \mathbb{E}[X^2] - (\mathbb{E}X)^2$, and $\mathrm{Cov}[X,Y] = \mathbb{E}[XY] - \mathbb{E}X\,\mathbb{E}Y$.</p>
+<p><strong>(3) Why.</strong> Linearity of expectation holds without any independence assumption, which is why $\mathbb{E}$ of a sum is easy and $\mathrm{Var}$ of a sum is not. The covariance term is exactly what dropout, ensembling, and data augmentation try to control: they average predictors whose errors are correlated, and correlation limits the benefit (derived in <strong>M05</strong>).</p>
+<p><strong>(4) Micro-example.</strong> $X\in\{0,1\}$ with $p=0.3$: $\mathbb{E}X = 0.3$, $\mathbb{E}X^2 = 0.3$, $\mathrm{Var} = 0.21 = p(1-p)$. For $Y = 2X+3$: $\mathbb{E}Y = 3.6$ and $\mathrm{Var}[Y] = 4\cdot0.21 = 0.84$ — the shift does nothing, the scale squares.</p>
+<h3 id="the-distribution-zoo">The distribution zoo</h3>
+<p><strong>(1) Intuition.</strong> A handful of distributions covers almost everything you will meet. For each one, learn the support, the mean, the variance, and one place it appears.</p>
+<p><strong>(2) Formal.</strong> The table is the definition; each row is a family you can write down and differentiate in closed form.</p>
+<table>
+<thead>
+<tr>
+<th>Distribution</th>
+<th>Support</th>
+<th>Mean</th>
+<th>Variance</th>
+<th>Where it appears</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bernoulli$(p)$</td>
+<td>$\{0,1\}$</td>
+<td>$p$</td>
+<td>$p(1-p)$</td>
+<td>binary classification, dropout masks</td>
+</tr>
+<tr>
+<td>Categorical$(\mathbf{p})$</td>
+<td>$1..K$</td>
+<td>—</td>
+<td>—</td>
+<td>next-token prediction, class labels</td>
+</tr>
+<tr>
+<td>Gaussian$(\mu,\sigma^2)$</td>
+<td>$\mathbb{R}$</td>
+<td>$\mu$</td>
+<td>$\sigma^2$</td>
+<td>regression noise, weight priors, VAEs</td>
+</tr>
+<tr>
+<td>Uniform$[a,b]$</td>
+<td>$[a,b]$</td>
+<td>$(a+b)/2$</td>
+<td>$(b-a)^2/12$</td>
+<td>initialisation, sampling primitives</td>
+</tr>
+<tr>
+<td>Exponential$(\lambda)$</td>
+<td>$[0,\infty)$</td>
+<td>$1/\lambda$</td>
+<td>$1/\lambda^2$</td>
+<td>inter-arrival times; a Gamma special case</td>
+</tr>
+<tr>
+<td>Poisson$(\lambda)$</td>
+<td>$\mathbb{N}$</td>
+<td>$\lambda$</td>
+<td>$\lambda$</td>
+<td>event counts, token counts</td>
+</tr>
+<tr>
+<td>Beta$(a,b)$</td>
+<td>$[0,1]$</td>
+<td>$a/(a+b)$</td>
+<td>$ab/[(a+b)^2(a+b+1)]$</td>
+<td>priors on probabilities</td>
+</tr>
+<tr>
+<td>Dirichlet$(\boldsymbol{\alpha})$</td>
+<td>simplex</td>
+<td>$\alpha_i/\sum\alpha$</td>
+<td>—</td>
+<td>priors on categorical distributions</td>
+</tr>
+<tr>
+<td>Laplace$(\mu,b)$</td>
+<td>$\mathbb{R}$</td>
+<td>$\mu$</td>
+<td>$2b^2$</td>
+<td>L1-regularised regression, robust noise</td>
+</tr>
+</tbody>
+</table>
+<p><strong>(3) Why this zoo.</strong> Each entry is the maximum-entropy distribution for a particular constraint (support plus a moment), which is why these are the defaults: if you know only the mean of a positive quantity, the exponential is the least-committal choice; if you know only a mean and a variance on the line, the Gaussian is.</p>
+<p><strong>(4) Micro-example.</strong> A categorical over 4 classes with probabilities $(0.5, 0.25, 0.15, 0.10)$: the most likely token has probability a half, yet the expected log-probability is $-\sum p\log p = 1.2730$ nats, so the "typical" token is far less likely than the mode. Mode and typical set are different objects, and sampling versus greedy decoding differ for exactly this reason (<strong>M15</strong>).</p>
+<h3 id="why-the-gaussian-is-special">Why the Gaussian is special</h3>
+<p><strong>(1) Intuition.</strong> Two independent forces point at the Gaussian: averages of many small effects become Gaussian regardless of the underlying distribution (central limit theorem), and among all distributions with a given variance, the Gaussian is the one that assumes the least (maximum entropy).</p>
+<p><strong>(2) Formal.</strong> CLT: for i.i.d. $X_i$ with mean $\mu$ and variance $\sigma^2 < \infty$, $\sqrt{n}(\bar{X}_n - \mu)/\sigma \to \mathcal{N}(0,1)$ in distribution. Max entropy: among densities with $\int p = 1$, $\int xp = \mu$, $\int (x-\mu)^2p = \sigma^2$, the Gaussian maximises $H(p) = -\int p\log p$.</p>
+<p><strong>(3) Why.</strong> The max-entropy property is the rigorous version of "assume nothing extra": any other distribution with the same mean and variance encodes additional structure you did not put in. So when you choose a Gaussian likelihood you are choosing the least-committal model consistent with a mean and a variance — and that is why Gaussian noise is the default and why squared error follows from it (derivation 3).</p>
+<p><strong>(4) Micro-example.</strong> Sample means of Exponential(1) data: the population skew is 2, and the skew of $\bar{X}_n$ is $2/\sqrt{n}$ — measured as $1.975$ at $n=1$, $0.879$ at $n=5$, $0.379$ at $n=30$, approaching 0 as the CLT predicts. The variance of the mean is $1/n$: measured $0.998$, $0.198$, $0.0333$ against theory $1$, $0.2$, $0.0333$.</p>
+<h3 id="bayes-rule-and-the-bayesian-versus-frequentist-split">Bayes' rule, and the Bayesian versus frequentist split</h3>
+<p><strong>(1) Intuition.</strong> Bayes' rule says: start with a belief, see data, update in proportion to how well each hypothesis predicted it. It is the only consistent way to move from "what I think" to "what I should think now".</p>
+<p><strong>(2) Formal.</strong> $p(\theta\mid D) = p(D\mid\theta)p(\theta)/p(D)$, with $p(D) = \int p(D\mid\theta)p(\theta)\,d\theta$. Posterior $\propto$ likelihood $\times$ prior.</p>
+<p><strong>(3) Why.</strong> The two schools disagree about what $\theta$ is, not about algebra. A frequentist treats $\theta$ as a fixed unknown and reports procedures with long-run guarantees (unbiasedness, coverage); a Bayesian treats $\theta$ as a distribution and reports beliefs conditional on the data. Both are self-consistent; they answer different questions, and conflating them produces the standard misinterpretation of a confidence interval as a posterior probability.</p>
+<p><strong>(4) Micro-example.</strong> A test with 99% sensitivity and 99% specificity for a condition with 1% prevalence. Positive results: $0.99\cdot0.01 = 0.0099$ true positives and $0.01\cdot0.99 = 0.0099$ false positives, so $\mathbb{P}(\text{condition}\mid+) = 0.0099/(0.0099+0.0099) = 0.5$. A "99% accurate" test is right half the time on a positive — because the prior was 1%.</p>
+<h3 id="mle-and-map">MLE and MAP</h3>
+<p><strong>(1) Intuition.</strong> Maximum likelihood picks the parameters under which the observed data is most probable. Maximum a posteriori picks the parameters that are most probable <em>given</em> the data, which adds a prior that pulls estimates toward it.</p>
+<p><strong>(2) Formal.</strong> $\hat{\theta}_{\text{MLE}} = \arg\max_\theta \prod_i p(x_i\mid\theta) = \arg\max_\theta \sum_i \log p(x_i\mid\theta)$; $\hat{\theta}_{\text{MAP}} = \arg\max_\theta [\sum_i \log p(x_i\mid\theta) + \log p(\theta)]$.</p>
+<p><strong>(3) Why.</strong> The switch from product to sum of logs is not cosmetic: products of thousands of small probabilities underflow, and the log turns a product of derivatives into a sum, which is what makes the problem separable and the gradients additive. The MAP form shows regularisation for what it is: $-\log p(\theta)$ is a penalty, so a Gaussian prior is L2 weight decay and a Laplace prior is L1 (<strong>M04</strong>, <strong>M05</strong>).</p>
+<p><strong>(4) Micro-example.</strong> Seven heads in ten flips. MLE: $\hat{p} = 0.7$. With a Beta$(2,2)$ prior the posterior is Beta$(9,5)$ and the MAP is $(9-1)/(9+5-2) = 8/12 = 0.6667$; the posterior mean is $9/14 = 0.6429$. Three summaries, three numbers — "the estimate" is not well defined until you say which.</p>
+<h3 id="entropy-cross-entropy-kl-mutual-information-perplexity">Entropy, cross-entropy, KL, mutual information, perplexity</h3>
+<p><strong>(1) Intuition.</strong> Entropy is how many bits (or nats) you need on average to describe a draw from $p$. Cross-entropy is what it costs to describe draws from $p$ using a code built for $q$. KL is the <em>extra</em> cost of using $q$ instead of $p$. Mutual information is how many nats knowing $Y$ saves you about $X$.</p>
+<p><strong>(2) Formal.</strong> $H(p) = -\sum_x p(x)\log p(x)$; $H(p,q) = -\sum_x p(x)\log q(x)$; $\operatorname{KL}(p\|q) = \sum_x p(x)\log\frac{p(x)}{q(x)} = H(p,q) - H(p)$; $I(X;Y) = H(X) - H(X\mid Y)$; perplexity $= \exp(H)$ when $H$ is in nats.</p>
+<p><strong>(3) Why.</strong> Cross-entropy is the training loss because it is the MLE objective (derivation 3) and because $\operatorname{KL} = H(p,q) - H(p)$ decomposes the loss into an irreducible entropy term plus a divergence you can actually minimise (<strong>M03</strong>'s derivation 5 makes this exact). Perplexity is entropy exponentiated back into "how many equally likely options": it is the effective vocabulary size the model is choosing among.</p>
+<p><strong>(4) Micro-example.</strong> $p = (0.5,0.5)$, $q = (0.9,0.1)$: $H(p) = 0.6931$, $H(q) = 0.3251$, $H(p,q) = 1.2040$, so $\operatorname{KL}(p\|q) = 1.2040-0.6931 = 0.5108$ nats. Reversed: $\operatorname{KL}(q\|p) = 0.3681$. The two differ by 39%: KL is not a distance.</p>
+<p><div class="viz" data-viz="v-entropy"></div><div class="vizcap">Drag probability mass between the categories and watch entropy, cross-entropy against a fixed $q$, and their difference move together. Note that entropy is maximised at the uniform distribution and that the KL term is zero exactly when the two distributions coincide.</div></p>
+<h3 id="estimators-bias-variance-and-the-decomposition">Estimators: bias, variance, and the decomposition</h3>
+<p><strong>(1) Intuition.</strong> An estimator is a procedure, not a number; run it on different samples and you get different answers. Its quality has two parts: is it centred on the truth (bias), and how much does it scatter (variance)?</p>
+<p><strong>(2) Formal.</strong> For an estimator $\hat\theta$ of $\theta$, $\mathrm{MSE}(\hat\theta) = \mathbb{E}[(\hat\theta-\theta)^2] = \mathrm{Bias}(\hat\theta)^2 + \mathrm{Var}(\hat\theta)$, with $\mathrm{Bias} = \mathbb{E}[\hat\theta] - \theta$.</p>
+<p><strong>(3) Why.</strong> This decomposition is the reason regularisation works: shrinking an estimator introduces bias but can reduce variance by more, lowering total error. It is also why the MLE is not automatically the best estimator at finite $n$ — it is asymptotically efficient, not uniformly optimal.</p>
+<p><strong>(4) Micro-example.</strong> The MLE variance $\frac1n\sum(x_i-\bar x)^2$ is biased: $\mathbb{E}[\hat\sigma^2] = \frac{n-1}{n}\sigma^2$. For $n=5$ and sample variance $12.5$ (the unbiased estimate), the MLE reports $10.0$, a bias of $-2.5$. The Bessel-corrected version divides by $n-1$ and is unbiased — at the cost of a larger variance, which is why some practitioners deliberately use the biased form.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 392" width="100%" role="img" aria-label="Bias, variance, and the U-shaped test error" class="fig-svg"><defs><marker id="bv-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><circle cx="96.0" cy="100.0" r="46.0" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2"/><circle cx="96.0" cy="100.0" r="30.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><circle cx="96.0" cy="100.0" r="14.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><circle cx="96.0" cy="100.0" r="2.5" fill="var(--fig-ink,#e6e9f5)"/><text x="96.0" y="162.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">low bias, low variance</text><circle cx="276.0" cy="100.0" r="46.0" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2"/><circle cx="276.0" cy="100.0" r="30.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><circle cx="276.0" cy="100.0" r="14.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><circle cx="276.0" cy="100.0" r="2.5" fill="var(--fig-ink,#e6e9f5)"/><text x="276.0" y="162.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">low bias, high variance</text><circle cx="96.0" cy="268.0" r="46.0" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2"/><circle cx="96.0" cy="268.0" r="30.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><circle cx="96.0" cy="268.0" r="14.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><circle cx="96.0" cy="268.0" r="2.5" fill="var(--fig-ink,#e6e9f5)"/><text x="96.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="400">high bias, low variance</text><circle cx="276.0" cy="268.0" r="46.0" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2"/><circle cx="276.0" cy="268.0" r="30.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><circle cx="276.0" cy="268.0" r="14.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><circle cx="276.0" cy="268.0" r="2.5" fill="var(--fig-ink,#e6e9f5)"/><text x="276.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">high bias, high variance</text><circle cx="96.0" cy="101.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="93.5" cy="95.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="91.9" cy="95.0" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="96.5" cy="106.7" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="91.6" cy="96.9" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="100.4" cy="101.8" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="96.9" cy="95.3" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="95.7" cy="103.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="83.9" cy="97.7" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="233.5" cy="88.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="232.1" cy="97.8" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="238.0" cy="103.3" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="280.7" cy="97.8" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="232.2" cy="96.2" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="274.5" cy="101.4" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="232.3" cy="94.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="246.6" cy="90.3" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="307.8" cy="90.3" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="111.8" cy="275.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="107.9" cy="253.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="112.8" cy="257.4" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="103.4" cy="257.7" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="120.0" cy="227.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="118.0" cy="258.6" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="107.5" cy="300.0" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="117.3" cy="229.6" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="112.5" cy="268.7" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="286.3" cy="276.5" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="290.0" cy="276.0" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="320.2" cy="242.8" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="298.1" cy="242.1" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="295.3" cy="225.6" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="274.6" cy="250.1" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="316.5" cy="287.2" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="252.3" cy="232.2" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><circle cx="302.7" cy="223.1" r="3.2" fill="var(--fig-ink,#e6e9f5)" opacity="0.8"/><line x1="470.0" y1="310.0" x2="800.0" y2="310.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.4" stroke-linecap="round"/><line x1="470.0" y1="74.0" x2="470.0" y2="310.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.4" stroke-linecap="round"/><path d="M471.6,164.4 L473.7,168.5 L475.8,172.2 L477.8,175.7 L479.9,179.0 L481.9,182.1 L484.0,185.2 L486.0,188.1 L488.1,190.9 L490.1,193.6 L492.2,196.2 L494.2,198.8 L496.3,201.2 L498.3,203.6 L500.4,206.0 L502.4,208.2 L504.5,210.4 L506.5,212.5 L508.6,214.6 L510.6,216.7 L512.7,218.6 L514.7,220.5 L516.8,222.4 L518.9,224.2 L520.9,226.0 L523.0,227.8 L525.0,229.4 L527.1,231.1 L529.1,232.7 L531.2,234.3 L533.2,235.8 L535.3,237.3 L537.3,238.8 L539.4,240.2 L541.4,241.6 L543.5,243.0 L545.5,244.3 L547.6,245.6 L549.6,246.9 L551.7,248.1 L553.7,249.4 L555.8,250.6 L557.8,251.7 L559.9,252.9 L561.9,254.0 L564.0,255.1 L566.1,256.1 L568.1,257.2 L570.2,258.2 L572.2,259.2 L574.3,260.2 L576.3,261.2 L578.4,262.1 L580.4,263.0 L582.5,263.9 L584.5,264.8 L586.6,265.7 L588.6,266.5 L590.7,267.3 L592.7,268.1 L594.8,268.9 L596.8,269.7 L598.9,270.5 L600.9,271.2 L603.0,271.9 L605.0,272.7 L607.1,273.4 L609.1,274.1 L611.2,274.7 L613.3,275.4 L615.3,276.0 L617.4,276.7 L619.4,277.3 L621.5,277.9 L623.5,278.5 L625.6,279.1 L627.6,279.6 L629.7,280.2 L631.7,280.8 L633.8,281.3 L635.8,281.8 L637.9,282.3 L639.9,282.9 L642.0,283.4 L644.0,283.8 L646.1,284.3 L648.1,284.8 L650.2,285.3 L652.2,285.7 L654.3,286.1 L656.3,286.6 L658.4,287.0 L660.5,287.4 L662.5,287.8 L664.6,288.2 L666.6,288.6 L668.7,289.0 L670.7,289.4 L672.8,289.8 L674.8,290.1 L676.9,290.5 L678.9,290.8 L681.0,291.2 L683.0,291.5 L685.1,291.9 L687.1,292.2 L689.2,292.5 L691.2,292.8 L693.3,293.1 L695.3,293.4 L697.4,293.7 L699.4,294.0 L701.5,294.3 L703.5,294.6 L705.6,294.8 L707.7,295.1 L709.7,295.4 L711.8,295.6 L713.8,295.9 L715.9,296.1 L717.9,296.4 L720.0,296.6 L722.0,296.9 L724.1,297.1 L726.1,297.3 L728.2,297.6 L730.2,297.8 L732.3,298.0 L734.3,298.2 L736.4,298.4 L738.4,298.6 L740.5,298.8 L742.5,299.0 L744.6,299.2 L746.6,299.4 L748.7,299.6 L750.7,299.8 L752.8,299.9 L754.9,300.1 L756.9,300.3 L759.0,300.5 L761.0,300.6 L763.1,300.8 L765.1,300.9 L767.2,301.1 L769.2,301.3 L771.3,301.4 L773.3,301.6 L775.4,301.7 L777.4,301.8 L779.5,302.0 L781.5,302.1 L783.6,302.3 L785.6,302.4 L787.7,302.5 L789.7,302.7 L791.8,302.8 L793.8,302.9 L795.9,303.0 L797.9,303.1 L800.0,303.3" fill="none" stroke="var(--fig-blue,#5b8cff)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M471.6,310.0 L473.7,309.9 L475.8,309.9 L477.8,309.8 L479.9,309.8 L481.9,309.7 L484.0,309.6 L486.0,309.6 L488.1,309.5 L490.1,309.4 L492.2,309.3 L494.2,309.3 L496.3,309.2 L498.3,309.1 L500.4,309.0 L502.4,308.9 L504.5,308.9 L506.5,308.8 L508.6,308.7 L510.6,308.6 L512.7,308.5 L514.7,308.4 L516.8,308.3 L518.9,308.2 L520.9,308.1 L523.0,308.0 L525.0,307.9 L527.1,307.8 L529.1,307.7 L531.2,307.6 L533.2,307.4 L535.3,307.3 L537.3,307.2 L539.4,307.1 L541.4,306.9 L543.5,306.8 L545.5,306.7 L547.6,306.5 L549.6,306.4 L551.7,306.3 L553.7,306.1 L555.8,306.0 L557.8,305.8 L559.9,305.7 L561.9,305.5 L564.0,305.4 L566.1,305.2 L568.1,305.0 L570.2,304.9 L572.2,304.7 L574.3,304.5 L576.3,304.3 L578.4,304.2 L580.4,304.0 L582.5,303.8 L584.5,303.6 L586.6,303.4 L588.6,303.2 L590.7,303.0 L592.7,302.8 L594.8,302.5 L596.8,302.3 L598.9,302.1 L600.9,301.9 L603.0,301.6 L605.0,301.4 L607.1,301.2 L609.1,300.9 L611.2,300.6 L613.3,300.4 L615.3,300.1 L617.4,299.9 L619.4,299.6 L621.5,299.3 L623.5,299.0 L625.6,298.7 L627.6,298.4 L629.7,298.1 L631.7,297.8 L633.8,297.5 L635.8,297.2 L637.9,296.8 L639.9,296.5 L642.0,296.1 L644.0,295.8 L646.1,295.4 L648.1,295.1 L650.2,294.7 L652.2,294.3 L654.3,293.9 L656.3,293.5 L658.4,293.1 L660.5,292.7 L662.5,292.3 L664.6,291.8 L666.6,291.4 L668.7,290.9 L670.7,290.5 L672.8,290.0 L674.8,289.5 L676.9,289.0 L678.9,288.5 L681.0,288.0 L683.0,287.5 L685.1,286.9 L687.1,286.4 L689.2,285.8 L691.2,285.3 L693.3,284.7 L695.3,284.1 L697.4,283.5 L699.4,282.9 L701.5,282.2 L703.5,281.6 L705.6,280.9 L707.7,280.3 L709.7,279.6 L711.8,278.9 L713.8,278.1 L715.9,277.4 L717.9,276.7 L720.0,275.9 L722.0,275.1 L724.1,274.3 L726.1,273.5 L728.2,272.7 L730.2,271.8 L732.3,271.0 L734.3,270.1 L736.4,269.2 L738.4,268.2 L740.5,267.3 L742.5,266.3 L744.6,265.4 L746.6,264.3 L748.7,263.3 L750.7,262.3 L752.8,261.2 L754.9,260.1 L756.9,259.0 L759.0,257.8 L761.0,256.7 L763.1,255.5 L765.1,254.3 L767.2,253.0 L769.2,251.7 L771.3,250.4 L773.3,249.1 L775.4,247.7 L777.4,246.4 L779.5,244.9 L781.5,243.5 L783.6,242.0 L785.6,240.5 L787.7,238.9 L789.7,237.4 L791.8,235.8 L793.8,234.1 L795.9,232.4 L797.9,230.7 L800.0,228.9" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M471.6,155.7 L473.7,159.7 L475.8,163.4 L477.8,166.8 L479.9,170.1 L481.9,173.2 L484.0,176.1 L486.0,179.0 L488.1,181.7 L490.1,184.4 L492.2,186.9 L494.2,189.4 L496.3,191.8 L498.3,194.1 L500.4,196.3 L502.4,198.5 L504.5,200.6 L506.5,202.7 L508.6,204.7 L510.6,206.6 L512.7,208.5 L514.7,210.3 L516.8,212.1 L518.9,213.8 L520.9,215.5 L523.0,217.1 L525.0,218.7 L527.1,220.2 L529.1,221.7 L531.2,223.2 L533.2,224.6 L535.3,226.0 L537.3,227.3 L539.4,228.6 L541.4,229.9 L543.5,231.1 L545.5,232.3 L547.6,233.5 L549.6,234.7 L551.7,235.8 L553.7,236.8 L555.8,237.9 L557.8,238.9 L559.9,239.9 L561.9,240.9 L564.0,241.8 L566.1,242.7 L568.1,243.6 L570.2,244.4 L572.2,245.3 L574.3,246.1 L576.3,246.8 L578.4,247.6 L580.4,248.3 L582.5,249.0 L584.5,249.7 L586.6,250.4 L588.6,251.0 L590.7,251.6 L592.7,252.2 L594.8,252.8 L596.8,253.4 L598.9,253.9 L600.9,254.4 L603.0,254.9 L605.0,255.4 L607.1,255.9 L609.1,256.3 L611.2,256.7 L613.3,257.1 L615.3,257.5 L617.4,257.9 L619.4,258.2 L621.5,258.5 L623.5,258.8 L625.6,259.1 L627.6,259.4 L629.7,259.7 L631.7,259.9 L633.8,260.1 L635.8,260.3 L637.9,260.5 L639.9,260.7 L642.0,260.8 L644.0,261.0 L646.1,261.1 L648.1,261.2 L650.2,261.3 L652.2,261.3 L654.3,261.4 L656.3,261.4 L658.4,261.4 L660.5,261.4 L662.5,261.4 L664.6,261.4 L666.6,261.4 L668.7,261.3 L670.7,261.2 L672.8,261.1 L674.8,261.0 L676.9,260.9 L678.9,260.7 L681.0,260.5 L683.0,260.3 L685.1,260.1 L687.1,259.9 L689.2,259.7 L691.2,259.4 L693.3,259.2 L695.3,258.9 L697.4,258.6 L699.4,258.2 L701.5,257.9 L703.5,257.5 L705.6,257.1 L707.7,256.7 L709.7,256.3 L711.8,255.9 L713.8,255.4 L715.9,254.9 L717.9,254.4 L720.0,253.9 L722.0,253.3 L724.1,252.8 L726.1,252.2 L728.2,251.6 L730.2,251.0 L732.3,250.3 L734.3,249.6 L736.4,248.9 L738.4,248.2 L740.5,247.5 L742.5,246.7 L744.6,245.9 L746.6,245.1 L748.7,244.2 L750.7,243.4 L752.8,242.5 L754.9,241.6 L756.9,240.6 L759.0,239.6 L761.0,238.6 L763.1,237.6 L765.1,236.5 L767.2,235.5 L769.2,234.3 L771.3,233.2 L773.3,232.0 L775.4,230.8 L777.4,229.5 L779.5,228.3 L781.5,227.0 L783.6,225.6 L785.6,224.2 L787.7,222.8 L789.7,221.4 L791.8,219.9 L793.8,218.4 L795.9,216.8 L797.9,215.2 L800.0,213.6" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/><circle cx="608.6" cy="256.2" r="4.5" fill="var(--fig-cyan,#22d3ee)"/><line x1="608.6" y1="74.0" x2="608.6" y2="310.0" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 3" opacity="0.6"/><text x="470.0" y="56.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">error</text><text x="800.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">model capacity →</text><rect x="480.0" y="348.0" width="11.0" height="11.0" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5"/><text x="496.0" y="358.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">total error</text><rect x="588.0" y="348.0" width="11.0" height="11.0" rx="3" fill="var(--fig-blue,#5b8cff)" stroke="none" stroke-width="1.5"/><text x="604.0" y="358.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">bias²</text><rect x="696.0" y="348.0" width="11.0" height="11.0" rx="3" fill="var(--fig-amber,#f5b544)" stroke="none" stroke-width="1.5"/><text x="712.0" y="358.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">variance</text><text x="614.6" y="246.2" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">sweet spot</text></svg><figcaption>The left panel is the dartboard: bias is a shifted cluster, variance is a wide cluster, and total error is the spread about the bullseye. The right panel is the consequence — as model complexity grows, bias falls and variance rises, and the test error is their sum plus irreducible noise.</figcaption></figure></p>
+<p><div class="viz" data-viz="v-bias-variance"></div><div class="vizcap">Drag the polynomial degree to change estimator complexity and watch the fit, the squared bias, the variance, and the test error move together. The quantity being estimated is the same one the dartboard shows — notice that the test error bottoms out before either component does.</div></p>
+<h3 id="the-elbo-and-variational-inference">The ELBO and variational inference</h3>
+<p><strong>(1) Intuition.</strong> The quantity you want, $\log p(x)$, is an integral over hidden variables you cannot compute. So you pick a tractable family $q$, and you maximise a <em>lower bound</em> on the log-likelihood instead — improving the bound both fits the model and tightens the approximation.</p>
+<p><strong>(2) Formal.</strong> For any distribution $q(z)$ over the latent variable,</p>
+<p>$$\log p(x) = \operatorname{ELBO}(q) + \operatorname{KL}(q(z)\|p(z\mid x)), \qquad \operatorname{ELBO}(q) = \mathbb{E}_{q}[\log p(x,z)] - \mathbb{E}_q[\log q(z)].$$</p>
+<p>Since the KL term is nonnegative, $\operatorname{ELBO}(q) \le \log p(x)$ with equality iff $q = p(z\mid x)$ exactly.</p>
+<p><strong>(3) Why.</strong> The ELBO is computable whenever $q$ is chosen with a convenient form (mean-field, diagonal Gaussian): the first term is an expectation you can estimate by sampling, the second is the entropy of $q$ which is often closed-form. Maximising it does two jobs at once — it drives $q$ toward the posterior <em>and</em> pushes up the marginal likelihood — which is why VAEs train on a reconstruction term minus a KL term.</p>
+<p><strong>(4) Micro-example.</strong> A two-component mixture with $\pi = (0.3,0.7)$, means $(0,4)$, unit variance, at $x = 3$: $\log p(x) = -1.7678$ and the true posterior is $(0.0078, 0.9922)$. Take $q$ over the component indicator:</p>
+<table>
+<thead>
+<tr>
+<th>$q$</th>
+<th>ELBO</th>
+<th>gap $=$ KL$(q\|p(z\mid x))$</th>
+<th>$H(q)$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$(1,0)$</td>
+<td>$-6.6229$</td>
+<td>$4.8551$</td>
+<td>$0$</td>
+</tr>
+<tr>
+<td>$(0.5,0.5)$</td>
+<td>$-3.5061$</td>
+<td>$1.7383$</td>
+<td>$0.6931$</td>
+</tr>
+<tr>
+<td>$(0.2,0.8)$</td>
+<td>$-2.2447$</td>
+<td>$0.4769$</td>
+<td>$0.5004$</td>
+</tr>
+<tr>
+<td>$(0.0078,0.9922)$</td>
+<td>$-1.7678$</td>
+<td>$0.0000$</td>
+<td>$0.0456$</td>
+</tr>
+</tbody>
+</table>
+<p>The bound is tight exactly at the posterior, as the derivation says, and every other $q$ pays a positive gap.</p>
+<h3 id="sampling-inverse-cdf-rejection-reparameterization">Sampling: inverse CDF, rejection, reparameterization</h3>
+<p><strong>(1) Intuition.</strong> Inverse CDF turns a uniform random number into a draw from any distribution by inverting its cdf. Rejection sampling proposes from something easy and keeps proposals with a probability proportional to how well they fit the target. The reparameterization trick rewrites a draw so that the randomness is independent of the parameters — which lets a gradient pass through.</p>
+<p><strong>(2) Formal.</strong> If $U\sim\mathrm{Uniform}[0,1]$ then $X = F^{-1}(U)$ has cdf $F$. Rejection: propose $Y\sim q$, accept with probability $p(Y)/(Mq(Y))$ for $M \ge \sup p/q$; the accepted draws are distributed as $p$, at expected cost $M$ proposals each. Reparameterization: if $z = \mu + \sigma\epsilon$ with $\epsilon\sim\mathcal{N}(0,1)$, then $\mathbb{E}_{z\sim\mathcal{N}(\mu,\sigma^2)}[f(z)] = \mathbb{E}_\epsilon[f(\mu+\sigma\epsilon)]$ and $\nabla_\mu = \mathbb{E}_\epsilon[f'(\mu+\sigma\epsilon)]$.</p>
+<p><strong>(3) Why.</strong> Sampling is how intractable expectations are estimated, so the <em>variance</em> of the estimator determines how much of the training signal is noise. The reparameterized gradient has dramatically lower variance than the score-function (REINFORCE) estimator, which is the reason VAEs are trainable at all (<strong>M23</strong>), and the reason RL needs variance-reduction machinery that supervised learning does not (<strong>M18</strong>).</p>
+<p><strong>(4) Micro-example.</strong> Inverse CDF for the exponential: $F(x) = 1-e^{-\lambda x}$, so $X = -\log(1-U)/\lambda$. With $U = 0.5$, $X = 0.6931$; with $U = 0.9$, $X = 2.3026$. Rejection for the triangular density $p(x) = 2x$ on $[0,1]$ with a uniform proposal: $M = 2$, so accept if $U_2 < U_1$. Measured acceptance rate $0.4995$ against the theoretical $0.5$, and the accepted draws have mean $0.6679$ against the theoretical $2/3$.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 360" width="100%" role="img" aria-label="Temperature reshapes the distribution; top-k and top-p cut it" class="fig-svg"><defs><marker id="samp-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="150.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">T = 0.5 (sharper)</text><rect x="38.0" y="159.0" width="24.0" height="101.0" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="50.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">the</text><text x="50.0" y="153.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.56</text><rect x="66.0" y="214.6" width="24.0" height="45.4" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="78.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">a</text><text x="78.0" y="208.6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.25</text><rect x="94.0" y="239.6" width="24.0" height="20.4" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="106.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">thi</text><text x="106.0" y="233.6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.11</text><rect x="122.0" y="252.5" width="24.0" height="7.5" rx="3" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="134.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">one</text><rect x="150.0" y="256.6" width="24.0" height="3.4" rx="3" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="162.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">som</text><rect x="178.0" y="258.5" width="24.0" height="1.5" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="190.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">eac</text><rect x="206.0" y="259.4" width="24.0" height="0.6" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="218.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">any</text><rect x="234.0" y="259.7" width="24.0" height="0.3" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="246.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">no</text><line x1="34.0" y1="260.0" x2="270.0" y2="260.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><text x="150.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">entropy 1.19 nats</text><text x="430.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">T = 1.0</text><rect x="318.0" y="196.2" width="24.0" height="63.8" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="330.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">the</text><text x="330.0" y="190.2" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.35</text><rect x="346.0" y="217.2" width="24.0" height="42.8" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="358.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">a</text><text x="358.0" y="211.2" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.24</text><rect x="374.0" y="231.3" width="24.0" height="28.7" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="386.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">thi</text><text x="386.0" y="225.3" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.16</text><rect x="402.0" y="242.6" width="24.0" height="17.4" rx="3" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="414.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">one</text><text x="414.0" y="236.6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.10</text><rect x="430.0" y="248.3" width="24.0" height="11.7" rx="3" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="442.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">som</text><text x="442.0" y="242.3" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.06</text><rect x="458.0" y="252.2" width="24.0" height="7.8" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="470.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">eac</text><rect x="486.0" y="255.3" width="24.0" height="4.7" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="498.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">any</text><rect x="514.0" y="256.8" width="24.0" height="3.2" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="526.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">no</text><line x1="314.0" y1="260.0" x2="550.0" y2="260.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><text x="430.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">entropy 1.71 nats</text><text x="710.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">T = 2.0 (flatter)</text><rect x="598.0" y="218.0" width="24.0" height="42.0" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="610.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">the</text><text x="610.0" y="212.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.23</text><rect x="626.0" y="225.6" width="24.0" height="34.4" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="638.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">a</text><text x="638.0" y="219.6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.19</text><rect x="654.0" y="231.8" width="24.0" height="28.2" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="666.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">thi</text><text x="666.0" y="225.8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.16</text><rect x="682.0" y="238.1" width="24.0" height="21.9" rx="3" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="694.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">one</text><text x="694.0" y="232.1" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.12</text><rect x="710.0" y="242.0" width="24.0" height="18.0" rx="3" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="722.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">som</text><text x="722.0" y="236.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.10</text><rect x="738.0" y="245.3" width="24.0" height="14.7" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="750.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">eac</text><text x="750.0" y="239.3" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.08</text><rect x="766.0" y="248.5" width="24.0" height="11.5" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="778.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">any</text><text x="778.0" y="242.5" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.06</text><rect x="794.0" y="250.6" width="24.0" height="9.4" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="806.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">no</text><line x1="594.0" y1="260.0" x2="830.0" y2="260.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><text x="710.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">entropy 1.97 nats</text><rect x="30.0" y="30.0" width="0.0" height="0.0" rx="0" fill="none" stroke="none" stroke-width="1.5"/><line x1="840.0" y1="40.0" x2="840.0" y2="300.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="0" stroke-linecap="round"/><text x="440.0" y="336.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">temperature divides the logits before the softmax; it changes the shape, never the ranking</text></svg><figcaption>The proposal, the target, and the accepted region on one axis: the ratio $p/(Mq)$ is the acceptance probability at each point, so mass the proposal over-covers is thinned and mass it never reaches is lost forever.</figcaption></figure></p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<p>The algorithm is <strong>variational inference by stochastic gradient ascent on the ELBO</strong>, using the reparameterization trick so that gradients flow through the sampling. This is the loop inside every VAE, and the same machinery appears wherever a bound on a log-likelihood must be optimised (<strong>M23</strong>).</p>
+<ol>
+<li>Fix the model: a prior $p(z)$ and a likelihood $p(x\mid z)$, with all parameters.</li>
+<li>Choose a variational family $q(z;\phi)$ that is reparameterizable: $z = \mu_\phi + \sigma_\phi\odot\epsilon$ with $\epsilon\sim\mathcal{N}(\mathbf{0},\mathbf{I})$. Diagonal Gaussians are the default because their entropy is closed-form and their reparameterization is exact.</li>
+<li>Draw $K$ noise samples $\epsilon_1,\ldots,\epsilon_K$, form $z_k = \mu_\phi + \sigma_\phi\odot\epsilon_k$.</li>
+<li>Estimate the ELBO with the Monte Carlo average
+$$\hat{\operatorname{ELBO}} = \frac1K\sum_{k=1}^{K}\left[\log p(x,z_k) - \log q(z_k;\phi)\right].$$</li>
+<li>Backpropagate through the <em>deterministic</em> map $\epsilon\mapsto z$ to get $\nabla_\phi\hat{\operatorname{ELBO}}$; the noise is now an input, not a sampling operation, so no score-function estimator is needed.</li>
+<li>Take an optimizer step on $(\phi, \text{model parameters})$ — Adam is standard (<strong>M04</strong>).</li>
+<li>Monitor the bound. The importance-weighted estimate $\log\frac1K\sum_k p(x,z_k)/q(z_k)$ is itself a lower bound on $\log p(x)$ and tighter than the ELBO; the gap between the two estimates the remaining KL.</li>
+<li>At convergence, $q(z;\phi)$ approximates the posterior. If you need $\log p(x)$ itself, use the IWAE bound or annealed importance sampling; the ELBO alone never gives it.</li>
+</ol>
+<p>```text
+INPUT  data x, prior p(z), likelihood p(x|z), family q(z;phi)
+repeat:
+    eps  <- randn(K, dim_z)                     # K reparameterised noise draws
+    z    <- mu_phi + sigma_phi * eps            # deterministic given eps
+    elbo <- mean(log p(x, z) - log q(z; phi))   # Monte Carlo estimate
+    g    <- grad(elbo, [phi, model params])     # exact gradient through eps -> z
+    params <- adam_update(params, g)
+until elbo converges
+RETURN q(z;phi) approximating the posterior
+```</p>
+<p><strong>Complexity.</strong> Per step: $O(K)$ evaluations of $\log p(x,z)$ and $\log q(z)$, each costing one forward pass through the decoder; memory $O(K\cdot\dim z)$ for the samples plus the activations. The estimator's variance falls as $1/K$, so $K$ trades compute for gradient noise — and unlike the score-function estimator, its variance does not scale with the dimension of $z$.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="1-i313-and-the-variance-of-a-sum">1. $\mathrm{Var}[aX+b] = a^2\mathrm{Var}[X]$, and the variance of a sum</h3>
+<p>By definition and linearity of expectation,</p>
+<p>$$\begin{aligned}
+\mathrm{Var}[aX+b] &= \mathbb{E}\left[(aX+b - \mathbb{E}[aX+b])^2\right] = \mathbb{E}\left[(aX+b - a\mathbb{E}X - b)^2\right] \\
+&= \mathbb{E}\left[a^2(X-\mathbb{E}X)^2\right] = a^2\mathrm{Var}[X].
+\end{aligned}$$</p>
+<p>The shift $b$ cancels inside the square and the scale $a$ factors out squared. For two variables,</p>
+<p>$$\begin{aligned}
+\mathrm{Var}[X+Y] &= \mathbb{E}\left[((X-\mu_X) + (Y-\mu_Y))^2\right] \\
+&= \mathbb{E}[(X-\mu_X)^2] + \mathbb{E}[(Y-\mu_Y)^2] + 2\mathbb{E}[(X-\mu_X)(Y-\mu_Y)] \\
+&= \mathrm{Var}[X] + \mathrm{Var}[Y] + 2\mathrm{Cov}[X,Y].
+\end{aligned}$$</p>
+<p>Independence makes the covariance zero (since $\mathbb{E}[XY] = \mathbb{E}X\mathbb{E}Y$), which is why variances add for independent variables and only then. For $n$ i.i.d. observations, $\mathrm{Var}[\bar X] = \frac{1}{n^2}\sum_i\mathrm{Var}[X_i] = \sigma^2/n$ — the $1/n$ that makes averaging work.</p>
+<h3 id="2-maximum-entropy-under-fixed-variance-gives-the-gaussian">2. Maximum entropy under fixed variance gives the Gaussian</h3>
+<p>Maximise $H(p) = -\int p(x)\log p(x)\,dx$ subject to three constraints: normalisation, mean $\mu$, and variance $\sigma^2$:</p>
+<p>$$g_1 = \int p\,dx - 1 = 0, \quad g_2 = \int xp\,dx - \mu = 0, \quad g_3 = \int (x-\mu)^2p\,dx - \sigma^2 = 0 .$$</p>
+<p>Form the Lagrangian with multipliers $\lambda_0,\lambda_1,\lambda_2$:</p>
+<p>$$\mathcal{L} = -\int p\log p\,dx + \lambda_0\left(\int p - 1\right) + \lambda_1\left(\int xp - \mu\right) + \lambda_2\left(\int (x-\mu)^2p - \sigma^2\right).$$</p>
+<p>Vary $p$ at a point $x$ (a functional derivative): $\delta\mathcal{L}/\delta p(x) = -\log p(x) - 1 + \lambda_0 + \lambda_1x + \lambda_2(x-\mu)^2 = 0$, so</p>
+<p>$$p(x) = \exp\left(\lambda_0 - 1 + \lambda_1 x + \lambda_2(x-\mu)^2\right).$$</p>
+<p>A density of this form is Gaussian with precision $-2\lambda_2$. Imposing the constraints: $\lambda_1 = 0$ by symmetry about $\mu$, and $\lambda_2 = -1/(2\sigma^2)$ so that the exponent is $-(x-\mu)^2/(2\sigma^2)$; normalisation fixes $\lambda_0$. Hence $p = \mathcal{N}(\mu,\sigma^2)$.</p>
+<p>Two consequences worth carrying: the maximum value is $H = \frac12\log(2\pi e\sigma^2)$ — for $\sigma = 1$ that is $1.4189$ nats, and it grows only logarithmically in $\sigma$ — and any other distribution with the same variance has strictly lower entropy, so choosing a Gaussian likelihood is choosing to add no assumption beyond a mean and a variance.</p>
+<h3 id="3-mle-gives-cross-entropy-for-bernoulli-and-categorical-and-mse-for-gaussian">3. MLE gives cross-entropy for Bernoulli and categorical, and MSE for Gaussian</h3>
+<p><strong>Bernoulli.</strong> With $n$ trials and $k$ successes,</p>
+<p>$$\log L(p) = k\log p + (n-k)\log(1-p), \qquad \frac{d\log L}{dp} = \frac{k}{p} - \frac{n-k}{1-p} = 0 \;\Longrightarrow\; \hat p = \frac{k}{n}.$$</p>
+<p>The second derivative is $-k/p^2 - (n-k)/(1-p)^2 < 0$, so this is a maximum. Written per observation, $-\frac1n\log L = -\left[\hat p\log p + (1-\hat p)\log(1-p)\right]$ — the cross-entropy between the empirical distribution and the model. Minimising the negative log-likelihood <em>is</em> minimising cross-entropy, term for term.</p>
+<p><strong>Categorical.</strong> With counts $n_j$ in class $j$ and model probabilities $q_j$,</p>
+<p>$$\log L(\mathbf{q}) = \sum_j n_j\log q_j \quad\text{subject to}\quad \sum_j q_j = 1 .$$</p>
+<p>A Lagrange multiplier for the constraint gives $n_j/q_j = \lambda$ for every $j$, so $q_j \propto n_j$ and $\hat q_j = n_j/n$: the MLE is the empirical frequency, and the loss is $-\sum_j \hat q_j\log q_j$, categorical cross-entropy. For a one-hot target this is $-\log q_{\text{true}}$, the loss every language model minimises.</p>
+<p><strong>Gaussian.</strong> With $x_i\sim\mathcal{N}(\mu,\sigma^2)$,</p>
+<p>$$\log L = -\frac{n}{2}\log(2\pi\sigma^2) - \frac{1}{2\sigma^2}\sum_i(x_i-\mu)^2 .$$</p>
+<p>Differentiating with respect to $\mu$: $\frac{1}{\sigma^2}\sum_i(x_i-\mu) = 0$, so $\hat\mu = \bar x$, and the maximised log-likelihood is a decreasing function of $\sum_i(x_i-\bar x)^2$. Minimising squared error <em>is</em> Gaussian MLE with $\sigma$ fixed; with $\sigma$ free, $\hat\sigma^2 = \frac1n\sum_i(x_i-\bar x)^2$, the biased estimator.</p>
+<h3 id="4-i359-via-jensen-and-the-asymmetry">4. $\operatorname{KL}(p\|q)\ge0$ via Jensen, and the asymmetry</h3>
+<p>Write the divergence as an expectation and apply Jensen's inequality to the convex function $-\log$:</p>
+<p>$$\operatorname{KL}(p\|q) = \sum_x p(x)\log\frac{p(x)}{q(x)} = -\sum_x p(x)\log\frac{q(x)}{p(x)} \ge -\log\sum_x p(x)\frac{q(x)}{p(x)} = -\log\sum_x q(x) = -\log 1 = 0 .$$</p>
+<p>Equality holds iff $q(x)/p(x)$ is constant on the support of $p$, i.e. $p = q$. The same argument works for densities with $\int$ in place of $\sum$.</p>
+<p>KL is not symmetric, and the asymmetry is not a technicality: $\operatorname{KL}(p\|q)$ is infinite wherever $p > 0$ and $q = 0$ (mass-covering: $q$ is punished for missing regions), while $\operatorname{KL}(q\|p)$ is infinite wherever $q > 0$ and $p = 0$ (mode-seeking: $q$ is punished for inventing regions). Concretely, for $p = (0.5,0.5)$ and $q = (0.9,0.1)$:</p>
+<p>$$\operatorname{KL}(p\|q) = 0.5\log\frac{0.5}{0.9} + 0.5\log\frac{0.5}{0.1} = 0.5108, \qquad \operatorname{KL}(q\|p) = 0.9\log\frac{0.9}{0.5} + 0.1\log\frac{0.1}{0.5} = 0.3681 .$$</p>
+<p>That difference is why forward KL (as in maximum likelihood) produces an average-covering fit and reverse KL (as in variational inference) produces a mode-seeking one: two different-looking models, neither wrong.</p>
+<h3 id="5-mutual-information-is-a-kl-divergence-and-is-symmetric">5. Mutual information is a KL divergence, and is symmetric</h3>
+<p>$$I(X;Y) = \sum_{x,y}p(x,y)\log\frac{p(x,y)}{p(x)p(y)} = \operatorname{KL}\left(p(x,y)\,\|\,p(x)p(y)\right) \ge 0 .$$</p>
+<p>That form makes non-negativity and symmetry immediate: the expression is symmetric in $x$ and $y$ even though KL in general is not, because the argument is a ratio of a joint to a product. Expanding the log,</p>
+<p>$$\begin{aligned}
+I(X;Y) &= \sum_{x,y}p(x,y)\log p(x,y) - \sum_{x,y}p(x,y)\log p(x) - \sum_{x,y}p(x,y)\log p(y) \\
+&= -H(X,Y) + H(X) + H(Y) = H(X) - H(X\mid Y),
+\end{aligned}$$</p>
+<p>using $H(X\mid Y) = H(X,Y) - H(Y)$. So mutual information is the reduction in uncertainty about $X$ from observing $Y$, and it is zero exactly when the variables are independent.</p>
+<p><strong>Micro-check.</strong> For the $2\times2$ table $p(0,0) = p(1,1) = 0.4$, $p(0,1) = p(1,0) = 0.1$: $H(X) = H(Y) = 0.6931$, $H(X,Y) = 1.1936$, so $I = 0.1927$ nats, matching $\operatorname{KL}(p(x,y)\|p(x)p(y))$ computed directly. The conditional entropy is $H(X\mid Y) = H(X) - I = 0.5004$, exactly the entropy of the conditional distribution $(0.8,0.2)$.</p>
+<h3 id="6-the-elbo-derived">6. The ELBO, derived</h3>
+<p>Introduce any distribution $q(z)$ with $q(z) > 0$ wherever $p(x,z) > 0$, and multiply and divide inside the log:</p>
+<p>$$\log p(x) = \log\int p(x,z)\,dz = \log\int q(z)\frac{p(x,z)}{q(z)}\,dz .$$</p>
+<p>The integral is an expectation under $q$, so apply Jensen's inequality to the concave $\log$:</p>
+<p>$$\log p(x) = \log\mathbb{E}_{q}\left[\frac{p(x,z)}{q(z)}\right] \ge \mathbb{E}_q\left[\log\frac{p(x,z)}{q(z)}\right] = \mathbb{E}_q[\log p(x,z)] - \mathbb{E}_q[\log q(z)] =: \operatorname{ELBO}(q).$$</p>
+<p>That is the bound. For the gap, expand $p(x,z) = p(z\mid x)p(x)$:</p>
+<p>$$\begin{aligned}
+\log p(x) - \operatorname{ELBO}(q) &= \mathbb{E}_q[\log p(x)] - \mathbb{E}_q[\log p(x,z)] + \mathbb{E}_q[\log q(z)] \\
+&= \mathbb{E}_q\left[\log\frac{p(x)q(z)}{p(x,z)}\right] = \mathbb{E}_q\left[\log\frac{q(z)}{p(z\mid x)}\right] = \operatorname{KL}(q(z)\|p(z\mid x)) \ge 0 .
+\end{aligned}$$</p>
+<p>Since the gap is a KL divergence, it is zero exactly when $q$ is the true posterior — which is the target inference is trying to hit, and also the reason the ELBO is tight only in that limit. The two-term form follows from $p(x,z) = p(z)p(x\mid z)$: $\operatorname{ELBO} = \mathbb{E}_q[\log p(x\mid z)] - \operatorname{KL}(q(z)\|p(z))$, a reconstruction term minus a complexity term, which is the VAE objective printed in every paper (<strong>M23</strong>).</p>
+<h3 id="7-the-reparameterized-gradient-and-inverse-cdf-sampling">7. The reparameterized gradient, and inverse-CDF sampling</h3>
+<p><strong>Inverse CDF.</strong> For $U\sim\mathrm{Uniform}[0,1]$ and $X = F^{-1}(U)$, monotonicity of $F$ gives</p>
+<p>$$\mathbb{P}(X\le x) = \mathbb{P}(F^{-1}(U)\le x) = \mathbb{P}(U\le F(x)) = F(x),$$</p>
+<p>so $X$ has cdf $F$ — provided $F$ is continuous and strictly increasing, which guarantees $F^{-1}$ exists.</p>
+<p><strong>Reparameterization.</strong> For $z = \mu + \sigma\epsilon$ with $\epsilon\sim\mathcal{N}(0,1)$ and $f$ any function,</p>
+<p>$$\mathbb{E}_{z\sim\mathcal{N}(\mu,\sigma^2)}[f(z)] = \int f(z)\frac{1}{\sqrt{2\pi}\sigma}e^{-(z-\mu)^2/(2\sigma^2)}dz = \int f(\mu+\sigma\epsilon)\phi(\epsilon)\,d\epsilon = \mathbb{E}_{\epsilon}[f(\mu+\sigma\epsilon)],$$</p>
+<p>by the substitution $z = \mu + \sigma\epsilon$, $dz = \sigma\,d\epsilon$, under which the density factors cancel exactly. Differentiating the right-hand side moves the gradient inside the expectation:</p>
+<p>$$\frac{\partial}{\partial\mu}\mathbb{E}_\epsilon[f(\mu+\sigma\epsilon)] = \mathbb{E}_\epsilon\left[f'(\mu+\sigma\epsilon)\right],$$</p>
+<p>because the distribution of $\epsilon$ does not depend on $\mu$. The score-function estimator cannot do this and instead differentiates the log-density: $\nabla_\mu\mathbb{E}_q[f] = \mathbb{E}_q[f(z)\nabla_\mu\log q(z)]$, which is unbiased but multiplies $f$ by a random score. Measured on $f(z) = z^2$, $\mu = 2$, $\sigma = 0.5$: the reparameterized estimator has variance $1.002$ (it is exactly $2z$), while the score-function estimator has variance $124.1$ — a factor of 124 in variance for the same expectation, and the reason VAEs train at all.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>MLE and MAP in closed form, the information-theoretic quantities, and the two gradient estimators side by side. The last block is the point: same expectation, variances differing by two orders of magnitude.</p>
+<p>```python
+import numpy as np
+rng = np.random.default_rng(0)
+
+def bernoulli_mle(k, n):            # from d/dp of the log-likelihood = 0
+    return k / n
+
+def bernoulli_map(k, n, a, b):      # Beta(a,b) prior -> posterior Beta(a+k, b+n-k)
+    return (a + k - 1) / (a + b + n - 2)
+
+def entropy(p):
+    p = np.asarray(p, dtype=float)
+    return -np.sum(p * np.log(p))
+
+def cross_entropy(p, q):
+    return -np.sum(np.asarray(p) * np.log(np.asarray(q)))
+
+def kl(p, q):
+    p, q = np.asarray(p, float), np.asarray(q, float)
+    return np.sum(p * np.log(p / q))
+
+print("MLE :", bernoulli_mle(7, 10))                 # 0.7
+print("MAP :", bernoulli_map(7, 10, 2, 2))           # 0.6667
+p, q = [0.5, 0.5], [0.9, 0.1]
+print("H, H(p,q), KL(p||q), KL(q||p):",
+      round(entropy(p), 4), round(cross_entropy(p, q), 4),
+      round(kl(p, q), 4), round(kl(q, p), 4))        # 0.6931 1.2040 0.5108 0.3681
+print("ppl of 3 nats:", round(np.exp(3.0), 4))       # 20.0855
+
+# --- reparameterised vs score-function gradient of E[f(z)], z ~ N(mu, sigma^2) ---
+def f(z):  return z ** 2          # E[f] = mu^2 + sigma^2
+def df(z): return 2 * z           # E[f'] = 2*mu, the true d/dmu
+
+mu, sigma, K = 2.0, 0.5, 200000
+eps = rng.standard_normal(K)
+z = mu + sigma * eps                              # deterministic given eps
+g_reparam = df(z).mean()                          # 4.0
+g_score   = (f(z) * (z - mu) / sigma ** 2).mean() # also unbiased, far noisier
+print("reparam:", round(g_reparam, 4), "var", round(df(z).var(), 4))    # var 1.0
+print("score  :", round(g_score, 4),
+      "var", round((f(z) * (z - mu) / sigma ** 2).var(), 2))            # var 124
+
+# --- importance-weighted bound: a tighter lower bound on log p(x) ---
+def logsumexp(v):
+    return v.max() + np.log(np.exp(v - v.max()).sum())
+
+lw = np.array([-1.9, -2.1, -1.8])                 # per-sample log p(x,z) - log q(z)
+print("ELBO:", round(lw.mean(), 4), "IWAE:", round(logsumexp(lw) - np.log(len(lw)), 4))
+```</p>
+<p><strong>What to expect.</strong> MLE $0.7$ and MAP $0.6667$, the four divergences and entropies in the order above, and a perplexity of $20.0855$ for an entropy of 3 nats. The variance comparison is the headline: $1.0$ against $124.1$ for the same expectation. The IWAE line reports $-1.9257$ against the ELBO's $-1.9333$ — always at least as high, which is the practical test that the bound implementation is not inverted.</p>
+<h2 id="worked-example">Worked example</h2>
+<p><strong>Coin with a Beta$(2,2)$ prior.</strong> Seven heads in ten flips. The log-likelihood is $\ell(p) = 7\log p + 3\log(1-p)$, and the log-prior is $\log p + \log(1-p) + \text{const}$ (since Beta$(2,2)\propto p(1-p)$).</p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Formula</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>log-likelihood at $p=0.5$</td>
+<td>$7\log0.5+3\log0.5$</td>
+<td>$-6.9315$</td>
+</tr>
+<tr>
+<td>log-likelihood at $p=0.7$</td>
+<td>$7\log0.7+3\log0.3$</td>
+<td>$-6.1086$</td>
+</tr>
+<tr>
+<td>log-likelihood at $p=0.9$</td>
+<td>$7\log0.9+3\log0.1$</td>
+<td>$-7.6453$</td>
+</tr>
+<tr>
+<td>MLE</td>
+<td>$k/n$</td>
+<td>$0.7000$</td>
+</tr>
+<tr>
+<td>posterior</td>
+<td>Beta$(9,5)$</td>
+<td>mean $0.6429$</td>
+</tr>
+<tr>
+<td>MAP</td>
+<td>$(9-1)/(14-2)$</td>
+<td>$0.6667$</td>
+</tr>
+<tr>
+<td>log-odds shift from prior $0.5$</td>
+<td>$\log\frac{0.7}{0.3}-\log\frac{0.5}{0.5}$</td>
+<td>$0.8473$</td>
+</tr>
+</tbody>
+</table>
+<p>With a strong prior Beta$(5,5)$ the MAP moves to $(5+7-1)/(10+10-2) = 0.6111$; with the uniform Beta$(1,1)$ it equals the MLE at $0.7$. The prior's strength, not its mean, decides how far the estimate is pulled — a fact that reappears as "weight decay strength" in <strong>M04</strong>.</p>
+<p><strong>Perplexity, converted.</strong> A model reporting a mean negative log-likelihood of $3.0$ nats per token has $3.0/0.6931 = 4.33$ bits per token and perplexity $e^{3.0} = 20.0855$: it behaves like a model choosing uniformly among about 20 options. A uniform distribution over a 50,000-token vocabulary has $H = \log 50000 = 10.8198$ nats $= 15.61$ bits, so its perplexity is exactly $50{,}000$ — which is the ceiling, and the reason perplexity comparisons are only meaningful within one tokenizer (<strong>M14</strong>).</p>
+<p><strong>KL is not symmetric, and here is the cost.</strong> With $p = (0.5,0.5)$ and $q = (0.9,0.1)$: $\operatorname{KL}(p\|q) = 0.5108$ and $\operatorname{KL}(q\|p) = 0.3681$. If $q$ has a zero where $p$ has mass, $\operatorname{KL}(p\|q) = \infty$ while $\operatorname{KL}(q\|p)$ stays finite — so "fitting $q$ to $p$ by minimising KL" has two different answers depending on direction, and choosing the direction is a modelling decision, not a convention.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="a-99-accurate-test-means-a-positive-result-is-99-likely-to-be-true">"A 99%-accurate test means a positive result is 99% likely to be true"</h3>
+<p>Accuracy is $\mathbb{P}(\text{test}\mid\text{state})$; what you want is $\mathbb{P}(\text{state}\mid\text{test})$, and Bayes' rule relates them through the base rate. At 1% prevalence the posterior is 50%, as computed in the core concepts. Every "the model is 95% accurate" claim about a rare event fails the same way, and it is why precision matters more than accuracy on imbalanced data (<strong>M05</strong>).</p>
+<h3 id="kl-divergence-is-a-distance">"KL divergence is a distance"</h3>
+<p>It is not symmetric and it violates the triangle inequality, so it is a divergence, not a metric. The asymmetry is informative rather than annoying: forward KL punishes a model that assigns zero probability to data ($q=0$ where $p>0$) infinitely, so it spreads mass to cover; reverse KL punishes mass where there is no data, so it concentrates on modes. Two different objectives, two different failure modes, both called "minimising KL".</p>
+<h3 id="because-the-model-assumes-iid-data-it-thinks-tokens-are-independent">"Because the model assumes i.i.d. data, it thinks tokens are independent"</h3>
+<p>The i.i.d. assumption is about the <em>dataset</em>: examples (documents) are treated as independent, and the likelihood factorises over them. Within a document, a language model is explicitly a factorisation of a joint distribution into conditionals, $p(x_1,\ldots,x_T) = \prod_t p(x_t\mid x_{<t})$ — the exact opposite of independence. Confusing the two leads to the false conclusion that a language model cannot represent dependencies.</p>
+<h3 id="lower-cross-entropy-always-means-a-better-model">"Lower cross-entropy always means a better model"</h3>
+<p>Cross-entropy is minimised by the true distribution, but it is unbounded below if the model is allowed to assign probability 1 to the observed labels — an overfitted classifier can reach zero training loss while being worse in every useful sense. On held-out data, lower cross-entropy implies better calibration only if the model class is the same; across model classes, tokenisers, or label smoothing settings, the numbers are not comparable (<strong>M20</strong>).</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>3.1</strong> $X\sim\mathrm{Bernoulli}(0.3)$, $Y = 4X - 2$. Compute $\mathbb{E}Y$ and $\mathrm{Var}Y$.</p>
+<details><summary>Solution</summary>
+
+$\mathbb{E}Y = 4(0.3)-2 = -0.8$. $\mathrm{Var}Y = 16\mathrm{Var}X = 16(0.21) = 3.36$. The shift changes the mean and nothing else; the scale enters squared.
+</details>
+
+<p><strong>3.2</strong> Convert an entropy of $4.5$ bits to nats and give the perplexity.</p>
+<details><summary>Solution</summary>
+
+$4.5$ bits $= 4.5\log 2 = 3.1192$ nats. Perplexity $= \exp(3.1192) = 2^{4.5} = 22.6274$ — the base-2 form is the useful one: perplexity is $2^{H_{\text{bits}}}$.
+</details>
+
+<p><strong>3.3</strong> $p = (0.25,0.75)$, $q = (0.5,0.5)$. Compute $H(p)$ and $\operatorname{KL}(p\|q)$.</p>
+<details><summary>Solution</summary>
+
+$H(p) = -0.25\log0.25 - 0.75\log0.75 = 0.3466 + 0.2158 = 0.5623$ nats. $\operatorname{KL}(p\|q) = 0.25\log0.5 + 0.75\log1.5 = -0.1733+0.3041 = 0.1308$. Since $H(p,q) = H(p)+0.1308 = 0.6931 = \log 2$, describing draws from $p$ with a uniform code costs exactly one bit — the maximum for a binary variable, as it must be.
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>3.4</strong> Derive the MLE for a Poisson model and show the loss is not squared error.</p>
+<details><summary>Solution</summary>
+
+$p(k;\lambda) = \lambda^k e^{-\lambda}/k!$, so $\log L = \sum_i(k_i\log\lambda - \lambda - \log k_i!)$. Differentiating: $\sum_i k_i/\lambda - n = 0$, giving $\hat\lambda = \bar k$. The negative log-likelihood per example is $\lambda - \bar k\log\lambda + \text{const}$ — a count model with a log link, whose loss grows only linearly in large residuals. Squared error would instead treat a count of 100 against a prediction of 10 as 100 times worse than 11 against 10, and it can drive $\lambda$ negative. The loss follows from the likelihood; it is not a free choice.
+</details>
+
+<p><strong>3.5</strong> Show that the ELBO is invariant to reparameterizing $q$ by a location shift, and that its two terms trade off.</p>
+<details><summary>Solution</summary>
+
+Invariance: the ELBO is $\mathbb{E}_q[\log p(x,z) - \log q(z)]$, and both the expectation and the density transform consistently under any invertible reparameterization, so the value is unchanged — it is a functional of $q$, not of a particular coordinate system. The trade-off appears in the form $\mathbb{E}_q[\log p(x\mid z)] - \operatorname{KL}(q\|p(z))$: as $q$ concentrates (small KL) the reconstruction term usually worsens, because a narrow posterior explores fewer latent settings; as $q$ widens, reconstruction improves while the KL grows. The optimum balances them, which is exactly the rate-distortion trade-off a VAE's $\beta$ knob controls.
+</details>
+
+<p><strong>3.6</strong> Derive the bias of the MLE variance estimator.</p>
+<details><summary>Solution</summary>
+
+$\sum_i(x_i-\bar x)^2 = \sum_i(x_i-\mu)^2 - n(\bar x-\mu)^2$. Taking expectations: $\mathbb{E}[\sum_i(x_i-\mu)^2] = n\sigma^2$ and $\mathbb{E}[n(\bar x-\mu)^2] = n\cdot\sigma^2/n = \sigma^2$. So $\mathbb{E}[\sum_i(x_i-\bar x)^2] = (n-1)\sigma^2$ and $\mathbb{E}[\hat\sigma^2_{\text{MLE}}] = \frac{n-1}{n}\sigma^2$. Dividing by $n-1$ removes the bias. For $n = 5$ the MLE reports $10.0$ where the unbiased estimate is $12.5$, a 20% underestimate — which is why the $n-1$ version is the default everywhere.
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>3.7</strong> Build a sampler for the standard normal by rejection from a Laplace proposal and compute the acceptance rate. Why is the Gaussian a bad proposal for a heavy-tailed target?</p>
+<details><summary>Solution</summary>
+
+Propose $Y\sim\mathrm{Laplace}(0,1)$ with density $q(y) = \frac12e^{-|y|}$ and target $p(y) = \phi(y)$. The ratio $p/q = \sqrt{2/\pi}\,e^{-y^2/2+|y|}$ is maximised at $|y| = 1$ (differentiate the exponent: $-y + \operatorname{sign}(y) = 0$), giving $M = \sqrt{2e/\pi} \approx 1.3155$ and acceptance rate $1/M \approx 0.76$. Reversing the roles fails badly: a Gaussian proposal for a heavy-tailed target has $\sup p/q = \infty$, so no finite $M$ exists and the method never terminates. Rejection needs the proposal to dominate the target in the tails — the practical reason people use adaptive or MCMC methods instead.
+</details>
+
+<p><strong>3.8</strong> Show that minimising $\operatorname{KL}(p_{\text{data}}\|p_\theta)$ is equivalent to minimising cross-entropy, and say what happens to the entropy term.</p>
+<details><summary>Solution</summary>
+
+$\operatorname{KL}(p_{\text{data}}\|p_\theta) = \mathbb{E}_{p_{\text{data}}}[\log p_{\text{data}}] - \mathbb{E}_{p_{\text{data}}}[\log p_\theta] = -H(p_{\text{data}}) + H(p_{\text{data}},p_\theta)$. The first term does not depend on $\theta$, so minimising the divergence, minimising cross-entropy, and maximising the likelihood are the same optimisation. The entropy term matters when you compare *different* datasets or tokenisers: cross-entropy differences then mix model quality with data entropy, while the KL does not. This is also why "the loss went down" across a data-mixture change proves nothing.
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>Prove $\mathrm{Var}[aX+b] = a^2\mathrm{Var}[X]$ and give $\mathrm{Var}[X+Y]$.</li>
+<li>State the two independent arguments for why the Gaussian is the default noise model.</li>
+<li>Derive the MLE for the categorical distribution and identify the resulting loss.</li>
+<li>Prove $\operatorname{KL}(p\|q)\ge0$ and explain what the two directions of KL do differently.</li>
+<li>Derive the ELBO and identify the gap.</li>
+<li>Why does the reparameterized gradient have lower variance than the score-function estimator?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. Expand $\mathbb{E}[(aX+b-a\mu-b)^2] = a^2\mathbb{E}[(X-\mu)^2]$; and $\mathrm{Var}[X+Y] = \mathrm{Var}X+\mathrm{Var}Y+2\mathrm{Cov}(X,Y)$, with the covariance term vanishing under independence.
+2. The central limit theorem (sums of many small independent effects are approximately Gaussian) and maximum entropy at fixed variance (the Gaussian encodes no structure beyond a mean and a variance).
+3. Maximise $\sum_j n_j\log q_j$ subject to $\sum_j q_j = 1$; the multiplier gives $n_j/q_j = \lambda$, so $\hat q_j = n_j/n$, and the negative log-likelihood is categorical cross-entropy.
+4. Write KL as $-\mathbb{E}_p[\log(q/p)]$ and apply Jensen to the convex $-\log$: it is $\ge-\log\mathbb{E}_p[q/p] = -\log1 = 0$. Forward KL is mass-covering (infinite if $q$ misses support of $p$); reverse KL is mode-seeking (infinite if $q$ invents support where $p$ has none).
+5. $\log p(x) = \log\mathbb{E}_q[p(x,z)/q(z)] \ge \mathbb{E}_q[\log p(x,z)] - \mathbb{E}_q[\log q(z)]$; the gap is $\operatorname{KL}(q(z)\|p(z\mid x))$, zero iff $q$ is the exact posterior.
+6. Reparameterization moves the parameter dependence into a deterministic map applied to parameter-free noise, so the gradient is $\mathbb{E}[f'(\mu+\sigma\epsilon)]$ — an average of $f'$ values. The score-function estimator multiplies $f(z)$ by a random score, so its variance grows with the magnitude of $f$ and the dimension of $z$; measured here, 124.1 against 1.0.
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><strong>Cover and Thomas, <em>Elements of Information Theory</em> (2nd ed., Wiley, 2006), chapters 2 and 8.</strong> Extract the chain rule for entropy and the data-processing inequality; both frame what a model can and cannot preserve.</li>
+<li><strong>MacKay, <em>Information Theory, Inference, and Learning Algorithms</em> (Cambridge, 2003; free PDF on the author's site).</strong> Extract chapters 1–4 for the Bayesian view and chapter 33 for variational inference — the derivation of the ELBO there is the one this module follows.</li>
+<li><strong>Bishop, <em>Pattern Recognition and Machine Learning</em> (Springer, 2006), sections 1.6, 2.3, 10.1.</strong> Extract the exponential-family chapter and the variational inference chapter; the latter is the cleanest full treatment of the ELBO for mixtures.</li>
+<li><strong>Kingma and Welling, "Auto-Encoding Variational Bayes," 2013 (arXiv:1312.6114).</strong> Extract section 2.3 for the reparameterization trick and its variance argument against the score-function estimator.</li>
+<li><strong>Mohamed, Rosca, Figurnov, Mnih, "Monte Carlo Gradient Estimation in Machine Learning," JMLR 21, 2020 (free).</strong> Extract the unified view of score-function, pathwise, and measure-valued estimators — it is the reference that makes the reparameterization trick look inevitable rather than clever.</li>
+<li><strong>Wasserman, <em>All of Statistics</em> (Springer, 2004), chapters 6–8.</strong> Extract the bias–variance decomposition and the MLE asymptotics, stated with the precision this material deserves.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when you can, without notes:</p>
+<ol>
+<li>Derive the variance of a sum from scratch, including the covariance term, and say when it vanishes.</li>
+<li>Derive the Gaussian as the maximum-entropy distribution at fixed variance in under five minutes.</li>
+<li>Show that Gaussian MLE is least squares and Bernoulli MLE is cross-entropy, and say why the loss follows from the likelihood.</li>
+<li>Prove KL non-negativity and explain, with an example, what each direction of KL penalises.</li>
+<li>Derive the ELBO, identify the gap as a KL divergence, and explain why the bound is tight only at the true posterior.</li>
+<li>Write down the reparameterized gradient and explain why it beats the score-function estimator.</li>
+<li>Convert between nats, bits, and perplexity for any given loss.</li>
+</ol><div class="pager"><a id="prevlink" href="../m/02-calculus.html"><small>← previous</small><b>M02 · Multivariable and Matrix Calculus</b></a><a id="nextlink" class="next" href="../m/04-optimization.html"><small>next →</small><b>M04 · Optimization for Deep Learning</b></a></div></article>
+</main>
+</div>
+</body></html>

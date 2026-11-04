@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M16 · Pretraining and Scaling Laws — From Zero to Frontier</title>
+<meta name="description" content="Turning a corpus into a base model, and predicting the loss before you spend the money.">
+<meta property="og:title" content="M16 · Pretraining and Scaling Laws — From Zero to Frontier">
+<meta property="og:description" content="Turning a corpus into a base model, and predicting the loss before you spend the money.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Large language models / M16</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M16">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M16</span><span class="pill d5">difficulty 5/5</span><span class="pill">3 weeks</span><span class="pill">prereqs: M15</span><span class="pill">8,672 words</span></div><h1>Pretraining and Scaling Laws</h1><p class="tagline">Turning a corpus into a base model, and predicting the loss before you spend the money.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>Pretraining is the only stage where the model acquires capability rather than being shaped. It is also the only stage that costs eight figures, which makes it the only stage where you are expected to predict the outcome before running it. Scaling laws are that prediction: fitted power laws that say what loss a given parameter count and token count will reach, and how to split a fixed compute budget between them. Getting the split wrong is not a marginal error — the field spent two years building models at the wrong ratio before Chinchilla corrected it, at a cost measurable in tens of millions of dollars. If you skip this module you will treat "bigger is better" as the whole of scaling, have no way to evaluate whether a training run is on track mid-flight, and believe the emergence literature more than the metric you are measuring it with.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<p>If two or more are shaky, revisit <strong>M15</strong> and <strong>M03</strong>.</p>
+<ol>
+<li>Write the mean negative log-likelihood training loss for a language model.</li>
+<li>If a process's cost is $6ND$ FLOPs, how much compute is 10 times as many tokens at half the parameters?</li>
+<li>What is the difference between a power law and an exponential, on log-log axes?</li>
+<li>In fp16, what is the largest finite number, and how many bits of mantissa does it carry?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $\mathcal{L} = -\frac{1}{N}\sum_t\log p_\theta(x_t\mid x_{<t})$.
+2. $6 \cdot (N/2) \cdot (10D) = 5 \cdot 6ND$ — five times as much.
+3. A power law $y = ax^{-b}$ is a straight line with slope $-b$ on log-log axes; an exponential is a straight line on semi-log axes.
+4. $65504$; 10 explicit mantissa bits, 11 significant, so a relative precision of about $2^{-11} = 4.9\times10^{-4}$.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<ul>
+<li>Describe the pretraining pipeline stage by stage, and say what each filter removes and what it costs in tokens.</li>
+<li>Derive the MinHash collision probability and the LSH banding formula $1-(1-J^{r})^{b}$, and choose $r,b$ for a target Jaccard threshold.</li>
+<li>Derive the compute-optimal allocation $N^{*}\propto C^{\beta/(\alpha+\beta)}$ from a three-term loss law, and reproduce Chinchilla's 70B/1.4T point from its headline rule.</li>
+<li>Explain precisely what Kaplan et al. and Hoffmann et al. did differently and why the conclusion inverted, and state which parts of it remain contested.</li>
+<li>Compute the expected speedup and memory consequences of bf16 versus fp16 from the exponent and mantissa budget.</li>
+<li>Show why an exact-match metric turns a smooth capability curve into an apparent step change, and evaluate emergence claims accordingly.</li>
+<li>Work a full compute budget: parameters, tokens, GPU-days, dollars, and memory.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$N$</td>
+<td>model parameters (non-embedding unless stated)</td>
+</tr>
+<tr>
+<td>$D$</td>
+<td>training tokens</td>
+</tr>
+<tr>
+<td>$C$</td>
+<td>training compute in FLOPs, $C \approx 6ND$</td>
+</tr>
+<tr>
+<td>$L$</td>
+<td>cross-entropy loss in nats per token</td>
+</tr>
+<tr>
+<td>$L_\infty$</td>
+<td>irreducible loss (the entropy of the data)</td>
+</tr>
+<tr>
+<td>$A, B$</td>
+<td>coefficients of the parameter and data terms</td>
+</tr>
+<tr>
+<td>$\alpha, \beta$</td>
+<td>exponents of the parameter and data terms</td>
+</tr>
+<tr>
+<td>$J$</td>
+<td>Jaccard similarity of two shingle sets</td>
+</tr>
+<tr>
+<td>$r, b$</td>
+<td>LSH rows per band, number of bands</td>
+</tr>
+<tr>
+<td>$k$</td>
+<td>shingle length in characters</td>
+</tr>
+<tr>
+<td>$D_{\mathrm{inf}}$</td>
+<td>lifetime inference tokens served by the model</td>
+</tr>
+<tr>
+<td>$\eta$</td>
+<td>learning rate</td>
+</tr>
+<tr>
+<td>$B_{\mathrm{batch}}$</td>
+<td>batch size in tokens</td>
+</tr>
+</tbody>
+</table>
+<p>$C \approx 6ND$ counts 2 FLOPs per parameter per token in the forward pass and 4 in the backward pass. It omits attention, which is why long-context training costs more than the formula says.</p>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="the-pipeline-and-where-the-tokens-go">The pipeline, and where the tokens go</h3>
+<p><strong>(1) Intuition.</strong> A pretraining corpus is made, not found. You start with a crawl, then your filters remove most of it, then you deduplicate, then you throw away benchmarks you accidentally included, and only then do you count tokens.</p>
+<p><strong>(2) Formal definition.</strong> The stages, in order: <em>source selection</em> (web crawl, code, books, papers, reference, synthetic), <em>text extraction</em> (boilerplate removal, HTML to text), <em>language identification</em>, <em>quality filtering</em> (a classifier or heuristic scoring), <em>deduplication</em> (exact hash, then near-duplicate MinHash), <em>toxicity filtering</em>, <em>decontamination</em> against the eval sets, <em>mixture weighting</em>, and <em>ordering</em>. Each stage is a function on documents, and the composition is the actual training set.</p>
+<p><strong>(3) Why it is built this way.</strong> Each filter exists because a specific failure was measured. Deduplication exists because repeated documents cause memorization and waste gradient steps. Quality filtering exists because classifier-scored "educational" text produces measurably better models per token. Decontamination exists because a benchmark leaked into training turns your evaluation into a memorization test.</p>
+<p><strong>(4) Worked micro-example.</strong> Suppose 100 billion raw pages average 2,000 tokens: $2\times10^{14}$ raw tokens. Text extraction keeps 60% (140T), language ID keeps 45% (63T), quality filtering at a 10% keep rate leaves 6.3T, near-dedup removes 40% leaving 3.8T, and decontamination removes a negligible fraction. You planned for 10T tokens and have 3.8T — a 2.6x shortfall that changes your optimal model size. This is the routine arithmetic of corpus building.</p>
+<h3 id="deduplication-exact-then-near">Deduplication: exact, then near</h3>
+<p><strong>(1) Intuition.</strong> Exact duplicates are easy: hash the document, keep the first. Near-duplicates — the same article with a different boilerplate header, or with the date changed — need a similarity measure, and comparing all pairs is quadratic in corpus size. MinHash turns each document into a small fixed-size signature such that the probability two signatures agree on an element equals the Jaccard similarity of the documents; LSH then buckets signatures so you only compare likely matches.</p>
+<p><strong>(2) Formal definition.</strong> Shingle a document into the set $S$ of its $k$-character substrings. Jaccard similarity is $J(A,B) = |A\cap B|/|A\cup B|$. Pick $n$ random hash functions $h_i$ and define the signature $\mathrm{sig}_i(A) = \min_{x\in A}h_i(x)$. Then $P[\mathrm{sig}_i(A) = \mathrm{sig}_i(B)] = J(A,B)$, so the fraction of matching signature entries estimates $J$.</p>
+<p><strong>(3) Why it is built this way.</strong> An $n=128$ signature is 128 integers — about 1 KB at 64 bits each — and replaces a document comparison with 128 integer comparisons. The estimate has standard error $\sqrt{J(1-J)/n}$, which is $\pm0.044$ at $J=0.5$ for $n=128$: enough to make a keep/drop decision at a threshold, not enough to report a precise similarity.</p>
+<p><strong>(4) Worked micro-example.</strong> Two documents with $J = 0.82$ (one sentence changed out of five) produce signatures agreeing on $0.82\cdot128 \approx 105$ of 128 entries. A third document about a different topic has $J \approx 0.007$ and agrees on essentially zero entries. Set a threshold at 0.8 and the first pair is a duplicate. Derivation 1 gives the probability that LSH finds the pair at all.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="Domain mixture weights are a hyperparameter with a large effect" class="fig-svg"><defs><marker id="mix-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="120.0" y="36.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">mixture, run A</text><rect x="30.0" y="54.0" width="124.8" height="44.0" rx="5" fill="var(--fig-blue,#5b8cff)" stroke="none" stroke-width="1.5" opacity="0.85"/><text x="92.4" y="81.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="#0b0f1c" text-anchor="middle" font-weight="700">web</text><rect x="154.8" y="54.0" width="57.2" height="44.0" rx="5" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.85"/><text x="183.4" y="81.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="#0b0f1c" text-anchor="middle" font-weight="700">code</text><rect x="212.0" y="54.0" width="26.0" height="44.0" rx="5" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.85"/><text x="225.0" y="81.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="#0b0f1c" text-anchor="middle" font-weight="700">math</text><rect x="238.0" y="54.0" width="23.4" height="44.0" rx="5" fill="var(--fig-amber,#f5b544)" stroke="none" stroke-width="1.5" opacity="0.85"/><rect x="261.4" y="54.0" width="18.2" height="44.0" rx="5" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.85"/><rect x="279.6" y="54.0" width="10.4" height="44.0" rx="5" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.85"/><text x="120.0" y="36.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">mixture, run A</text><text x="120.0" y="130.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">mixture, run B (more math, less web)</text><rect x="30.0" y="148.0" width="78.0" height="44.0" rx="5" fill="var(--fig-blue,#5b8cff)" stroke="none" stroke-width="1.5" opacity="0.85"/><text x="69.0" y="175.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="#0b0f1c" text-anchor="middle" font-weight="700">web</text><rect x="108.0" y="148.0" width="31.2" height="44.0" rx="5" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.85"/><text x="123.6" y="175.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="#0b0f1c" text-anchor="middle" font-weight="700">code</text><rect x="139.2" y="148.0" width="72.8" height="44.0" rx="5" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.85"/><text x="175.6" y="175.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="#0b0f1c" text-anchor="middle" font-weight="700">math</text><rect x="212.0" y="148.0" width="20.8" height="44.0" rx="5" fill="var(--fig-amber,#f5b544)" stroke="none" stroke-width="1.5" opacity="0.85"/><rect x="232.8" y="148.0" width="41.6" height="44.0" rx="5" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.85"/><text x="253.6" y="175.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="#0b0f1c" text-anchor="middle" font-weight="700">papers</text><rect x="274.4" y="148.0" width="15.6" height="44.0" rx="5" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.85"/><rect x="330.0" y="44.0" width="480.0" height="160.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="348.0" y="68.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">effect on downstream benchmarks</text><text x="348.0" y="96.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">code</text><rect x="402.0" y="87.0" width="55.8" height="12.0" rx="3" fill="var(--fig-blue,#5b8cff)" stroke="none" stroke-width="1.5"/><rect x="402.0" y="101.0" width="48.6" height="12.0" rx="3" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5"/><text x="596.0" y="98.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">-13%</text><text x="348.0" y="130.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">math</text><rect x="402.0" y="121.0" width="43.2" height="12.0" rx="3" fill="var(--fig-blue,#5b8cff)" stroke="none" stroke-width="1.5"/><rect x="402.0" y="135.0" width="68.4" height="12.0" rx="3" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5"/><text x="596.0" y="132.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">+58%</text><text x="348.0" y="164.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">general</text><rect x="402.0" y="155.0" width="99.0" height="12.0" rx="3" fill="var(--fig-blue,#5b8cff)" stroke="none" stroke-width="1.5"/><rect x="402.0" y="169.0" width="86.4" height="12.0" rx="3" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5"/><text x="596.0" y="166.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">-13%</text><text x="348.0" y="196.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">every point of math data costs code and general ability</text><text x="430.0" y="250.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">there is no free domain. Mixture weights are chosen by ablation, not by taste.</text><rect x="30.0" y="268.0" width="780.0" height="44.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="46.0" y="294.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">the same total token budget, reallocated. This is one of the highest-leverage decisions in pretraining.</text></svg><figcaption>The mixture is a set of weights, not a list of sources. Watch how raising one domain's weight raises its capability and lowers another's — the trade is real and it is not a law of nature, it is a budget.</figcaption></figure></p>
+<h3 id="filtering-quality-toxicity-decontamination">Filtering: quality, toxicity, decontamination</h3>
+<p><strong>(1) Intuition.</strong> Quality filtering is a classifier trained to recognize text that looks like the text you wish your model wrote. Toxicity filtering removes content you do not want reproduced. Decontamination removes the answer key.</p>
+<p><strong>(2) Formal definition.</strong> A quality filter is a binary classifier $q(d)\in[0,1]$ trained on positive examples (Wikipedia, books, curated web) and negatives (random crawl), applied with a threshold $\tau$; the keep rate is $P[q(d)>\tau]$. Decontamination is a membership test: for each evaluation item, check $n$-gram overlap against every training document and remove documents exceeding a threshold.</p>
+<p><strong>(3) Why it is built this way.</strong> A classifier generalizes better than a heuristic (perplexity under a reference model, stop-word ratios, symbol-to-word ratios) but inherits its training labels' biases — a quality classifier trained to prefer Wikipedia will systematically discard dialect, informal writing, and non-Western web text, which is a documented and serious failure mode. Decontamination is essential rather than optional because a contaminated benchmark reports memorization as capability, and reported gains of many points have been traced to exactly this.</p>
+<p><strong>(4) Worked micro-example.</strong> A 13-gram decontamination test: for evaluation item "The capital of Burkina Faso is Ouagadougou", any training document containing that exact 13-token sequence is dropped. A model that has seen the sequence 40 times in training will complete it from memory; removing the documents removes the memorization, and the score drops. That drop is the measurement you wanted.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 320" width="100%" role="img" aria-label="How benchmark data leaks into training corpora" class="fig-svg"><defs><marker id="contam-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="24.0" y="54.0" width="200.0" height="110.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.4"/><text x="124.0" y="78.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="650">test set</text><text x="124.0" y="100.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">held out,</text><text x="124.0" y="116.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">supposedly unseen</text><rect x="300.0" y="46.0" width="220.0" height="28.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><text x="410.0" y="64.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">crawled solution sites</text><line x1="228.0" y1="108.0" x2="298.0" y2="60.0" stroke="var(--fig-rose,#fb7185)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#contam-ah)" opacity="0.7"/><rect x="300.0" y="86.0" width="220.0" height="28.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><text x="410.0" y="104.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">model-generated answers</text><line x1="228.0" y1="108.0" x2="298.0" y2="100.0" stroke="var(--fig-rose,#fb7185)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#contam-ah)" opacity="0.7"/><rect x="300.0" y="126.0" width="220.0" height="28.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><text x="410.0" y="144.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">benchmark in a textbook</text><line x1="228.0" y1="108.0" x2="298.0" y2="140.0" stroke="var(--fig-rose,#fb7185)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#contam-ah)" opacity="0.7"/><rect x="300.0" y="176.0" width="220.0" height="52.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.4"/><text x="410.0" y="198.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="650">pretraining corpus</text><text x="410.0" y="216.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">with the answers inside</text><line x1="410.0" y1="158.0" x2="410.0" y2="174.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#contam-ah)"/><rect x="580.0" y="130.0" width="96.0" height="60.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4"/><text x="628.0" y="156.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">score</text><text x="628.0" y="174.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">inflated</text><line x1="522.0" y1="200.0" x2="578.0" y2="168.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#contam-ah)"/><text x="430.0" y="268.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">detection: n-gram overlap against the test set, membership inference, and asking for the item verbatim</text><text x="430.0" y="292.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">the honest position: you cannot fully prove absence, so report what you checked</text></svg><figcaption>The paths by which test items reach a training corpus, and what the leak does to the score curve: the signature is a benchmark that jumps well above its neighbours and does not improve with more compute.</figcaption></figure></p>
+<h3 id="mixture-weights-ordering-and-the-data-wall">Mixture weights, ordering, and the data wall</h3>
+<p><strong>(1) Intuition.</strong> You have several corpora of different sizes and different usefulness. What fraction of each goes into the training set? There is no formula; there is a search.</p>
+<p><strong>(2) Formal definition.</strong> A mixture is a probability vector $\mathbf{w}$ over domains; sampling draws documents with probability proportional to $w_j$ within domain $j$. Choosing $\mathbf{w}$ is an optimization over a validation objective, usually done by training many small models (a "mixture sweep") or by fitting a regression of downstream score on mixture weights.</p>
+<p><strong>(3) Why it is built this way.</strong> Mixture weights are not proportional to available tokens. Code and mathematics are typically up-weighted far above their natural share because they improve reasoning; web text is down-weighted. The ordering matters less than the mixture but not nothing: a curriculum that ends on high-quality data ("cooldown") measurably improves the final model, and is standard practice.</p>
+<p><strong>(4) Worked micro-example.</strong> A 10T-token budget with weights (web 0.55, code 0.25, math 0.10, books 0.06, papers 0.04) allocates 5.5T web, 2.5T code, 1T math, 600B books, 400B papers. If the code corpus holds only 1.2T tokens, a 2.5T allocation means 2.1x epoch repetition on code — and repeated data has diminishing and eventually negative returns. <strong>The data wall</strong>: deduplicated public web text is on the order of $1.5\times10^{13}$ tokens (FineWeb, a documented Common Crawl extraction, reports about 15 trillion). At the Chinchilla ratio of 20 tokens per parameter, 15T tokens support a model of $7.5\times10^{11}$ parameters — 750B — and nothing larger without repeating data or generating it. That is the wall, and it is why models are now trained far past the Chinchilla ratio.</p>
+<h3 id="the-objective-and-multi-token-prediction">The objective, and multi-token prediction</h3>
+<p><strong>(1) Intuition.</strong> Next-token prediction looks like a toy task and is in fact a universal one: to predict the next token of arbitrary text you must model everything the text encodes — grammar, arithmetic, style, facts, and the intentions of whoever wrote the prompt.</p>
+<p><strong>(2) Formal definition.</strong> $\mathcal{L} = -\frac{1}{N}\sum_t \log p_\theta(x_t\mid x_{<t})$, exactly as in <strong>M15</strong>. Multi-token prediction (MTP) instead trains $n$ heads at each position, head $j$ predicting $x_{t+j}$, with loss $\frac{1}{n}\sum_j -\log p^{(j)}_\theta(x_{t+j}\mid x_{\le t})$; the heads can be sequenced so head $j$ conditions on head $j-1$'s hidden state.</p>
+<p><strong>(3) Why it is built this way.</strong> Next-token prediction is the densest supervision signal available for free: every position in every document is a training example. MTP exists because it forces the model to plan ahead rather than only to fit the immediate next token, and because it can be used at inference as a built-in speculative draft (see <strong>M15</strong>). Whether MTP improves quality at fixed compute is contested; the efficiency claim is more robust than the quality claim.</p>
+<p><strong>(4) Worked micro-example.</strong> With $n=4$ MTP heads, a 1T-token corpus yields $4\times10^{12}$ prediction targets, but the gradient cost of the extra heads is small (each is one $d\times V$ projection) while the forward pass is shared. The extra compute is roughly $4\cdot 2\cdot dV$ FLOPs per position — for $d=4096$, $V=128{,}256$, that is 4.2 GFLOP per position versus about 12 GFLOP for the body, so a 35% increase in training compute, not a 4x one.</p>
+<h3 id="optimization-batch-size-schedules-and-stability">Optimization: batch size, schedules, and stability</h3>
+<p><strong>(1) Intuition.</strong> Large runs fail in specific, well-catalogued ways, and almost all of them are the optimizer taking too large a step on a batch that happened to be unrepresentative.</p>
+<p><strong>(2) Formal definition.</strong> The learning rate is usually warmed up linearly over the first few thousand steps, held, then decayed — cosine, or the WSD (warmup–stable–decay) shape where most of training is at a constant rate and the decay is a short final phase. Batch size is raised over the first part of training ("batch size ramp") and the learning rate with it.</p>
+<p><strong>(3) Why it is built this way.</strong> Warmup exists because at initialization the gradient is large and the Adam second-moment estimate is uninformed; a full-size step destroys the model. WSD exists because it makes the learning-rate schedule independent of the total token budget, so you can extend a run — or branch off a checkpoint — without restarting annealing. Loss spikes, where the loss jumps by a factor of 2–5 and sometimes never recovers, are handled by rewind-and-skip: roll back to an earlier checkpoint, skip the offending data shard, and continue with a slightly lower learning rate.</p>
+<p><strong>(4) Worked micro-example.</strong> Learning rate scaling with batch: at small batch, the gradient estimate's noise scales as $1/B_{\mathrm{batch}}$, so the update's variance scales as $\eta^{2}/B_{\mathrm{batch}}$, and holding that constant requires $\eta \propto B_{\mathrm{batch}}$. Beyond a critical batch size, the noise is no longer the limiting factor and the rule becomes $\eta \propto \sqrt{B_{\mathrm{batch}}}$. A run at $B_{\mathrm{batch}} = 8$M tokens and $\eta = 3\times10^{-4}$ moved to $B_{\mathrm{batch}} = 32$M would use $\eta = 1.2\times10^{-3}$ under linear scaling — usually too aggressive in practice, which is why the rule is treated as a starting point.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="Common learning-rate schedules" class="fig-svg"><defs><marker id="lr-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="70.0" y1="284.0" x2="610.0" y2="284.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><line x1="70.0" y1="242.3" x2="610.0" y2="242.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><line x1="70.0" y1="200.5" x2="610.0" y2="200.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><line x1="70.0" y1="158.8" x2="610.0" y2="158.8" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><line x1="70.0" y1="117.0" x2="610.0" y2="117.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><line x1="70.0" y1="75.3" x2="610.0" y2="75.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><line x1="70.0" y1="284.0" x2="610.0" y2="284.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.4" stroke-linecap="round"/><line x1="70.0" y1="44.0" x2="70.0" y2="284.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.4" stroke-linecap="round"/><path d="M71.3,277.5 L72.7,271.0 L74.0,264.5 L75.4,258.0 L76.7,251.5 L78.1,245.0 L79.4,238.4 L80.8,231.9 L82.1,225.4 L83.5,218.9 L84.8,212.4 L86.2,205.9 L87.5,199.4 L88.9,192.9 L90.2,186.4 L91.5,179.9 L92.9,173.4 L94.2,166.9 L95.6,160.4 L96.9,153.9 L98.3,147.4 L99.6,140.9 L101.0,134.4 L102.3,127.9 L103.7,121.3 L105.0,114.8 L106.4,108.3 L107.7,101.8 L109.1,95.3 L110.4,88.8 L111.7,82.3 L113.1,75.8 L114.4,75.3 L115.8,75.3 L117.1,75.3 L118.5,75.4 L119.8,75.4 L121.2,75.4 L122.5,75.5 L123.9,75.5 L125.2,75.6 L126.6,75.7 L127.9,75.8 L129.3,75.8 L130.6,75.9 L131.9,76.0 L133.3,76.1 L134.6,76.3 L136.0,76.4 L137.3,76.5 L138.7,76.7 L140.0,76.8 L141.4,77.0 L142.7,77.1 L144.1,77.3 L145.4,77.5 L146.8,77.6 L148.1,77.8 L149.5,78.0 L150.8,78.2 L152.1,78.5 L153.5,78.7 L154.8,78.9 L156.2,79.1 L157.5,79.4 L158.9,79.6 L160.2,79.9 L161.6,80.1 L162.9,80.4 L164.3,80.7 L165.6,81.0 L167.0,81.3 L168.3,81.6 L169.7,81.9 L171.0,82.2 L172.3,82.5 L173.7,82.8 L175.0,83.2 L176.4,83.5 L177.7,83.9 L179.1,84.2 L180.4,84.6 L181.8,85.0 L183.1,85.3 L184.5,85.7 L185.8,86.1 L187.2,86.5 L188.5,86.9 L189.9,87.3 L191.2,87.7 L192.5,88.2 L193.9,88.6 L195.2,89.0 L196.6,89.5 L197.9,89.9 L199.3,90.4 L200.6,90.8 L202.0,91.3 L203.3,91.8 L204.7,92.3 L206.0,92.8 L207.4,93.3 L208.7,93.8 L210.1,94.3 L211.4,94.8 L212.7,95.3 L214.1,95.8 L215.4,96.4 L216.8,96.9 L218.1,97.4 L219.5,98.0 L220.8,98.6 L222.2,99.1 L223.5,99.7 L224.9,100.3 L226.2,100.8 L227.6,101.4 L228.9,102.0 L230.3,102.6 L231.6,103.2 L232.9,103.8 L234.3,104.4 L235.6,105.0 L237.0,105.7 L238.3,106.3 L239.7,106.9 L241.0,107.6 L242.4,108.2 L243.7,108.9 L245.1,109.5 L246.4,110.2 L247.8,110.9 L249.1,111.5 L250.5,112.2 L251.8,112.9 L253.1,113.6 L254.5,114.3 L255.8,115.0 L257.2,115.7 L258.5,116.4 L259.9,117.1 L261.2,117.8 L262.6,118.5 L263.9,119.2 L265.3,119.9 L266.6,120.7 L268.0,121.4 L269.3,122.1 L270.7,122.9 L272.0,123.6 L273.3,124.4 L274.7,125.1 L276.0,125.9 L277.4,126.7 L278.7,127.4 L280.1,128.2 L281.4,129.0 L282.8,129.8 L284.1,130.5 L285.5,131.3 L286.8,132.1 L288.2,132.9 L289.5,133.7 L290.8,134.5 L292.2,135.3 L293.5,136.1 L294.9,136.9 L296.2,137.7 L297.6,138.6 L298.9,139.4 L300.3,140.2 L301.6,141.0 L303.0,141.8 L304.3,142.7 L305.7,143.5 L307.0,144.3 L308.4,145.2 L309.7,146.0 L311.0,146.9 L312.4,147.7 L313.7,148.6 L315.1,149.4 L316.4,150.3 L317.8,151.1 L319.1,152.0 L320.5,152.8 L321.8,153.7 L323.2,154.5 L324.5,155.4 L325.9,156.3 L327.2,157.1 L328.6,158.0 L329.9,158.9 L331.2,159.7 L332.6,160.6 L333.9,161.5 L335.3,162.4 L336.6,163.2 L338.0,164.1 L339.3,165.0 L340.7,165.9 L342.0,166.8 L343.4,167.6 L344.7,168.5 L346.1,169.4 L347.4,170.3 L348.8,171.2 L350.1,172.1 L351.4,173.0 L352.8,173.8 L354.1,174.7 L355.5,175.6 L356.8,176.5 L358.2,177.4 L359.5,178.3 L360.9,179.2 L362.2,180.1 L363.6,181.0 L364.9,181.8 L366.3,182.7 L367.6,183.6 L369.0,184.5 L370.3,185.4 L371.6,186.3 L373.0,187.2 L374.3,188.1 L375.7,188.9 L377.0,189.8 L378.4,190.7 L379.7,191.6 L381.1,192.5 L382.4,193.4 L383.8,194.2 L385.1,195.1 L386.5,196.0 L387.8,196.9 L389.2,197.7 L390.5,198.6 L391.8,199.5 L393.2,200.4 L394.5,201.2 L395.9,202.1 L397.2,203.0 L398.6,203.8 L399.9,204.7 L401.3,205.6 L402.6,206.4 L404.0,207.3 L405.3,208.1 L406.7,209.0 L408.0,209.8 L409.4,210.7 L410.7,211.5 L412.0,212.4 L413.4,213.2 L414.7,214.1 L416.1,214.9 L417.4,215.7 L418.8,216.6 L420.1,217.4 L421.5,218.2 L422.8,219.0 L424.2,219.9 L425.5,220.7 L426.9,221.5 L428.2,222.3 L429.6,223.1 L430.9,223.9 L432.2,224.7 L433.6,225.5 L434.9,226.3 L436.3,227.1 L437.6,227.9 L439.0,228.7 L440.3,229.5 L441.7,230.3 L443.0,231.0 L444.4,231.8 L445.7,232.6 L447.1,233.3 L448.4,234.1 L449.8,234.9 L451.1,235.6 L452.4,236.4 L453.8,237.1 L455.1,237.8 L456.5,238.6 L457.8,239.3 L459.2,240.0 L460.5,240.8 L461.9,241.5 L463.2,242.2 L464.6,242.9 L465.9,243.6 L467.3,244.3 L468.6,245.0 L470.0,245.7 L471.3,246.4 L472.6,247.1 L474.0,247.7 L475.3,248.4 L476.7,249.1 L478.0,249.7 L479.4,250.4 L480.7,251.0 L482.1,251.7 L483.4,252.3 L484.8,253.0 L486.1,253.6 L487.5,254.2 L488.8,254.8 L490.2,255.4 L491.5,256.0 L492.8,256.6 L494.2,257.2 L495.5,257.8 L496.9,258.4 L498.2,259.0 L499.6,259.6 L500.9,260.1 L502.3,260.7 L503.6,261.3 L505.0,261.8 L506.3,262.4 L507.7,262.9 L509.0,263.4 L510.3,264.0 L511.7,264.5 L513.0,265.0 L514.4,265.5 L515.7,266.0 L517.1,266.5 L518.4,267.0 L519.8,267.5 L521.1,267.9 L522.5,268.4 L523.8,268.9 L525.2,269.3 L526.5,269.8 L527.9,270.2 L529.2,270.7 L530.5,271.1 L531.9,271.5 L533.2,271.9 L534.6,272.4 L535.9,272.8 L537.3,273.2 L538.6,273.6 L540.0,273.9 L541.3,274.3 L542.7,274.7 L544.0,275.0 L545.4,275.4 L546.7,275.8 L548.1,276.1 L549.4,276.4 L550.7,276.8 L552.1,277.1 L553.4,277.4 L554.8,277.7 L556.1,278.0 L557.5,278.3 L558.8,278.6 L560.2,278.9 L561.5,279.1 L562.9,279.4 L564.2,279.7 L565.6,279.9 L566.9,280.1 L568.3,280.4 L569.6,280.6 L570.9,280.8 L572.3,281.0 L573.6,281.3 L575.0,281.5 L576.3,281.6 L577.7,281.8 L579.0,282.0 L580.4,282.2 L581.7,282.3 L583.1,282.5 L584.4,282.6 L585.8,282.8 L587.1,282.9 L588.5,283.0 L589.8,283.1 L591.1,283.3 L592.5,283.4 L593.8,283.5 L595.2,283.5 L596.5,283.6 L597.9,283.7 L599.2,283.8 L600.6,283.8 L601.9,283.9 L603.3,283.9 L604.6,283.9 L606.0,284.0 L607.3,284.0 L608.7,284.0 L610.0,284.0" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M71.3,277.5 L72.7,271.0 L74.0,264.5 L75.4,258.0 L76.7,251.5 L78.1,245.0 L79.4,238.4 L80.8,231.9 L82.1,225.4 L83.5,218.9 L84.8,212.4 L86.2,205.9 L87.5,199.4 L88.9,192.9 L90.2,186.4 L91.5,179.9 L92.9,173.4 L94.2,166.9 L95.6,160.4 L96.9,153.9 L98.3,147.4 L99.6,140.9 L101.0,134.4 L102.3,127.9 L103.7,121.3 L105.0,114.8 L106.4,108.3 L107.7,101.8 L109.1,95.3 L110.4,88.8 L111.7,82.3 L113.1,75.8 L114.4,75.8 L115.8,76.4 L117.1,77.0 L118.5,77.5 L119.8,78.1 L121.2,78.7 L122.5,79.2 L123.9,79.8 L125.2,80.4 L126.6,80.9 L127.9,81.5 L129.3,82.0 L130.6,82.6 L131.9,83.2 L133.3,83.7 L134.6,84.3 L136.0,84.9 L137.3,85.4 L138.7,86.0 L140.0,86.6 L141.4,87.1 L142.7,87.7 L144.1,88.3 L145.4,88.8 L146.8,89.4 L148.1,90.0 L149.5,90.5 L150.8,91.1 L152.1,91.7 L153.5,92.2 L154.8,92.8 L156.2,93.4 L157.5,93.9 L158.9,94.5 L160.2,95.1 L161.6,95.6 L162.9,96.2 L164.3,96.8 L165.6,97.3 L167.0,97.9 L168.3,98.5 L169.7,99.0 L171.0,99.6 L172.3,100.2 L173.7,100.7 L175.0,101.3 L176.4,101.8 L177.7,102.4 L179.1,103.0 L180.4,103.5 L181.8,104.1 L183.1,104.7 L184.5,105.2 L185.8,105.8 L187.2,106.4 L188.5,106.9 L189.9,107.5 L191.2,108.1 L192.5,108.6 L193.9,109.2 L195.2,109.8 L196.6,110.3 L197.9,110.9 L199.3,111.5 L200.6,112.0 L202.0,112.6 L203.3,113.2 L204.7,113.7 L206.0,114.3 L207.4,114.9 L208.7,115.4 L210.1,116.0 L211.4,116.6 L212.7,117.1 L214.1,117.7 L215.4,118.3 L216.8,118.8 L218.1,119.4 L219.5,119.9 L220.8,120.5 L222.2,121.1 L223.5,121.6 L224.9,122.2 L226.2,122.8 L227.6,123.3 L228.9,123.9 L230.3,124.5 L231.6,125.0 L232.9,125.6 L234.3,126.2 L235.6,126.7 L237.0,127.3 L238.3,127.9 L239.7,128.4 L241.0,129.0 L242.4,129.6 L243.7,130.1 L245.1,130.7 L246.4,131.3 L247.8,131.8 L249.1,132.4 L250.5,133.0 L251.8,133.5 L253.1,134.1 L254.5,134.7 L255.8,135.2 L257.2,135.8 L258.5,136.4 L259.9,136.9 L261.2,137.5 L262.6,138.1 L263.9,138.6 L265.3,139.2 L266.6,139.7 L268.0,140.3 L269.3,140.9 L270.7,141.4 L272.0,142.0 L273.3,142.6 L274.7,143.1 L276.0,143.7 L277.4,144.3 L278.7,144.8 L280.1,145.4 L281.4,146.0 L282.8,146.5 L284.1,147.1 L285.5,147.7 L286.8,148.2 L288.2,148.8 L289.5,149.4 L290.8,149.9 L292.2,150.5 L293.5,151.1 L294.9,151.6 L296.2,152.2 L297.6,152.8 L298.9,153.3 L300.3,153.9 L301.6,154.5 L303.0,155.0 L304.3,155.6 L305.7,156.2 L307.0,156.7 L308.4,157.3 L309.7,157.9 L311.0,158.4 L312.4,159.0 L313.7,159.5 L315.1,160.1 L316.4,160.7 L317.8,161.2 L319.1,161.8 L320.5,162.4 L321.8,162.9 L323.2,163.5 L324.5,164.1 L325.9,164.6 L327.2,165.2 L328.6,165.8 L329.9,166.3 L331.2,166.9 L332.6,167.5 L333.9,168.0 L335.3,168.6 L336.6,169.2 L338.0,169.7 L339.3,170.3 L340.7,170.9 L342.0,171.4 L343.4,172.0 L344.7,172.6 L346.1,173.1 L347.4,173.7 L348.8,174.3 L350.1,174.8 L351.4,175.4 L352.8,176.0 L354.1,176.5 L355.5,177.1 L356.8,177.7 L358.2,178.2 L359.5,178.8 L360.9,179.3 L362.2,179.9 L363.6,180.5 L364.9,181.0 L366.3,181.6 L367.6,182.2 L369.0,182.7 L370.3,183.3 L371.6,183.9 L373.0,184.4 L374.3,185.0 L375.7,185.6 L377.0,186.1 L378.4,186.7 L379.7,187.3 L381.1,187.8 L382.4,188.4 L383.8,189.0 L385.1,189.5 L386.5,190.1 L387.8,190.7 L389.2,191.2 L390.5,191.8 L391.8,192.4 L393.2,192.9 L394.5,193.5 L395.9,194.1 L397.2,194.6 L398.6,195.2 L399.9,195.8 L401.3,196.3 L402.6,196.9 L404.0,197.4 L405.3,198.0 L406.7,198.6 L408.0,199.1 L409.4,199.7 L410.7,200.3 L412.0,200.8 L413.4,201.4 L414.7,202.0 L416.1,202.5 L417.4,203.1 L418.8,203.7 L420.1,204.2 L421.5,204.8 L422.8,205.4 L424.2,205.9 L425.5,206.5 L426.9,207.1 L428.2,207.6 L429.6,208.2 L430.9,208.8 L432.2,209.3 L433.6,209.9 L434.9,210.5 L436.3,211.0 L437.6,211.6 L439.0,212.2 L440.3,212.7 L441.7,213.3 L443.0,213.9 L444.4,214.4 L445.7,215.0 L447.1,215.6 L448.4,216.1 L449.8,216.7 L451.1,217.2 L452.4,217.8 L453.8,218.4 L455.1,218.9 L456.5,219.5 L457.8,220.1 L459.2,220.6 L460.5,221.2 L461.9,221.8 L463.2,222.3 L464.6,222.9 L465.9,223.5 L467.3,224.0 L468.6,224.6 L470.0,225.2 L471.3,225.7 L472.6,226.3 L474.0,226.9 L475.3,227.4 L476.7,228.0 L478.0,228.6 L479.4,229.1 L480.7,229.7 L482.1,230.3 L483.4,230.8 L484.8,231.4 L486.1,232.0 L487.5,232.5 L488.8,233.1 L490.2,233.7 L491.5,234.2 L492.8,234.8 L494.2,235.4 L495.5,235.9 L496.9,236.5 L498.2,237.0 L499.6,237.6 L500.9,238.2 L502.3,238.7 L503.6,239.3 L505.0,239.9 L506.3,240.4 L507.7,241.0 L509.0,241.6 L510.3,242.1 L511.7,242.7 L513.0,243.3 L514.4,243.8 L515.7,244.4 L517.1,245.0 L518.4,245.5 L519.8,246.1 L521.1,246.7 L522.5,247.2 L523.8,247.8 L525.2,248.4 L526.5,248.9 L527.9,249.5 L529.2,250.1 L530.5,250.6 L531.9,251.2 L533.2,251.8 L534.6,252.3 L535.9,252.9 L537.3,253.5 L538.6,254.0 L540.0,254.6 L541.3,255.1 L542.7,255.7 L544.0,256.3 L545.4,256.8 L546.7,257.4 L548.1,258.0 L549.4,258.5 L550.7,259.1 L552.1,259.7 L553.4,260.2 L554.8,260.8 L556.1,261.4 L557.5,261.9 L558.8,262.5 L560.2,263.1 L561.5,263.6 L562.9,264.2 L564.2,264.8 L565.6,265.3 L566.9,265.9 L568.3,266.5 L569.6,267.0 L570.9,267.6 L572.3,268.2 L573.6,268.7 L575.0,269.3 L576.3,269.9 L577.7,270.4 L579.0,271.0 L580.4,271.6 L581.7,272.1 L583.1,272.7 L584.4,273.3 L585.8,273.8 L587.1,274.4 L588.5,274.9 L589.8,275.5 L591.1,276.1 L592.5,276.6 L593.8,277.2 L595.2,277.8 L596.5,278.3 L597.9,278.9 L599.2,279.5 L600.6,280.0 L601.9,280.6 L603.3,281.2 L604.6,281.7 L606.0,282.3 L607.3,282.9 L608.7,283.4 L610.0,284.0" fill="none" stroke="var(--fig-violet,#a78bfa)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M71.3,277.5 L72.7,271.0 L74.0,264.5 L75.4,258.0 L76.7,251.5 L78.1,245.0 L79.4,238.4 L80.8,231.9 L82.1,225.4 L83.5,218.9 L84.8,212.4 L86.2,205.9 L87.5,199.4 L88.9,192.9 L90.2,186.4 L91.5,179.9 L92.9,173.4 L94.2,166.9 L95.6,160.4 L96.9,153.9 L98.3,147.4 L99.6,140.9 L101.0,134.4 L102.3,127.9 L103.7,121.3 L105.0,114.8 L106.4,108.3 L107.7,101.8 L109.1,95.3 L110.4,88.8 L111.7,82.3 L113.1,75.8 L114.4,78.2 L115.8,81.3 L117.1,84.2 L118.5,87.0 L119.8,89.7 L121.2,92.3 L122.5,94.7 L123.9,97.1 L125.2,99.4 L126.6,101.6 L127.9,103.7 L129.3,105.8 L130.6,107.8 L131.9,109.7 L133.3,111.6 L134.6,113.4 L136.0,115.1 L137.3,116.8 L138.7,118.5 L140.0,120.1 L141.4,121.6 L142.7,123.1 L144.1,124.6 L145.4,126.0 L146.8,127.4 L148.1,128.8 L149.5,130.1 L150.8,131.4 L152.1,132.7 L153.5,133.9 L154.8,135.1 L156.2,136.2 L157.5,137.4 L158.9,138.5 L160.2,139.6 L161.6,140.7 L162.9,141.7 L164.3,142.7 L165.6,143.7 L167.0,144.7 L168.3,145.7 L169.7,146.6 L171.0,147.5 L172.3,148.4 L173.7,149.3 L175.0,150.2 L176.4,151.0 L177.7,151.8 L179.1,152.7 L180.4,153.5 L181.8,154.3 L183.1,155.0 L184.5,155.8 L185.8,156.5 L187.2,157.3 L188.5,158.0 L189.9,158.7 L191.2,159.4 L192.5,160.1 L193.9,160.8 L195.2,161.4 L196.6,162.1 L197.9,162.7 L199.3,163.4 L200.6,164.0 L202.0,164.6 L203.3,165.2 L204.7,165.8 L206.0,166.4 L207.4,167.0 L208.7,167.5 L210.1,168.1 L211.4,168.6 L212.7,169.2 L214.1,169.7 L215.4,170.3 L216.8,170.8 L218.1,171.3 L219.5,171.8 L220.8,172.3 L222.2,172.8 L223.5,173.3 L224.9,173.8 L226.2,174.3 L227.6,174.7 L228.9,175.2 L230.3,175.6 L231.6,176.1 L232.9,176.5 L234.3,177.0 L235.6,177.4 L237.0,177.9 L238.3,178.3 L239.7,178.7 L241.0,179.1 L242.4,179.5 L243.7,179.9 L245.1,180.3 L246.4,180.7 L247.8,181.1 L249.1,181.5 L250.5,181.9 L251.8,182.3 L253.1,182.6 L254.5,183.0 L255.8,183.4 L257.2,183.7 L258.5,184.1 L259.9,184.5 L261.2,184.8 L262.6,185.2 L263.9,185.5 L265.3,185.8 L266.6,186.2 L268.0,186.5 L269.3,186.8 L270.7,187.2 L272.0,187.5 L273.3,187.8 L274.7,188.1 L276.0,188.4 L277.4,188.7 L278.7,189.1 L280.1,189.4 L281.4,189.7 L282.8,190.0 L284.1,190.3 L285.5,190.6 L286.8,190.8 L288.2,191.1 L289.5,191.4 L290.8,191.7 L292.2,192.0 L293.5,192.3 L294.9,192.5 L296.2,192.8 L297.6,193.1 L298.9,193.3 L300.3,193.6 L301.6,193.9 L303.0,194.1 L304.3,194.4 L305.7,194.6 L307.0,194.9 L308.4,195.2 L309.7,195.4 L311.0,195.7 L312.4,195.9 L313.7,196.1 L315.1,196.4 L316.4,196.6 L317.8,196.9 L319.1,197.1 L320.5,197.3 L321.8,197.6 L323.2,197.8 L324.5,198.0 L325.9,198.2 L327.2,198.5 L328.6,198.7 L329.9,198.9 L331.2,199.1 L332.6,199.4 L333.9,199.6 L335.3,199.8 L336.6,200.0 L338.0,200.2 L339.3,200.4 L340.7,200.6 L342.0,200.8 L343.4,201.0 L344.7,201.2 L346.1,201.4 L347.4,201.6 L348.8,201.8 L350.1,202.0 L351.4,202.2 L352.8,202.4 L354.1,202.6 L355.5,202.8 L356.8,203.0 L358.2,203.2 L359.5,203.4 L360.9,203.6 L362.2,203.8 L363.6,203.9 L364.9,204.1 L366.3,204.3 L367.6,204.5 L369.0,204.7 L370.3,204.8 L371.6,205.0 L373.0,205.2 L374.3,205.4 L375.7,205.5 L377.0,205.7 L378.4,205.9 L379.7,206.1 L381.1,206.2 L382.4,206.4 L383.8,206.6 L385.1,206.7 L386.5,206.9 L387.8,207.1 L389.2,207.2 L390.5,207.4 L391.8,207.5 L393.2,207.7 L394.5,207.9 L395.9,208.0 L397.2,208.2 L398.6,208.3 L399.9,208.5 L401.3,208.6 L402.6,208.8 L404.0,208.9 L405.3,209.1 L406.7,209.2 L408.0,209.4 L409.4,209.5 L410.7,209.7 L412.0,209.8 L413.4,210.0 L414.7,210.1 L416.1,210.3 L417.4,210.4 L418.8,210.6 L420.1,210.7 L421.5,210.8 L422.8,211.0 L424.2,211.1 L425.5,211.3 L426.9,211.4 L428.2,211.5 L429.6,211.7 L430.9,211.8 L432.2,211.9 L433.6,212.1 L434.9,212.2 L436.3,212.3 L437.6,212.5 L439.0,212.6 L440.3,212.7 L441.7,212.8 L443.0,213.0 L444.4,213.1 L445.7,213.2 L447.1,213.4 L448.4,213.5 L449.8,213.6 L451.1,213.7 L452.4,213.9 L453.8,214.0 L455.1,214.1 L456.5,214.2 L457.8,214.3 L459.2,214.5 L460.5,214.6 L461.9,214.7 L463.2,214.8 L464.6,214.9 L465.9,215.1 L467.3,215.2 L468.6,215.3 L470.0,215.4 L471.3,215.5 L472.6,215.6 L474.0,215.8 L475.3,215.9 L476.7,216.0 L478.0,216.1 L479.4,216.2 L480.7,216.3 L482.1,216.4 L483.4,216.5 L484.8,216.6 L486.1,216.8 L487.5,216.9 L488.8,217.0 L490.2,217.1 L491.5,217.2 L492.8,217.3 L494.2,217.4 L495.5,217.5 L496.9,217.6 L498.2,217.7 L499.6,217.8 L500.9,217.9 L502.3,218.0 L503.6,218.1 L505.0,218.2 L506.3,218.3 L507.7,218.4 L509.0,218.5 L510.3,218.6 L511.7,218.7 L513.0,218.8 L514.4,218.9 L515.7,219.0 L517.1,219.1 L518.4,219.2 L519.8,219.3 L521.1,219.4 L522.5,219.5 L523.8,219.6 L525.2,219.7 L526.5,219.8 L527.9,219.9 L529.2,220.0 L530.5,220.1 L531.9,220.2 L533.2,220.3 L534.6,220.4 L535.9,220.5 L537.3,220.5 L538.6,220.6 L540.0,220.7 L541.3,220.8 L542.7,220.9 L544.0,221.0 L545.4,221.1 L546.7,221.2 L548.1,221.3 L549.4,221.4 L550.7,221.4 L552.1,221.5 L553.4,221.6 L554.8,221.7 L556.1,221.8 L557.5,221.9 L558.8,222.0 L560.2,222.0 L561.5,222.1 L562.9,222.2 L564.2,222.3 L565.6,222.4 L566.9,222.5 L568.3,222.5 L569.6,222.6 L570.9,222.7 L572.3,222.8 L573.6,222.9 L575.0,223.0 L576.3,223.0 L577.7,223.1 L579.0,223.2 L580.4,223.3 L581.7,223.4 L583.1,223.4 L584.4,223.5 L585.8,223.6 L587.1,223.7 L588.5,223.8 L589.8,223.8 L591.1,223.9 L592.5,224.0 L593.8,224.1 L595.2,224.1 L596.5,224.2 L597.9,224.3 L599.2,224.4 L600.6,224.4 L601.9,224.5 L603.3,224.6 L604.6,224.7 L606.0,224.7 L607.3,224.8 L608.7,224.9 L610.0,225.0" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M71.3,277.5 L72.7,271.0 L74.0,264.5 L75.4,258.0 L76.7,251.5 L78.1,245.0 L79.4,238.4 L80.8,231.9 L82.1,225.4 L83.5,218.9 L84.8,212.4 L86.2,205.9 L87.5,199.4 L88.9,192.9 L90.2,186.4 L91.5,179.9 L92.9,173.4 L94.2,166.9 L95.6,160.4 L96.9,153.9 L98.3,147.4 L99.6,140.9 L101.0,134.4 L102.3,127.9 L103.7,121.3 L105.0,114.8 L106.4,108.3 L107.7,101.8 L109.1,95.3 L110.4,88.8 L111.7,82.3 L113.1,75.8 L114.4,75.3 L115.8,75.3 L117.1,75.3 L118.5,75.3 L119.8,75.3 L121.2,75.3 L122.5,75.3 L123.9,75.3 L125.2,75.3 L126.6,75.3 L127.9,75.3 L129.3,75.3 L130.6,75.3 L131.9,75.3 L133.3,75.3 L134.6,75.3 L136.0,75.3 L137.3,75.3 L138.7,75.3 L140.0,75.3 L141.4,75.3 L142.7,75.3 L144.1,75.3 L145.4,75.3 L146.8,75.3 L148.1,75.3 L149.5,75.3 L150.8,75.3 L152.1,75.3 L153.5,75.3 L154.8,75.3 L156.2,75.3 L157.5,75.3 L158.9,75.3 L160.2,75.3 L161.6,75.3 L162.9,75.3 L164.3,75.3 L165.6,75.3 L167.0,75.3 L168.3,75.3 L169.7,75.3 L171.0,75.3 L172.3,75.3 L173.7,75.3 L175.0,75.3 L176.4,75.3 L177.7,75.3 L179.1,75.3 L180.4,75.3 L181.8,75.3 L183.1,75.3 L184.5,75.3 L185.8,75.3 L187.2,75.3 L188.5,75.3 L189.9,75.3 L191.2,75.3 L192.5,75.3 L193.9,75.3 L195.2,75.3 L196.6,75.3 L197.9,75.3 L199.3,75.3 L200.6,75.3 L202.0,75.3 L203.3,75.3 L204.7,75.3 L206.0,75.3 L207.4,75.3 L208.7,75.3 L210.1,75.3 L211.4,75.3 L212.7,75.3 L214.1,75.3 L215.4,75.3 L216.8,75.3 L218.1,75.3 L219.5,75.3 L220.8,75.3 L222.2,75.3 L223.5,75.3 L224.9,75.3 L226.2,75.3 L227.6,75.3 L228.9,75.3 L230.3,75.3 L231.6,75.3 L232.9,75.3 L234.3,75.3 L235.6,75.3 L237.0,75.3 L238.3,75.3 L239.7,75.3 L241.0,75.3 L242.4,75.3 L243.7,75.3 L245.1,75.3 L246.4,75.3 L247.8,75.3 L249.1,75.3 L250.5,75.3 L251.8,75.3 L253.1,75.3 L254.5,75.3 L255.8,75.3 L257.2,75.3 L258.5,75.3 L259.9,75.3 L261.2,75.3 L262.6,75.3 L263.9,75.3 L265.3,75.3 L266.6,75.3 L268.0,75.3 L269.3,75.3 L270.7,75.3 L272.0,75.3 L273.3,75.3 L274.7,75.3 L276.0,75.3 L277.4,75.3 L278.7,75.3 L280.1,75.3 L281.4,75.3 L282.8,75.3 L284.1,75.3 L285.5,75.3 L286.8,75.3 L288.2,75.3 L289.5,75.3 L290.8,75.3 L292.2,75.3 L293.5,75.3 L294.9,75.3 L296.2,75.3 L297.6,75.3 L298.9,75.3 L300.3,75.3 L301.6,75.3 L303.0,75.3 L304.3,75.3 L305.7,75.3 L307.0,75.3 L308.4,75.3 L309.7,75.3 L311.0,75.3 L312.4,75.3 L313.7,75.3 L315.1,75.3 L316.4,75.3 L317.8,75.3 L319.1,75.3 L320.5,75.3 L321.8,75.3 L323.2,75.3 L324.5,75.3 L325.9,75.3 L327.2,75.3 L328.6,75.3 L329.9,75.3 L331.2,75.3 L332.6,75.3 L333.9,75.3 L335.3,75.3 L336.6,75.3 L338.0,75.3 L339.3,75.3 L340.7,75.3 L342.0,75.3 L343.4,75.3 L344.7,75.3 L346.1,75.3 L347.4,75.3 L348.8,75.3 L350.1,75.3 L351.4,75.3 L352.8,75.3 L354.1,75.3 L355.5,75.3 L356.8,75.3 L358.2,75.3 L359.5,75.3 L360.9,75.3 L362.2,75.3 L363.6,75.3 L364.9,75.3 L366.3,75.3 L367.6,75.3 L369.0,75.3 L370.3,75.3 L371.6,75.3 L373.0,75.3 L374.3,75.3 L375.7,75.3 L377.0,75.3 L378.4,75.3 L379.7,75.3 L381.1,75.3 L382.4,75.3 L383.8,75.3 L385.1,75.3 L386.5,75.3 L387.8,75.3 L389.2,75.3 L390.5,75.3 L391.8,75.3 L393.2,75.3 L394.5,75.3 L395.9,75.3 L397.2,75.3 L398.6,75.3 L399.9,75.3 L401.3,75.3 L402.6,75.3 L404.0,75.3 L405.3,75.3 L406.7,75.3 L408.0,75.3 L409.4,75.3 L410.7,75.3 L412.0,75.3 L413.4,75.3 L414.7,75.3 L416.1,75.3 L417.4,75.3 L418.8,75.3 L420.1,75.3 L421.5,75.3 L422.8,75.3 L424.2,75.3 L425.5,75.3 L426.9,75.3 L428.2,75.3 L429.6,75.3 L430.9,75.3 L432.2,75.3 L433.6,75.3 L434.9,75.3 L436.3,75.3 L437.6,75.3 L439.0,75.3 L440.3,75.3 L441.7,75.3 L443.0,75.3 L444.4,75.3 L445.7,75.3 L447.1,75.3 L448.4,75.3 L449.8,75.3 L451.1,75.3 L452.4,75.3 L453.8,75.3 L455.1,75.3 L456.5,75.3 L457.8,75.3 L459.2,75.3 L460.5,75.3 L461.9,75.3 L463.2,75.3 L464.6,75.3 L465.9,75.3 L467.3,75.3 L468.6,75.3 L470.0,75.3 L471.3,75.3 L472.6,75.3 L474.0,75.3 L475.3,75.3 L476.7,75.3 L478.0,75.3 L479.4,75.3 L480.7,75.3 L482.1,75.3 L483.4,75.3 L484.8,75.3 L486.1,75.3 L487.5,75.3 L488.8,75.3 L490.2,75.3 L491.5,75.3 L492.8,75.3 L494.2,75.3 L495.5,75.3 L496.9,75.3 L498.2,75.3 L499.6,75.3 L500.9,75.3 L502.3,75.3 L503.6,75.3 L505.0,75.3 L506.3,75.3 L507.7,75.3 L509.0,75.3 L510.3,75.3 L511.7,75.3 L513.0,75.8 L514.4,78.7 L515.7,81.6 L517.1,84.5 L518.4,87.4 L519.8,90.3 L521.1,93.2 L522.5,96.1 L523.8,99.0 L525.2,101.8 L526.5,104.7 L527.9,107.6 L529.2,110.5 L530.5,113.4 L531.9,116.3 L533.2,119.2 L534.6,122.1 L535.9,125.0 L537.3,127.9 L538.6,130.8 L540.0,133.7 L541.3,136.5 L542.7,139.4 L544.0,142.3 L545.4,145.2 L546.7,148.1 L548.1,151.0 L549.4,153.9 L550.7,156.8 L552.1,159.7 L553.4,162.6 L554.8,165.5 L556.1,168.3 L557.5,171.2 L558.8,174.1 L560.2,177.0 L561.5,179.9 L562.9,182.8 L564.2,185.7 L565.6,188.6 L566.9,191.5 L568.3,194.4 L569.6,197.3 L570.9,200.2 L572.3,203.0 L573.6,205.9 L575.0,208.8 L576.3,211.7 L577.7,214.6 L579.0,217.5 L580.4,220.4 L581.7,223.3 L583.1,226.2 L584.4,229.1 L585.8,232.0 L587.1,234.8 L588.5,237.7 L589.8,240.6 L591.1,243.5 L592.5,246.4 L593.8,249.3 L595.2,252.2 L596.5,255.1 L597.9,258.0 L599.2,260.9 L600.6,263.8 L601.9,266.7 L603.3,269.5 L604.6,272.4 L606.0,275.3 L607.3,278.2 L608.7,281.1 L610.0,284.0" fill="none" stroke="var(--fig-green,#34d399)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><rect x="70.0" y="44.0" width="43.2" height="240.0" rx="0" fill="rgba(91,140,255,0.10)" stroke="none" stroke-width="1.5"/><text x="91.6" y="62.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="600">warmup</text><rect x="636.0" y="84.0" width="12.0" height="12.0" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5"/><text x="656.0" y="94.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">cosine decay</text><rect x="636.0" y="118.0" width="12.0" height="12.0" rx="3" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5"/><text x="656.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">linear decay</text><rect x="636.0" y="152.0" width="12.0" height="12.0" rx="3" fill="var(--fig-amber,#f5b544)" stroke="none" stroke-width="1.5"/><text x="656.0" y="162.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">inverse sqrt</text><rect x="636.0" y="186.0" width="12.0" height="12.0" rx="3" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5"/><text x="656.0" y="196.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">WSD</text><text x="70.0" y="312.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">training progress →</text><text x="636.0" y="64.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">decay shape</text><text x="420.0" y="26.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">learning rate, normalised to peak</text></svg><figcaption>Four schedule shapes on one axis. Note that WSD's stable phase makes the run extendable: the decay is a decision you can defer, whereas a cosine schedule commits you to the total token count when you start.</figcaption></figure></p>
+<h3 id="precision-bf16-versus-fp16">Precision: bf16 versus fp16</h3>
+<p><strong>(1) Intuition.</strong> Both are 16-bit floats, and they fail differently. fp16 has more mantissa bits, so it is more precise, but its exponent range is small, so it overflows. bf16 has the same exponent range as fp32, so it cannot overflow, but it keeps only 8 significant bits.</p>
+<p><strong>(2) Formal definition.</strong> fp16: 1 sign, 5 exponent, 10 mantissa bits — maximum finite value $65504$, smallest normal $6.1\times10^{-5}$, relative precision $2^{-11} = 4.9\times10^{-4}$. bf16: 1 sign, 8 exponent, 7 mantissa bits — maximum $3.39\times10^{38}$, relative precision $2^{-8} = 3.9\times10^{-3}$.</p>
+<p><strong>(3) Why it is built this way.</strong> Training needs range more than precision. Gradients span many orders of magnitude and any overflow produces <code>inf</code>, which propagates as <code>NaN</code> through the whole parameter update. bf16 makes overflow impossible for any value representable in fp32, at the cost of 8x coarser quantization — tolerable because the optimizer keeps a separate fp32 master copy of the weights, so the accumulated update is not quantized.</p>
+<p><strong>(4) Worked micro-example.</strong> An attention logit of 70,000 is fine in fp32 and bf16, and becomes <code>inf</code> in fp16. With gradients at $3\times10^{-6}$, fp16's smallest normal is $6.1\times10^{-5}$, so those gradients flush to zero without loss scaling — which is why fp16 training requires multiplying the loss by a scale factor (typically $2^{16}$) and dividing it back before the optimizer step. bf16 needs no loss scaling at all. The cost of bf16's precision: an update of $1.0$ and a value of $1.0$ plus $2^{-9}$ are the same bf16 number, so anything below about 0.4% relative change is invisible — which is why the master weights must stay in fp32.</p>
+<h3 id="scaling-laws">Scaling laws</h3>
+<p><strong>(1) Intuition.</strong> Loss falls as a power law in parameters and as a power law in tokens, with a floor. Fit the three constants and you can predict the loss of a run you have not done.</p>
+<p><strong>(2) Formal definition.</strong></p>
+<p>$$L(N, D) = L_{\infty} + A N^{-\alpha} + B D^{-\beta}$$</p>
+<p>with fitted $\alpha \approx 0.34$ and $\beta \approx 0.28$ in the most-cited language-model fit. This is an empirical regularity, not a theorem; there is no derivation of the exponents from first principles, and different corpora, tokenizers, and architectures give different values.</p>
+<p><strong>(3) Why it is built this way.</strong> A three-term form with an irreducible floor is the simplest function that matches what is observed: loss decreases monotonically with both arguments, the decreases diminish, and the fitted curve bends away from a pure power law when one argument becomes very small — which the additive form reproduces exactly, because the smaller term dominates and the loss levels off at the other term's value.</p>
+<p><strong>(4) Worked micro-example.</strong> With $L_\infty = 1.69$, $A = 406.4$, $B = 410.7$, $\alpha = 0.34$, $\beta = 0.28$: at $N = 70\times10^{9}$ and $D = 1.4\times10^{12}$, $A N^{-\alpha} = 406.4/3760 = 0.108$, $B D^{-\beta} = 410.7/3110 = 0.132$, so $L = 1.69+0.108+0.132 = 1.930$ nats/token, $\mathrm{PP} = 6.89$. Double the tokens to $2.8\times10^{12}$ at the same size: $B D^{-\beta} = 0.109$, so $L = 1.907$ — a 1.2% loss reduction for 2x the training compute. That flatness is why allocation matters.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 372" width="100%" role="img" aria-label="Loss falls as a power law in compute, parameters, and tokens" class="fig-svg"><defs><marker id="scale-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="80.0" y1="284.6" x2="480.0" y2="284.6" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="288.6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">-0.5</text><line x1="80.0" y1="227.4" x2="480.0" y2="227.4" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="231.4" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">0.0</text><line x1="80.0" y1="170.3" x2="480.0" y2="170.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="174.3" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">0.5</text><line x1="80.0" y1="113.1" x2="480.0" y2="113.1" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="117.1" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1.0</text><line x1="80.0" y1="56.0" x2="480.0" y2="56.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="60.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1.5</text><text x="80.0" y="314.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e17</text><text x="168.9" y="314.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e19</text><text x="257.8" y="314.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e21</text><text x="346.7" y="314.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e23</text><text x="435.6" y="314.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e25</text><line x1="80.0" y1="296.0" x2="480.0" y2="296.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><line x1="80.0" y1="56.0" x2="80.0" y2="296.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M80.0,73.1 L82.5,73.9 L85.0,74.6 L87.5,75.4 L90.0,76.1 L92.5,76.8 L95.0,77.6 L97.5,78.3 L100.0,79.1 L102.5,79.8 L105.0,80.5 L107.5,81.3 L110.0,82.0 L112.5,82.8 L115.0,83.5 L117.5,84.2 L120.0,85.0 L122.5,85.7 L125.0,86.4 L127.5,87.2 L130.0,87.9 L132.5,88.7 L135.0,89.4 L137.5,90.1 L140.0,90.9 L142.5,91.6 L145.0,92.4 L147.5,93.1 L150.0,93.8 L152.5,94.6 L155.0,95.3 L157.5,96.1 L160.0,96.8 L162.5,97.5 L165.0,98.3 L167.5,99.0 L170.0,99.8 L172.5,100.5 L175.0,101.2 L177.5,102.0 L180.0,102.7 L182.5,103.5 L185.0,104.2 L187.5,104.9 L190.0,105.7 L192.5,106.4 L195.0,107.1 L197.5,107.9 L200.0,108.6 L202.5,109.4 L205.0,110.1 L207.5,110.8 L210.0,111.6 L212.5,112.3 L215.0,113.1 L217.5,113.8 L220.0,114.5 L222.5,115.3 L225.0,116.0 L227.5,116.8 L230.0,117.5 L232.5,118.2 L235.0,119.0 L237.5,119.7 L240.0,120.5 L242.5,121.2 L245.0,121.9 L247.5,122.7 L250.0,123.4 L252.5,124.2 L255.0,124.9 L257.5,125.6 L260.0,126.4 L262.5,127.1 L265.0,127.9 L267.5,128.6 L270.0,129.3 L272.5,130.1 L275.0,130.8 L277.5,131.5 L280.0,132.3 L282.5,133.0 L285.0,133.8 L287.5,134.5 L290.0,135.2 L292.5,136.0 L295.0,136.7 L297.5,137.5 L300.0,138.2 L302.5,138.9 L305.0,139.7 L307.5,140.4 L310.0,141.2 L312.5,141.9 L315.0,142.6 L317.5,143.4 L320.0,144.1 L322.5,144.9 L325.0,145.6 L327.5,146.3 L330.0,147.1 L332.5,147.8 L335.0,148.6 L337.5,149.3 L340.0,150.0 L342.5,150.8 L345.0,151.5 L347.5,152.2 L350.0,153.0 L352.5,153.7 L355.0,154.5 L357.5,155.2 L360.0,155.9 L362.5,156.7 L365.0,157.4 L367.5,158.2 L370.0,158.9 L372.5,159.6 L375.0,160.4 L377.5,161.1 L380.0,161.9 L382.5,162.6 L385.0,163.3 L387.5,164.1 L390.0,164.8 L392.5,165.6 L395.0,166.3 L397.5,167.0 L400.0,167.8 L402.5,168.5 L405.0,169.2 L407.5,170.0 L410.0,170.7 L412.5,171.5 L415.0,172.2 L417.5,172.9 L420.0,173.7 L422.5,174.4 L425.0,175.2 L427.5,175.9 L430.0,176.6 L432.5,177.4 L435.0,178.1 L437.5,178.9 L440.0,179.6 L442.5,180.3 L445.0,181.1 L447.5,181.8 L450.0,182.6 L452.5,183.3 L455.0,184.0 L457.5,184.8 L460.0,185.5 L462.5,186.3 L465.0,187.0 L467.5,187.7 L470.0,188.5 L472.5,189.2 L475.0,189.9 L477.5,190.7 L480.0,191.4" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M80.0,56.0 L82.5,57.0 L85.0,57.9 L87.5,58.9 L90.0,59.9 L92.5,60.8 L95.0,61.8 L97.5,62.8 L100.0,63.7 L102.5,64.7 L105.0,65.6 L107.5,66.6 L110.0,67.6 L112.5,68.5 L115.0,69.5 L117.5,70.5 L120.0,71.4 L122.5,72.4 L125.0,73.4 L127.5,74.3 L130.0,75.3 L132.5,76.2 L135.0,77.2 L137.5,78.2 L140.0,79.1 L142.5,80.1 L145.0,81.1 L147.5,82.0 L150.0,83.0 L152.5,84.0 L155.0,84.9 L157.5,85.9 L160.0,86.9 L162.5,87.8 L165.0,88.8 L167.5,89.8 L170.0,90.7 L172.5,91.7 L175.0,92.6 L177.5,93.6 L180.0,94.6 L182.5,95.5 L185.0,96.5 L187.5,97.5 L190.0,98.4 L192.5,99.4 L195.0,100.4 L197.5,101.3 L200.0,102.3 L202.5,103.3 L205.0,104.2 L207.5,105.2 L210.0,106.1 L212.5,107.1 L215.0,108.1 L217.5,109.0 L220.0,110.0 L222.5,111.0 L225.0,111.9 L227.5,112.9 L230.0,113.9 L232.5,114.8 L235.0,115.8 L237.5,116.8 L240.0,117.7 L242.5,118.7 L245.0,119.6 L247.5,120.6 L250.0,121.6 L252.5,122.5 L255.0,123.5 L257.5,124.5 L260.0,125.4 L262.5,126.4 L265.0,127.4 L267.5,128.3 L270.0,129.3 L272.5,130.3 L275.0,131.2 L277.5,132.2 L280.0,133.1 L282.5,134.1 L285.0,135.1 L287.5,136.0 L290.0,137.0 L292.5,138.0 L295.0,138.9 L297.5,139.9 L300.0,140.9 L302.5,141.8 L305.0,142.8 L307.5,143.7 L310.0,144.7 L312.5,145.7 L315.0,146.6 L317.5,147.6 L320.0,148.6 L322.5,149.5 L325.0,150.5 L327.5,151.5 L330.0,152.4 L332.5,153.4 L335.0,154.4 L337.5,155.3 L340.0,156.3 L342.5,157.2 L345.0,158.2 L347.5,159.2 L350.0,160.1 L352.5,161.1 L355.0,162.1 L357.5,163.0 L360.0,164.0 L362.5,165.0 L365.0,165.9 L367.5,166.9 L370.0,167.9 L372.5,168.8 L375.0,169.8 L377.5,170.8 L380.0,171.7 L382.5,172.7 L385.0,173.6 L387.5,174.6 L390.0,175.6 L392.5,176.5 L395.0,177.5 L397.5,178.5 L400.0,179.4 L402.5,180.4 L405.0,181.4 L407.5,182.3 L410.0,183.3 L412.5,184.2 L415.0,185.2 L417.5,186.2 L420.0,187.1 L422.5,188.1 L425.0,189.1 L427.5,190.0 L430.0,191.0 L432.5,192.0 L435.0,192.9 L437.5,193.9 L440.0,194.9 L442.5,195.8 L445.0,196.8 L447.5,197.8 L450.0,198.7 L452.5,199.7 L455.0,200.6 L457.5,201.6 L460.0,202.6 L462.5,203.5 L465.0,204.5 L467.5,205.5 L470.0,206.4 L472.5,207.4 L475.0,208.4 L477.5,209.3 L480.0,210.3" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="5 4"/><circle cx="213.3" cy="112.6" r="4.5" fill="var(--fig-amber,#f5b544)"/><circle cx="302.2" cy="138.9" r="4.5" fill="var(--fig-violet,#a78bfa)"/><text x="280.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">loss vs compute (schematic)</text><text x="280.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">FLOPs (log)</text><rect x="520.0" y="70.0" width="254.0" height="176.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="538.0" y="96.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">Chinchilla allocation</text><text x="538.0" y="122.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">N ≈ C^0.5, D ≈ C^0.5</text><text x="538.0" y="142.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">→ about 20 tokens per parameter</text><text x="538.0" y="166.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Kaplan et al. concluded</text><text x="538.0" y="180.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">parameters should grow much</text><text x="538.0" y="194.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">faster than data. Chinchilla</text><text x="538.0" y="208.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">re-ran the sweep with matched</text><text x="538.0" y="222.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">learning-rate schedules and</text><text x="538.0" y="236.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">found the opposite balance.</text><text x="538.0" y="234.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">the axis, not the constant, was the bug</text></svg><figcaption>Log-log axes: the isoflop contours are straight lines of slope $-1$ in $(N,D)$ space, and the loss surface's valley crosses them at a single point per budget. Note that the optimum moves toward more tokens as compute grows.</figcaption></figure></p>
+<h3 id="kaplan-versus-chinchilla-and-the-inference-aware-picture">Kaplan versus Chinchilla, and the inference-aware picture</h3>
+<p><strong>(1) Intuition.</strong> Two teams fit the same kind of law and reached opposite conclusions about how to spend a budget: Kaplan said put it into parameters, Chinchilla said split it roughly evenly. Chinchilla was right, and the reason is methodological rather than mysterious.</p>
+<p><strong>(2) Formal definition.</strong> Kaplan et al. (2020) reported $N^{*}\propto C^{0.73}$ and $D^{*}\propto C^{0.27}$ — strongly favouring parameters. Hoffmann et al. (2022) reported roughly equal scaling, $N^{*}\propto C^{0.5}$ and $D^{*}\propto C^{0.5}$, equivalently about 20 training tokens per parameter, and demonstrated it by training Chinchilla (70B parameters, 1.4T tokens) to beat a 280B model trained on the same compute.</p>
+<p><strong>(3) Why it is built this way — the actual disagreement.</strong> Hoffmann et al. attribute the discrepancy principally to Kaplan et al.'s learning-rate schedule not being adapted to each run's token budget: with a cosine decay defined over a fixed horizon, a run with fewer optimization steps is compared before its schedule has annealed, so larger models trained for fewer steps look worse than they are, and the fit compensates by over-rewarding parameters. Two further differences compound it: whether embedding parameters are counted, and the functional form fitted. The corrected picture is that the two terms must stay balanced — see Derivation 2, where $\alpha \approx \beta$ implies $N^{*}\propto D^{*}$, i.e. equal scaling.</p>
+<p><strong>(4) Worked micro-example.</strong> Chinchilla's headline rule, $D = 20N$ with $C = 6ND$, gives $C = 120N^{2}$, so $N^{*} = \sqrt{C/120}$. At $C = 5.88\times10^{23}$: $N^{*} = \sqrt{4.9\times10^{21}} = 7.0\times10^{10}$ = 70B, and $D = 1.4$T. Exactly the published pair. Post-Chinchilla practice then diverged deliberately: inference cost dominates for a deployed model, so you <em>over-train</em> a smaller model past the Chinchilla ratio. Llama-3-8B was reported trained on 15T tokens — roughly 1,875 tokens per parameter, about 94x the Chinchilla ratio — because a model that serves trillions of tokens is cheaper to serve if it is small, even at a slightly worse loss per training FLOP.</p>
+<p><div class="viz" data-viz="v-scaling"></div><div class="vizcap">Drag the compute budget and watch the optimal split move. Then change the axis to inference volume: as lifetime tokens served rise, the optimum shifts to fewer parameters and more training tokens, which is the entire argument for over-training.</div></p>
+<h3 id="emergence-and-the-metric-argument">Emergence, and the metric argument</h3>
+<p><strong>(1) Intuition.</strong> Papers reported abilities that are absent at one scale and present at the next, as if something switched on. A large part of that is the metric: a task that requires $k$ correct tokens has an exact-match score of roughly $p^{k}$, and a high power of a smooth curve is a step.</p>
+<p><strong>(2) Formal definition.</strong> Suppose per-token accuracy $p$ improves smoothly with scale, and a task is scored by exact match over a sequence of $k$ positions, so score $\approx p^{k}$. Then</p>
+<p>$$\frac{d\log(p^{k})}{d\log p} = k$$</p>
+<p>so the apparent sharpness of the transition in log-log space is proportional to $k$ — the number of tokens the metric requires to be right at once.</p>
+<p><strong>(3) Why it is built this way.</strong> This is an argument about measurement, not about capability. Schaeffer et al. (2023) showed that the same model evaluations, rescored with continuous metrics (token-level accuracy, edit distance, log-likelihood), produce smooth curves where the original papers reported jumps. The counterargument, also worth taking seriously, is that some abilities may genuinely be discontinuous — a capability that requires a circuit to exist at all can appear abruptly — and the mirage critique does not prove no such abilities exist, only that most published examples are metric artifacts.</p>
+<p><strong>(4) Worked micro-example.</strong> With $k=20$ required positions:</p>
+<table>
+<thead>
+<tr>
+<th>$p$</th>
+<th style="text-align: right;">0.50</th>
+<th style="text-align: right;">0.70</th>
+<th style="text-align: right;">0.80</th>
+<th style="text-align: right;">0.90</th>
+<th style="text-align: right;">0.95</th>
+<th style="text-align: right;">0.99</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$p^{1}$</td>
+<td style="text-align: right;">0.500</td>
+<td style="text-align: right;">0.700</td>
+<td style="text-align: right;">0.800</td>
+<td style="text-align: right;">0.900</td>
+<td style="text-align: right;">0.950</td>
+<td style="text-align: right;">0.990</td>
+</tr>
+<tr>
+<td>$p^{5}$</td>
+<td style="text-align: right;">0.031</td>
+<td style="text-align: right;">0.168</td>
+<td style="text-align: right;">0.328</td>
+<td style="text-align: right;">0.591</td>
+<td style="text-align: right;">0.774</td>
+<td style="text-align: right;">0.951</td>
+</tr>
+<tr>
+<td>$p^{10}$</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">0.028</td>
+<td style="text-align: right;">0.107</td>
+<td style="text-align: right;">0.349</td>
+<td style="text-align: right;">0.599</td>
+<td style="text-align: right;">0.904</td>
+</tr>
+<tr>
+<td>$p^{20}$</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">0.012</td>
+<td style="text-align: right;">0.122</td>
+<td style="text-align: right;">0.359</td>
+<td style="text-align: right;">0.818</td>
+</tr>
+</tbody>
+</table>
+<p>A model improving steadily from $p=0.7$ to $p=0.95$ moves 0.001 → 0.359 on the $k=20$ metric. On a plot of accuracy versus log-compute, that is indistinguishable from a capability appearing. The honest reading: some reported emergences are real and some are the exponent doing the work, and you cannot tell which without rescoring with a continuous metric.</p>
+<h3 id="data-quality-versus-quantity-what-is-actually-known">Data quality versus quantity — what is actually known</h3>
+<p>Quality filtering reliably improves models per token; that is well established and is the reason every frontier pipeline filters. What is contested is the stronger claim that a small model trained on a small, curated corpus can match a much larger model trained on a large raw corpus. The reports supporting it are real, and so are the replications that fail to reproduce the effect at scale, usually because the curated corpus was itself generated by a larger model, which makes the comparison a distillation result rather than a data-quality result. The defensible summary: at fixed token count, better data gives a better model, monotonically and substantially; at fixed compute, the exchange rate between quality and quantity has not been established publicly, and claims to a dramatic rate should be read as claims about distillation.</p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<ol>
+<li><strong>Collect.</strong> Assemble sources: web crawl, code, books, papers, reference works, and any licensed corpora.</li>
+<li><strong>Extract.</strong> Convert HTML or PDF to plain text; strip boilerplate, navigation, and repeated site furniture.</li>
+<li><strong>Identify language.</strong> Run a language-ID classifier; keep the languages in your target mixture.</li>
+<li><strong>Score quality.</strong> Apply a classifier trained on curated positives; keep documents above the threshold.</li>
+<li><strong>Deduplicate exactly.</strong> Hash each document's normalized text; drop repeats keeping the first.</li>
+<li><strong>Deduplicate near.</strong> Shingle, MinHash-signature, band into LSH buckets, and within each bucket drop all but one document above the Jaccard threshold.</li>
+<li><strong>Filter toxicity.</strong> Score and remove above a threshold; record the removed fraction, because it interacts with language and dialect.</li>
+<li><strong>Decontaminate.</strong> Remove documents with long $n$-gram overlap against every evaluation set you intend to use.</li>
+<li><strong>Mix and order.</strong> Sample domains by weight; reserve a high-quality cooldown set for the final few percent of tokens.</li>
+<li><strong>Tokenize and pack.</strong> Encode to token IDs, concatenate documents into fixed-length sequences with an end-of-document token between them, and shuffle.</li>
+</ol>
+<p>```text
+function BUILD_CORPUS(sources, threshold, weights):
+    docs <- empty list
+    for src in sources:
+        docs += extract_text(src)
+    docs <- [d for d in docs if language(d) in targets]
+    docs <- [d for d in docs if quality(d) > threshold]
+    docs <- exact_dedup(docs)                    # hash of normalised text
+    sigs <- {d: minhash(shingles(d, k), n_perm) for d in docs}
+    for bucket in lsh_bands(sigs, r, b):
+        for pair in pairs(bucket):
+            if jaccard_estimate(pair) > 0.8:
+                drop one of pair
+    docs <- [d for d in docs if toxicity(d) < tau]
+    docs <- [d for d in docs if not contaminated(d, eval_sets, ngram=13)]
+    train <- weighted_sample(docs, weights)
+    return tokenize_and_pack(train, seq_len)
+```</p>
+<p><strong>Complexity.</strong> MinHash is $O(|S|\,n)$ hash evaluations per document for $n$ permutations, and with $n=128$ that dominates. LSH bucketing is $O(n_{\mathrm{docs}}\cdot b)$ dictionary insertions. Exact dedup is $O(n_{\mathrm{docs}})$ hashing plus one pass. Quality and toxicity scoring are one forward pass of a small classifier per document — for a 3B-page corpus this is the single largest data-processing cost, often more than the deduplication.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="derivation-1-minhash-is-unbiased-and-lsh-banding-gives-i151">Derivation 1: MinHash is unbiased, and LSH banding gives $1-(1-J^{r})^{b}$</h3>
+<p><strong>Step 1 — the minimum of a random permutation is uniform over the set.</strong> Let $h$ be a random permutation of the universe, and let $y = \arg\min_{x\in A}h(x)$ be the element of $A$ with the smallest hash. By symmetry, each element of $A$ is equally likely to be the minimum, so $P[y = x] = 1/|A|$ for every $x\in A$.</p>
+<p><strong>Step 2 — agreement probability equals Jaccard.</strong> Let $y$ be the minimum-hash element of $A\cup B$, which lies in $A\cap B$ with probability $|A\cap B|/|A\cup B| = J$. If $y\in A\cap B$, then $\min_{A}h = \min_{B}h = h(y)$ and the signatures agree at this hash. If $y\notin A\cap B$, then $y$ is in exactly one of the two sets, so the other set's minimum is a different element with a larger hash, and the signatures disagree. Therefore</p>
+<p>$$P[\mathrm{sig}_i(A) = \mathrm{sig}_i(B)] = \frac{|A\cap B|}{|A\cup B|} = J$$</p>
+<p>and averaging over $n$ independent permutations gives an estimator with mean $J$ and variance $J(1-J)/n$.</p>
+<p><strong>Step 3 — banding.</strong> Split the $n = rb$ signature entries into $b$ bands of $r$ consecutive entries. Two documents become <em>candidates</em> if any single band matches completely. A band of $r$ entries matches with probability $J^{r}$ (independence across permutations), so it fails to match with probability $1-J^{r}$, and all $b$ bands fail independently:</p>
+<p>$$P[\text{no band matches}] = (1-J^{r})^{b} \implies P[\text{candidate}] = 1-(1-J^{r})^{b}$$</p>
+<p><strong>Step 4 — choosing $r$ and $b$.</strong> With $n = rb = 64$ fixed:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">$J$</th>
+<th style="text-align: right;">$r{=}2,b{=}32$</th>
+<th style="text-align: right;">$r{=}4,b{=}16$</th>
+<th style="text-align: right;">$r{=}8,b{=}8$</th>
+<th style="text-align: right;">$r{=}16,b{=}4$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">0.2750</td>
+<td style="text-align: right;">0.0016</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">0.9511</td>
+<td style="text-align: right;">0.1220</td>
+<td style="text-align: right;">0.0005</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.9999</td>
+<td style="text-align: right;">0.6439</td>
+<td style="text-align: right;">0.0308</td>
+<td style="text-align: right;">0.0001</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.7</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">0.9876</td>
+<td style="text-align: right;">0.3781</td>
+<td style="text-align: right;">0.0132</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">0.9889</td>
+<td style="text-align: right;">0.5595</td>
+</tr>
+</tbody>
+</table>
+<p>The transition steepens with $r$: $r=8,b=8$ is nearly a step function at $J\approx0.8$, which is the right shape for "drop near-duplicates above 0.8 and never compare anything below 0.3". Choosing the pair is therefore choosing the threshold: solve $1-(1-J_t^{r})^{b} = 1/2$ for the desired $J_t$.</p>
+<h3 id="derivation-2-the-compute-optimal-allocation">Derivation 2: the compute-optimal allocation</h3>
+<p>Minimize $L(N,D) = A N^{-\alpha} + B D^{-\beta}$ subject to $6ND = C$ (the constants $L_\infty$ and 6 do not affect the argmin).</p>
+<p><strong>Step 1 — Lagrangian.</strong></p>
+<p>$$\mathcal{J}(N,D,\lambda) = A N^{-\alpha} + B D^{-\beta} + \lambda\left(6ND - C\right)$$</p>
+<p><strong>Step 2 — first-order conditions.</strong></p>
+<p>$$\frac{\partial\mathcal{J}}{\partial N} = -\alpha A N^{-\alpha-1} + 6\lambda D = 0 \implies \alpha A N^{-\alpha-1} = 6\lambda D$$</p>
+<p>$$\frac{\partial\mathcal{J}}{\partial D} = -\beta B D^{-\beta-1} + 6\lambda N = 0 \implies \beta B D^{-\beta-1} = 6\lambda N$$</p>
+<p><strong>Step 3 — eliminate $\lambda$.</strong> Divide the first by the second:</p>
+<p>$$\frac{\alpha A N^{-\alpha-1}}{\beta B D^{-\beta-1}} = \frac{D}{N}$$</p>
+<p>Multiply both sides by $N$:</p>
+<p>$$\alpha A N^{-\alpha} = \beta B D^{-\beta}$$</p>
+<p>This is the substantive result: at the optimum, the <em>scaled</em> loss reduction from parameters equals the scaled loss reduction from tokens. If the left side is larger, buy parameters; if the right is larger, buy tokens.</p>
+<p><strong>Step 4 — solve for the exponents.</strong> From Step 3, $D^{\beta} = (\beta B/\alpha A)N^{\alpha}$, so $D = (\beta B/\alpha A)^{1/\beta}N^{\alpha/\beta}$. Substituting into $6ND = C$:</p>
+<p>$$6\left(\frac{\beta B}{\alpha A}\right)^{1/\beta} N^{1+\alpha/\beta} = C \implies N^{*} = \left(\frac{C}{6}\right)^{\beta/(\alpha+\beta)}\left(\frac{\alpha A}{\beta B}\right)^{1/(\alpha+\beta)}$$</p>
+<p>and symmetrically</p>
+<p>$$D^{*} = \left(\frac{C}{6}\right)^{\alpha/(\alpha+\beta)}\left(\frac{\beta B}{\alpha A}\right)^{1/(\alpha+\beta)}$$</p>
+<p>So $N^{*}\propto C^{\beta/(\alpha+\beta)}$ and $D^{*}\propto C^{\alpha/(\alpha+\beta)}$.</p>
+<p><strong>Step 5 — read off the consequence.</strong> If $\alpha = \beta$, then $N^{*}\propto D^{*}$: double compute, double both. With the fitted $\alpha = 0.34$, $\beta = 0.28$, the exponents are $0.28/0.62 = 0.452$ for $N$ and $0.34/0.62 = 0.548$ for $D$ — slightly more tokens than parameters as compute grows. Kaplan's $0.73/0.27$ would require $\beta/(\alpha+\beta) = 0.73$, i.e. $\beta \approx 2.7\alpha$: a data term that saturates far faster than the parameter term. The whole disagreement reduces to one ratio.</p>
+<p><strong>Step 6 — the absolute level depends on $A$ and $B$.</strong> The <em>ratio</em> $D/N$ at the optimum is $(\beta B/(\alpha A))^{1/\beta}N^{(\alpha-\beta)/\beta}$, which does depend on the coefficients. With the fitted $A = 406.4$, $B = 410.7$ one gets a considerably higher token-to-parameter ratio than the 20 that the paper's headline allocation states, because the headline round numbers come from a coarser fit than the full surface. Both statements appear in the same paper and they are not numerically identical. The robust content is the <em>exponents</em> and the qualitative rule (balance the two terms, slightly favouring data as compute grows); the absolute 20:1 is a rounded convenience, widely used and useful, not an exact consequence of the fit.</p>
+<h3 id="derivation-3-inference-aware-allocation">Derivation 3: inference-aware allocation</h3>
+<p>If the model will serve $D_{\mathrm{inf}}$ tokens after training, the cost constraint becomes</p>
+<p>$$6ND + 2ND_{\mathrm{inf}} = C$$</p>
+<p><strong>Step 1 — reframe as a per-parameter cost.</strong> Write $q = 2D_{\mathrm{inf}}$, so $N(6D + q) = C$ and $D = C/(6N) - q/6$. The inference term behaves exactly like an increase in the price of parameters: every parameter is read once per generated token, so a parameter costs FLOPs forever, while a training token costs FLOPs once.</p>
+<p><strong>Step 2 — first-order condition.</strong> Write $\mathcal{L}(N) = AN^{-\alpha} + B\,D(N)^{-\beta}$ with $D(N) = C/(6N)-q/6$, so $dD/dN = -C/(6N^{2})$. Differentiating and setting to zero:</p>
+<p>$$-\alpha A N^{-\alpha-1} + \beta B D^{-\beta-1}\frac{C}{6N^{2}} = 0 \implies \alpha A N^{-\alpha+1} = \frac{\beta B C}{6}D^{-\beta-1}$$</p>
+<p><strong>Step 3 — substitute the budget.</strong> Since $C = N(6D+q)$, we have $C/6 = N(D+q/6)$. Substituting:</p>
+<p>$$\alpha A N^{-\alpha+1} = \beta B D^{-\beta-1}\,N\left(D+\frac{q}{6}\right)$$</p>
+<p>Divide both sides by $N$ and pull out $D^{-\beta}$:</p>
+<p>$$\alpha A N^{-\alpha} = \beta B D^{-\beta}\left(1+\frac{q}{6D}\right)$$</p>
+<p>Compare with the no-inference condition $\alpha AN^{-\alpha} = \beta BD^{-\beta}$. The right-hand side is multiplied by $(1+q/(6D)) > 1$, which is the factor by which inference inflates the shadow price of a parameter: a token is now worth more, because every token also amortizes the cost of reading the parameters. For fixed $N$, restoring equality requires a larger $D$ — the right side falls as $D$ grows, in both factors. Combined with the budget, which then forces $N$ down, this gives the direction announced above: <strong>as $q$ grows, fewer parameters and more training tokens.</strong></p>
+<p><strong>Step 4 — solve it numerically.</strong> With $A=406.4$, $B=410.7$, $\alpha=0.34$, $\beta=0.28$ and $C = 5.88\times10^{23}$, minimizing over $N$ with $D$ determined by the budget:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">$D_{\mathrm{inf}}$</th>
+<th style="text-align: right;">$N^{*}$</th>
+<th style="text-align: right;">$D^{*}$</th>
+<th style="text-align: right;">$D/N$</th>
+<th style="text-align: right;">loss</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">$0$</td>
+<td style="text-align: right;">32.5B</td>
+<td style="text-align: right;">3.02T</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">1.930</td>
+</tr>
+<tr>
+<td style="text-align: right;">$10^{12}$</td>
+<td style="text-align: right;">26.7B</td>
+<td style="text-align: right;">3.34T</td>
+<td style="text-align: right;">125</td>
+<td style="text-align: right;">1.934</td>
+</tr>
+<tr>
+<td style="text-align: right;">$10^{13}$</td>
+<td style="text-align: right;">11.6B</td>
+<td style="text-align: right;">5.14T</td>
+<td style="text-align: right;">444</td>
+<td style="text-align: right;">1.957</td>
+</tr>
+</tbody>
+</table>
+<p>Going from no inference to $10^{13}$ served tokens cuts the optimal parameter count by 64% and raises the token count by 70%, at a cost of 0.027 nats — a 1.4% loss increase that is more than repaid by the serving savings. Beyond about $2\times10^{13}$, the inference term consumes the entire budget and no $N$ is feasible. (The absolute $D/N$ here follows from this particular $A,B$ fit; the shift, not the level, is the transferable result — see Derivation 2, Step 6.)</p>
+<h3 id="derivation-4-what-bf16-and-fp16-actually-cost-you">Derivation 4: what bf16 and fp16 actually cost you</h3>
+<p><strong>Step 1 — representable range.</strong> fp16 spends 5 bits on the exponent, so its exponent field ranges over $2^{-14}$ to $2^{15}$, giving maximum finite value $65504$ and smallest normal $2^{-14} = 6.1\times10^{-5}$. bf16 spends 8 bits, matching fp32's exponent field of $2^{-126}$ to $2^{127}$, so its maximum is $3.39\times10^{38}$ — the same as fp32.</p>
+<p><strong>Step 2 — precision.</strong> With $m$ explicit mantissa bits, adjacent representable numbers differ by a relative amount $2^{-(m+1)}$. fp16 has $m=10$, so the relative gap is $2^{-11} = 4.9\times10^{-4}$; bf16 has $m=7$, so $2^{-8} = 3.9\times10^{-3}$. bf16 is 8x coarser.</p>
+<p><strong>Step 3 — what that means for an update.</strong> An optimizer step changes a weight by $\Delta w$. If $|\Delta w|/|w| < 2^{-8}$ in bf16, the change rounds to nothing and the parameter never moves. Real update-to-weight ratios in LLM training are commonly $10^{-3}$ to $10^{-4}$, so on average a bf16 <em>weight</em> loses the update entirely. This is exactly why mixed-precision training stores an fp32 master copy: the sum accumulates in fp32, and only the forward-pass copy is rounded to bf16. The rounding error per step is then $2^{-8}$ of the weight, and the accumulated error is a random walk whose expected magnitude stays far below the update size.</p>
+<p><strong>Step 4 — what that means for overflow.</strong> Gradient magnitudes span many orders; a single <code>inf</code> in a bf16 tensor propagates through any multiply and becomes <code>NaN</code>, which poisons the parameter on that step. fp16 produces <code>inf</code> for any value above 65,504, which attention logits and unnormalized activations routinely reach, and underflows to zero below $6.1\times10^{-5}$, which small gradients routinely are. Loss scaling fixes the underflow by multiplying the loss by $2^{16}$ before the backward pass and dividing the gradients by $2^{16}$ afterwards, but it cannot fix overflow and needs dynamic adjustment. bf16 needs neither. <strong>The result: bf16 for training, and if you use fp16 for inference, you are choosing precision you do not need in exchange for a range you cannot afford.</strong></p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="Where the money goes" class="fig-svg"><defs><marker id="cost-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="80.0" y1="276.0" x2="480.0" y2="276.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="280.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1×</text><line x1="80.0" y1="207.2" x2="480.0" y2="207.2" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="211.2" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10×</text><line x1="80.0" y1="138.5" x2="480.0" y2="138.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="142.5" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">100×</text><line x1="80.0" y1="69.8" x2="480.0" y2="69.8" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="73.8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1000×</text><line x1="80.0" y1="276.0" x2="480.0" y2="276.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M80.0,276.0 L82.5,276.0 L85.0,275.9 L87.5,275.6 L90.0,275.3 L92.5,274.9 L95.0,274.4 L97.5,273.8 L100.0,273.1 L102.5,272.2 L105.0,271.3 L107.5,270.3 L110.0,269.3 L112.5,268.1 L115.0,266.9 L117.5,265.7 L120.0,264.4 L122.5,263.0 L125.0,261.6 L127.5,260.2 L130.0,258.8 L132.5,257.3 L135.0,255.9 L137.5,254.4 L140.0,253.0 L142.5,251.5 L145.0,250.0 L147.5,248.5 L150.0,247.1 L152.5,245.6 L155.0,244.2 L157.5,242.8 L160.0,241.3 L162.5,239.9 L165.0,238.6 L167.5,237.2 L170.0,235.8 L172.5,234.5 L175.0,233.2 L177.5,231.9 L180.0,230.6 L182.5,229.3 L185.0,228.0 L187.5,226.8 L190.0,225.6 L192.5,224.3 L195.0,223.2 L197.5,222.0 L200.0,220.8 L202.5,219.7 L205.0,218.5 L207.5,217.4 L210.0,216.3 L212.5,215.2 L215.0,214.2 L217.5,213.1 L220.0,212.1 L222.5,211.0 L225.0,210.0 L227.5,209.0 L230.0,208.0 L232.5,207.1 L235.0,206.1 L237.5,205.2 L240.0,204.2 L242.5,203.3 L245.0,202.4 L247.5,201.5 L250.0,200.6 L252.5,199.7 L255.0,198.8 L257.5,198.0 L260.0,197.1 L262.5,196.3 L265.0,195.4 L267.5,194.6 L270.0,193.8 L272.5,193.0 L275.0,192.2 L277.5,191.4 L280.0,190.6 L282.5,189.9 L285.0,189.1 L287.5,188.3 L290.0,187.6 L292.5,186.9 L295.0,186.1 L297.5,185.4 L300.0,184.7 L302.5,184.0 L305.0,183.3 L307.5,182.6 L310.0,181.9 L312.5,181.2 L315.0,180.5 L317.5,179.9 L320.0,179.2 L322.5,178.6 L325.0,177.9 L327.5,177.3 L330.0,176.6 L332.5,176.0 L335.0,175.4 L337.5,174.8 L340.0,174.1 L342.5,173.5 L345.0,172.9 L347.5,172.3 L350.0,171.7 L352.5,171.2 L355.0,170.6 L357.5,170.0 L360.0,169.4 L362.5,168.9 L365.0,168.3 L367.5,167.7 L370.0,167.2 L372.5,166.6 L375.0,166.1 L377.5,165.6 L380.0,165.0 L382.5,164.5 L385.0,164.0 L387.5,163.4 L390.0,162.9 L392.5,162.4 L395.0,161.9 L397.5,161.4 L400.0,160.9 L402.5,160.4 L405.0,159.9 L407.5,159.4 L410.0,158.9 L412.5,158.4 L415.0,157.9 L417.5,157.4 L420.0,157.0 L422.5,156.5 L425.0,156.0 L427.5,155.6 L430.0,155.1 L432.5,154.6 L435.0,154.2 L437.5,153.7 L440.0,153.3 L442.5,152.8 L445.0,152.4 L447.5,151.9 L450.0,151.5 L452.5,151.1 L455.0,150.6 L457.5,150.2 L460.0,149.8 L462.5,149.4 L465.0,148.9 L467.5,148.5 L470.0,148.1 L472.5,147.7 L475.0,147.3 L477.5,146.9 L480.0,146.5" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M80.0,276.0 L82.5,275.5 L85.0,275.1 L87.5,274.6 L90.0,274.2 L92.5,273.8 L95.0,273.3 L97.5,272.9 L100.0,272.5 L102.5,272.1 L105.0,271.7 L107.5,271.3 L110.0,270.9 L112.5,270.5 L115.0,270.1 L117.5,269.7 L120.0,269.3 L122.5,269.0 L125.0,268.6 L127.5,268.2 L130.0,267.9 L132.5,267.5 L135.0,267.2 L137.5,266.8 L140.0,266.5 L142.5,266.2 L145.0,265.8 L147.5,265.5 L150.0,265.2 L152.5,264.8 L155.0,264.5 L157.5,264.2 L160.0,263.9 L162.5,263.6 L165.0,263.3 L167.5,263.0 L170.0,262.7 L172.5,262.4 L175.0,262.1 L177.5,261.8 L180.0,261.5 L182.5,261.2 L185.0,260.9 L187.5,260.7 L190.0,260.4 L192.5,260.1 L195.0,259.8 L197.5,259.6 L200.0,259.3 L202.5,259.0 L205.0,258.8 L207.5,258.5 L210.0,258.2 L212.5,258.0 L215.0,257.7 L217.5,257.5 L220.0,257.2 L222.5,257.0 L225.0,256.7 L227.5,256.5 L230.0,256.3 L232.5,256.0 L235.0,255.8 L237.5,255.5 L240.0,255.3 L242.5,255.1 L245.0,254.8 L247.5,254.6 L250.0,254.4 L252.5,254.2 L255.0,253.9 L257.5,253.7 L260.0,253.5 L262.5,253.3 L265.0,253.1 L267.5,252.8 L270.0,252.6 L272.5,252.4 L275.0,252.2 L277.5,252.0 L280.0,251.8 L282.5,251.6 L285.0,251.4 L287.5,251.2 L290.0,251.0 L292.5,250.8 L295.0,250.6 L297.5,250.4 L300.0,250.2 L302.5,250.0 L305.0,249.8 L307.5,249.6 L310.0,249.4 L312.5,249.2 L315.0,249.0 L317.5,248.8 L320.0,248.6 L322.5,248.5 L325.0,248.3 L327.5,248.1 L330.0,247.9 L332.5,247.7 L335.0,247.5 L337.5,247.4 L340.0,247.2 L342.5,247.0 L345.0,246.8 L347.5,246.7 L350.0,246.5 L352.5,246.3 L355.0,246.1 L357.5,246.0 L360.0,245.8 L362.5,245.6 L365.0,245.5 L367.5,245.3 L370.0,245.1 L372.5,245.0 L375.0,244.8 L377.5,244.6 L380.0,244.5 L382.5,244.3 L385.0,244.1 L387.5,244.0 L390.0,243.8 L392.5,243.7 L395.0,243.5 L397.5,243.4 L400.0,243.2 L402.5,243.0 L405.0,242.9 L407.5,242.7 L410.0,242.6 L412.5,242.4 L415.0,242.3 L417.5,242.1 L420.0,242.0 L422.5,241.8 L425.0,241.7 L427.5,241.5 L430.0,241.4 L432.5,241.2 L435.0,241.1 L437.5,241.0 L440.0,240.8 L442.5,240.7 L445.0,240.5 L447.5,240.4 L450.0,240.2 L452.5,240.1 L455.0,240.0 L457.5,239.8 L460.0,239.7 L462.5,239.5 L465.0,239.4 L467.5,239.3 L470.0,239.1 L472.5,239.0 L475.0,238.9 L477.5,238.7 L480.0,238.6" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><text x="400.0" y="111.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="end" font-weight="400">training</text><text x="400.0" y="227.9" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="end" font-weight="400">inference</text><text x="280.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">relative spend →</text><rect x="520.0" y="76.0" width="280.0" height="180.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="538.0" y="100.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">cost per token</text><text x="538.0" y="124.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">≈ 2 · N · P FLOPs</text><text x="538.0" y="146.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">≈ 2 · P FLOPs / token</text><text x="538.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Training is a one-off; serving</text><text x="538.0" y="185.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">is per token, forever. A model</text><text x="538.0" y="198.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">that is 30% better but 3× more</text><text x="538.0" y="211.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">expensive may simply lose.</text><text x="538.0" y="240.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">this is why small models keep winning</text></svg><figcaption>Training cost is $6ND$ times a dollars-per-FLOP constant, and both factors appear symmetrically. Change the parameter count and the token count independently to see which one your budget is actually sensitive to at your scale.</figcaption></figure></p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>```python
+import numpy as np
+import zlib
+
+
+def shingles(text, k=5):
+    """Set of k-character substrings of the whitespace-normalised text."""
+    t = " ".join(text.split())
+    return {t[i:i + k] for i in range(max(1, len(t) - k + 1))}
+
+
+def minhash(sh, n_perm=128, seed=0, mod=(1 << 31) - 1):
+    """n_perm independent hash functions h_i(x) = (a_i*x + b_i) mod p, take the min."""
+    rng = np.random.default_rng(seed)
+    A = rng.integers(1, mod, n_perm, dtype=np.int64)
+    B = rng.integers(0, mod, n_perm, dtype=np.int64)
+    hs = np.array([zlib.crc32(s.encode()) % mod for s in sh], dtype=np.int64)
+    return np.array([((a * hs + b) % mod).min() for a, b in zip(A, B)])
+
+
+def lsh_candidates(sigs, n_bands):
+    """Band the signature matrix; any band that matches exactly yields a candidate pair."""
+    r = len(next(iter(sigs.values()))) // n_bands
+    buckets = {}
+    for doc, s in sigs.items():
+        for band in range(n_bands):
+            key = (band, s[band * r:(band + 1) * r].tobytes())
+            buckets.setdefault(key, []).append(doc)
+    pairs = set()
+    for members in buckets.values():
+        for i in range(len(members)):
+            for j in range(i + 1, len(members)):
+                pairs.add(tuple(sorted((members[i], members[j]))))
+    return pairs
+
+
+def dedup(docs, k=5, n_perm=128, n_bands=16, threshold=0.8):
+    """Return the kept document ids after near-duplicate removal."""
+    sh = {d: shingles(t, k) for d, t in docs.items()}
+    sig = {d: minhash(s, n_perm) for d, s in sh.items()}
+    dropped = set()
+    for a, b in lsh_candidates(sig, n_bands):
+        if a in dropped or b in dropped:
+            continue
+        j = len(sh[a] & sh[b]) / len(sh[a] | sh[b])
+        if j > threshold:
+            dropped.add(b)
+    return [d for d in docs if d not in dropped]
+
+
+if __name__ == "__main__":
+    docs = {
+        "a": "the quick brown fox jumps over the lazy dog near the river bank at dawn",
+        "a2": "the quick brown fox jumps over the lazy dog near the river bank at dusk",
+        "b": "gradient descent minimises a loss surface by following its negative gradient",
+        "c": "tokenisation splits raw text into subword units before it reaches the model",
+    }
+    print("kept:", dedup(docs))
+    for r, b in [(4, 16), (8, 8)]:
+        print(f"r={r} b={b}:",
+              [round(1 - (1 - j ** r) ** b, 4) for j in (0.1, 0.3, 0.5, 0.7, 0.9)])
+```</p>
+<p><strong>What to expect.</strong> <code>kept: ['a', 'b', 'c']</code> — the near-duplicate <code>a2</code> is dropped and the unrelated documents survive. The signature match rate for the pair is about 0.85 against a true Jaccard of 0.82, which is the $\sqrt{J(1-J)/128}$ sampling error in action. The band table reproduces the row of Derivation 1: $r=8,b=8$ is near-zero below $J=0.3$ and near-one above $0.9$.</p>
+<h2 id="worked-example">Worked example</h2>
+<p><strong>The budget.</strong> $C = 5.88\times10^{23}$ FLOPs, chosen because it is the Chinchilla run's compute and makes the arithmetic checkable.</p>
+<p><strong>Step 1 — allocation.</strong> With the equal-scaling rule $D = 20N$ and $C = 6ND$: $C = 120N^{2}$, so</p>
+<p>$$N = \sqrt{C/120} = \sqrt{5.88\times10^{23}/120} = \sqrt{4.9\times10^{21}} = 7.0\times10^{10}$$</p>
+<p>$D = 20N = 1.4\times10^{12}$. Check: $6 \cdot 7.0\times10^{10}\cdot 1.4\times10^{12} = 5.88\times10^{23}$. ✓</p>
+<p><strong>Step 2 — predicted loss.</strong> With the fitted coefficients: $A N^{-\alpha} = 406.4/(7.0\times10^{10})^{0.34} = 406.4/3760 = 0.1081$; $B D^{-\beta} = 410.7/(1.4\times10^{12})^{0.28} = 410.7/3110 = 0.1321$. So $L = 1.69 + 0.1081 + 0.1321 = 1.930$ nats/token, $\mathrm{PP} = e^{1.930} = 6.89$.</p>
+<p><strong>Step 3 — how much of the loss is recoverable?</strong> Push to $N = 700$B and $D = 14$T (100x the compute): $A N^{-\alpha} = 406.4/10^{3.64} = 406.4/4365 = 0.0931$; $B D^{-\beta} = 410.7/10^{4.09} = 410.7/12{,}300 = 0.0334$. $L = 1.817$. So 100x the compute buys 0.113 nats — 5.9%. The floor is 1.69, so of the 0.240 nats above the floor at 70B, only 0.127 remains at 700B. Diminishing returns, quantified.</p>
+<p><strong>Step 4 — wall-clock.</strong> An H100 delivers about 989 TFLOP/s of dense bf16 at peak; at a realistic 40% model-FLOP utilisation that is $3.96\times10^{14}$ FLOP/s. Then</p>
+<p>$$\text{GPU-seconds} = \frac{5.88\times10^{23}}{3.96\times10^{14}} = 1.485\times10^{9}\ \text{s} = 17{,}200\ \text{GPU-days}$$</p>
+<p>On 2,048 GPUs that is 8.4 days, if everything scales perfectly — which it does not, and <strong>M25</strong> is about why. At 2 USD per GPU-hour the run costs $17{,}200 \cdot 24 \cdot 2 = 826{,}000$ USD. Note what this says: the training compute is expensive but not the dominant cost for a deployed model; serving 70B parameters over trillions of tokens dwarfs it, which is the argument in Derivation 3.</p>
+<p><strong>Step 5 — memory.</strong> Per parameter you need 2 bytes of bf16 weights, 2 of bf16 gradients, 4 of fp32 master weight, and 8 for the two Adam moments: 16 bytes, so 1.12 TB for 70B. That does not fit on any single accelerator; it requires sharding the optimizer state and gradients across at least 16 80-GB devices before activations are counted. This is why the memory budget, not the FLOP budget, usually decides your parallelism plan (<strong>M25</strong>).</p>
+<p><strong>Step 6 — data feasibility check.</strong> 1.4T tokens at 4 bytes per token is 5.6 TB of text. Under the 15T-token public-web ceiling that is 9% of the available corpus — comfortable. Now try the same ratio at $N = 10^{12}$: $D = 2\times10^{13}$ tokens, which exceeds the 15T wall, so you must either repeat data or accept a worse-than-optimal allocation. That is the wall, and it now binds at around 750B parameters.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="scaling-laws-are-laws">"Scaling laws are laws"</h3>
+<p>They are fits. The exponents depend on the corpus, the tokenizer, the architecture, and the range over which you fit, and extrapolating outside that range is unvalidated. The Chinchilla paper's own two derivations produce somewhat different token-to-parameter ratios, which is a useful reminder that these are regression results with uncertainty, not physical constants.</p>
+<h3 id="chinchilla-says-train-on-20-tokens-per-parameter">"Chinchilla says train on 20 tokens per parameter"</h3>
+<p>It says that at fixed <em>training</em> compute. If you are going to serve the model, the relevant budget includes inference, and the optimum moves toward smaller models trained on more tokens — see Derivation 3 and the Llama-3-8B figure of roughly 1,875 tokens per parameter. "Chinchilla-optimal" is optimal for a model you train and never use.</p>
+<h3 id="deduplication-is-a-small-cleanup-step">"Deduplication is a small cleanup step"</h3>
+<p>Duplicated documents are memorized preferentially, waste gradient steps on data you already learned, and are one of the main mechanisms by which a model regurgitates training text verbatim. Near-duplicate rates in raw web crawls are high — tens of percent — which makes dedup one of the highest-leverage stages in the pipeline, not a cleanup.</p>
+<h3 id="bf16-is-just-a-smaller-fp32-so-use-it-everywhere">"bf16 is just a smaller fp32, so use it everywhere"</h3>
+<p>bf16's 8-bit mantissa means a relative precision of 0.4%, so any update smaller than that vanishes if the <em>weight</em> is bf16. Training works only because the master weights stay in fp32. And for inference, bf16's precision loss is measurable on some tasks; the choice is a range-versus-precision trade, and which side binds depends on the computation.</p>
+<h3 id="emergent-abilities-prove-that-scale-produces-qualitatively-new-capabilities">"Emergent abilities prove that scale produces qualitatively new capabilities"</h3>
+<p>The measurement cannot support that claim as stated. Exact-match metrics are powers of per-token accuracy, and a high power of a smooth function is a step (Derivation in the emergence concept). Some discontinuities may be real; most published examples dissolve when rescored continuously. The correct stance is to distrust any emergence claim that is not accompanied by a continuous-metric replication.</p>
+<h3 id="more-data-always-helps-so-just-add-tokens">"More data always helps, so just add tokens"</h3>
+<p>Repeating data beyond a few epochs has sharply diminishing returns and can hurt, and low-quality data can actively degrade the model: the loss falls while downstream quality does not. The evidence for quality filtering is stronger than the evidence for any particular quality-versus-quantity exchange rate.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>1.</strong> A run uses 8,000 GPUs for 30 days at 40% of a 989 TFLOP/s peak. What is $C$, and what token count would you pick under the equal-scaling rule?</p>
+<p><strong>2.</strong> Two documents share 900 of 1,200 distinct 5-grams. What is their Jaccard similarity, and with $n=128$ MinHash permutations what is the standard error of the estimate?</p>
+<p><strong>3.</strong> Why does fp16 training need loss scaling and bf16 does not?</p>
+<details><summary>Solution</summary>
+
+1. $8{,}000 \cdot 30 \cdot 86{,}400 \cdot 0.4 \cdot 9.89\times10^{14} = 8.20\times10^{24}$ FLOPs. Under $D=20N$ and $C=6ND$: $N = \sqrt{C/120} = \sqrt{6.83\times10^{22}} = 2.61\times10^{11}$ = 261B, $D = 5.2\times10^{12}$ tokens — and that exceeds the public-web ceiling, so you would over-train a smaller model instead.
+2. $J = 900/1200 = 0.75$. Standard error $= \sqrt{0.75\cdot0.25/128} = \sqrt{0.001465} = 0.0383$.
+3. fp16's smallest normal is $6.1\times10^{-5}$, so gradients smaller than that flush to zero; loss scaling multiplies the loss by a large constant so the gradients land in range. bf16's exponent range matches fp32, so nothing underflows or overflows, and only the mantissa is sacrificed.
+
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>4.</strong> Derive the compute-optimal condition $\alpha A N^{-\alpha} = \beta B D^{-\beta}$ and interpret it in words.</p>
+<details><summary>Solution</summary>
+
+Minimize $AN^{-\alpha} + BD^{-\beta}$ subject to $6ND = C$. The Lagrangian's first-order conditions are $\alpha AN^{-\alpha-1} = 6\lambda D$ and $\beta BD^{-\beta-1} = 6\lambda N$; dividing and multiplying by $N$ gives $\alpha AN^{-\alpha} = \beta BD^{-\beta}$. In words: at the optimum, the loss reduction available from one more parameter (scaled by its exponent) equals the loss reduction available from one more token. If the left exceeds the right, parameters are under-supplied relative to tokens, so shift budget to parameters.
+
+</details>
+
+<p><strong>5.</strong> With $n = 64$ signature entries, choose $(r,b)$ so the candidate probability is about 0.5 at $J = 0.85$. Then state the probability at $J = 0.3$.</p>
+<details><summary>Solution</summary>
+
+Try $r=8$, $b=8$: $1-(1-0.85^{8})^{8} = 1-(1-0.2725)^{8} = 1-0.7275^{8} = 1-0.0777 = 0.922$. Too high. Try $r=16$, $b=4$: $0.85^{16} = 0.0744$; $1-(1-0.0744)^{4} = 1-0.9256^{4} = 1-0.7340 = 0.266$. Too low. Try $r=12$, $b=5$ (60 of 64 entries used): $0.85^{12} = 0.1422$; $1-(1-0.1422)^{5} = 1-0.8578^{5} = 0.531$. Close to 0.5. At $J=0.3$: $0.3^{12} = 5.3\times10^{-7}$, so the probability is essentially 0 — which is what you want: never waste comparisons on unrelated pairs.
+
+</details>
+
+<p><strong>6.</strong> A model is trained with $N = 13$B and $D = 300$B. Using $A=406.4$, $B=410.7$, $\alpha=0.34$, $\beta=0.28$, $L_\infty=1.69$, compute the predicted loss and the compute spent. Then compute the Chinchilla-optimal $N,D$ for that same compute and the loss there.</p>
+<details><summary>Solution</summary>
+
+$C = 6 \cdot 1.3\times10^{10} \cdot 3.0\times10^{11} = 2.34\times10^{22}$.
+Loss: $AN^{-\alpha} = 406.4/(1.3\times10^{10})^{0.34} = 406.4/2263 = 0.1796$; $BD^{-\beta} = 410.7/(3\times10^{11})^{0.28} = 410.7/1691 = 0.2429$. $L = 1.69+0.1796+0.2429 = 2.1125$, $\mathrm{PP} = 8.27$.
+Chinchilla for the same $C$: $N = \sqrt{C/120} = \sqrt{1.95\times10^{20}} = 1.40\times10^{10}$ = 14B, $D = 280$B. That is essentially the same allocation — this configuration is already near-optimal. To create a real gap take $N=52$B, $D=75$B (a "Kaplan-style" allocation): $AN^{-\alpha} = 406.4/3372 = 0.1205$, $BD^{-\beta} = 410.7/1030 = 0.3987$, $L = 2.209$ — 0.097 nats worse, i.e. 4.6% worse perplexity for the identical compute.
+
+</details>
+
+<p><strong>7.</strong> The inference-aware condition moves the optimum toward more tokens. Explain in two sentences why, using the idea of a per-parameter price.</p>
+<details><summary>Solution</summary>
+
+A training token's cost is paid once, at $6N$ FLOPs, while a parameter's cost is paid at every training step *and* at every subsequent inference step, because decoding reads every weight for each generated token. Raising $D_{\mathrm{inf}}$ therefore raises the effective price of parameters relative to tokens, and the optimum substitutes the now-cheaper input (tokens) for the now-dearer one (parameters).
+
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>8.</strong> Modify the MinHash implementation to drop the multiplicity of the shingle set (shingle into a multiset rather than a set) and explain why the Jaccard estimate changes.</p>
+<details><summary>Solution</summary>
+
+A multiset turns the comparison into a *weighted* Jaccard, $\sum_x\min(c_A(x),c_B(x))/\sum_x\max(c_A(x),c_B(x))$, which counts repeated phrases. MinHash still works if the minimum is taken over the multiset with multiplicity, but the estimate now weights documents by phrase repetition: a document that repeats one sentence fifty times gets a large self-similarity to any document containing that sentence, which is often undesirable — repetition is exactly what you are trying to remove. The set version is standard for corpus dedup for this reason; the multiset version is useful when you want to detect templated spam.
+
+</details>
+
+<p><strong>9.</strong> Design a decontamination test with a specified false-positive and false-negative rate. What do you have to assume?</p>
+<details><summary>Solution</summary>
+
+Take 13-gram overlap with any training document above a threshold of, say, 50% of the evaluation item's 13-grams, and drop the document. To control the rates you must assume (i) contamination is *documents* leaking test items, not paraphrases — n-gram matching catches copying and not paraphrase, so the false-negative rate is unknown and probably large for a model-generated benchmark; (ii) benign overlap exists (a question about a famous speech may legitimately share 13-grams with a book in the corpus), so the false-positive rate is set by how common the item's phrasing is in the corpus generally, which you can measure by matching against a held-out clean corpus; (iii) the eval item's own text is representative — a benchmark released as JSON with formatting often appears verbatim in code corpora. Report both rates; a decontamination claim without them is not a measurement.
+
+</details>
+
+<p><strong>10.</strong> A 30B model at bf16 is to serve $10^{13}$ tokens over its life on 8-GPU nodes. Estimate the inference FLOPs, compare to a 7B model trained longer to reach a similar loss, and say which you would deploy.</p>
+<details><summary>Solution</summary>
+
+Inference FLOPs $\approx 2ND_{\mathrm{inf}} = 2\cdot3\times10^{10}\cdot10^{13} = 6\times10^{23}$ — larger than the training run that produced it. A 7B model needs $2\cdot7\times10^{9}\cdot10^{13} = 1.4\times10^{23}$, a 4.3x reduction, and it also occupies 4.3x less memory, which changes how many concurrent requests one node serves. Under Derivation 3 the loss penalty for the smaller model is recovered by training it on more tokens: solving $AN^{-\alpha}+BD^{-\beta}$ at $N=7\times10^{9}$ for the $D$ that matches the 30B model's loss gives roughly $D \approx 2.5\times10^{12}$, i.e. 357 tokens per parameter — more than Chinchilla but nowhere near the 15T wall. Deploy the 7B: a 4.3x serving-cost reduction for a loss difference you can erase with about 1T extra training tokens is not a close call.
+
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>Name the eight pipeline stages from crawl to packed token sequences.</li>
+<li>State the MinHash estimator and its variance.</li>
+<li>Give the LSH candidate probability formula and explain how $r$ sets the similarity threshold.</li>
+<li>Write the three-term scaling law and say what each term does as $N$ or $D$ gets large.</li>
+<li>State the compute-optimal condition and derive the exponents.</li>
+<li>What did Kaplan et al. conclude, what did Chinchilla conclude, and what does Chinchilla's paper attribute the difference to?</li>
+<li>Why does inference change the optimal allocation, and in which direction?</li>
+<li>Show why an exact-match metric makes a smooth capability curve look discontinuous.</li>
+<li>Give the fp16 and bf16 mantissa and exponent budgets and the practical consequence of each.</li>
+<li>What is the data wall, at roughly what parameter count does it bind, and what do you do about it?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. Source collection, text extraction, language identification, quality scoring, exact dedup, near dedup (MinHash/LSH), toxicity filtering, decontamination — then mixture weighting, ordering, tokenization and packing.
+2. $\hat{J} = \frac{1}{n}\sum_i \mathbf{1}[\mathrm{sig}_i(A)=\mathrm{sig}_i(B)]$, unbiased for $J$ with variance $J(1-J)/n$.
+3. $1-(1-J^{r})^{b}$ with $n = rb$. A band of $r$ entries matches only if all $r$ agree, so $r$ controls how sharp the transition is around the threshold $J_t$: larger $r$ gives a steeper step.
+4. $L = L_\infty + AN^{-\alpha} + BD^{-\beta}$. As $N\to\infty$ the parameter term vanishes and $L\to L_\infty + BD^{-\beta}$; the terms are additive so whichever is smaller dominates.
+5. $\alpha AN^{-\alpha} = \beta BD^{-\beta}$, from the Lagrangian; with $6ND=C$ this gives $N^{*}\propto C^{\beta/(\alpha+\beta)}$, $D^{*}\propto C^{\alpha/(\alpha+\beta)}$.
+6. Kaplan: $N\propto C^{0.73}$, $D\propto C^{0.27}$ — spend on parameters. Chinchilla: roughly equal scaling, about 20 tokens per parameter. Chinchilla's authors attribute the difference mainly to Kaplan's learning-rate schedule not being adapted to each run's token budget, with parameter counting and functional form as secondary causes. With $\alpha\approx\beta$ the derivation gives equal scaling.
+7. Inference adds $2ND_{\mathrm{inf}}$ to the cost of every parameter, so parameters become relatively dearer; the optimum moves to fewer parameters and more training tokens.
+8. Exact match over $k$ positions is roughly $p^{k}$, and $d\log(p^k)/d\log p = k$, so the transition's sharpness in log-compute space scales with $k$. A smooth $p$ becomes an apparent step for large $k$.
+9. fp16: 5 exponent bits (max 65504, min normal $6.1\times10^{-5}$), 10 mantissa bits ($4.9\times10^{-4}$ relative). bf16: 8 exponent bits (fp32 range), 7 mantissa bits ($3.9\times10^{-3}$). fp16 overflows and needs loss scaling; bf16 never overflows but needs fp32 master weights.
+10. Deduplicated public web text is roughly $1.5\times10^{13}$ tokens; at 20 tokens per parameter that supports about $7.5\times10^{11}$ parameters. Beyond it you repeat data (diminishing returns), generate synthetic data, or accept a worse-than-optimal allocation by over-training a smaller model.
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><strong>Kaplan et al., "Scaling Laws for Neural Language Models" (2020).</strong> The original power-law fits and the (later corrected) allocation conclusion. Read for the functional form and the experimental design, not the exponents.</li>
+<li><strong>Hoffmann et al., "Training Compute-Optimal Large Language Models" (2022).</strong> The Chinchilla correction. Extract §3, where three fitting approaches are compared and the Kaplan discrepancy is diagnosed, and §4 for the 70B/1.4T result.</li>
+<li><strong>Brown et al., "Language Models are Few-Shot Learners" (2020).</strong> GPT-3; read for the pipeline description and the in-context-learning evaluation that made pretraining matter.</li>
+<li><strong>Penedo et al., "The FineWeb Datasets" (2024).</strong> A fully documented deduplication and filtering pipeline, with ablations of each stage. The best public account of what the filters actually buy.</li>
+<li><strong>Broder, "On the Resemblance and Containment of Documents" (1997).</strong> The MinHash origin. Short, and the sketch argument is clearer than any subsequent summary.</li>
+<li><strong>Schaeffer et al., "Are Emergent Abilities of Large Language Models a Mirage?" (2023).</strong> The metric-artifact argument with replications. Pair it with Wei et al. (2022) and decide for yourself.</li>
+<li><strong>Muennighoff et al., "Scaling Data-Constrained Language Models" (2023).</strong> What actually happens when you repeat data — the quantitative answer to the data wall.</li>
+<li><strong>Sutton and Barto, <em>Reinforcement Learning: An Introduction</em>, free PDF.</strong> Not about pretraining, but the treatment of bias-variance in estimation is the clearest antidote to reading single-run scaling fits as ground truth.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when you can, without notes:</p>
+<ul>
+<li>Draw the pretraining pipeline and state what each stage removes and roughly what fraction it keeps.</li>
+<li>Derive both the MinHash unbiasedness result and the banding formula, and pick $(r,b)$ for a target threshold.</li>
+<li>Reproduce the compute-optimal derivation through to the exponents, and explain the condition $\alpha AN^{-\alpha}=\beta BD^{-\beta}$ in plain words.</li>
+<li>Explain the Kaplan–Chinchilla disagreement mechanistically, naming the schedule issue.</li>
+<li>Compute a full budget: parameters, tokens, FLOPs, GPU-days, dollars, memory at 16 bytes per parameter.</li>
+<li>Argue both sides of the emergence debate and state what evidence would settle it for a given task.</li>
+</ul><div class="pager"><a id="prevlink" href="../m/15-language-modeling.html"><small>← previous</small><b>M15 · Language Modeling and Decoding</b></a><a id="nextlink" class="next" href="../m/17-sft-peft.html"><small>next →</small><b>M17 · Supervised Fine-Tuning and Parameter-Efficient Tuning</b></a></div></article>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M11 · Recurrent Networks, LSTMs, and Sequence Models — From Zero to Frontier</title>
+<meta name="description" content="Sequences before attention — gates, cell states, and the gradient product that killed them.">
+<meta property="og:title" content="M11 · Recurrent Networks, LSTMs, and Sequence Models — From Zero to Frontier">
+<meta property="og:description" content="Sequences before attention — gates, cell states, and the gradient product that killed them.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Architectures / M11</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M11">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M11</span><span class="pill d3">difficulty 3/5</span><span class="pill">2 weeks</span><span class="pill">prereqs: M08</span><span class="pill">11,535 words</span></div><h1>Recurrent Networks, LSTMs, and Sequence Models</h1><p class="tagline">Sequences before attention — gates, cell states, and the gradient product that killed them.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>A feedforward network computes a function of fixed-size input. Language is not that. The recurrence is the first architecture in this curriculum that carries <strong>state</strong> forward in time, and the machinery built to train it — backpropagation through time, gate-by-gate credit assignment, truncated credit, gradient clipping — is not historical trivia. The LSTM's forget gate is a per-channel multiplicative recurrence, which is exactly what a state-space model's discretized transition is (<strong>M13</strong>); the gated skip connection that rescues gradient flow is the residual connection that every transformer block in <strong>M12</strong> is built from; and the encoder-decoder bottleneck is the specific problem that attention was invented to solve. Skip the recurrence and attention looks like an arbitrary arrangement of matrices; read the recurrence and attention looks inevitable: it is what you get when you decide the state should be <em>all previous positions, addressed by content</em> rather than <em>one vector, carried forward</em>. You also get the field's best-documented case study in an architecture losing for reasons that are not about expressiveness. Recurrent networks can represent anything a transformer can, in principle. They lost on wall-clock time, and understanding precisely why is more instructive than any amount of attention algebra.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<ol>
+<li>A computation is $h \mapsto \tanh(Wh + b)$. Write $\partial h'/\partial h$ as a matrix. [<strong>M02</strong>]</li>
+<li>What is $\sigma'(z)$ in terms of $\sigma(z)$, and what is its maximum? [<strong>M06</strong>]</li>
+<li>For softmax cross-entropy with logits $\mathbf{o}$ and true class $k$, what is $\partial\mathcal{L}/\partial\mathbf{o}$? [<strong>M07</strong>]</li>
+<li>Why does a product of many matrices with spectral norm $< 1$ shrink exponentially? [<strong>M01</strong>]</li>
+<li>What does the chain rule say about $\partial \mathcal{L}/\partial \mathbf{W}$ when $\mathbf{W}$ is used at many points in the graph? [<strong>M07</strong>]</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $\partial h'/\partial h = \operatorname{diag}(1 - h'^2)\,W$, where $h'$ is the *output* (post-tanh) vector. Two factors: the elementwise derivative of tanh, then the linear map.
+2. $\sigma'(z) = \sigma(z)(1-\sigma(z))$, maximized at $z=0$ where it equals $0.25$. That factor of $0.25$ is why a stack of sigmoid layers attenuates gradients by at least $4\times$ per layer.
+3. $\hat{\mathbf{y}} - \mathbf{e}_k$: the softmax output minus the one-hot target.
+4. Because $\|\prod_i A_i\| \le \prod_i\|A_i\| \le \rho^T$, so the product decays geometrically; in the scalar case $0.9^{100} \approx 2.7\times10^{-5}$.
+5. The gradient is the *sum* of the contributions from every use of $\mathbf{W}$: $\partial\mathcal{L}/\partial\mathbf{W} = \sum_{t}\partial\mathcal{L}/\partial\mathbf{W}\big|_{\text{at }t}$. This is the whole content of "weight sharing in time".
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<ol>
+<li>Unfold a recurrent network over $T$ steps and write the BPTT recursion for $\delta_t = \partial\mathcal{L}/\partial\mathbf{h}_t$ plus the three parameter gradients, with every transpose in the right place.</li>
+<li>Derive the bound $\big\|\partial\mathbf{h}_t/\partial\mathbf{h}_s\big\| \le (\gamma\sigma_{\max})^{t-s}$, and compute the number of steps to reach underflow or overflow for given values.</li>
+<li>Explain what truncated BPTT biases and why the bias is usually acceptable; state the exact quantity that truncation changes.</li>
+<li>Derive gradient clipping's update as the solution of a constrained step, and show it rescales without rotating the gradient.</li>
+<li>Derive each LSTM gate from the specific failure it fixes, and show that the cell-state gradient contains the diagonal path $\prod_t \mathbf{f}_t$.</li>
+<li>Show that a highway layer with a constant transform gate is exactly a residual connection, and say what the LSTM's cell state is a highway <em>across</em>.</li>
+<li>Compute the compounding of teacher-forcing error, and state the beam-search cost and why it is not exact MAP decoding.</li>
+<li>Fill in a comparison table of compute, memory, gradient path length, and available parallelism for RNN, CNN, and transformer, with named quantities.</li>
+</ol>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$T$</td>
+<td>number of time steps in a sequence</td>
+</tr>
+<tr>
+<td>$\mathbf{x}_t \in \mathbb{R}^{d_x}$</td>
+<td>input at step $t$</td>
+</tr>
+<tr>
+<td>$\mathbf{h}_t \in \mathbb{R}^{d_h}$</td>
+<td>hidden state at step $t$; $\mathbf{h}_0 = \mathbf{0}$ unless stated</td>
+</tr>
+<tr>
+<td>$\mathbf{a}_t$</td>
+<td>pre-activation, $\mathbf{a}_t = \mathbf{W}_{hx}\mathbf{x}_t + \mathbf{W}_{hh}\mathbf{h}_{t-1} + \mathbf{b}_h$</td>
+</tr>
+<tr>
+<td>$\mathbf{W}_{hx}, \mathbf{W}_{hh}$</td>
+<td>input-to-hidden and hidden-to-hidden weights, shared across all $t$</td>
+</tr>
+<tr>
+<td>$\mathbf{W}_{yh}$</td>
+<td>hidden-to-output weights</td>
+</tr>
+<tr>
+<td>$\mathbf{o}_t, \hat{\mathbf{y}}_t$</td>
+<td>logits and softmax output at step $t$</td>
+</tr>
+<tr>
+<td>$\mathbf{c}_t$</td>
+<td>LSTM cell state</td>
+</tr>
+<tr>
+<td>$\mathbf{f}_t, \mathbf{i}_t, \mathbf{o}_t, \mathbf{g}_t$</td>
+<td>LSTM forget, input, output gates and candidate</td>
+</tr>
+<tr>
+<td>$\mathbf{z}_t, \mathbf{r}_t$</td>
+<td>GRU update and reset gates</td>
+</tr>
+<tr>
+<td>$\delta_t$</td>
+<td>$\partial\mathcal{L}/\partial\mathbf{h}_t$, the total derivative (not the partial)</td>
+</tr>
+<tr>
+<td>$L$, $L_t$</td>
+<td>total loss $\sum_t L_t$; per-step loss</td>
+</tr>
+<tr>
+<td>$\rho(\mathbf{W})$</td>
+<td>spectral radius — largest absolute eigenvalue</td>
+</tr>
+<tr>
+<td>$\sigma_{\max}(\mathbf{W})$</td>
+<td>largest singular value, i.e. $\|\mathbf{W}\|_2$</td>
+</tr>
+<tr>
+<td>$\gamma$</td>
+<td>bound on $\|1 - h^2\|_\infty$ for saturated tanh, $\gamma \le 1$</td>
+</tr>
+<tr>
+<td>$\bar{\mathbf{A}}, \bar{\mathbf{B}}$</td>
+<td>discretized state-transition and input matrices (used in the SSM bridge, <strong>M13</strong>)</td>
+</tr>
+</tbody>
+</table>
+<p>Shapes are per-sequence unless a batch is named. $\odot$ is elementwise product. The subscript $t$ always indexes time; superscript $(l)$ indexes layer where both appear.</p>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="sequences-state-and-the-recurrence">Sequences, state, and the recurrence</h3>
+<p><strong>Intuition.</strong> Read a sentence one word at a time, and after each word update a summary — a fixed-size vector that stands for "everything read so far, as far as it matters for what comes next". The same update rule every time, applied to a different word and a different summary.</p>
+<p><strong>Formal definition.</strong> The Elman (simple) recurrent network is</p>
+<p>$$
+\mathbf{a}_t = \mathbf{W}_{hx}\mathbf{x}_t + \mathbf{W}_{hh}\mathbf{h}_{t-1} + \mathbf{b}_h, \qquad \mathbf{h}_t = \tanh(\mathbf{a}_t), \qquad \mathbf{o}_t = \mathbf{W}_{yh}\mathbf{h}_t + \mathbf{b}_y .
+$$</p>
+<p>Three weight matrices, shared across all $T$ steps. Parameters: $d_x d_h + d_h^2 + d_h + d_h d_y + d_y$. The map from a sequence of length $T$ to an output sequence of length $T$ is a <em>family</em> of functions indexed by $T$, generated by one set of weights — that is what "handles variable-length input" actually means.</p>
+<p><strong>Why it is built this way.</strong> Any model of a sequence must decide how the past enters the present. A dense layer over a fixed window of the last $k$ tokens costs $O(k)$ parameters per extra token of context and cannot generalize to a longer window than it was trained on. The recurrence makes the state's <em>size</em> independent of the context length: $d_h$ numbers summarize arbitrarily long history. That is an aggressive compression — and it is precisely the assumption that later fails, because a fixed $d_h$-dimensional state cannot store unbounded information about an unbounded past. The information-theoretic statement: with fp32 state, at most $32 d_h$ bits survive from the past, regardless of $T$.</p>
+<p><strong>Worked micro-example.</strong> $d_x = 3$, $d_h = 2$, $d_y = 3$: $\mathbf{W}_{hx}$ is $2\times3$ = 6, $\mathbf{W}_{hh}$ is $2\times2$ = 4, $\mathbf{b}_h$ is 2, $\mathbf{W}_{yh}$ is $3\times2$ = 6, $\mathbf{b}_y$ is 3. Total 21 parameters, and the network accepts sequences of any length. Compare a dense layer over a 10-token window with one-hot inputs: $10\cdot|V|\cdot d$ parameters, which for $|V| = 50{,}000$ and $d = 256$ is 128M.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 330" width="100%" role="img" aria-label="An RNN unrolled over four timesteps, with one weight set reused" class="fig-svg"><defs><marker id="rnn-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="70.0" y="108.0" width="60.0" height="44.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.5"/><text x="100.0" y="126.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="13" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="650">h0</text><text x="100.0" y="142.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">tanh</text><circle cx="100.0" cy="66.0" r="13.0" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.5"/><text x="100.0" y="71.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">x0</text><line x1="100.0" y1="82.0" x2="100.0" y2="104.0" stroke="var(--fig-green,#34d399)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#rnn-ah)"/><rect x="74.0" y="220.0" width="52.0" height="36.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4"/><text x="100.0" y="243.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">y0</text><line x1="100.0" y1="154.0" x2="100.0" y2="216.0" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#rnn-ah)"/><line x1="132.0" y1="130.0" x2="268.0" y2="130.0" stroke="var(--fig-violet,#a78bfa)" stroke-width="2.2" stroke-linecap="round" marker-end="url(#rnn-ah)"/><text x="200.0" y="120.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="650">Wₕₕ</text><rect x="270.0" y="108.0" width="60.0" height="44.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.5"/><text x="300.0" y="126.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="13" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="650">h1</text><text x="300.0" y="142.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">tanh</text><circle cx="300.0" cy="66.0" r="13.0" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.5"/><text x="300.0" y="71.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">x1</text><line x1="300.0" y1="82.0" x2="300.0" y2="104.0" stroke="var(--fig-green,#34d399)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#rnn-ah)"/><rect x="274.0" y="220.0" width="52.0" height="36.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4"/><text x="300.0" y="243.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">y1</text><line x1="300.0" y1="154.0" x2="300.0" y2="216.0" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#rnn-ah)"/><line x1="332.0" y1="130.0" x2="468.0" y2="130.0" stroke="var(--fig-violet,#a78bfa)" stroke-width="2.2" stroke-linecap="round" marker-end="url(#rnn-ah)"/><text x="400.0" y="120.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="650">Wₕₕ</text><rect x="470.0" y="108.0" width="60.0" height="44.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.5"/><text x="500.0" y="126.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="13" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="650">h2</text><text x="500.0" y="142.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">tanh</text><circle cx="500.0" cy="66.0" r="13.0" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.5"/><text x="500.0" y="71.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">x2</text><line x1="500.0" y1="82.0" x2="500.0" y2="104.0" stroke="var(--fig-green,#34d399)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#rnn-ah)"/><rect x="474.0" y="220.0" width="52.0" height="36.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4"/><text x="500.0" y="243.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">y2</text><line x1="500.0" y1="154.0" x2="500.0" y2="216.0" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#rnn-ah)"/><line x1="532.0" y1="130.0" x2="668.0" y2="130.0" stroke="var(--fig-violet,#a78bfa)" stroke-width="2.2" stroke-linecap="round" marker-end="url(#rnn-ah)"/><text x="600.0" y="120.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="650">Wₕₕ</text><rect x="670.0" y="108.0" width="60.0" height="44.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.5"/><text x="700.0" y="126.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="13" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="650">h3</text><text x="700.0" y="142.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">tanh</text><circle cx="700.0" cy="66.0" r="13.0" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.5"/><text x="700.0" y="71.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">x3</text><line x1="700.0" y1="82.0" x2="700.0" y2="104.0" stroke="var(--fig-green,#34d399)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#rnn-ah)"/><rect x="674.0" y="220.0" width="52.0" height="36.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4"/><text x="700.0" y="243.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">y3</text><line x1="700.0" y1="154.0" x2="700.0" y2="216.0" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#rnn-ah)"/><rect x="54.0" y="286.0" width="300.0" height="34.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.2"/><text x="204.0" y="308.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="400">h_t = tanh(W_hh h_{t-1} + W_xh x_t + b)</text><text x="600.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">same W at every step</text><text x="600.0" y="318.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">so gradients must flow through every product</text></svg><figcaption>The same recurrent cell drawn once on the left and unrolled over four time steps on the right. Look at the weight matrices on the horizontal arrows: they are literally the same tensor at every step, which is the origin of both the parameter economy and the gradient product.</figcaption></figure></p>
+<h3 id="unfolding-weight-sharing-in-time">Unfolding: weight sharing in time</h3>
+<p><strong>Intuition.</strong> Unrolling is not a change of model. It is drawing the same model in a different layout so that the chain rule becomes visible. The unrolled graph is a very deep feedforward network with $T$ layers <em>that all share one weight matrix</em>.</p>
+<p><strong>Formal definition.</strong> The unrolled computation is a directed acyclic graph with nodes $\mathbf{h}_1,\ldots,\mathbf{h}_T$ and edges $\mathbf{h}_{t-1}\to\mathbf{h}_t$, each carrying the same linear map. In reverse-mode automatic differentiation (<strong>M07</strong>) the backward pass sums, at every shared parameter, the contributions from every node that used it:</p>
+<p>$$
+\nabla_{\mathbf{W}_{hh}}\mathcal{L} = \sum_{t=1}^{T}\nabla_{\mathbf{W}_{hh}}\mathcal{L}\Big|_{\text{via step }t} = \sum_{t=1}^{T}\boldsymbol{\epsilon}_t\,\mathbf{h}_{t-1}^\top,
+$$</p>
+<p>where $\boldsymbol{\epsilon}_t = \partial\mathcal{L}/\partial\mathbf{a}_t$ is the gradient at the pre-activation.</p>
+<p><strong>Why it is built this way.</strong> The unrolled view turns a "sequence model" into an ordinary deep network whose depth equals the sequence length. Everything you know about deep networks — vanishing gradients, the need for residual paths, the cost of depth — transfers directly, with the twist that the depth is a <em>data</em> property (how long the sequence is), not an architectural choice. This is also why the pathology is acute: a 500-token sequence is a 500-layer network with one shared weight matrix, and a 500-layer plain network is hopeless.</p>
+<p><strong>Worked micro-example.</strong> $T = 50$, $d_h = 256$. The unrolled graph has 50 matrix multiplies of size $256\times256$ in the forward pass, giving an effective depth of 50 for gradient purposes. A 50-layer feedforward net with the same width and He initialization has $\|{\partial\mathbf{h}_{50}}/{\partial\mathbf{h}_0}\| \approx \mathcal{O}(1)$ per unit-variance propagation; the recurrent version instead multiplies by the <em>same</em> $\mathbf{W}_{hh}$ fifty times, so its behavior is governed by $\rho(\mathbf{W}_{hh})^{50}$.</p>
+<h3 id="backpropagation-through-time">Backpropagation through time</h3>
+<p><strong>Intuition.</strong> Run forward, keep every state, then walk backward through time sending a gradient vector from step $t+1$ into step $t$ — while <em>also</em> adding the gradient arriving from the output at step $t$. Two sources per node, exactly like the residual stream.</p>
+<p><strong>Formal definition.</strong> With $\mathbf{g}_t = \partial L_t/\partial\mathbf{o}_t = \hat{\mathbf{y}}_t - \mathbf{e}_t$, define $\delta_t = \partial \mathcal{L}/\partial \mathbf{h}_t$ (total, including future steps). Then</p>
+<p>$$
+\delta_t = \mathbf{W}_{yh}^\top\mathbf{g}_t \;+\; \mathbf{W}_{hh}^\top\operatorname{diag}\!\big(1-\mathbf{h}_{t+1}^2\big)\,\delta_{t+1}, \qquad \delta_T = \mathbf{W}_{yh}^\top\mathbf{g}_T,
+$$</p>
+<p>run from $t = T$ down to $1$. Then, with $\boldsymbol{\epsilon}_t = \operatorname{diag}(1-\mathbf{h}_t^2)\,\delta_t$,</p>
+<p>$$
+\nabla_{\mathbf{W}_{yh}}\mathcal{L} = \sum_t \mathbf{g}_t\mathbf{h}_t^\top,\quad
+\nabla_{\mathbf{W}_{hh}}\mathcal{L} = \sum_t \boldsymbol{\epsilon}_t\mathbf{h}_{t-1}^\top,\quad
+\nabla_{\mathbf{W}_{hx}}\mathcal{L} = \sum_t \boldsymbol{\epsilon}_t\mathbf{x}_t^\top,\quad
+\nabla_{\mathbf{b}_h}\mathcal{L} = \sum_t \boldsymbol{\epsilon}_t .
+$$</p>
+<p><strong>Why it is built this way.</strong> Because it is the ordinary reverse-mode gradient on the unrolled graph — there is nothing recurrent about the <em>algorithm</em>, only about the graph. The recursion is what makes it cheap: computing $\delta_t$ from $\delta_{t+1}$ costs one matrix-vector product and one elementwise multiply, so the whole backward pass is $O(T d_h^2)$, the same order as the forward pass.</p>
+<p><strong>Worked micro-example.</strong> $d_h = 2$, $\mathbf{h}_1 = (0.5, -0.2)$, $\mathbf{h}_2 = (0.8, 0.3)$, $\mathbf{W}_{hh} = \begin{pmatrix}0.1 & 0.4\\ -0.3 & 0.2\end{pmatrix}$, and suppose $\delta_2 = (1.0, 0.5)$.</p>
+<p>$$
+\operatorname{diag}(1-\mathbf{h}_2^2) = \operatorname{diag}(0.36, 0.91), \qquad
+\operatorname{diag}(1-\mathbf{h}_2^2)\delta_2 = (0.36, 0.455).
+$$
+$$
+\mathbf{W}_{hh}^\top(0.36, 0.455) = \begin{pmatrix}0.1 & -0.3\\ 0.4 & 0.2\end{pmatrix}\begin{pmatrix}0.36\\ 0.455\end{pmatrix} = \begin{pmatrix}0.036 - 0.1365\\ 0.144 + 0.091\end{pmatrix} = \begin{pmatrix}-0.1005\\ 0.235\end{pmatrix}.
+$$</p>
+<p>Add the local term $\mathbf{W}_{yh}^\top\mathbf{g}_1$ to get $\delta_1$. Two things to notice: the tanh derivative shrank the first coordinate by $0.36$, and the matrix multiply mixed the two coordinates — so a gradient that started purely in coordinate 1 can end up mostly in coordinate 2. That mixing is what makes the recurrent Jacobian's <em>eigenvalues</em>, not its individual entries, the thing to reason about.</p>
+<h3 id="the-gradient-product-and-the-spectral-radius">The gradient product and the spectral radius</h3>
+<p><strong>Intuition.</strong> To learn that token 1 caused the loss at token 50, the gradient must travel 49 steps. At each step it gets multiplied by the recurrent Jacobian. If that Jacobian shrinks vectors on average, the signal is annihilated; if it expands them, the signal explodes. Repeated multiplication is the entire mechanism.</p>
+<p><strong>Formal definition.</strong> Unroll the recursion:</p>
+<p>$$
+\frac{\partial\mathcal{L}}{\partial\mathbf{h}_s} = \sum_{t\ge s}\mathbf{W}_{yh}^\top\mathbf{g}_t\frac{\partial\mathbf{h}_t}{\partial\mathbf{h}_s},\qquad
+\frac{\partial\mathbf{h}_t}{\partial\mathbf{h}_s} = \prod_{i=s+1}^{t}\operatorname{diag}\!\big(1-\mathbf{h}_i^2\big)\mathbf{W}_{hh}.
+$$</p>
+<p>Taking norms and using submultiplicativity and $\|1-\mathbf{h}_i^2\|_\infty \le \gamma \le 1$:</p>
+<p>$$
+\left\|\frac{\partial\mathbf{h}_t}{\partial\mathbf{h}_s}\right\| \;\le\; \prod_{i=s+1}^{t}\underbrace{\big\|\operatorname{diag}(1-\mathbf{h}_i^2)\big\|\,\big\|\mathbf{W}_{hh}\big\|}_{\le\;\gamma\,\sigma_{\max}} \;\le\; (\gamma\,\sigma_{\max})^{\,t-s}.
+$$</p>
+<p>Since $\sigma_{\max} \ge \rho(\mathbf{W}_{hh})$, a network whose recurrent matrix has spectral radius well below $1/\gamma$ provably cannot propagate a gradient more than a few dozen steps.</p>
+<p><strong>Why it is built this way — and why the argument is incomplete.</strong> The bound is one-sided and crude: it is a worst case over directions, not the typical behaviour. The quantity that actually governs a <em>random</em> gradient's growth is closer to the spectral radius (for long products, $\|J^T\|^{1/T}\to\rho(J)$ by Gelfand's formula), which is why $\rho(\mathbf{W}_{hh})$ is the usual diagnostic and why orthogonal or identity-initialized recurrent matrices ($\rho = 1$) train noticeably better. Even so, learning an $h_t$ that depends on $h_1$ requires more than a non-vanishing gradient: the network must also <em>store</em> the dependency in a $d_h$-dimensional state, and no initialization changes that. Bengio, Simard and Frasconi made the first argument precise in 1994; the field's subsequent decade of LSTM work is the engineering response.</p>
+<p><strong>Worked micro-example.</strong> The per-step factor $r = \gamma\sigma_{\max}$ determines everything:</p>
+<table>
+<thead>
+<tr>
+<th>$r$</th>
+<th>after 10 steps</th>
+<th>after 50 steps</th>
+<th>after 100 steps</th>
+<th>verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$0.9$</td>
+<td>$3.5\times10^{-1}$</td>
+<td>$5.2\times10^{-3}$</td>
+<td>$2.7\times10^{-5}$</td>
+<td>slow decay, ~175 steps to lose 8 digits</td>
+</tr>
+<tr>
+<td>$0.8$</td>
+<td>$1.1\times10^{-1}$</td>
+<td>$1.4\times10^{-5}$</td>
+<td>$2.0\times10^{-10}$</td>
+<td>unusable past ~80 steps</td>
+</tr>
+<tr>
+<td>$0.5$</td>
+<td>$9.8\times10^{-4}$</td>
+<td>$8.9\times10^{-16}$</td>
+<td>$7.9\times10^{-31}$</td>
+<td>dead past ~27 steps</td>
+</tr>
+<tr>
+<td>$1.2$</td>
+<td>$38.3$</td>
+<td>$9.1\times10^{3}$</td>
+<td>$8.3\times10^{7}$</td>
+<td>overflow by step 487 in fp32</td>
+</tr>
+<tr>
+<td>$1.5$</td>
+<td>$3.3\times10^{3}$</td>
+<td>$6.4\times10^{8}$</td>
+<td>$4.1\times10^{17}$</td>
+<td>overflow by step 219</td>
+</tr>
+<tr>
+<td>$2.0$</td>
+<td>$1.0\times10^{6}$</td>
+<td>$1.1\times10^{15}$</td>
+<td>$1.3\times10^{30}$</td>
+<td>overflow by step 128</td>
+</tr>
+</tbody>
+</table>
+<p>fp32 has roughly seven significant decimal digits, so a term that is $10^{-8}$ relative to the largest term in a sum contributes nothing: the practical horizon at $r=0.9$ is under 200 steps, at $r=0.8$ under 100. The right-hand column is the explosion: at $r = 1.5$ you overflow fp32 within a 219-token sequence, which is why unclipped RNN training on long sequences produces <code>nan</code> loss rather than merely slow learning.</p>
+<p><strong>The asymmetry that matters.</strong> Vanishing is a <em>capability</em> limit — the model cannot learn the dependency at all. Exploding is a <em>stability</em> problem — the model has the information but the step destroys it. The two need different fixes, and conflating them is the most common error in reading about RNNs.</p>
+<h3 id="truncated-bptt-and-gradient-clipping">Truncated BPTT and gradient clipping</h3>
+<p><strong>Intuition.</strong> Two different problems, two different instruments. Truncation decides <em>how far back in time you are willing to assign credit</em>. Clipping decides <em>how large a step you are willing to take</em>.</p>
+<p><strong>Formal definition — truncation.</strong> Split the sequence into chunks of length $k$. Process chunk $m$ with the hidden state carried in from chunk $m-1$, but treat that carried state as a <strong>constant</strong> (detach it from the graph). Then</p>
+<p>$$
+\nabla_{\boldsymbol{\theta}}\mathcal{L} \approx \sum_{m}\sum_{t \in \text{chunk } m}\;\sum_{\substack{s \le t\\ t-s \le k}} \frac{\partial L_t}{\partial\boldsymbol{\theta}}\bigg|_{\text{path } s\to t} .
+$$</p>
+<p>The exact gradient sums over <em>all</em> $s \le t$; truncation drops every path longer than $k$. What truncation changes, precisely: the terms with $t - s > k$, which are exactly the terms whose magnitude the bound $( \gamma\sigma_{\max})^{t-s}$ says is smallest. That is why the bias is usually tolerable — you are discarding the contributions the model cannot learn from anyway. What it does <strong>not</strong> change: the forward pass still carries state across chunks, so the model can <em>use</em> arbitrarily long context; it just cannot <em>learn</em> a dependency spanning more than $k$ steps in a single update.</p>
+<p><strong>Formal definition — clipping.</strong> With global-norm clipping at threshold $c$:</p>
+<p>$$
+\mathbf{g} \leftarrow \mathbf{g}\cdot\min\!\left(1, \frac{c}{\|\mathbf{g}\|_2}\right).
+$$</p>
+<p><strong>Derivation: clipping is a projection.</strong> Consider the problem of finding the vector $\mathbf{v}$ closest to $\mathbf{g}$ subject to $\|\mathbf{v}\| \le c$:</p>
+<p>$$
+\min_{\mathbf{v}}\;\|\mathbf{v} - \mathbf{g}\|_2^2 \quad\text{s.t.}\quad \|\mathbf{v}\|_2 \le c .
+$$</p>
+<p>The objective is $\|\mathbf{v}\|^2 - 2\langle\mathbf{v},\mathbf{g}\rangle + \|\mathbf{g}\|^2$, minimized at $\mathbf{v} = \mathbf{g}$ when $\|\mathbf{g}\|\le c$ by Cauchy–Schwarz ($\langle\mathbf{v},\mathbf{g}\rangle \le \|\mathbf{v}\|\|\mathbf{g}\|$, with equality iff $\mathbf{v} \parallel \mathbf{g}$). When $\|\mathbf{g}\| > c$, the constraint is active and the optimum is on the sphere $\|\mathbf{v}\| = c$ with $\mathbf{v}$ parallel to $\mathbf{g}$:</p>
+<p>$$
+\mathbf{v} = \frac{c}{\|\mathbf{g}\|}\,\mathbf{g} .
+$$</p>
+<p>So clipping is the Euclidean projection onto the ball of radius $c$: it changes magnitude and preserves direction exactly. That is the property worth remembering — clipping never rotates the update, so it cannot silently substitute one descent direction for another.</p>
+<p><strong>Why it is built this way.</strong> The loss surface of a recurrent network is steep near "cliff" regions: small changes in a parameter produce enormous changes in the loss (Pascanu, Mikolov and Bengio documented this in 2013 and showed clipping is what makes RNN training reliable). A step whose norm scales with the gradient's norm will, on a cliff, jump somewhere arbitrary. Clipping makes the step size bounded by $\eta c$ regardless of the terrain, which is a crude but extremely effective form of trust region. Note what it does <em>not</em> do: it is not a fix for vanishing gradients, and it is not equivalent to lowering the learning rate — it lowers the effective rate only on the steps that need it.</p>
+<p><strong>Worked micro-example.</strong> $\mathbf{g} = (3, 4)$, so $\|\mathbf{g}\| = 5$. With $c = 2$: $\mathbf{g}\leftarrow (3,4)\cdot(2/5) = (1.2, 1.6)$, norm exactly 2, direction unchanged. With $c = 10$: unchanged. With a per-coordinate ("elementwise") clip at $c=2$: $(2, 2)$, norm $2.83$ — direction <em>changed</em>, and the relative weighting of the two coordinates destroyed. This is why global-norm clipping is the default in every serious RNN or transformer training code you will read.</p>
+<h3 id="the-lstm-four-gates-each-derived-from-a-failure">The LSTM: four gates, each derived from a failure</h3>
+<p><strong>Intuition.</strong> Do not overwrite the memory. Add to it, under a learnable valve; let the memory decay under a second valve; and guard the memory from the read-out with a third.</p>
+<p><strong>Formal definition.</strong> With $[\mathbf{h}_{t-1};\mathbf{x}_t]$ denoting concatenation and $\mathbf{W}_f,\mathbf{W}_i,\mathbf{W}_o,\mathbf{W}_g$ the four gate matrices:</p>
+<p>$$\begin{aligned}
+\mathbf{f}_t &= \sigma\big(\mathbf{W}_f[\mathbf{h}_{t-1};\mathbf{x}_t] + \mathbf{b}_f\big) &&\text{forget gate}\\
+\mathbf{i}_t &= \sigma\big(\mathbf{W}_i[\mathbf{h}_{t-1};\mathbf{x}_t] + \mathbf{b}_i\big) &&\text{input gate}\\
+\mathbf{g}_t &= \tanh\big(\mathbf{W}_g[\mathbf{h}_{t-1};\mathbf{x}_t] + \mathbf{b}_g\big) &&\text{candidate}\\
+\mathbf{o}_t &= \sigma\big(\mathbf{W}_o[\mathbf{h}_{t-1};\mathbf{x}_t] + \mathbf{b}_o\big) &&\text{output gate}\\
+\mathbf{c}_t &= \mathbf{f}_t\odot\mathbf{c}_{t-1} + \mathbf{i}_t\odot\mathbf{g}_t &&\text{cell state}\\
+\mathbf{h}_t &= \mathbf{o}_t\odot\tanh(\mathbf{c}_t) &&\text{hidden state}
+\end{aligned}$$</p>
+<p>Parameters: $4\big(d_h(d_h + d_x) + d_h\big)$, four times the Elman network's recurrent block.</p>
+<p><strong>Why it is built this way — each gate from the failure it fixes.</strong></p>
+<p><em>(a) The input gate fixes the overwrite conflict.</em> In the Elman network, $\mathbf{h}_t = \tanh(\mathbf{W}_{hh}\mathbf{h}_{t-1} + \cdots)$ replaces the state every step. There is no way for the network to say "keep what is there". Hochreiter and Schmidhuber's diagnosis was sharper than "overwriting": a single weight set must simultaneously decide what to <em>store</em> and how to <em>protect the store</em> from the current input — the input-weight conflict. The fix is an additive state plus a multiplicative valve on the write:</p>
+<p>$$
+\mathbf{c}_t = \mathbf{c}_{t-1} + \mathbf{i}_t\odot\mathbf{g}_t .
+$$</p>
+<p>With $\mathbf{i}_t \approx 0$ the state is untouched; with $\mathbf{i}_t \approx 1$ the candidate is written. The valve is learned and content-dependent, so "store this" is a function of the input rather than a property of a frozen weight.</p>
+<p><em>(b) The forget gate fixes unbounded accumulation.</em> A purely additive state never decreases, so $\tanh(\mathbf{c}_t)$ saturates, the gradient through it dies, and the cell can never be reused for a new memory. Gers, Schmidhuber and Cummins added the multiplicative forget term in 2000 and called it "learning to forget":</p>
+<p>$$
+\mathbf{c}_t = \mathbf{f}_t\odot\mathbf{c}_{t-1} + \mathbf{i}_t\odot\mathbf{g}_t .
+$$</p>
+<p>This one term is what turns the cell into a <em>leaky integrator</em> with a learned, per-channel leak — and it is also, as derived below, the term that creates the gradient highway.</p>
+<p><em>(c) The output gate fixes the read-out conflict.</em> If the cell state were exposed directly, $\mathbf{h}_t = \tanh(\mathbf{c}_t)$, then every step's loss would demand that $\mathbf{c}_t$ be immediately interpretable, which fights against it being a long-term store. The output gate decouples the two: $\mathbf{h}_t = \mathbf{o}_t\odot\tanh(\mathbf{c}_t)$ lets the cell keep a value that is <em>not</em> currently relevant. In the original 1997 formulation the output gate also served the function of protecting the cell from irrelevant, noisy inputs arriving through the output path.</p>
+<p><em>(d) The tanh on the candidate bounds the write</em>, so no single update can push the cell state far. Combined with (a) and (b) the cell is bounded between $-1$ and $1$ in the limit of repeated writes with $\mathbf{i} = 1$ and $\mathbf{f}=0$.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 380" width="100%" role="img" aria-label="The LSTM cell: three gates guarding one highway" class="fig-svg"><defs><marker id="lstm-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="430.0" y="34.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">cell state Cₜ₋₁ → Cₜ (the highway, changed only by multiply and add)</text><line x1="60.0" y1="76.0" x2="800.0" y2="76.0" stroke="var(--fig-cyan,#22d3ee)" stroke-width="3" stroke-linecap="round" opacity="0.9"/><text x="46.0" y="82.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="14" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">C</text><text x="806.0" y="82.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="14" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">C</text><circle cx="300.0" cy="76.0" r="17.0" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="2"/><text x="300.0" y="82.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="16" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">×</text><circle cx="560.0" cy="76.0" r="17.0" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="2"/><text x="560.0" y="82.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="18" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">+</text><rect x="244.0" y="150.0" width="112.0" height="54.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.6"/><text x="300.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="650">forget fₜ</text><text x="300.0" y="190.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">sigmoid</text><text x="300.0" y="224.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">how much of the old cell survives</text><rect x="374.0" y="150.0" width="112.0" height="54.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.6"/><text x="430.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">input iₜ</text><text x="430.0" y="190.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">sigmoid</text><text x="430.0" y="224.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">how much new content is written</text><rect x="584.0" y="150.0" width="112.0" height="54.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6"/><text x="640.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">output oₜ</text><text x="640.0" y="190.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">sigmoid</text><text x="640.0" y="224.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">how much of the cell is exposed</text><rect x="374.0" y="150.0" width="112.0" height="54.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.6"/><text x="430.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="650">candidate gₜ</text><text x="430.0" y="190.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">tanh</text><line x1="300.0" y1="150.0" x2="300.0" y2="96.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#lstm-ah)"/><line x1="430.0" y1="150.0" x2="430.0" y2="96.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#lstm-ah)"/><line x1="640.0" y1="150.0" x2="640.0" y2="96.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#lstm-ah)"/><path d="M430.0,96.0 Q365.0,110.0 300.0,96.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#lstm-ah)"/><path d="M430.0,96.0 Q495.0,110.0 560.0,96.0" fill="none" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#lstm-ah)"/><circle cx="430.0" cy="76.0" r="15.0" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.8"/><text x="430.0" y="82.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="14" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="400">×</text><rect x="30.0" y="268.0" width="210.0" height="40.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="135.0" y="293.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">hₜ₋₁ and xₜ</text><line x1="140.0" y1="268.0" x2="260.0" y2="208.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#lstm-ah)"/><rect x="600.0" y="268.0" width="230.0" height="90.0" rx="10" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="715.0" y="292.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">hₜ = oₜ ⊙ tanh(Cₜ)</text><text x="715.0" y="314.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="650">Cₜ = fₜ⊙Cₜ₋₁ + iₜ⊙gₜ</text><text x="715.0" y="338.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">additive, not multiplicative</text><line x1="640.0" y1="204.0" x2="660.0" y2="264.0" stroke="var(--fig-amber,#f5b544)" stroke-width="1.3" stroke-linecap="round" marker-end="url(#lstm-ah)"/><text x="430.0" y="240.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">1</text></svg><figcaption>The LSTM cell with all four gates drawn. Trace the horizontal line through $\mathbf{c}_t$: it crosses only a multiply by $\mathbf{f}_t$ and an add of $\mathbf{i}_t\odot\mathbf{g}_t$ — no weight matrix sits on that path, which is the structural reason the gradient survives.</figcaption></figure></p>
+<h3 id="the-cell-state-highway">The cell-state highway</h3>
+<p><strong>Intuition.</strong> The cell state is a conveyor belt. The only things that touch it are a per-channel multiply and a per-channel add. Nothing mixes its coordinates, and nothing squashes it. Gradient flowing backward along the belt is scaled but never rotated.</p>
+<p><strong>Formal definition and derivation.</strong> Differentiate $\mathbf{c}_t = \mathbf{f}_t\odot\mathbf{c}_{t-1} + \mathbf{i}_t\odot\mathbf{g}_t$ with respect to $\mathbf{c}_{t-1}$. Both $\mathbf{f}_t$ and $\mathbf{i}_t\odot\mathbf{g}_t$ depend on $\mathbf{c}_{t-1}$ <em>through</em> $\mathbf{h}_{t-1} = \mathbf{o}_{t-1}\odot\tanh(\mathbf{c}_{t-1})$, so</p>
+<p>$$
+\frac{\partial\mathbf{c}_t}{\partial\mathbf{c}_{t-1}} = \underbrace{\operatorname{diag}(\mathbf{f}_t)}_{\text{direct path}} \;+\; \underbrace{\frac{\partial\mathbf{f}_t}{\partial\mathbf{h}_{t-1}}\frac{\partial\mathbf{h}_{t-1}}{\partial\mathbf{c}_{t-1}}\mathbf{c}_{t-1} \;+\; \frac{\partial(\mathbf{i}_t\odot\mathbf{g}_t)}{\partial\mathbf{h}_{t-1}}\frac{\partial\mathbf{h}_{t-1}}{\partial\mathbf{c}_{t-1}}}_{\text{indirect paths, through the gates}} .
+$$</p>
+<p>The indirect terms are usually small (they pass through a sigmoid derivative, bounded by $0.25$, and a $\tanh$ derivative, bounded by $1$). Keeping only the direct path:</p>
+<p>$$
+\frac{\partial\mathcal{L}}{\partial\mathbf{c}_{s}} \;\approx\; \left(\prod_{t=s+1}^{T}\operatorname{diag}(\mathbf{f}_t)\right)\frac{\partial\mathcal{L}}{\partial\mathbf{c}_{T}} \quad\Longrightarrow\quad \left\|\frac{\partial\mathcal{L}}{\partial\mathbf{c}_s}\right\| \approx \left(\prod_{t=s+1}^{T} f_t\right)\left\|\frac{\partial\mathcal{L}}{\partial\mathbf{c}_T}\right\| .
+$$</p>
+<p>Three structural differences from the Elman network, and they are the whole point.</p>
+<ol>
+<li><strong>No matrix on the path.</strong> The product is of <em>diagonal</em> matrices, so coordinate $j$ of the gradient is scaled by $\prod_t f_{t,j}$ — there is no mixing, hence no rotation toward a small singular direction. In an Elman network the product of full matrices mixes coordinates and it is the <em>smallest singular value</em> that decides survival.</li>
+<li><strong>The factors are learned per channel.</strong> $f_{t,j} = \sigma(\cdot)\in(0,1)$ and the network can drive it to $1$ for a channel it wants to preserve. A weight matrix cannot do this per-input; a gate can.</li>
+<li><strong>The default can be "remember".</strong> Initializing the forget bias to $1$ or $2$ (so $\mathbf{f}\approx0.73$ or $0.88$ at step 0) is a standard trick for exactly this reason: it starts the cell as an integrator rather than a forgetter.</li>
+</ol>
+<p><strong>The honest caveat.</strong> This is a path, not a guarantee. If the task drives $\mathbf{f}\to 0$ (which it will, whenever the past is irrelevant), the path dies — the product is $\prod f_t$, and $0.9^{50} = 5.2\times10^{-3}$. The LSTM did not abolish vanishing gradients; it gave the network a <em>learnable dial</em> on how much of the past to keep, which is a far better place to be than a fixed matrix product, but it is not immunity. Empirically, vanilla LSTMs learn dependencies reliably to a few hundred steps, not to tens of thousands.</p>
+<p><strong>Worked micro-example.</strong> One channel, $f = 0.99$ every step: after 100 steps the gradient factor is $0.366$; with $f=0.95$, $5.9\times10^{-3}$; with $f=0.9$, $2.66\times10^{-5}$. For comparison the Elman network with $r = 0.9$ has the same $2.66\times10^{-5}$ after 100 steps — so a <em>well-tuned</em> LSTM whose forget gate sits at $0.99$ is ahead by four orders of magnitude, and an LSTM whose forget gate has collapsed to $0.9$ is no better than a well-tuned Elman net. The gate is doing the work, not the architecture name.</p>
+<h3 id="the-gru">The GRU</h3>
+<p><strong>Intuition.</strong> Two gates instead of three, and the update gate does double duty: it is both "how much of the new candidate to write" and "how much of the old state to keep", forced to sum to one.</p>
+<p><strong>Formal definition.</strong></p>
+<p>$$\begin{aligned}
+\mathbf{z}_t &= \sigma\big(\mathbf{W}_z[\mathbf{h}_{t-1};\mathbf{x}_t]\big) &&\text{update gate}\\
+\mathbf{r}_t &= \sigma\big(\mathbf{W}_r[\mathbf{h}_{t-1};\mathbf{x}_t]\big) &&\text{reset gate}\\
+\tilde{\mathbf{h}}_t &= \tanh\big(\mathbf{W}_h[\mathbf{r}_t\odot\mathbf{h}_{t-1};\mathbf{x}_t]\big) &&\text{candidate}\\
+\mathbf{h}_t &= (1-\mathbf{z}_t)\odot\mathbf{h}_{t-1} + \mathbf{z}_t\odot\tilde{\mathbf{h}}_t &&\text{state}
+\end{aligned}$$</p>
+<p><strong>Why it is built this way.</strong> Three economy arguments. (i) The LSTM's forget and input gates are complementary in a well-trained cell ($f \approx 1-i$), because a cell cannot both keep and overwrite the same coordinate; the GRU hard-wires $f = 1-z$ instead of learning it. (ii) There is no separate output gate and no cell state: $\mathbf{h}_t$ <em>is</em> the memory, so the read-out conflict is not resolved but eliminated by removing the separate exposed variable. (iii) The reset gate is applied to the <em>previous state</em> before the candidate is computed, letting the cell forget its own history while still writing — a capability the LSTM gets from having two states.</p>
+<p>Parameter count: $3(d_h(d_h+d_x) + d_h)$, which is $0.75\times$ the LSTM's. With $d_x = d_h = 256$: LSTM $= 4\cdot(256\cdot512 + 256) = 525{,}312$; GRU $= 393{,}984$.</p>
+<p><strong>Worked micro-example.</strong> $\mathbf{z}_t = 0.25$, $\mathbf{h}_{t-1} = (2, -1)$, $\tilde{\mathbf{h}}_t = (0.5, 0.5)$. Then $\mathbf{h}_t = 0.75\cdot(2,-1) + 0.25\cdot(0.5,0.5) = (1.5 + 0.125,\; -0.75 + 0.125) = (1.625, -0.625)$. The gradient path is $\partial\mathbf{h}_t/\partial\mathbf{h}_{t-1} = \operatorname{diag}(1-\mathbf{z}_t) + \ldots = \operatorname{diag}(0.75) + \ldots$: a diagonal leaky-integrator path, exactly like the LSTM's forget path with $f = 1-z$.</p>
+<h3 id="skip-and-highway-connections-the-bridge-to-residuals">Skip and highway connections: the bridge to residuals</h3>
+<p><strong>Intuition.</strong> If the problem is that the signal has to pass through many multiplicative stages, give it a bypass that multiplies by nothing.</p>
+<p><strong>Formal definition.</strong> A highway layer (Srivastava, Greff and Schmidhuber, 2015) is</p>
+<p>$$
+\mathbf{y} = \mathbf{T}\odot H(\mathbf{x}) + \big(\mathbf{1}-\mathbf{T}\big)\odot\mathbf{x}, \qquad \mathbf{T} = \sigma(\mathbf{W}_T\mathbf{x} + \mathbf{b}_T),
+$$</p>
+<p>with $\mathbf{T}$ the transform gate. Set $\mathbf{T} \equiv \mathbf{1}$ and the parameters of the gate vanish:</p>
+<p>$$
+\mathbf{y} = H(\mathbf{x}) + \mathbf{x},
+$$</p>
+<p>which is the residual connection of <strong>M10</strong> — and, one dimension over, the transformer block of <strong>M12</strong>.</p>
+<p><strong>Why it is built this way.</strong> The gated version lets the network choose, per unit and per input, whether to transform or to pass through. The ungated version removes even that choice, on the observation that a gate that can close is a gate that can close <em>badly</em>: if $\mathbf{T}\to0$ the layer is a pure skip and the parameters below receive no gradient through it. Fixing $\mathbf{T}=\mathbf{1}$ guarantees the identity term is present unconditionally, which is exactly the singular-value bound derived in <strong>M10</strong>. The residual connection is the highway network with the gate deleted because the gate is not worth its failure modes.</p>
+<p><strong>Worked micro-example.</strong> Scalar, $H(x) = 0.5x$, $T = 0.9$: $y = 0.9\cdot0.5x + 0.1x = 0.55x$. Gradient $\partial y/\partial x = 0.55$. With $T = 1$ (residual): $y = 1.5x$, $\partial y/\partial x = 1.5$, and the identity contributes $1$ regardless of what $H$ does. With $T = 0.1$: $y = 0.05x + 0.9x = 0.95x$, gradient $0.95$ — but the <em>path through $H$</em> is now weighted by $0.1$ in the forward and its gradient contribution is scaled by $0.1$, so the transform branch learns $10\times$ slower. A gate that can close is a gate that can starve.</p>
+<h3 id="teacher-forcing-and-exposure-bias">Teacher forcing and exposure bias</h3>
+<p><strong>Intuition.</strong> In training you feed the model the true previous token; at generation you must feed it its own. The model is graded on a distribution it never practised on.</p>
+<p><strong>Formal definition.</strong> Training minimizes</p>
+<p>$$
+\mathcal{L}_{\text{TF}} = -\sum_{t=1}^{T}\log p_{\boldsymbol{\theta}}\big(y_t \mid y_{<t}^{\star},\, \mathbf{x}\big),
+$$</p>
+<p>conditioning on the <strong>ground-truth</strong> prefix $y^{\star}_{<t}$. Generation samples from</p>
+<p>$$
+\hat{y}_t \sim p_{\boldsymbol{\theta}}\big(\cdot \mid \hat{y}_{<t},\, \mathbf{x}\big),
+$$</p>
+<p>conditioning on the model's <strong>own</strong> prefix. The two distributions over prefixes coincide only if the model is perfect. This mismatch is <em>exposure bias</em>.</p>
+<p><strong>Derivation of the compounding.</strong> Suppose that at each step the model deviates from the ground-truth prefix with probability $\epsilon$, independently across steps. The prefix fed at step $t$ is on-distribution only if no earlier step deviated, so</p>
+<p>$$
+P(\text{prefix at step } t \text{ is on-distribution}) = (1-\epsilon)^{t-1},
+$$</p>
+<p>which decays geometrically. Concretely, at $\epsilon = 0.05$: 60% of prefixes are on-distribution after 10 steps, 36% after 20, 8% after 50. Because the deviation is not independent — an error tends to make further errors more likely — the real decay is faster.</p>
+<p><strong>Why it is built this way, and the honest counter-argument.</strong> Teacher forcing makes the training problem a set of independent per-step classifications, which is why it converges so reliably; training on self-generated prefixes is unstable early (the model's samples are garbage, so the gradient teaches it to model garbage) and the usual fix is a curriculum — <em>scheduled sampling</em> anneals the probability of using a model-generated token from 0 to 1. But the standard contemporary view, argued carefully by Holtzman et al. (2019), is that exposure bias is <em>not</em> the main reason generated text is worse than its likelihood suggests. The larger effect is that maximizing likelihood trains a model to assign mass to every plausible continuation, including dull ones, and that decoding by likelihood therefore produces degenerate repetition. The contested part: how much of generation quality is exposure bias versus objective mismatch. Both effects are real; the field now mostly addresses the second (with preference tuning, <strong>M18</strong>) and lives with the first.</p>
+<p><strong>Worked micro-example.</strong> Vocabulary of 4, true sequence $(a,b,c,d)$, and a model that assigns probability $0.9$ to the correct token <em>given a correct prefix</em> but $0.4$ given a corrupted prefix. Teacher-forced loss per step: $-\log 0.9 = 0.105$, so the sequence loss is $0.421$. With one early error at step 2, the remaining three steps are scored at $0.4$: the loss becomes $0.105 + 3\cdot0.916 = 2.85$, a $6.8\times$ larger gradient — for a single mistake. Teacher forcing is a training signal that systematically under-weights the cost of the errors a model actually makes at inference.</p>
+<h3 id="sequence-to-sequence-and-the-encoder-decoder-bottleneck">Sequence-to-sequence and the encoder-decoder bottleneck</h3>
+<p><strong>Intuition.</strong> Read the whole source into one summary, then write the target from that summary. The summary is the bottleneck.</p>
+<p><strong>Formal definition.</strong> An encoder RNN consumes $\mathbf{x}_1,\ldots,\mathbf{x}_S$ and produces a context vector — usually the final state, $\mathbf{c} = \mathbf{h}^{\text{enc}}_S$. A decoder RNN is initialized from $\mathbf{c}$ (or has it concatenated at every step) and generates the target:</p>
+<p>$$
+p(\mathbf{y}\mid\mathbf{x}) = \prod_{t=1}^{T}p\big(y_t \mid y_{<t}, \mathbf{c}\big).
+$$</p>
+<p><strong>Why it is built this way.</strong> It is the minimal architecture that maps variable-length input to variable-length output, and it works — the <em>only</em> structural weakness is that $\mathbf{c}$ has fixed size. The encoder is being asked to produce a <strong>sufficient statistic</strong> for the entire source in $d_h$ floats. No fixed-size vector is a sufficient statistic for unbounded input, so the architecture must <em>decide during encoding</em> which source information to throw away, before knowing what the decoder will need. Bahdanau, Cho and Bengio (2014) diagnosed exactly this and replaced the single vector with a per-step weighted average over all encoder states — attention — which is the subject of <strong>M12</strong>. Their paper's empirical signature is the diagnostic to remember: translation quality degraded sharply with source length for the fixed-vector model and flattened out with attention.</p>
+<p><strong>Worked micro-example.</strong> $d_h = 1{,}024$ in fp32 is 4,096 bytes = 32,768 bits of context. A 60-token sentence whose tokens carry, say, 8 bits of unpredictable information each needs ~480 bits of <em>content</em> — well inside 32,768 — so the bottleneck is not raw capacity. It is that the encoder has no idea which 480 bits the decoder will need, and the fixed vector has no addressing mechanism to store them at a known location. Attention is not primarily a capacity increase; it is the addition of <strong>addresses</strong>.</p>
+<h3 id="beam-search">Beam search</h3>
+<p><strong>Intuition.</strong> Greedy decoding commits to the locally best token and never reconsiders. Beam search keeps $k$ partial hypotheses alive and re-ranks them as evidence accumulates.</p>
+<p><strong>Formal definition.</strong> A hypothesis is a sequence $y_{1:t}$ with score $S(y_{1:t}) = \sum_{i=1}^{t}\log p(y_i \mid y_{<i})$. Beam search maintains the $k$ hypotheses with the largest $S$. At each step it forms all $k\cdot|V|$ one-token extensions, scores them, and keeps the top $k$.</p>
+<p><strong>Why it is built this way — and why it is not MAP decoding.</strong> The exact $\arg\max_{\mathbf{y}} p(\mathbf{y}\mid\mathbf{x})$ requires enumerating $|V|^T$ sequences. Beam search is a heuristic: it is exact only in the limit $k \to |V|^T$, and it can prune a prefix that leads to the globally best sequence because that prefix looked mediocre at step 3. Its cost is $O(k\,|V|\,T)$ scored extensions — for $k=5$, $|V|=50{,}257$, $T=30$ that is 7.5M token scorings, against a search space of $50{,}257^{30}\approx10^{141}$.</p>
+<p>Two further problems, both worth knowing. <strong>Length bias</strong>: sums of log-probabilities are monotonically decreasing in length, so the objective favours short sequences; the standard correction divides by $t^{\alpha}$ (length normalization) or by a length reward. <strong>Objective mismatch</strong>: maximizing likelihood is not the same as producing good text, so a larger beam can make output <em>worse</em> — more degenerate, more repetitive — which is the empirical finding behind the move to sampling and to preference-tuned objectives.</p>
+<p><strong>Worked micro-example.</strong> $k=2$, vocabulary $\{a,b\}$, $p(a\mid\text{start}) = 0.6$, $p(b\mid\text{start}) = 0.4$. Step 2: $p(a\mid a) = 0.1$, $p(b\mid a) = 0.9$; $p(a\mid b) = 0.8$, $p(b\mid b) = 0.2$. Scores: $aa: -0.51-2.30 = -2.81$; $ab: -0.51-0.11 = -0.62$; $ba: -0.92-0.22 = -1.14$; $bb: -0.92-1.61 = -2.53$. Beam keeps $\{ab, ba\}$; greedy keeps only $\{aa\}$ and never sees the $0.9$ branch. With $k=1$ you would have prefixed on the wrong token from step 1.</p>
+<h3 id="post-mortem-why-recurrence-lost-to-attention">Post-mortem: why recurrence lost to attention</h3>
+<p><strong>Intuition.</strong> The recurrent network has to read the sequence in order, and it has to compress everything it has read into one vector. Attention does neither: it looks at every position at once and it never compresses.</p>
+<p><strong>Three precise claims.</strong></p>
+<p><em>(1) Path length.</em> The gradient path from the loss at output position $t$ to the input at position $s$ has length $|t-s|$ in a recurrent network and length $1$ in a self-attention layer (both positions are one edge from the pairwise score). By the bound above, the recurrent path is multiplied by $|t-s|$ Jacobians; the attention path is not multiplied at all in that way — a query at $t$ reads key $s$ directly through a dot product. Everything about long-range dependency learning follows from this one structural difference.</p>
+<p><em>(2) Parallelism.</em> A recurrent network cannot compute $\mathbf{h}_t$ without $\mathbf{h}_{t-1}$. Training over a sequence of length $T$ therefore requires $T$ sequential kernel launches, each a matrix-vector product of size $d_h\times d_h$ — an operation with $O(d_h^2)$ arithmetic and $O(d_h^2)$ memory traffic, i.e. arithmetic intensity about 1, which on a GPU runs at a small fraction of peak. Self-attention training over the same sequence is a handful of $T\times T$ and $T\times d$ matrix–matrix products, all parallel over positions, all high-intensity. The measured consequence: transformers use the hardware far better <em>per token of sequence processed</em>, which is why the same wall-clock budget buys many more tokens. This is the argument that decided the field, and it is about hardware utilization, not expressiveness.</p>
+<p><em>(3) Content-based addressing.</em> Attention's weights are computed from the data ($\alpha_{ts}\propto\exp\langle\mathbf{q}_t,\mathbf{k}_s\rangle$), so the model chooses <em>where</em> to read for each query. A recurrent state has no address space: it cannot say "retrieve the fourth token". This is the capability that makes in-context learning and copying behaviour possible at all.</p>
+<p><strong>What recurrence kept.</strong> A fixed-size state means $O(1)$ memory and $O(1)$ compute per token regardless of context length, and no growth of inference cost with history. That property is real, and it is why the field has not abandoned recurrence but <em>re-derived</em> it: linear attention and state-space models (<strong>M13</strong>) are exactly "recurrence with a matrix-valued state and parallel-scan training", and hybrid stacks keep a minority of attention layers for their exact recall.</p>
+<p><strong>Complexity comparison.</strong> Per layer, over a sequence of length $n$ with model width $d$, kernel width $k$:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Compute (per token)</th>
+<th>Training memory</th>
+<th>Gradient path length</th>
+<th>Parallel over time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RNN / LSTM</td>
+<td>$O(d^2)$</td>
+<td>$O(d)$ state, $O(nd)$ if all states stored</td>
+<td>$O(n)$</td>
+<td>no — $n$ sequential steps</td>
+</tr>
+<tr>
+<td>CNN (kernel $k$, dilated)</td>
+<td>$O(k d^2)$</td>
+<td>$O(nd)$</td>
+<td>$O(\log_k n)$</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>Self-attention</td>
+<td>$O(nd)$ for the projections, $O(nd)$ KV-cache read, $O(n d)$ to $O(n^2 d)$ attention</td>
+<td>$O(nd)$ cache, $O(n^2)$ per head if materialized</td>
+<td>$O(1)$</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>Linear attention / SSM</td>
+<td>$O(d^2)$ amortized</td>
+<td>$O(d^2)$ state</td>
+<td>$O(1)$</td>
+<td>yes (scan)</td>
+</tr>
+</tbody>
+</table>
+<p>Total cost over $n$ tokens: RNN $O(nd^2)$ with $n$ sequential barriers; transformer $O(n^2d + nd^2)$ fully parallel. The crossover is where the quadratic term starts to dominate: $n^2d$ beats $nd^2$ when $n < d$ roughly, so for $d=4096$ attention is cheaper than the projections up to about 4,000 tokens — and beyond that the quadratic wall arrives, which is the subject of <strong>M13</strong>.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 330" width="100%" role="img" aria-label="Attention cost: quadratic versus linear" class="fig-svg"><defs><marker id="lin-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="86.0" y1="276.0" x2="506.0" y2="276.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="280.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^-6</text><line x1="86.0" y1="232.0" x2="506.0" y2="232.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="236.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^-4</text><line x1="86.0" y1="188.0" x2="506.0" y2="188.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="192.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^-2</text><line x1="86.0" y1="144.0" x2="506.0" y2="144.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="148.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^0</text><line x1="86.0" y1="100.0" x2="506.0" y2="100.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="104.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^2</text><line x1="86.0" y1="56.0" x2="506.0" y2="56.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="60.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^4</text><line x1="86.0" y1="56.0" x2="86.0" y2="276.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M86.0,232.0 L88.6,232.0 L91.2,223.0 L93.9,215.3 L96.5,209.8 L99.1,205.5 L101.8,202.0 L104.4,199.1 L107.0,196.5 L109.6,194.3 L112.2,192.3 L114.9,190.4 L117.5,188.8 L120.1,187.3 L122.8,185.8 L125.4,184.5 L128.0,183.3 L130.6,182.1 L133.2,181.0 L135.9,180.0 L138.5,179.0 L141.1,178.1 L143.8,177.2 L146.4,176.3 L149.0,175.5 L151.6,174.8 L154.2,174.0 L156.9,173.3 L159.5,172.6 L162.1,171.9 L164.8,171.3 L167.4,170.6 L170.0,170.0 L172.6,169.4 L175.2,168.9 L177.9,168.3 L180.5,167.8 L183.1,167.3 L185.8,166.8 L188.4,166.3 L191.0,165.8 L193.6,165.3 L196.2,164.8 L198.9,164.4 L201.5,164.0 L204.1,163.5 L206.8,163.1 L209.4,162.7 L212.0,162.3 L214.6,161.9 L217.2,161.5 L219.9,161.1 L222.5,160.8 L225.1,160.4 L227.8,160.0 L230.4,159.7 L233.0,159.3 L235.6,159.0 L238.2,158.7 L240.9,158.3 L243.5,158.0 L246.1,157.7 L248.8,157.4 L251.4,157.1 L254.0,156.8 L256.6,156.5 L259.2,156.2 L261.9,155.9 L264.5,155.6 L267.1,155.4 L269.8,155.1 L272.4,154.8 L275.0,154.5 L277.6,154.3 L280.2,154.0 L282.9,153.8 L285.5,153.5 L288.1,153.3 L290.8,153.0 L293.4,152.8 L296.0,152.5 L298.6,152.3 L301.2,152.1 L303.9,151.8 L306.5,151.6 L309.1,151.4 L311.8,151.1 L314.4,150.9 L317.0,150.7 L319.6,150.5 L322.2,150.3 L324.9,150.1 L327.5,149.9 L330.1,149.7 L332.8,149.4 L335.4,149.2 L338.0,149.0 L340.6,148.8 L343.2,148.7 L345.9,148.5 L348.5,148.3 L351.1,148.1 L353.8,147.9 L356.4,147.7 L359.0,147.5 L361.6,147.3 L364.2,147.2 L366.9,147.0 L369.5,146.8 L372.1,146.6 L374.8,146.4 L377.4,146.3 L380.0,146.1 L382.6,145.9 L385.2,145.8 L387.9,145.6 L390.5,145.4 L393.1,145.3 L395.8,145.1 L398.4,144.9 L401.0,144.8 L403.6,144.6 L406.2,144.5 L408.9,144.3 L411.5,144.2 L414.1,144.0 L416.8,143.8 L419.4,143.7 L422.0,143.5 L424.6,143.4 L427.2,143.3 L429.9,143.1 L432.5,143.0 L435.1,142.8 L437.8,142.7 L440.4,142.5 L443.0,142.4 L445.6,142.2 L448.2,142.1 L450.9,142.0 L453.5,141.8 L456.1,141.7 L458.8,141.6 L461.4,141.4 L464.0,141.3 L466.6,141.2 L469.2,141.0 L471.9,140.9 L474.5,140.8 L477.1,140.6 L479.8,140.5 L482.4,140.4 L485.0,140.3 L487.6,140.1 L490.2,140.0 L492.9,139.9 L495.5,139.8 L498.1,139.6 L500.8,139.5 L503.4,139.4 L506.0,139.3" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M86.0,232.0 L88.6,232.0 L91.2,227.5 L93.9,223.6 L96.5,220.9 L99.1,218.8 L101.8,217.0 L104.4,215.5 L107.0,214.3 L109.6,213.1 L112.2,212.1 L114.9,211.2 L117.5,210.4 L120.1,209.6 L122.8,208.9 L125.4,208.3 L128.0,207.6 L130.6,207.1 L133.2,206.5 L135.9,206.0 L138.5,205.5 L141.1,205.0 L143.8,204.6 L146.4,204.2 L149.0,203.8 L151.6,203.4 L154.2,203.0 L156.9,202.6 L159.5,202.3 L162.1,202.0 L164.8,201.6 L167.4,201.3 L170.0,201.0 L172.6,200.7 L175.2,200.4 L177.9,200.2 L180.5,199.9 L183.1,199.6 L185.8,199.4 L188.4,199.1 L191.0,198.9 L193.6,198.7 L196.2,198.4 L198.9,198.2 L201.5,198.0 L204.1,197.8 L206.8,197.6 L209.4,197.3 L212.0,197.1 L214.6,196.9 L217.2,196.8 L219.9,196.6 L222.5,196.4 L225.1,196.2 L227.8,196.0 L230.4,195.8 L233.0,195.7 L235.6,195.5 L238.2,195.3 L240.9,195.2 L243.5,195.0 L246.1,194.9 L248.8,194.7 L251.4,194.5 L254.0,194.4 L256.6,194.2 L259.2,194.1 L261.9,194.0 L264.5,193.8 L267.1,193.7 L269.8,193.5 L272.4,193.4 L275.0,193.3 L277.6,193.1 L280.2,193.0 L282.9,192.9 L285.5,192.8 L288.1,192.6 L290.8,192.5 L293.4,192.4 L296.0,192.3 L298.6,192.1 L301.2,192.0 L303.9,191.9 L306.5,191.8 L309.1,191.7 L311.8,191.6 L314.4,191.5 L317.0,191.4 L319.6,191.2 L322.2,191.1 L324.9,191.0 L327.5,190.9 L330.1,190.8 L332.8,190.7 L335.4,190.6 L338.0,190.5 L340.6,190.4 L343.2,190.3 L345.9,190.2 L348.5,190.1 L351.1,190.0 L353.8,189.9 L356.4,189.8 L359.0,189.8 L361.6,189.7 L364.2,189.6 L366.9,189.5 L369.5,189.4 L372.1,189.3 L374.8,189.2 L377.4,189.1 L380.0,189.0 L382.6,189.0 L385.2,188.9 L387.9,188.8 L390.5,188.7 L393.1,188.6 L395.8,188.6 L398.4,188.5 L401.0,188.4 L403.6,188.3 L406.2,188.2 L408.9,188.2 L411.5,188.1 L414.1,188.0 L416.8,187.9 L419.4,187.8 L422.0,187.8 L424.6,187.7 L427.2,187.6 L429.9,187.6 L432.5,187.5 L435.1,187.4 L437.8,187.3 L440.4,187.3 L443.0,187.2 L445.6,187.1 L448.2,187.1 L450.9,187.0 L453.5,186.9 L456.1,186.8 L458.8,186.8 L461.4,186.7 L464.0,186.6 L466.6,186.6 L469.2,186.5 L471.9,186.5 L474.5,186.4 L477.1,186.3 L479.8,186.3 L482.4,186.2 L485.0,186.1 L487.6,186.1 L490.2,186.0 L492.9,185.9 L495.5,185.9 L498.1,185.8 L500.8,185.8 L503.4,185.7 L506.0,185.6" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><text x="401.0" y="78.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-rose,#fb7185)" text-anchor="end" font-weight="700">O(T²)</text><text x="446.9" y="185.8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="end" font-weight="700">O(T)</text><text x="296.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">context length, thousands of tokens →</text><text x="86.0" y="44.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">relative cost, log scale</text><rect x="546.0" y="82.0" width="228.0" height="156.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="564.0" y="108.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">the crossover</text><text x="564.0" y="130.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Below roughly 10k tokens</text><text x="564.0" y="144.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">quadratic attention is</text><text x="564.0" y="158.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">still competitive: it is</text><text x="564.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">dense, exact, and heavily</text><text x="564.0" y="186.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">optimised. Past that, the</text><text x="564.0" y="200.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">wall is real.</text><text x="564.0" y="222.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">linear attention trades exactness for scaling</text></svg><figcaption>Quadratic versus linear attention cost as the sequence length grows, on log axes. Watch the crossing point: below it, the $O(n^2d)$ and $O(nd^2)$ curves are within a constant factor and the choice is about quality; above it, the quadratic curve's slope is the problem, and no constant-factor engineering fixes a slope.</figcaption></figure></p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="One sequence, four heads, four different attention patterns" class="fig-svg"><defs><marker id="mh-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="70.0" y="52.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="13" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="700">X</text><rect x="24.0" y="64.0" width="92.0" height="180.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.5"/><line x1="30.0" y1="74.0" x2="110.0" y2="74.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round"/><line x1="30.0" y1="102.0" x2="110.0" y2="102.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round"/><line x1="30.0" y1="130.0" x2="110.0" y2="130.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round"/><line x1="30.0" y1="158.0" x2="110.0" y2="158.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round"/><line x1="30.0" y1="186.0" x2="110.0" y2="186.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round"/><line x1="30.0" y1="214.0" x2="110.0" y2="214.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round"/><text x="70.0" y="262.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">n×d</text><rect x="180.0" y="44.0" width="78.0" height="46.0" rx="7" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.4"/><text x="219.0" y="64.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="650">W1</text><text x="219.0" y="80.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">d×dₖ</text><line x1="118.0" y1="154.0" x2="180.0" y2="67.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#mh-ah)"/><rect x="276.0" y="44.0" width="152.0" height="46.0" rx="7" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="280.0" y="47.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="304.0" y="47.0" width="23.0" height="6.0" rx="1" fill="#32d0e0" stroke="none" stroke-width="1.5"/><rect x="328.0" y="47.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="352.0" y="47.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="376.0" y="47.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="400.0" y="47.0" width="23.0" height="6.0" rx="1" fill="#588efe" stroke="none" stroke-width="1.5"/><rect x="280.0" y="54.0" width="23.0" height="6.0" rx="1" fill="#32d0e0" stroke="none" stroke-width="1.5"/><rect x="304.0" y="54.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="328.0" y="54.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="352.0" y="54.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="376.0" y="54.0" width="23.0" height="6.0" rx="1" fill="#588efe" stroke="none" stroke-width="1.5"/><rect x="400.0" y="54.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="280.0" y="61.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="304.0" y="61.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="328.0" y="61.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="352.0" y="61.0" width="23.0" height="6.0" rx="1" fill="#588efe" stroke="none" stroke-width="1.5"/><rect x="376.0" y="61.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="400.0" y="61.0" width="23.0" height="6.0" rx="1" fill="#32d0e0" stroke="none" stroke-width="1.5"/><rect x="280.0" y="68.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="304.0" y="68.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="328.0" y="68.0" width="23.0" height="6.0" rx="1" fill="#588efe" stroke="none" stroke-width="1.5"/><rect x="352.0" y="68.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="376.0" y="68.0" width="23.0" height="6.0" rx="1" fill="#32d0e0" stroke="none" stroke-width="1.5"/><rect x="400.0" y="68.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="280.0" y="75.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="304.0" y="75.0" width="23.0" height="6.0" rx="1" fill="#588efe" stroke="none" stroke-width="1.5"/><rect x="328.0" y="75.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="352.0" y="75.0" width="23.0" height="6.0" rx="1" fill="#32d0e0" stroke="none" stroke-width="1.5"/><rect x="376.0" y="75.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="400.0" y="75.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="280.0" y="82.0" width="23.0" height="6.0" rx="1" fill="#588efe" stroke="none" stroke-width="1.5"/><rect x="304.0" y="82.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="328.0" y="82.0" width="23.0" height="6.0" rx="1" fill="#32d0e0" stroke="none" stroke-width="1.5"/><rect x="352.0" y="82.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="376.0" y="82.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="400.0" y="82.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><text x="352.0" y="100.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">local</text><rect x="180.0" y="102.0" width="78.0" height="46.0" rx="7" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4"/><text x="219.0" y="122.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">W2</text><text x="219.0" y="138.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">d×dₖ</text><line x1="118.0" y1="154.0" x2="180.0" y2="125.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#mh-ah)"/><rect x="276.0" y="102.0" width="152.0" height="46.0" rx="7" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="280.0" y="105.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="304.0" y="105.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="328.0" y="105.0" width="23.0" height="6.0" rx="1" fill="#58cbc1" stroke="none" stroke-width="1.5"/><rect x="352.0" y="105.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="376.0" y="105.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="400.0" y="105.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="280.0" y="112.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="304.0" y="112.0" width="23.0" height="6.0" rx="1" fill="#58cbc1" stroke="none" stroke-width="1.5"/><rect x="328.0" y="112.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="352.0" y="112.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="376.0" y="112.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="400.0" y="112.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="280.0" y="119.0" width="23.0" height="6.0" rx="1" fill="#58cbc1" stroke="none" stroke-width="1.5"/><rect x="304.0" y="119.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="328.0" y="119.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="352.0" y="119.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="376.0" y="119.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="400.0" y="119.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="280.0" y="126.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="304.0" y="126.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="328.0" y="126.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="352.0" y="126.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="376.0" y="126.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="400.0" y="126.0" width="23.0" height="6.0" rx="1" fill="#58cbc1" stroke="none" stroke-width="1.5"/><rect x="280.0" y="133.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="304.0" y="133.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="328.0" y="133.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="352.0" y="133.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="376.0" y="133.0" width="23.0" height="6.0" rx="1" fill="#58cbc1" stroke="none" stroke-width="1.5"/><rect x="400.0" y="133.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="280.0" y="140.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="304.0" y="140.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="328.0" y="140.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="352.0" y="140.0" width="23.0" height="6.0" rx="1" fill="#58cbc1" stroke="none" stroke-width="1.5"/><rect x="376.0" y="140.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="400.0" y="140.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><text x="352.0" y="158.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">syntactic</text><rect x="180.0" y="160.0" width="78.0" height="46.0" rx="7" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.4"/><text x="219.0" y="180.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="650">W3</text><text x="219.0" y="196.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">d×dₖ</text><line x1="118.0" y1="154.0" x2="180.0" y2="183.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#mh-ah)"/><rect x="276.0" y="160.0" width="152.0" height="46.0" rx="7" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="280.0" y="163.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="304.0" y="163.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="328.0" y="163.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="352.0" y="163.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="376.0" y="163.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="400.0" y="163.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="280.0" y="170.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="304.0" y="170.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="328.0" y="170.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="352.0" y="170.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="376.0" y="170.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="400.0" y="170.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="280.0" y="177.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="304.0" y="177.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="328.0" y="177.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="352.0" y="177.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="376.0" y="177.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="400.0" y="177.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="280.0" y="184.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="304.0" y="184.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="328.0" y="184.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="352.0" y="184.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="376.0" y="184.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="400.0" y="184.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="280.0" y="191.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="304.0" y="191.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="328.0" y="191.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="352.0" y="191.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="376.0" y="191.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="400.0" y="191.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="280.0" y="198.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="304.0" y="198.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="328.0" y="198.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="352.0" y="198.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="376.0" y="198.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="400.0" y="198.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><text x="352.0" y="216.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">long-range</text><rect x="180.0" y="218.0" width="78.0" height="46.0" rx="7" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.4"/><text x="219.0" y="238.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">W4</text><text x="219.0" y="254.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">d×dₖ</text><line x1="118.0" y1="154.0" x2="180.0" y2="241.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#mh-ah)"/><rect x="276.0" y="218.0" width="152.0" height="46.0" rx="7" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="280.0" y="221.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="304.0" y="221.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="328.0" y="221.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="352.0" y="221.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="376.0" y="221.0" width="23.0" height="6.0" rx="1" fill="#7ec5a3" stroke="none" stroke-width="1.5"/><rect x="400.0" y="221.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="280.0" y="228.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="304.0" y="228.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="328.0" y="228.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="352.0" y="228.0" width="23.0" height="6.0" rx="1" fill="#7ec5a3" stroke="none" stroke-width="1.5"/><rect x="376.0" y="228.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="400.0" y="228.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="280.0" y="235.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="304.0" y="235.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="328.0" y="235.0" width="23.0" height="6.0" rx="1" fill="#7ec5a3" stroke="none" stroke-width="1.5"/><rect x="352.0" y="235.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="376.0" y="235.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="400.0" y="235.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="280.0" y="242.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="304.0" y="242.0" width="23.0" height="6.0" rx="1" fill="#7ec5a3" stroke="none" stroke-width="1.5"/><rect x="328.0" y="242.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="352.0" y="242.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="376.0" y="242.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="400.0" y="242.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="280.0" y="249.0" width="23.0" height="6.0" rx="1" fill="#7ec5a3" stroke="none" stroke-width="1.5"/><rect x="304.0" y="249.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="328.0" y="249.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="352.0" y="249.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="376.0" y="249.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="400.0" y="249.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="280.0" y="256.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="304.0" y="256.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="328.0" y="256.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="352.0" y="256.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="376.0" y="256.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="400.0" y="256.0" width="23.0" height="6.0" rx="1" fill="#7ec5a3" stroke="none" stroke-width="1.5"/><text x="352.0" y="274.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">rare</text><rect x="456.0" y="64.0" width="78.0" height="180.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.4"/><text x="495.0" y="160.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">concat</text><line x1="430.0" y1="66.0" x2="456.0" y2="140.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#mh-ah)"/><line x1="430.0" y1="124.0" x2="456.0" y2="162.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#mh-ah)"/><line x1="430.0" y1="182.0" x2="456.0" y2="184.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#mh-ah)"/><line x1="430.0" y1="240.0" x2="456.0" y2="206.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#mh-ah)"/><rect x="556.0" y="96.0" width="84.0" height="116.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.5"/><text x="598.0" y="152.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="650">W_O</text><text x="598.0" y="168.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">d×d</text><line x1="534.0" y1="154.0" x2="556.0" y2="154.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#mh-ah)"/><rect x="664.0" y="96.0" width="152.0" height="116.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.4"/><text x="740.0" y="148.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">same shape</text><text x="740.0" y="166.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">as the input</text><line x1="640.0" y1="154.0" x2="664.0" y2="154.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#mh-ah)"/><text x="420.0" y="294.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">each head gets its own d/h slice of the model dimension, so total cost is unchanged</text><text x="420.0" y="316.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">different heads really do learn different patterns — that is measured, not assumed</text></svg><figcaption>One sequence split into heads, each attending over all positions simultaneously, then concatenated. Compare this with the unrolled recurrent graph you saw at the start of the module: attention has $n^2$ edges between positions and no sequential dependency, where the recurrence has $n$ edges and a chain of dependencies. That trade is the whole post-mortem in one image.</figcaption></figure></p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<p>Training a recurrent network with truncated BPTT on chunks of length $k$, batch size $B$.</p>
+<ol>
+<li><strong>Initialize state.</strong> $\mathbf{H}_0 \in \mathbb{R}^{B\times d_h}$, zeros (or the detached final state of the previous chunk when streaming).</li>
+<li><strong>Forward within the chunk.</strong> For $t = 1..k$: $\mathbf{A}_t = \mathbf{X}_t\mathbf{W}_{hx}^\top + \mathbf{H}_{t-1}\mathbf{W}_{hh}^\top + \mathbf{b}_h$, then $\mathbf{H}_t = \tanh(\mathbf{A}_t)$, then logits $\mathbf{O}_t = \mathbf{H}_t\mathbf{W}_{yh}^\top+\mathbf{b}_y$. Store $\mathbf{A}_t$ and $\mathbf{H}_t$ (needed by the backward pass).</li>
+<li><strong>Loss.</strong> $\mathbf{G}_t = \partial L_t/\partial\mathbf{O}_t = \hat{\mathbf{Y}}_t - \mathbf{Y}_t$ (one-hot targets), and $L = \frac{1}{Bk}\sum_t\sum_b L_{t,b}$.</li>
+<li><strong>Seed the backward pass.</strong> $\boldsymbol{\Delta}_k = \mathbf{G}_k\mathbf{W}_{yh}$ (the $\partial L_k/\partial\mathbf{h}_k$ term). Accumulate $\nabla_{\mathbf{W}_{yh}} \mathrel{+}= \mathbf{G}_k^\top\mathbf{H}_k$ and $\nabla_{\mathbf{b}_y}\mathrel{+}= \sum_b\mathbf{G}_k$.</li>
+<li><strong>Walk backward.</strong> For $t = k-1$ down to $1$: $\boldsymbol{\Delta}_t = \mathbf{G}_t\mathbf{W}_{yh} + \big(\boldsymbol{\Delta}_{t+1}\odot(1-\mathbf{H}_{t+1}^2)\big)\mathbf{W}_{hh}$. The second term is the message from the future; the first is the local loss at step $t$.</li>
+<li><strong>Accumulate parameter gradients.</strong> With $\boldsymbol{\epsilon}_t = \boldsymbol{\Delta}_t\odot(1-\mathbf{H}_t^2)$: $\nabla_{\mathbf{W}_{hh}}\mathrel{+}= \boldsymbol{\epsilon}_t^\top\mathbf{H}_{t-1}$, $\nabla_{\mathbf{W}_{hx}}\mathrel{+}= \boldsymbol{\epsilon}_t^\top\mathbf{X}_t$, $\nabla_{\mathbf{b}_h}\mathrel{+}= \sum_b\boldsymbol{\epsilon}_t$. Note $\boldsymbol{\epsilon}_t$ is used for all three — compute it once.</li>
+<li><strong>Detach and advance.</strong> $\mathbf{H}_k$ becomes the carry-in for the next chunk with <code>.detach()</code>: the graph is severed, so no gradient crosses a chunk boundary.</li>
+<li><strong>Clip and step.</strong> $\|\nabla\| \leftarrow \min(1, c/\|\nabla\|)$; optimizer step.</li>
+</ol>
+<p>```text
+function train_step(chunks, model, c, eta):
+    H = zeros(B, dh)
+    for X, Y in chunks:                     # X: (B, k, dx), Y: (B, k)
+        A, Hh, O, H_last = forward(X, H)    # store every intermediate
+        L, G = softmax_ce(O, Y)             # G: (B, k, dy)
+        dW = zeros_like(all parameters)
+        Delta = G[:, -1] @ W_yh             # seed at the last step
+        dW_yh += G[:, -1].T @ Hh[:, -1]
+        for t in reversed(range(k)):
+            if t < k - 1:
+                Delta = G[:, t] @ W_yh \
+                      + (Delta * (1 - Hh[:, t+1]**2)) @ W_hh
+            eps = Delta * (1 - Hh[:, t]**2)
+            dW_hh += eps.T @ (H if t == 0 else Hh[:, t-1])
+            dW_hx += eps.T @ X[:, t]
+            dW_bh += eps.sum(0)
+        dW_yh += einsum over all t         # do this in one batched pass
+        g = concat(all dW);  g *= min(1, c / norm(g))
+        params -= eta * g
+        H = H_last.detach()                 # truncation: no gradient crosses
+```</p>
+<p><strong>Complexity.</strong> Forward: $O(Bk(d_x d_h + d_h^2 + d_h d_y))$ multiply-accumulates, of which $O(Bk\,d_h^2)$ is the recurrent term. Backward: the same order, with a constant factor near 2 for the extra matrix products. Memory: $O(Bk\,d_h)$ for the stored states and pre-activations — and this is the quantity truncation controls, since without it you must keep every state of the full sequence. With $B=32$, $k=100$, $d_h=1024$: $3.4\times10^{6}$ floats per stored tensor, 13 MB in fp32; four such tensors plus the graph overhead is why a 500-step sequence at these sizes does not fit.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 400" width="100%" role="img" aria-label="Tensor shapes through one forward pass" class="fig-svg"><defs><marker id="shapes-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="24.0" y="42.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="58.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">token ids</text><text x="300.0" y="58.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T)</text><text x="520.0" y="58.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024</text><text x="38.0" y="87.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">embedding</text><text x="300.0" y="87.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, D)</text><text x="520.0" y="87.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 4096</text><rect x="24.0" y="100.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">W_Q / W_K / W_V</text><text x="300.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(D, D)</text><text x="520.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">4096 × 4096 each</text><text x="38.0" y="145.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Q, K, V</text><text x="300.0" y="145.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, H, T, D/H)</text><text x="520.0" y="145.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 32 × 1024 × 128</text><rect x="24.0" y="158.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">scores QKᵀ</text><text x="300.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, H, T, T)</text><text x="520.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 32 × 1024 × 1024</text><text x="38.0" y="203.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">softmax weights</text><text x="300.0" y="203.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, H, T, T)</text><text x="520.0" y="203.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">head_dim no longer present</text><rect x="24.0" y="216.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="232.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">attention output</text><text x="300.0" y="232.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, H, T, D/H)</text><text x="520.0" y="232.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 32 × 1024 × 128</text><text x="38.0" y="261.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">after W_O</text><text x="300.0" y="261.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, D)</text><text x="520.0" y="261.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 4096</text><rect x="24.0" y="274.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="290.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">FFN up</text><text x="300.0" y="290.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, 4D)</text><text x="520.0" y="290.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 16384</text><text x="38.0" y="319.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">FFN down</text><text x="300.0" y="319.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, D)</text><text x="520.0" y="319.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 4096</text><rect x="24.0" y="332.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="348.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">logits</text><text x="300.0" y="348.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, V)</text><text x="520.0" y="348.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 128256</text><text x="38.0" y="42.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">stage</text><text x="300.0" y="42.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">symbolic</text><text x="520.0" y="42.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">with B=2, T=1024</text><rect x="24.0" y="382.0" width="772.0" height="1.0" rx="8" fill="var(--fig-edge,#2e3a5e)" stroke="none" stroke-width="1.5"/><text x="420.0" y="396.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">the score matrix is the only place T² appears — that is the quadratic wall</text></svg><figcaption>A tensor-shape trace for a recurrent forward pass over a batch, with the shared weight shapes annotated on every arrow and the carried state drawn as it crosses chunk boundaries. Check two things: the recurrent weight's shape is the same at every step, and the state's shape is the same at every step even though the sequence length changes — those two invariances together define the architecture.</figcaption></figure></p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="1-bptt-from-the-unrolled-graph-with-the-transposes-in-the-right-place">1. BPTT from the unrolled graph, with the transposes in the right place</h3>
+<p><strong>Set-up.</strong> Batch size 1 to keep the notation clean. Loss $L = \sum_t L_t$, with $L_t$ depending on $\mathbf{o}_t$ only. Define the per-step output gradient</p>
+<p>$$
+\mathbf{g}_t \equiv \frac{\partial L_t}{\partial\mathbf{o}_t} = \hat{\mathbf{y}}_t - \mathbf{e}_t \in\mathbb{R}^{d_y}.
+$$</p>
+<p><strong>Step 1: the output layer.</strong> $\mathbf{o}_t = \mathbf{W}_{yh}\mathbf{h}_t + \mathbf{b}_y$ gives</p>
+<p>$$
+\frac{\partial L_t}{\partial\mathbf{h}_t}\bigg|_{\text{direct}} = \mathbf{W}_{yh}^\top\mathbf{g}_t, \qquad \frac{\partial L_t}{\partial\mathbf{W}_{yh}} = \mathbf{g}_t\mathbf{h}_t^\top .
+$$</p>
+<p><strong>Step 2: the total derivative.</strong> $\mathbf{h}_t$ influences the loss through $\mathbf{o}_t$ <em>and</em> through every future state. So define</p>
+<p>$$
+\delta_t \equiv \frac{\partial L}{\partial\mathbf{h}_t} = \frac{\partial L_t}{\partial\mathbf{h}_t} + \frac{\partial L_{>t}}{\partial\mathbf{h}_t},
+$$</p>
+<p>where $L_{>t} = \sum_{k>t}L_k$. Since $\mathbf{h}_t$ enters $L_{>t}$ only via $\mathbf{h}_{t+1}$,</p>
+<p>$$
+\frac{\partial L_{>t}}{\partial\mathbf{h}_t} = \left(\frac{\partial\mathbf{h}_{t+1}}{\partial\mathbf{h}_t}\right)^{\!\top}\frac{\partial L}{\partial\mathbf{h}_{t+1}} = \left(\frac{\partial\mathbf{h}_{t+1}}{\partial\mathbf{h}_t}\right)^{\!\top}\delta_{t+1}.
+$$</p>
+<p>Note the transpose: the Jacobian is $d_h\times d_h$ and multiplies the gradient on its <em>left</em>, i.e. as $\mathbf{J}^\top$. Getting this wrong produces a code that runs and trains but with gradients that are wrong in a way finite-difference checking catches immediately.</p>
+<p><strong>Step 3: the recurrent Jacobian.</strong> With $\mathbf{h}_{t+1} = \tanh(\mathbf{W}_{hh}\mathbf{h}_t + \cdots)$,</p>
+<p>$$
+\frac{\partial\mathbf{h}_{t+1}}{\partial\mathbf{h}_t} = \operatorname{diag}\!\big(1 - \mathbf{h}_{t+1}^2\big)\mathbf{W}_{hh} \quad\Longrightarrow\quad \left(\frac{\partial\mathbf{h}_{t+1}}{\partial\mathbf{h}_t}\right)^{\!\top} = \mathbf{W}_{hh}^\top\operatorname{diag}\!\big(1-\mathbf{h}_{t+1}^2\big).
+$$</p>
+<p>(The diagonal is symmetric, so it is its own transpose; it sits between the two matrices and stays put.)</p>
+<p><strong>Step 4: the recursion.</strong> Combining,</p>
+<p>$$
+\boxed{\;\delta_t = \mathbf{W}_{yh}^\top\mathbf{g}_t + \mathbf{W}_{hh}^\top\operatorname{diag}\!\big(1-\mathbf{h}_{t+1}^2\big)\delta_{t+1},\qquad \delta_T = \mathbf{W}_{yh}^\top\mathbf{g}_T\;}
+$$</p>
+<p><strong>Step 5: the parameter gradients.</strong> For $\mathbf{W}_{hh}$, the pre-activation is $\mathbf{a}_t = \mathbf{W}_{hh}\mathbf{h}_{t-1}+\cdots$, and $\partial L/\partial\mathbf{a}_t = \partial L/\partial\mathbf{h}_t \odot (1-\mathbf{h}_t^2) \equiv \boldsymbol{\epsilon}_t$ by the chain rule through the elementwise tanh. Then</p>
+<p>$$
+\frac{\partial L}{\partial(\mathbf{W}_{hh})_{ij}} = \sum_t \frac{\partial L}{\partial(\mathbf{a}_t)_i}\frac{\partial(\mathbf{a}_t)_i}{\partial(\mathbf{W}_{hh})_{ij}} = \sum_t \epsilon_{t,i}\,h_{t-1,j}
+\;\Longrightarrow\; \nabla_{\mathbf{W}_{hh}}L = \sum_t \boldsymbol{\epsilon}_t\,\mathbf{h}_{t-1}^\top .
+$$</p>
+<p>Identically $\nabla_{\mathbf{W}_{hx}}L = \sum_t\boldsymbol{\epsilon}_t\mathbf{x}_t^\top$, $\nabla_{\mathbf{b}_h}L = \sum_t\boldsymbol{\epsilon}_t$, and $\nabla_{\mathbf{W}_{yh}}L = \sum_t\mathbf{g}_t\mathbf{h}_t^\top$. Each is an outer product summed over time — which is why weight sharing in time costs nothing extra: it just converts $T$ separate gradient matrices into their sum.</p>
+<h3 id="2-sum-over-paths-the-spectral-radius-and-gelfands-formula">2. Sum over paths, the spectral radius, and Gelfand's formula</h3>
+<p><strong>Step 1: expand the recursion.</strong> Applying Step 4 of the previous derivation repeatedly gives the sum-over-paths form</p>
+<p>$$
+\delta_s = \sum_{t\ge s}\left(\prod_{i=s+1}^{t}\mathbf{W}_{hh}^\top\operatorname{diag}\!\big(1-\mathbf{h}_i^2\big)\right)\mathbf{W}_{yh}^\top\mathbf{g}_t .
+$$</p>
+<p>Every term in the sum is the gradient contributed by one output time via one path back to $s$; the product is the path's Jacobian. This is the precise sense in which "the gradient has to travel through time".</p>
+<p><strong>Step 2: bound each factor.</strong></p>
+<p>$$
+\big\|\mathbf{W}_{hh}^\top\operatorname{diag}(1-\mathbf{h}_i^2)\big\|_2 \;\le\; \|\mathbf{W}_{hh}\|_2\,\|1-\mathbf{h}_i^2\|_\infty \;=\; \sigma_{\max}\,\gamma_i \;\le\; \sigma_{\max}\gamma,
+$$</p>
+<p>using $\|\operatorname{diag}(\mathbf{d})\|_2 = \max_i|d_i|$ and $\|\mathbf{A}^\top\| = \|\mathbf{A}\|$.</p>
+<p><strong>Step 3: bound the product.</strong> Submultiplicativity gives</p>
+<p>$$
+\left\|\prod_{i=s+1}^{t}\mathbf{W}_{hh}^\top\operatorname{diag}(1-\mathbf{h}_i^2)\right\| \le (\sigma_{\max}\gamma)^{t-s}.
+$$</p>
+<p><strong>Step 4: why the spectral radius, not $\sigma_{\max}$, is the right diagnostic for long products.</strong> For a fixed matrix $\mathbf{M}$, Gelfand's formula states</p>
+<p>$$
+\rho(\mathbf{M}) = \lim_{m\to\infty}\|\mathbf{M}^m\|^{1/m},
+$$</p>
+<p>so for large $m$, $\|\mathbf{M}^m\| \approx \rho(\mathbf{M})^m$ up to polynomial factors in $m$ — even when $\rho < \sigma_{\max}$, because the non-normal part of $\mathbf{M}$ (transient growth along nearly-parallel eigenvectors) dies out relative to the dominant eigencomponent. Since the dominant eigenvector of a product of <em>the same</em> matrix $T$ times is just the dominant eigenvector, the long-range behaviour of the gradient is governed by the eigenvalue largest in modulus. Setting $\rho(\mathbf{W}_{hh}) = 1$ with an orthogonal $\mathbf{W}_{hh}$ (so all singular values are 1 and $\gamma$ is the only source of decay) is the <em>orthogonal initialization</em> trick: it removes the matrix factor from the bound and leaves only the tanh saturation.</p>
+<p><strong>Step 5: what the bound is and is not.</strong> It is a uniform upper bound on the spectral norm of every path Jacobian. It is not a statement about the gradient of any particular parameter: the parameter gradient sums many paths of different lengths with different signs, so cancellation can make the sum far smaller than the bound. Diagnostically, the quantity to watch during training is the empirical distribution of $\|\delta_t\|$ across $t$: if it decays geometrically with $t$ at a rate near $\gamma\sigma_{\max}$, the bound is tight and long-range learning is impossible; if it is flat, credit is reaching back and the model is fine.</p>
+<h3 id="3-the-lstm-jacobian-in-full-and-where-the-highway-comes-from">3. The LSTM Jacobian in full, and where the highway comes from</h3>
+<p><strong>Step 1: write out the cell recursion and its inputs.</strong> For step $t$, with $\mathbf{u}_t = [\mathbf{h}_{t-1};\mathbf{x}_t]$:</p>
+<p>$$
+\mathbf{c}_t = \mathbf{f}_t\odot\mathbf{c}_{t-1} + \mathbf{i}_t\odot\mathbf{g}_t, \qquad \mathbf{f}_t = \sigma(\mathbf{W}_f\mathbf{u}_t + \mathbf{b}_f),\ \ \mathbf{i}_t = \sigma(\mathbf{W}_i\mathbf{u}_t+\mathbf{b}_i),
+$$
+$$
+\mathbf{h}_{t-1} = \mathbf{o}_{t-1}\odot\tanh(\mathbf{c}_{t-1}).
+$$</p>
+<p><strong>Step 2: differentiate.</strong> Treating $\mathbf{c}_{t-1}$ as the variable and noting that $\mathbf{f}_t,\mathbf{i}_t,\mathbf{g}_t$ depend on it only through $\mathbf{h}_{t-1}$:</p>
+<p>$$
+\frac{\partial\mathbf{c}_t}{\partial\mathbf{c}_{t-1}} = \operatorname{diag}(\mathbf{f}_t) + \frac{\partial\mathbf{f}_t}{\partial\mathbf{h}_{t-1}}\frac{\partial\mathbf{h}_{t-1}}{\partial\mathbf{c}_{t-1}}\operatorname{diag}(\mathbf{c}_{t-1}) + \frac{\partial(\mathbf{i}_t\odot\mathbf{g}_t)}{\partial\mathbf{h}_{t-1}}\frac{\partial\mathbf{h}_{t-1}}{\partial\mathbf{c}_{t-1}} .
+$$</p>
+<p><strong>Step 3: bound the indirect terms.</strong> With $\mathbf{W}_{f\cdot}$ the block of $\mathbf{W}_f$ multiplying $\mathbf{h}_{t-1}$:</p>
+<p>$$
+\frac{\partial\mathbf{f}_t}{\partial\mathbf{h}_{t-1}} = \operatorname{diag}\big(\mathbf{f}_t\odot(1-\mathbf{f}_t)\big)\mathbf{W}_{f\cdot}, \qquad \frac{\partial\mathbf{h}_{t-1}}{\partial\mathbf{c}_{t-1}} = \operatorname{diag}\big(\mathbf{o}_{t-1}\big)\operatorname{diag}\big(1-\tanh^2\mathbf{c}_{t-1}\big).
+$$</p>
+<p>Both carry a gate-derivative factor bounded by $0.25$ (sigmoid) times $\|\mathbf{W}\|$ and a tanh factor bounded by $1$. In a trained cell, $\mathbf{i}_t$ and $\mathbf{o}_t$ saturate toward $0$ or $1$ for most units most of the time, which drives those products toward zero — but "most of the time" is exactly why this is an argument about typical behaviour and not a proof.</p>
+<p><strong>Step 4: the dominant path.</strong> Retaining only the first term and multiplying over a span:</p>
+<p>$$
+\frac{\partial\mathbf{c}_T}{\partial\mathbf{c}_s} \;\approx\; \prod_{t=s+1}^{T}\operatorname{diag}(\mathbf{f}_t) \;=\; \operatorname{diag}\!\left(\prod_{t=s+1}^{T}\mathbf{f}_t\right),
+$$</p>
+<p>where the last equality holds because diagonal matrices commute. This is the <strong>constant error carousel</strong>: a purely diagonal, commutative product with no mixing of coordinates. For coordinate $j$ the gradient factor is $\prod_t f_{t,j}$, a product of <em>learned scalars in $(0,1)$</em> rather than a product of a matrix's singular values.</p>
+<p><strong>Step 5: why the difference is structural, not quantitative.</strong> In the Elman network the path factor is a product of full matrices; its norm is bounded by the <em>product of singular values</em>, and any single step where the relevant direction is contracted destroys that direction forever, because later steps mix coordinates and cannot recover a coordinate that has been annihilated. In the LSTM the coordinates never mix along the highway, so a coordinate survives exactly when its own forget gate stays high — an independent, per-coordinate, learnable decision. That is the entire content of "the LSTM solves the vanishing gradient problem", correctly stated: it changes the <em>geometry</em> of the gradient path from "product of matrices" to "product of scalars".</p>
+<h3 id="4-the-gru-is-an-lstm-with-the-input-gate-tied-to-the-forget-gate">4. The GRU is an LSTM with the input gate tied to the forget gate</h3>
+<p><strong>Step 1: impose the tie.</strong> In the LSTM, set $\mathbf{f}_t = 1-\mathbf{z}_t$ and $\mathbf{i}_t = \mathbf{z}_t$:</p>
+<p>$$
+\mathbf{c}_t = (1-\mathbf{z}_t)\odot\mathbf{c}_{t-1} + \mathbf{z}_t\odot\mathbf{g}_t .
+$$</p>
+<p><strong>Step 2: remove the separate exposed state.</strong> If $\mathbf{h}_t = \mathbf{c}_t$ (no output gate, no tanh on read-out), then</p>
+<p>$$
+\mathbf{h}_t = (1-\mathbf{z}_t)\odot\mathbf{h}_{t-1} + \mathbf{z}_t\odot\tilde{\mathbf{h}}_t,
+$$</p>
+<p>which is the GRU update with $\mathbf{z}$ playing the role of the LSTM's input gate. This is a convex combination — the state is always an interpolation between the old state and the new candidate, so it lies in the convex hull of past candidates and cannot grow without bound.</p>
+<p><strong>Step 3: the reset gate has no LSTM counterpart.</strong> The GRU also computes the candidate from $\mathbf{r}_t\odot\mathbf{h}_{t-1}$ rather than $\mathbf{h}_{t-1}$. Setting $\mathbf{r}=\mathbf{0}$ makes the candidate depend only on $\mathbf{x}_t$, i.e. it lets the cell write a value that is <em>independent of its history</em> — an LSTM can approximate this only by driving $\mathbf{i}$ up and $\mathbf{f}$ down simultaneously, which the GRU gets for free. That, not the parameter savings, is the architectural argument for the GRU.</p>
+<p><strong>Step 4: the gradient consequence.</strong> $\partial\mathbf{h}_t/\partial\mathbf{h}_{t-1}$ contains $\operatorname{diag}(1-\mathbf{z}_t)$, a diagonal highway identical in form to the LSTM's $\operatorname{diag}(\mathbf{f}_t)$. The two architectures therefore sit on the same gradient geometry; the difference is the parameter count ($0.75\times$) and the convex-combination constraint, which is a mild regularizer.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>An Elman RNN with hand-written BPTT — no autograd. The only subtle line is the <code>dprev</code> update: the message from step $t$ to step $t-1$ is $\mathbf{W}_{hh}^\top$ applied to $\boldsymbol{\epsilon}_t$, <em>not</em> $\mathbf{W}_{hh}^\top$ applied to $\delta_t$. Run the gradient check at the bottom; it should agree to about $10^{-10}$.</p>
+<p>```python
+import numpy as np
+
+def rnn_forward(X, Whx, Whh, bh):
+    """X: (T, dx). Returns hidden states H: (T, dh) and pre-activations A: (T, dh)."""
+    T, dx = X.shape
+    dh = Whh.shape[0]
+    H, A, h = np.zeros((T, dh)), np.zeros((T, dh)), np.zeros(dh)
+    for t in range(T):
+        A[t] = Whx @ X[t] + Whh @ h + bh      # same three matrices every step
+        h = np.tanh(A[t])
+        H[t] = h
+    return H, A
+
+def rnn_backward(dH_out, X, H, Whh):
+    """dH_out: dL/dH from the output layer, shape (T, dh). Full BPTT, no truncation."""
+    T, dh = H.shape
+    delta = np.zeros((T, dh))
+    dWhh, dWhx, dbh = np.zeros_like(Whh), np.zeros_like(Whx), np.zeros(dh)
+    dprev = np.zeros(dh)                       # message from step t+1, starts at zero
+    for t in range(T - 1, -1, -1):
+        delta[t] = dH_out[t] + dprev           # local loss + future message
+        eps = delta[t] * (1.0 - H[t]**2)       # through tanh
+        hprev = H[t-1] if t > 0 else np.zeros(dh)
+        dWhh += np.outer(eps, hprev)           # accumulate: weight used T times
+        dWhx += np.outer(eps, X[t])
+        dbh  += eps
+        dprev = Whh.T @ eps                    # W_hh^T applied to eps, not to delta
+    return delta, dWhx, dWhh, dbh
+
+# ---- gradient check: analytic vs central differences on every parameter ----
+rng = np.random.default_rng(1)
+T, dx, dh = 6, 3, 4
+X    = rng.normal(size=(T, dx))
+Whx  = rng.normal(size=(dh, dx)) * 0.5
+Whh  = rng.normal(size=(dh, dh)) * 0.5
+bh   = rng.normal(size=dh) * 0.1
+Wyh  = rng.normal(size=(dh, dh)) * 0.5
+
+def loss():
+    H, _ = rnn_forward(X, Whx, Whh, bh)
+    return 0.5 * ((H @ Wyh.T - 0.3)**2).sum(), H @ Wyh.T
+
+L, O = loss()
+H, _ = rnn_forward(X, Whx, Whh, bh)
+_, dWhx, dWhh, dbh = rnn_backward((O - 0.3) @ Wyh, X, H, Whh)
+
+eps = 1e-6
+for name, P, analytic in [("Whh", Whh, dWhh), ("Whx", Whx, dWhx), ("bh", bh, dbh)]:
+    num = np.zeros_like(P)
+    for idx in np.ndindex(*P.shape):
+        old = P[idx]
+        P[idx] = old + eps; lp, _ = loss()
+        P[idx] = old - eps; lm, _ = loss()
+        P[idx] = old
+        num[idx] = (lp - lm) / (2 * eps)
+    print(f"{name}: relative error {abs(num - analytic).max() / abs(analytic).max():.1e}")
+```</p>
+<p>Expected output: three lines of the form <code>Whh: relative error 2.6e-10</code>, <code>Whx: ...8.3e-11</code>, <code>bh: ...9.7e-11</code>. To get the LSTM, replace the state update with the six equations of the cell and let the same recursion carry $\delta\mathbf{c}_t$ in addition to $\delta\mathbf{h}_t$ — that extension is Exercise 9.</p>
+<h2 id="worked-example">Worked example</h2>
+<p><strong>A full forward and backward pass, by hand.</strong> Scalar state ($d_h = 1$), scalar input, three steps. $W_{hx} = 0.5$, $W_{hh} = 0.8$, $b_h = 0$, $W_{yh} = 1$, $b_y = 0$, so $o_t = h_t$. Inputs $x = (1,\,-0.5,\,0.25)$. Loss $L = \sum_t \tfrac12(o_t - y_t)^2$ with constant target $y = 0.8$.</p>
+<p>Forward:</p>
+<table>
+<thead>
+<tr>
+<th>$t$</th>
+<th>$x_t$</th>
+<th>$a_t = 0.5x_t + 0.8h_{t-1}$</th>
+<th>$h_t = \tanh a_t$</th>
+<th>$\partial L/\partial o_t = h_t - 0.8$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>$1.00$</td>
+<td>$0.5\cdot1 + 0 = 0.500000$</td>
+<td>$0.462117$</td>
+<td>$-0.337883$</td>
+</tr>
+<tr>
+<td>2</td>
+<td>$-0.50$</td>
+<td>$-0.25 + 0.8(0.462117) = 0.119694$</td>
+<td>$0.119125$</td>
+<td>$-0.680875$</td>
+</tr>
+<tr>
+<td>3</td>
+<td>$0.25$</td>
+<td>$0.125 + 0.8(0.119125) = 0.220300$</td>
+<td>$0.216804$</td>
+<td>$-0.583196$</td>
+</tr>
+</tbody>
+</table>
+<p>Loss $= \tfrac12(0.337883^2 + 0.680875^2 + 0.583196^2) = 0.458936$.</p>
+<p>Backward. With $W_{yh}=1$ the output contribution to $\delta_t$ is just $g_t$.</p>
+<table>
+<thead>
+<tr>
+<th>$t$</th>
+<th>$g_t$</th>
+<th>$W_{hh}^\top\epsilon_{t+1}$</th>
+<th>$\delta_t$</th>
+<th>$\epsilon_t = \delta_t(1-h_t^2)$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3</td>
+<td>$-0.583196$</td>
+<td>$0$ (none)</td>
+<td>$-0.583196$</td>
+<td>$-0.555783$</td>
+</tr>
+<tr>
+<td>2</td>
+<td>$-0.680875$</td>
+<td>$0.8\cdot(-0.555783) = -0.444626$</td>
+<td>$-1.125501$</td>
+<td>$-1.109529$</td>
+</tr>
+<tr>
+<td>1</td>
+<td>$-0.337883$</td>
+<td>$0.8\cdot(-1.109529) = -0.887623$</td>
+<td>$-1.225506$</td>
+<td>$-0.963797$</td>
+</tr>
+</tbody>
+</table>
+<p>Parameter gradients, accumulating over all three uses of each shared weight:</p>
+<p>$$\begin{aligned}
+\nabla_{W_{hh}} &= \epsilon_1 h_0 + \epsilon_2 h_1 + \epsilon_3 h_2 = 0 + (-1.109529)(0.462117) + (-0.555783)(0.119125) = -0.578940,\\
+\nabla_{W_{hx}} &= \epsilon_1 x_1 + \epsilon_2 x_2 + \epsilon_3 x_3 = (-0.963797)(1) + (-1.109529)(-0.5) + (-0.555783)(0.25) = -0.547978,\\
+\nabla_{b_h} &= \epsilon_1 + \epsilon_2 + \epsilon_3 = -2.629109,\\
+\nabla_{W_{yh}} &= \sum_t g_t h_t = -0.363690,\qquad \nabla_{b_y} = \sum_t g_t = -1.601953 .
+\end{aligned}$$</p>
+<p>Two observations worth carrying away. First, $\nabla_{W_{hh}}$ is <em>smaller in magnitude</em> than $\nabla_{b_h}$ even though it is the more important parameter — because its per-step contributions partially cancel, with $h_1 > 0$ and $h_2 > 0$ giving same-signed terms but $h_0 = 0$ contributing nothing at $t=1$. Second, the $\delta$ magnitudes <em>grow</em> as you go back ($0.58 \to 1.13 \to 1.23$): in this three-step example the future-term dominates the local term, which is the benign face of the mechanism — with $r = \gamma\sigma_{\max}$ near 1 the gradient neither vanishes nor explodes. Run the same trace with $W_{hh} = 0.1$ and $h_t$ tiny and the $\delta$ sequence collapses instead: $0.1^{3}$-ish behaviour.</p>
+<p><strong>One LSTM step, fully evaluated.</strong> Gates with $\mathbf{W}_f = (0.4,-0.2)$, $\mathbf{W}_i = (-0.3,0.5)$, $\mathbf{W}_o = (0.2,0.1)$, $\mathbf{W}_g = (0.6,-0.4)$, all biases zero, input $\mathbf{u} = [\mathbf{h}_{t-1};\mathbf{x}_t] = (0.5, 1.0)$, previous cell state $c_{t-1} = 0.3$.</p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Pre-activation</th>
+<th>Post-activation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>forget $\mathbf{f}_t$</td>
+<td>$0.4(0.5) - 0.2(1.0) = 0.000$</td>
+<td>$\sigma(0) = 0.5000$</td>
+</tr>
+<tr>
+<td>input $\mathbf{i}_t$</td>
+<td>$-0.3(0.5) + 0.5(1.0) = 0.350$</td>
+<td>$\sigma(0.35) = 0.5866$</td>
+</tr>
+<tr>
+<td>output $\mathbf{o}_t$</td>
+<td>$0.2(0.5) + 0.1(1.0) = 0.200$</td>
+<td>$\sigma(0.2) = 0.5498$</td>
+</tr>
+<tr>
+<td>candidate $\mathbf{g}_t$</td>
+<td>$0.6(0.5) - 0.4(1.0) = -0.100$</td>
+<td>$\tanh(-0.1) = -0.0997$</td>
+</tr>
+<tr>
+<td>cell $\mathbf{c}_t$</td>
+<td>—</td>
+<td>$0.5000(0.3) + 0.5866(-0.0997) = 0.0915$</td>
+</tr>
+<tr>
+<td>hidden $\mathbf{h}_t$</td>
+<td>—</td>
+<td>$0.5498\tanh(0.0915) = 0.0502$</td>
+</tr>
+</tbody>
+</table>
+<p>Read the arithmetic as a story: the forget gate at exactly $0.5$ halves the previous memory, the candidate is slightly negative so the input gate <em>subtracts</em> $0.0585$, and the output gate exposes only $55\%$ of the cell's tanh. Gradient-wise, $\partial c_t/\partial c_{t-1} = f_t = 0.5$ exactly (plus a small indirect term), so this step loses half the gradient: to keep a gradient alive over 20 steps a cell needs $f$ near $0.9$, not $0.5$.</p>
+<p><strong>The vanishing-gradient table, in units a practitioner cares about.</strong> At $r = 0.9$ the gradient retains $5.2\times10^{-3}$ after 50 steps and $2.7\times10^{-5}$ after 100 — and fp32 carries about seven decimal digits, so beyond roughly 175 steps the contribution is arithmetically present but numerically meaningless. At $r = 0.8$ the 100-step factor is $2.0\times10^{-10}$, i.e. gone. This is why "LSTMs can model dependencies 1,000 steps long" is a claim about a network whose forget gates were <em>learned to stay at 0.99</em>, not about the recurrent architecture in general.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="the-lstm-solved-the-vanishing-gradient-problem">"The LSTM solved the vanishing gradient problem."</h3>
+<p>It replaced a product of full matrices with a product of learned per-coordinate scalars. That is a change of geometry, not a cure. If the task drives $\mathbf{f}_t \to 0.9$, the 50-step factor is $5.2\times10^{-3}$ and the cell is no better than a well-tuned Elman network. The correct statement is: the LSTM makes the decay <em>learnable and per-channel</em>, so a cell that needs to remember can choose to. Empirically that extends the reliable horizon from tens of steps to hundreds — not to thousands, and certainly not to unbounded context.</p>
+<h3 id="rnns-are-slow-because-of-vanishing-gradients">"RNNs are slow because of vanishing gradients."</h3>
+<p>Vanishing gradients are a <em>learning</em> pathology; the slowness is a hardware pathology and they are independent. A recurrent layer's inner loop is $T$ sequential matrix–vector products of size $d_h\times d_h$: arithmetic intensity around 1 FLOP/byte, which leaves a GPU's tensor cores idle. You could fix the gradients perfectly (orthogonal $\mathbf{W}_{hh}$, gated units, no saturation at all) and the layer would still be $T$ sequential kernel launches. This conflation is why "the LSTM failed because of gradients" survives as folklore; the actual cause of the transformer's win was parallelism.</p>
+<h3 id="rnns-are-less-expressive-than-transformers">"RNNs are less expressive than transformers."</h3>
+<p>Both are universal approximators of sequence-to-sequence functions under standard assumptions, and a transformer with $n$ layers can be simulated by a recurrent network with adequate width and depth (and vice versa, with more layers). The difference is not in the function class but in three cost dimensions: gradient path length, available parallelism, and content-based addressing. Attention cannot represent anything a recurrence provably cannot; it can <em>reach</em> those functions in far fewer optimization steps and far less wall-clock time.</p>
+<h3 id="beam-search-finds-the-most-likely-output-sequence">"Beam search finds the most likely output sequence."</h3>
+<p>It finds the best sequence <em>among those whose prefixes stayed in the top $k$</em>, which is not the global MAP sequence and can miss it badly. A prefix that looks poor at step 2 may be the only route to the best full sequence, and beam search prunes it permanently. On top of that, the maximum-likelihood sequence is often not the best <em>output</em> — for open-ended generation, higher beams frequently produce more repetitive text, which is why the field moved toward sampling with top-p and toward preference-tuned objectives.</p>
+<h3 id="the-gates-mean-what-they-are-named">"The gates mean what they are named."</h3>
+<p>An LSTM's forget gate does not reliably "forget" and its input gate does not reliably "input" in any human-legible sense. Probing studies find units whose behaviour matches the names, units whose behaviour is the opposite, and many that are uninterpretable; the names are mnemonic labels for positions in an equation, adopted because they were the failures the authors were fixing. Treat "this gate is open so the model is remembering" as a hypothesis, not a fact.</p>
+<h3 id="truncated-bptt-means-the-model-cannot-use-long-context">"Truncated BPTT means the model cannot use long context."</h3>
+<p>Truncation cuts the <em>gradient</em> at chunk boundaries; the <em>forward state</em> still carries across them. So a model trained with $k=100$ truncation can condition on a token 5,000 steps back at inference time — it simply never received a gradient that credited that token for the loss. The precise consequence: the <em>forward</em> context is unbounded, the <em>learnable credit-assignment horizon</em> is $k$. In practice models learn to use long context only within roughly the truncation window plus whatever incidental structure generalizes.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>1.</strong> A 2-step RNN has $\mathbf{W}_{hh} = (0.5)$, $\mathbf{W}_{hx} = (1)$, $\mathbf{b}_h = 0$, $\mathbf{W}_{yh} = (1)$, $x = (1, 1)$, and the loss is $\tfrac12\sum_t o_t^2$ with $o_t = h_t$. Compute $\delta_2$, $\delta_1$, and $\nabla_{W_{hh}}$.</p>
+<details><summary>Solution</summary>
+
+$h_1 = \tanh(1) = 0.7616$, $h_2 = \tanh(1 + 0.5(0.7616)) = \tanh(1.3808) = 0.8817$. $g_1 = 0.7616$, $g_2 = 0.8817$.
+$\delta_2 = g_2 = 0.8817$; $\epsilon_2 = 0.8817(1-0.7774) = 0.1962$.
+$\delta_1 = g_1 + 0.5\epsilon_2 = 0.7616 + 0.0981 = 0.8597$; $\epsilon_1 = 0.8597(1-0.5800) = 0.3611$.
+$\nabla_{W_{hh}} = \epsilon_1 h_0 + \epsilon_2 h_1 = 0 + 0.1962(0.7616) = 0.1494$.
+
+</details>
+
+<p><strong>2.</strong> Give the parameter counts for an LSTM and a GRU with $d_x = d_h = 512$, counting biases.</p>
+<details><summary>Solution</summary>
+
+LSTM: $4(d_h(d_h+d_x) + d_h) = 4(512\cdot1024 + 512) = 4(524{,}800) = 2{,}099{,}200$. GRU: $3(512\cdot1024+512) = 1{,}574{,}400$. Ratio $0.75$. (Some GRU formulations omit the reset gate's bias or apply $\mathbf{W}_r$ to $\mathbf{x}$ only, changing the count by $O(d_h)$ — always state your convention.)
+
+</details>
+
+<p><strong>3.</strong> With per-step gradient factor $r = 0.95$, how many steps until the factor falls below $10^{-6}$? Below $10^{-12}$?</p>
+<details><summary>Solution</summary>
+
+$r^T = 10^{-6} \Rightarrow T = \ln(10^{-6})/\ln(0.95) = -13.8155/-0.051293 = 269$ steps. For $10^{-12}$: $T = 539$. A 0.95 per-step factor looks harmless and still destroys a 500-step dependency — which is why per-step factors must be read on a log scale.
+
+</details>
+
+<p><strong>4.</strong> State what truncated BPTT with $k=32$ changes about the gradient, in one sentence with the exact set of omitted terms.</p>
+<details><summary>Solution</summary>
+
+It omits every summand $\partial L_t/\partial\boldsymbol{\theta}$ whose path from step $s$ satisfies $t - s > 32$, i.e. exactly the terms in $\sum_t\sum_{s<t-32}$, leaving $\nabla_{\boldsymbol{\theta}}\mathcal{L}$ biased but with the omitted terms those bounded by $(\gamma\sigma_{\max})^{33}$.
+
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>5.</strong> Expand the sum-over-paths form explicitly for $T = 3$ and verify that it reproduces the recursion $\delta_1 = \mathbf{W}_{yh}^\top\mathbf{g}_1 + \mathbf{J}_2^\top\mathbf{W}_{yh}^\top\mathbf{g}_2 + \mathbf{J}_2^\top\mathbf{J}_3^\top\mathbf{W}_{yh}^\top\mathbf{g}_3$, where $\mathbf{J}_t = \operatorname{diag}(1-\mathbf{h}_t^2)\mathbf{W}_{hh}$.</p>
+<details><summary>Solution</summary>
+
+From $\delta_3 = \mathbf{W}^\top\mathbf{g}_3$ and $\delta_t = \mathbf{W}^\top\mathbf{g}_t + \mathbf{J}_{t+1}^\top\delta_{t+1}$:
+$\delta_2 = \mathbf{W}^\top\mathbf{g}_2 + \mathbf{J}_3^\top\mathbf{W}^\top\mathbf{g}_3$; substituting into $\delta_1 = \mathbf{W}^\top\mathbf{g}_1 + \mathbf{J}_2^\top\delta_2$ gives $\delta_1 = \mathbf{W}^\top\mathbf{g}_1 + \mathbf{J}_2^\top\mathbf{W}^\top\mathbf{g}_2 + \mathbf{J}_2^\top\mathbf{J}_3^\top\mathbf{W}^\top\mathbf{g}_3$. Note the order: the transpose reverses the product, so the earliest Jacobian is leftmost — the correct order for a vector multiplying from the right. Each term is the gradient of one output with respect to $\mathbf{h}_1$ along one path, and the number of terms grows linearly in $T$ while the number of *graph paths* grows as $2^T$ — the recursion is a dynamic program over those paths.
+
+</details>
+
+<p><strong>6.</strong> Derive $\nabla_{\mathbf{W}_i}\mathcal{L}$ for the LSTM input gate.</p>
+<details><summary>Solution</summary>
+
+$\mathbf{i}_t = \sigma(\mathbf{z}_t)$, $\mathbf{z}_t = \mathbf{W}_i\mathbf{u}_t+\mathbf{b}_i$, and $\mathbf{c}_t = \mathbf{f}_t\odot\mathbf{c}_{t-1} + \mathbf{i}_t\odot\mathbf{g}_t$. The gate enters the loss through $\mathbf{c}_t$, so
+$\partial L/\partial\mathbf{i}_t = (\partial L/\partial\mathbf{c}_t)\odot\mathbf{g}_t$, and $\partial\mathbf{i}_t/\partial\mathbf{z}_t = \operatorname{diag}(\mathbf{i}_t\odot(1-\mathbf{i}_t))$, hence
+$\partial L/\partial\mathbf{z}_t = (\partial L/\partial\mathbf{c}_t)\odot\mathbf{g}_t\odot\mathbf{i}_t\odot(1-\mathbf{i}_t)$ and
+$\nabla_{\mathbf{W}_i}\mathcal{L} = \sum_t \big[(\partial L/\partial\mathbf{c}_t)\odot\mathbf{g}_t\odot\mathbf{i}_t\odot(1-\mathbf{i}_t)\big]\mathbf{u}_t^\top$.
+The sigmoid-derivative factor $\mathbf{i}(1-\mathbf{i})\le0.25$ is why gates that saturate stop learning: at $\mathbf{i}=0.99$ the factor is $0.0099$.
+
+</details>
+
+<p><strong>7.</strong> A GRU has $\mathbf{z}_t = \mathbf{0}$ for a run of steps. What does the state do, why is this important, and what does it imply for the gradient?</p>
+<details><summary>Solution</summary>
+
+With $\mathbf{z} = 0$: $\mathbf{h}_t = 1\cdot\mathbf{h}_{t-1} + 0\cdot\tilde{\mathbf{h}}_t = \mathbf{h}_{t-1}$ — the state is copied verbatim, so the unit acts as an unbounded memory and any information written earlier survives indefinitely. This is the operation that makes "remember this token until needed" representable. Gradient: $\partial\mathbf{h}_t/\partial\mathbf{h}_{t-1} = \operatorname{diag}(1-\mathbf{z}_t) + \text{(candidate path)} = \mathbf{I}$ along the direct path, so the gradient passes undiminished. The candidate path also matters: with $\mathbf{r}\neq0$ the candidate depends on $\mathbf{h}_{t-1}$ and contributes an extra term, so a fully closed $\mathbf{z}$ does not make the Jacobian exactly $\mathbf{I}$.
+
+</details>
+
+<p><strong>8.</strong> Beam search with $k=3$ over vocabulary $\{a,b,c\}$, all prefixes so far scored: $a: -0.5$, $b: -1.0$, $c: -2.0$. Next-token log-probabilities are $p(a\mid\cdot) = -0.1$ for every prefix, $p(b\mid\cdot) = -1.2$, $p(c\mid\cdot) = -3.0$. Give the new beam and say what changed.</p>
+<details><summary>Solution</summary>
+
+Extensions: $a\to a: -0.6$; $a\to b: -1.7$; $a\to c: -3.5$; $b\to a: -1.1$; $b\to b: -2.2$; $b\to c: -4.0$; $c\to a: -2.1$; $c\to b: -3.2$; $c\to c: -5.0$. Top three: $aa$ ($-0.6$), $ba$ ($-1.1$), $ab$ ($-1.7$). The second-best prefix $b$ survives only because its single-token deficit ($-0.5$) is smaller than the gap between best and second-best continuations — the beam kept a hypothesis that greedy would have discarded at step 1. Note also that $ac$ and $bc$ are gone permanently even if $c$ becomes overwhelmingly likely later: pruning is irreversible, which is exactly why beam search is not exact.
+
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>9.</strong> Extend the NumPy implementation to a full LSTM and gradient-check $\mathbf{W}_f$. What is the most likely place to get the transpose wrong, and how would you detect it?</p>
+<details><summary>Solution</summary>
+
+State must carry two gradients: $\delta\mathbf{h}_t$ (from the output and from $\mathbf{h}_{t+1}$ and from the gates at $t+1$) and $\delta\mathbf{c}_t$ (from $\mathbf{h}_t$'s tanh and from $\mathbf{c}_{t+1}$'s forget multiply). The recursion is $\delta\mathbf{c}_t = \delta\mathbf{h}_t\odot\mathbf{o}_t\odot(1-\tanh^2\mathbf{c}_t) + \delta\mathbf{c}_{t+1}\odot\mathbf{f}_{t+1}$, and $\delta\mathbf{h}_t$ must additionally accumulate the gate terms $\mathbf{W}_{\cdot h}^\top(\ldots)$ for $f,i,o,g$ from step $t+1$. The most likely error is dropping the gate contributions from $\delta\mathbf{h}$ — the gradient check then passes for $\mathbf{W}_{hh}$ of an Elman network but fails for $\mathbf{W}_f$ by a few percent. Detect it by checking each weight matrix separately rather than the concatenated parameter vector, and by testing with a sequence of length 1 (where the gate paths vanish) and then length 3 (where they do not).
+
+</details>
+
+<p><strong>10.</strong> Compute the activation memory for (a) a 512-step RNN with $B=8$, $d_h=1024$ storing all states and pre-activations in fp32, and (b) a transformer with 12 layers, $n=512$, $d=1024$, storing the KV cache only, fp16.</p>
+<details><summary>Solution</summary>
+
+(a) Two tensors of shape $(8, 512, 1024)$ = 4.19M floats each = 16.8 MB each in fp32, so 33.6 MB for states and pre-activations, plus the same again for the backward pass's saved tanh inputs if not recomputed — call it ~70 MB, and it grows linearly in $T$.
+(b) Per layer per token: $2\cdot d$ values $= 2048$; times $n=512$ tokens times 12 layers times 8 batch: $2\cdot1024\cdot512\cdot12\cdot8 = 100.7$M values $= 201$ MB in fp16. So the transformer's memory is 3× the RNN's here and does not depend on depth in the sequence direction — it depends on layers. The comparison flips as $n$ grows: the RNN is $O(Td_h)$, the transformer $O(Lnd)$.
+
+</details>
+
+<p><strong>11.</strong> Show that clipping with threshold $c$ changes the parameter update's norm but not its direction, and construct a case where the <em>elementwise</em> variant changes the direction so much that the update is no longer a descent direction.</p>
+<details><summary>Solution</summary>
+
+Global clipping multiplies $\mathbf{g}$ by a positive scalar, which cannot change direction; the dot product with $-\mathbf{g}$ stays positive, so the step still decreases the first-order loss. Elementwise clipping maps each coordinate independently: $\mathbf{g} = (10, 1)$ with $c = 1$ becomes $(1,1)$, whose cosine with $\mathbf{g}$ is $(10+1)/(\sqrt{2}\sqrt{101}) = 0.774$ — direction rotated by $39°$. To make it non-descending you need weights on a curvature where the rotated direction increases the loss: take $\mathbf{g} = (\epsilon, 1)$ with $\epsilon \to 0$ and a Hessian strongly curved along the first coordinate and flat along the second; elementwise clipping amplifies the $\epsilon$ coordinate by $c/\epsilon$, producing a step that is dominated by the direction with the flattest descent, which is exactly the direction you did not want. This is the argument for global-norm clipping in one paragraph.
+
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>Write the BPTT recursion for $\delta_t$, including which quantity is transposed and why.</li>
+<li>State and justify the bound on $\|\partial\mathbf{h}_t/\partial\mathbf{h}_s\|$ in terms of $\gamma$ and $\sigma_{\max}$.</li>
+<li>Why is the spectral radius a better long-range diagnostic than the spectral norm?</li>
+<li>Name the four LSTM equations and the failure each gate addresses.</li>
+<li>Show that the cell-state gradient is approximately $\prod_t\mathbf{f}_t$, and state the two structural properties that make this different from a matrix product.</li>
+<li>What does a highway layer reduce to when $\mathbf{T}\equiv\mathbf{1}$?</li>
+<li>Give the exact-reason beam search is not MAP decoding, and one correction for its length bias.</li>
+<li>Give the three reasons attention displaced recurrence, and state which of them is not about expressiveness.</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $\delta_t = \mathbf{W}_{yh}^\top\mathbf{g}_t + \mathbf{W}_{hh}^\top\operatorname{diag}(1-\mathbf{h}_{t+1}^2)\delta_{t+1}$, with $\delta_T = \mathbf{W}_{yh}^\top\mathbf{g}_T$. The Jacobian $\partial\mathbf{h}_{t+1}/\partial\mathbf{h}_t$ is transposed because the gradient is a column vector that must be multiplied by $\mathbf{J}^\top$ when moving backward through a linear map.
+2. $\|\partial\mathbf{h}_t/\partial\mathbf{h}_s\| \le \prod_{i}\|\operatorname{diag}(1-\mathbf{h}_i^2)\|\|\mathbf{W}_{hh}\| \le (\gamma\sigma_{\max})^{t-s}$, from submultiplicativity and $\|\operatorname{diag}(\mathbf{d})\| = \max|d_i|$, with $\gamma\le1$ because $|1-h^2|\le1$ for $h = \tanh(\cdot)$.
+3. Because for long products $\|\mathbf{M}^m\|^{1/m}\to\rho(\mathbf{M})$ (Gelfand), so the typical growth of $\mathbf{M}^m$ is governed by the largest eigenvalue modulus, while $\sigma_{\max}$ over-estimates whenever the matrix is non-normal — it bounds the transient, not the asymptote.
+4. $\mathbf{f} = \sigma(\cdot)$ fixes unbounded accumulation; $\mathbf{i} = \sigma(\cdot)$ fixes the input-weight (overwrite) conflict; $\mathbf{o} = \sigma(\cdot)$ fixes the read-out conflict; $\mathbf{g} = \tanh(\cdot)$ bounds the write per step.
+5. Differentiating $\mathbf{c}_t = \mathbf{f}_t\odot\mathbf{c}_{t-1}+\mathbf{i}_t\odot\mathbf{g}_t$ keeping only the direct term gives $\partial\mathbf{c}_t/\partial\mathbf{c}_{t-1} = \operatorname{diag}(\mathbf{f}_t)$, so over a span $\operatorname{diag}(\prod\mathbf{f}_t)$ — diagonal matrices commute. Structural differences: no coordinate mixing (so no rotation toward small singular directions) and the factors are learned per-channel scalars.
+6. $\mathbf{y} = H(\mathbf{x}) + \mathbf{x}$: the residual connection with no gate and no gate parameters.
+7. Beam search keeps only the top-$k$ prefixes and pruning is irreversible, so a prefix that leads to the globally best sequence can be discarded early; exactness requires $k\to|V|^T$. Length bias is corrected by dividing the score by $t^{\alpha}$ (length normalization) or adding a length reward.
+8. Path length $O(n)$ vs $O(1)$, hardware parallelism ($n$ sequential matrix–vector products vs parallel GEMMs), and content-based addressing. None is a statement about expressiveness: the function classes overlap.
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><strong>Hochreiter &amp; Schmidhuber (1997), "Long Short-Term Memory", <em>Neural Computation</em> 9(8).</strong> Extract §3, the constant error carousel argument — it is the original derivation of the gradient highway, and it is written in exactly the terms this module uses.</li>
+<li><strong>Gers, Schmidhuber &amp; Cummins (2000), "Learning to Forget: Continual Prediction with LSTM", <em>Neural Computation</em> 12(10).</strong> Extract the forget gate's motivation and their demonstration that without it the cell saturates on long sequences. The clearest example in the literature of a gate added to fix a specific, named failure.</li>
+<li><strong>Bengio, Simard &amp; Frasconi (1994), "Learning Long-Term Dependencies with Gradient Descent is Difficult", <em>IEEE TNN</em> 5(2), and Pascanu, Mikolov &amp; Bengio (2013), "On the Difficulty of Training Recurrent Neural Networks", ICML.</strong> Read them as a pair: the 1994 paper made "vanishing gradients" a formal claim with a spectral-radius argument, and the 2013 paper added the gradient-norm bound and §4's clipping rule, which is where "cliffs" and global-norm clipping come from.</li>
+<li><strong>Cho, van Merrienboer, Gulcehre, Bahdanau, Bougares, Schwenk &amp; Bengio (2014), "Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation", EMNLP.</strong> The GRU and the encoder-decoder framing in one paper.</li>
+<li><strong>Sutskever, Vinyals &amp; Le (2014), "Sequence to Sequence Learning with Neural Networks", NeurIPS.</strong> Extract §3 on beam search and on reversing the source sequence — an architecturally arbitrary trick that measurably helped, and a good reminder of how much of the era's progress was empirical.</li>
+<li><strong>Bahdanau, Cho &amp; Bengio (2015), "Neural Machine Translation by Jointly Learning to Align and Translate", ICLR.</strong> Extract Figure 2 and the BLEU-versus-length plot: the bottleneck critique is empirical, not rhetorical, and this is where it was made.</li>
+<li><strong>Olah, "Understanding LSTM Networks" (colah's blog, free).</strong> The best-known visual explanation of the cell; use it to reinforce the gate diagram, and notice that it presents the gates as a story rather than as a derivation — this module is the derivation.</li>
+<li><strong>Holtzman, Buys, Du, Forbes &amp; Choi (2019), "The Curious Case of Neural Text Degeneration", ICLR.</strong> Extract the argument that likelihood maximization plus likelihood-based decoding, not exposure bias, is the main reason generated text degenerates.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when you can, without notes:</p>
+<ol>
+<li>Write the BPTT recursion and all four parameter gradients on a blank page, with the transposes in the right places.</li>
+<li>Derive the $(\gamma\sigma_{\max})^{t-s}$ bound and use it to predict how many steps a given architecture can learn over.</li>
+<li>Explain each LSTM gate as the fix for a named failure, and say what the cell-state gradient product is.</li>
+<li>Draw the GRU from memory and derive it as an LSTM with $\mathbf{f} = 1-\mathbf{z}$ and no output gate.</li>
+<li>Define exposure bias, compute its compounding, and say why the field now considers objective mismatch the bigger problem.</li>
+<li>Fill in the RNN/CNN/transformer cost table from memory and defend the claim that attention won on parallelism, not expressiveness.</li>
+</ol><div class="pager"><a id="prevlink" href="../m/10-convolutions.html"><small>← previous</small><b>M10 · Convolutional Networks</b></a><a id="nextlink" class="next" href="../m/12-attention-transformers.html"><small>next →</small><b>M12 · Attention and the Transformer</b></a></div></article>
+</main>
+</div>
+</body></html>

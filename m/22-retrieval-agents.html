@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M22 · Retrieval, Tools, and Agents — From Zero to Frontier</title>
+<meta name="description" content="Most RAG failures are retrieval failures misdiagnosed as generation failures.">
+<meta property="og:title" content="M22 · Retrieval, Tools, and Agents — From Zero to Frontier">
+<meta property="og:description" content="Most RAG failures are retrieval failures misdiagnosed as generation failures.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Large language models / M22</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M22">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M22</span><span class="pill d3">difficulty 3/5</span><span class="pill">2 weeks</span><span class="pill">prereqs: M15, M19</span><span class="pill">5,726 words</span></div><h1>Retrieval, Tools, and Agents</h1><p class="tagline">Most RAG failures are retrieval failures misdiagnosed as generation failures.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>A language model knows what was in its training data and nothing else. Everything you actually need it to know — your documents, this week's numbers, the result of the query it just wrote — arrives through the context window, which is finite, expensive, and badly attended to. Retrieval, tool use, and agents are all answers to the same problem: getting the right few thousand tokens in front of the model at the right moment, then acting on what comes back. The field is unusually susceptible to framework worship, because a demo with two documents looks like magic and a production system with two hundred thousand documents fails in ways the demo cannot reveal. This module is about the arithmetic that separates those cases: recall@$k$, the quadratic cost of long context, the compounding of per-step reliability, and the diagnostic that tells you whether to blame the retriever or the generator.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<ol>
+<li>What is the KV-cache cost per token, and how does attention compute scale with context length $T$?</li>
+<li>What is cosine similarity, and why are embeddings usually L2-normalised?</li>
+<li>What does a softmax over the vocabulary compute, and what is a temperature?</li>
+<li>With cross-entropy over a softmax, what is the gradient with respect to a logit?</li>
+<li>In a chat model, what is the difference between a system message, a user turn, and tool output?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. KV cache is $2Ln_{kv}d_hb$ bytes per token, linear in $T$; attention compute per layer is $O(T^2 d)$.
+2. $\langle \mathbf{a},\mathbf{b}\rangle/(\|\mathbf{a}\|\|\mathbf{b}\|)$; normalising makes the inner product equal the cosine, so nearest-neighbour search is a dot product.
+3. $\operatorname{softmax}(\mathbf{z}/\tau)$; temperature rescales logits before normalising, controlling sharpness.
+4. $\partial \mathcal{L}/\partial z_i = p_i - y_i$.
+5. A system message is provider-authored instruction, a user turn is the request, and tool output is data returned by a function call — which the model reads as text, which is exactly the injection problem.
+
+**M15** covers 1 and 3; **M12** covers why attention is quadratic.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<ul>
+<li>Compute the token and attention cost of stuffing a document set into context, and say when retrieval beats stuffing.</li>
+<li>Derive the InfoNCE loss and its gradient, and explain what hard negatives and temperature do to it.</li>
+<li>Implement BM25, explain each of its three factors, and fuse it with a second ranking using reciprocal rank fusion.</li>
+<li>Estimate HNSW and IVF-PQ recall/latency trade-offs from their parameters.</li>
+<li>Diagnose a RAG failure as retrieval, synthesis, or over-retrieval using a measurement rather than an opinion.</li>
+<li>Write a tool schema and describe the failure modes of argument grounding and tool selection.</li>
+<li>Compute the end-to-end reliability of an $n$-step agent loop and the token cost of a multi-agent hop.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$q$, $d$</td>
+<td>query, document (or passage)</td>
+</tr>
+<tr>
+<td>$\mathbf{e}_q, \mathbf{e}_d$</td>
+<td>embedding vectors, usually unit norm</td>
+</tr>
+<tr>
+<td>$\tau$</td>
+<td>temperature in the contrastive loss</td>
+</tr>
+<tr>
+<td>$\mathcal{B}$</td>
+<td>batch of (query, positive, negatives)</td>
+</tr>
+<tr>
+<td>$k$</td>
+<td>number of items retrieved</td>
+</tr>
+<tr>
+<td>$f_{t,d}$</td>
+<td>frequency of term $t$ in document $d$</td>
+</tr>
+<tr>
+<td>$\mathrm{df}_t$, $N$</td>
+<td>document frequency of $t$, corpus size</td>
+</tr>
+<tr>
+<td>$\mathrm{avgdl}$</td>
+<td>mean document length</td>
+</tr>
+<tr>
+<td>$k_1$, $b$</td>
+<td>BM25 saturation and length-normalisation parameters</td>
+</tr>
+<tr>
+<td>$T$</td>
+<td>context length in tokens</td>
+</tr>
+<tr>
+<td>$p$</td>
+<td>per-step success probability of an agent action</td>
+</tr>
+</tbody>
+</table>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="the-context-window-is-a-scarce-resource">The context window is a scarce resource</h3>
+<p><strong>Intuition.</strong> A context window is a desk, not a warehouse. Everything on it is in the way of everything else, and you pay rent per square centimetre per second.</p>
+<p><strong>Formal definition.</strong> Attention cost per layer is $O(T^2 d)$ compute and the KV cache is $O(T)$ memory per layer, so a request carrying $T$ tokens costs $O(T^2)$ to process once and then holds $2Ln_{kv}d_hb\,T$ bytes for the life of the generation. At $T = 100{,}000$ with $L=32$, $n_{kv}=8$, $d_h=128$, bf16, that is $100000 \times 128\ \text{KiB} = 12.8$ GB of cache for a single request.</p>
+<p><strong>Why it is built this way.</strong> The quadratic term is why "just put everything in the context" fails economically before it fails technically: doubling the context quadruples prefill compute and doubles the cache. Retrieval exists because the information density of a stuffed context is terrible — a 100k-token context where 2k tokens matter is 98% distraction, and models measurably attend worse to material in the middle of a long context than at either end.</p>
+<p><strong>Worked micro-example.</strong> Stuffing 200 documents of 800 tokens costs 160k tokens; retrieving the top 5 costs 4k tokens plus a 30 ms vector search. At 15k prefill tokens/s, 160k tokens is 10.7 s before the first output token, against a target TTFT of 500 ms.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" width="100%" role="img" aria-label="The KV cache: what is stored per layer, and how it grows" class="fig-svg"><defs><marker id="kv-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="120.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">without cache</text><rect x="30.0" y="56.0" width="180.0" height="120.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.4"/><rect x="44.0" y="70.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="83.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 1</text><rect x="44.0" y="94.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="107.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 2</text><rect x="44.0" y="118.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="131.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 3</text><rect x="44.0" y="142.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="155.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 4</text><text x="120.0" y="198.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">O(T²) work per token</text><line x1="226.0" y1="116.0" x2="268.0" y2="116.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#kv-ah)"/><text x="360.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">with KV cache</text><text x="286.0" y="72.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L0</text><rect x="292.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="56.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="106.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L1</text><rect x="292.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="90.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="140.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L2</text><rect x="292.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="124.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L3</text><rect x="292.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="158.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="457.0" y="206.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">one column per cached token, per layer, for both K and V</text><rect x="660.0" y="56.0" width="172.0" height="150.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="746.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">memory</text><text x="746.0" y="104.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">2 · L · H · T · dₕ</text><text x="746.0" y="124.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">· bytes per element</text><text x="746.0" y="152.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">7B, T=8192, bf16</text><text x="746.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">≈ 2 GB / sequence</text><text x="746.0" y="194.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">grows linearly, forever</text><text x="430.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">decode costs a matrix-vector product per step; the cache turns O(T) recompute into O(T) memory</text></svg><figcaption>The cache grows linearly with the token count while the weight block stays fixed; at 100k tokens a single request's cache dwarfs the model.</figcaption></figure></p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 330" width="100%" role="img" aria-label="Attention cost: quadratic versus linear" class="fig-svg"><defs><marker id="lin-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="86.0" y1="276.0" x2="506.0" y2="276.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="280.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^-6</text><line x1="86.0" y1="232.0" x2="506.0" y2="232.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="236.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^-4</text><line x1="86.0" y1="188.0" x2="506.0" y2="188.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="192.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^-2</text><line x1="86.0" y1="144.0" x2="506.0" y2="144.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="148.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^0</text><line x1="86.0" y1="100.0" x2="506.0" y2="100.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="104.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^2</text><line x1="86.0" y1="56.0" x2="506.0" y2="56.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="60.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^4</text><line x1="86.0" y1="56.0" x2="86.0" y2="276.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M86.0,232.0 L88.6,232.0 L91.2,223.0 L93.9,215.3 L96.5,209.8 L99.1,205.5 L101.8,202.0 L104.4,199.1 L107.0,196.5 L109.6,194.3 L112.2,192.3 L114.9,190.4 L117.5,188.8 L120.1,187.3 L122.8,185.8 L125.4,184.5 L128.0,183.3 L130.6,182.1 L133.2,181.0 L135.9,180.0 L138.5,179.0 L141.1,178.1 L143.8,177.2 L146.4,176.3 L149.0,175.5 L151.6,174.8 L154.2,174.0 L156.9,173.3 L159.5,172.6 L162.1,171.9 L164.8,171.3 L167.4,170.6 L170.0,170.0 L172.6,169.4 L175.2,168.9 L177.9,168.3 L180.5,167.8 L183.1,167.3 L185.8,166.8 L188.4,166.3 L191.0,165.8 L193.6,165.3 L196.2,164.8 L198.9,164.4 L201.5,164.0 L204.1,163.5 L206.8,163.1 L209.4,162.7 L212.0,162.3 L214.6,161.9 L217.2,161.5 L219.9,161.1 L222.5,160.8 L225.1,160.4 L227.8,160.0 L230.4,159.7 L233.0,159.3 L235.6,159.0 L238.2,158.7 L240.9,158.3 L243.5,158.0 L246.1,157.7 L248.8,157.4 L251.4,157.1 L254.0,156.8 L256.6,156.5 L259.2,156.2 L261.9,155.9 L264.5,155.6 L267.1,155.4 L269.8,155.1 L272.4,154.8 L275.0,154.5 L277.6,154.3 L280.2,154.0 L282.9,153.8 L285.5,153.5 L288.1,153.3 L290.8,153.0 L293.4,152.8 L296.0,152.5 L298.6,152.3 L301.2,152.1 L303.9,151.8 L306.5,151.6 L309.1,151.4 L311.8,151.1 L314.4,150.9 L317.0,150.7 L319.6,150.5 L322.2,150.3 L324.9,150.1 L327.5,149.9 L330.1,149.7 L332.8,149.4 L335.4,149.2 L338.0,149.0 L340.6,148.8 L343.2,148.7 L345.9,148.5 L348.5,148.3 L351.1,148.1 L353.8,147.9 L356.4,147.7 L359.0,147.5 L361.6,147.3 L364.2,147.2 L366.9,147.0 L369.5,146.8 L372.1,146.6 L374.8,146.4 L377.4,146.3 L380.0,146.1 L382.6,145.9 L385.2,145.8 L387.9,145.6 L390.5,145.4 L393.1,145.3 L395.8,145.1 L398.4,144.9 L401.0,144.8 L403.6,144.6 L406.2,144.5 L408.9,144.3 L411.5,144.2 L414.1,144.0 L416.8,143.8 L419.4,143.7 L422.0,143.5 L424.6,143.4 L427.2,143.3 L429.9,143.1 L432.5,143.0 L435.1,142.8 L437.8,142.7 L440.4,142.5 L443.0,142.4 L445.6,142.2 L448.2,142.1 L450.9,142.0 L453.5,141.8 L456.1,141.7 L458.8,141.6 L461.4,141.4 L464.0,141.3 L466.6,141.2 L469.2,141.0 L471.9,140.9 L474.5,140.8 L477.1,140.6 L479.8,140.5 L482.4,140.4 L485.0,140.3 L487.6,140.1 L490.2,140.0 L492.9,139.9 L495.5,139.8 L498.1,139.6 L500.8,139.5 L503.4,139.4 L506.0,139.3" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M86.0,232.0 L88.6,232.0 L91.2,227.5 L93.9,223.6 L96.5,220.9 L99.1,218.8 L101.8,217.0 L104.4,215.5 L107.0,214.3 L109.6,213.1 L112.2,212.1 L114.9,211.2 L117.5,210.4 L120.1,209.6 L122.8,208.9 L125.4,208.3 L128.0,207.6 L130.6,207.1 L133.2,206.5 L135.9,206.0 L138.5,205.5 L141.1,205.0 L143.8,204.6 L146.4,204.2 L149.0,203.8 L151.6,203.4 L154.2,203.0 L156.9,202.6 L159.5,202.3 L162.1,202.0 L164.8,201.6 L167.4,201.3 L170.0,201.0 L172.6,200.7 L175.2,200.4 L177.9,200.2 L180.5,199.9 L183.1,199.6 L185.8,199.4 L188.4,199.1 L191.0,198.9 L193.6,198.7 L196.2,198.4 L198.9,198.2 L201.5,198.0 L204.1,197.8 L206.8,197.6 L209.4,197.3 L212.0,197.1 L214.6,196.9 L217.2,196.8 L219.9,196.6 L222.5,196.4 L225.1,196.2 L227.8,196.0 L230.4,195.8 L233.0,195.7 L235.6,195.5 L238.2,195.3 L240.9,195.2 L243.5,195.0 L246.1,194.9 L248.8,194.7 L251.4,194.5 L254.0,194.4 L256.6,194.2 L259.2,194.1 L261.9,194.0 L264.5,193.8 L267.1,193.7 L269.8,193.5 L272.4,193.4 L275.0,193.3 L277.6,193.1 L280.2,193.0 L282.9,192.9 L285.5,192.8 L288.1,192.6 L290.8,192.5 L293.4,192.4 L296.0,192.3 L298.6,192.1 L301.2,192.0 L303.9,191.9 L306.5,191.8 L309.1,191.7 L311.8,191.6 L314.4,191.5 L317.0,191.4 L319.6,191.2 L322.2,191.1 L324.9,191.0 L327.5,190.9 L330.1,190.8 L332.8,190.7 L335.4,190.6 L338.0,190.5 L340.6,190.4 L343.2,190.3 L345.9,190.2 L348.5,190.1 L351.1,190.0 L353.8,189.9 L356.4,189.8 L359.0,189.8 L361.6,189.7 L364.2,189.6 L366.9,189.5 L369.5,189.4 L372.1,189.3 L374.8,189.2 L377.4,189.1 L380.0,189.0 L382.6,189.0 L385.2,188.9 L387.9,188.8 L390.5,188.7 L393.1,188.6 L395.8,188.6 L398.4,188.5 L401.0,188.4 L403.6,188.3 L406.2,188.2 L408.9,188.2 L411.5,188.1 L414.1,188.0 L416.8,187.9 L419.4,187.8 L422.0,187.8 L424.6,187.7 L427.2,187.6 L429.9,187.6 L432.5,187.5 L435.1,187.4 L437.8,187.3 L440.4,187.3 L443.0,187.2 L445.6,187.1 L448.2,187.1 L450.9,187.0 L453.5,186.9 L456.1,186.8 L458.8,186.8 L461.4,186.7 L464.0,186.6 L466.6,186.6 L469.2,186.5 L471.9,186.5 L474.5,186.4 L477.1,186.3 L479.8,186.3 L482.4,186.2 L485.0,186.1 L487.6,186.1 L490.2,186.0 L492.9,185.9 L495.5,185.9 L498.1,185.8 L500.8,185.8 L503.4,185.7 L506.0,185.6" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><text x="401.0" y="78.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-rose,#fb7185)" text-anchor="end" font-weight="700">O(T²)</text><text x="446.9" y="185.8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="end" font-weight="700">O(T)</text><text x="296.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">context length, thousands of tokens →</text><text x="86.0" y="44.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">relative cost, log scale</text><rect x="546.0" y="82.0" width="228.0" height="156.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="564.0" y="108.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">the crossover</text><text x="564.0" y="130.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Below roughly 10k tokens</text><text x="564.0" y="144.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">quadratic attention is</text><text x="564.0" y="158.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">still competitive: it is</text><text x="564.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">dense, exact, and heavily</text><text x="564.0" y="186.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">optimised. Past that, the</text><text x="564.0" y="200.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">wall is real.</text><text x="564.0" y="222.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">linear attention trades exactness for scaling</text></svg><figcaption>Both curves rise, but only one rises quadratically. On a log axis the vertical gap at long context is the compute budget you are choosing to spend on attention.</figcaption></figure></p>
+<h3 id="embeddings-and-contrastive-training">Embeddings and contrastive training</h3>
+<p><strong>Intuition.</strong> Put things that answer the same question near each other in space, without ever telling the model what the question means.</p>
+<p><strong>Formal definition.</strong> A bi-encoder maps query and document independently, $\mathbf{e}_q = f(q)$, $\mathbf{e}_d = g(d)$, and scores them with $s(q,d) = \langle \mathbf{e}_q, \mathbf{e}_d\rangle/\tau$. Training uses in-batch negatives with InfoNCE over a batch $\mathcal{B}$:</p>
+<p>$$
+\mathcal{L} = -\frac{1}{|\mathcal{B}|}\sum_{i \in \mathcal{B}} \log \frac{\exp(s(q_i, d_i^{+}))}{\sum_{j \in \mathcal{B}} \exp(s(q_i, d_j))} .
+$$</p>
+<p><strong>Why it is built this way.</strong> The independence of the two encoders is what makes retrieval fast: documents are embedded once, offline, and queries at request time, so scoring is a matrix multiply rather than a forward pass per candidate. The price is that query and document never see each other, so fine-grained interactions are invisible — exactly what a cross-encoder later restores, at one forward pass per candidate.</p>
+<p><strong>Worked micro-example.</strong> A batch of 256 pairs gives each query 255 negatives for free. With $\tau = 0.05$, a positive at cosine 0.9 gives a logit of 18 and a negative at 0.3 gives 6 — a ratio of $e^{12}$, so the positive dominates and the gradient nearly vanishes. That is the easy-negative problem, and it is why hard-negative mining and larger batches both help.</p>
+<h3 id="retrieval-lexical-dense-hybrid-and-reranked">Retrieval: lexical, dense, hybrid, and reranked</h3>
+<p><strong>Intuition.</strong> Keyword search knows when a term is rare; vector search knows when two sentences mean the same thing without sharing a word. Neither is a superset of the other.</p>
+<p><strong>Formal definition.</strong> BM25 multiplies three factors per query term:</p>
+<p>$$
+\text{score}(q,d) = \sum_{t \in q} \operatorname{idf}(t) \cdot \frac{f_{t,d}\,(k_1+1)}{f_{t,d} + k_1(1 - b + b\,\frac{|d|}{\mathrm{avgdl}})} .
+$$</p>
+<p>The $\operatorname{idf}$ term rewards rarity; the fraction saturates toward $k_1 + 1$ as $f_{t,d}$ grows, so a term appearing fifty times is not fifty times more relevant; and $b$ interpolates between no length normalisation ($b=0$) and full normalisation by relative length ($b=1$). <strong>HNSW</strong> builds a hierarchy of proximity graphs and descends greedily from a sparse top layer, with <code>M</code> controlling graph degree and <code>ef</code> the breadth of the search — larger <code>ef</code> is monotonically more recall and more latency. <strong>IVF-PQ</strong> clusters vectors into <code>nlist</code> cells, probes only <code>nprobe</code>, and compresses each vector into $m$ subspace codes: a 768-dimensional float32 vector is 3072 bytes, and at $m=96$ 8-bit codes it is 96 bytes, a 32-fold reduction that costs recall.</p>
+<p><strong>Why it is built this way.</strong> Lexical and dense retrieval fail in different places, which is the entire argument for hybrid search: BM25 fails on paraphrase (no shared terms), dense retrieval fails on rare identifiers, exact codes, and numbers (the embedding compresses them away). <strong>Reranking</strong> then spends a cross-encoder on the top 50 to 100 candidates, where full attention over (query, passage) is affordable and far more accurate.</p>
+<p><strong>Worked micro-example.</strong> In the implementation later, a query with no lexical overlap puts BM25's gold document at rank 6 of 6 — a total miss. Reciprocal rank fusion with a second ranking pulls it to rank 3, restoring recall@3 from 0 to 1 without beating the strong list on MRR. Fusion buys robustness, not accuracy; weighting the better retriever higher improves MRR from 0.33 to 0.50.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 300" width="100%" role="img" aria-label="The retrieval-augmented generation pipeline" class="fig-svg"><defs><marker id="rag-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="24.0" y="60.0" width="128.0" height="96.0" rx="10" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.6"/><text x="88.0" y="86.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="700">chunk</text><text x="88.0" y="108.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">split documents</text><text x="88.0" y="124.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">by structure</text><line x1="152.0" y1="108.0" x2="168.0" y2="108.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#rag-ah)"/><rect x="170.0" y="60.0" width="128.0" height="96.0" rx="10" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.6"/><text x="234.0" y="86.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">embed</text><text x="234.0" y="108.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">bi-encoder to</text><text x="234.0" y="124.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">vectors</text><line x1="298.0" y1="108.0" x2="314.0" y2="108.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#rag-ah)"/><rect x="316.0" y="60.0" width="128.0" height="96.0" rx="10" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.6"/><text x="380.0" y="86.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="700">index</text><text x="380.0" y="108.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">HNSW / IVF</text><text x="380.0" y="124.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">for approximate search</text><line x1="444.0" y1="108.0" x2="460.0" y2="108.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#rag-ah)"/><rect x="462.0" y="60.0" width="128.0" height="96.0" rx="10" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6"/><text x="526.0" y="86.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="700">retrieve</text><text x="526.0" y="108.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">top-k by</text><text x="526.0" y="124.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">similarity</text><line x1="590.0" y1="108.0" x2="606.0" y2="108.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#rag-ah)"/><rect x="608.0" y="60.0" width="128.0" height="96.0" rx="10" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.6"/><text x="672.0" y="86.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="700">rerank</text><text x="672.0" y="108.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">cross-encoder</text><text x="672.0" y="124.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">rescores k</text><line x1="736.0" y1="108.0" x2="752.0" y2="108.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#rag-ah)"/><rect x="754.0" y="60.0" width="128.0" height="96.0" rx="10" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.6"/><text x="818.0" y="86.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="700">generate</text><text x="818.0" y="108.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">prompt +</text><text x="818.0" y="124.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">context</text><text x="440.0" y="186.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">errors compound: a retrieval miss cannot be repaired by a better generator</text><text x="440.0" y="208.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">so evaluate retrieval and generation separately, with different metrics</text><rect x="24.0" y="228.0" width="828.0" height="52.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="42.0" y="250.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.2" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">the common failure is not a weak model — it is right retrieval with wrong synthesis, or over-retrieval</text><text x="42.0" y="268.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.2" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">which is why context engineering matters more than prompt wording</text></svg><figcaption>Follow the arrows through chunk, embed, index, retrieve, rerank, generate. Only the last two boxes touch the model — everything before them is where RAG actually fails.</figcaption></figure></p>
+<h3 id="chunking-and-the-ways-rag-fails">Chunking, and the ways RAG fails</h3>
+<p><strong>Intuition.</strong> A chunk is the unit of retrieval, so a badly cut chunk makes the right document unfindable even though it is sitting in the index.</p>
+<p><strong>Formal definition.</strong> A chunking strategy is a partition of each document into spans plus metadata. <strong>Mean-pooled embedding dilution</strong> is the governing arithmetic: if a 500-token chunk contains 20 tokens that answer the query, the answer contributes about 4 percent of the pooled vector and cosine similarity is dominated by the other 96 percent.</p>
+<p><strong>Why it is built this way.</strong> Splitting is unavoidable because embeddings degrade on long spans and context is expensive, but every split can cut a table from its header, a pronoun from its antecedent, or a definition from its use. The standard fixes are structural: split on document structure rather than character count, carry parent-section metadata so a retrieved chunk can be expanded, overlap by a sentence, and store the heading path with every chunk so the embedder sees what the passage is about.</p>
+<p><strong>Worked micro-example.</strong> The four failure modes, with the diagnostic that separates them:</p>
+<table>
+<thead>
+<tr>
+<th>Failure</th>
+<th>Symptom</th>
+<th>Measurement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Wrong retrieval</td>
+<td>gold passage never in the top $k$</td>
+<td>recall@$k$ against gold passages</td>
+</tr>
+<tr>
+<td>Right retrieval, wrong synthesis</td>
+<td>gold in context, answer still wrong</td>
+<td>conditional accuracy given gold retrieved</td>
+</tr>
+<tr>
+<td>Over-retrieval</td>
+<td>many chunks, answer drifts or ignores them</td>
+<td>accuracy vs $k$, usually peaking around 3–10</td>
+</tr>
+<tr>
+<td>Not in the corpus</td>
+<td>model answers anyway</td>
+<td>abstention rate on unanswerable queries</td>
+</tr>
+</tbody>
+</table>
+<p>The single most useful diagnostic is the <strong>oracle test</strong>: insert the gold passage by hand and re-run. If accuracy jumps, you have a retrieval problem and no prompt engineering will fix it. Teams that skip this step spend weeks tuning a generator whose input never contained the answer.</p>
+<h3 id="tools-and-the-agent-loop">Tools and the agent loop</h3>
+<p><strong>Intuition.</strong> A tool call turns a language model from a text generator into something that can act — and every action is a new way to be wrong.</p>
+<p><strong>Formal definition.</strong> A tool is a name, a description, and a JSON schema for arguments; the model emits a call as structured text, the harness validates it, executes it, and returns the result as a new message. The <strong>agent loop</strong> is: observe the task, choose an action (tool call or final answer), execute, append the observation, repeat until a termination condition. ReAct interleaves reasoning with actions; plan-and-execute separates a planning pass from execution; reflection adds a critique step feeding the next attempt.</p>
+<p><strong>Why it is built this way.</strong> The loop exists because a single forward pass cannot observe the world. Its cost is that errors become state: a wrong argument produces a wrong observation, which conditions the next step, which compounds. The termination condition is the hardest part and the commonest source of runaway cost — a loop needs a step budget, a no-progress detector, and an escalation path, not just a <code>while True</code>.</p>
+<p><strong>Worked micro-example.</strong> With per-step success probability $p$ over $n$ steps, end-to-end success is $p^n$:</p>
+<table>
+<thead>
+<tr>
+<th>$p$</th>
+<th>$n = 5$</th>
+<th>$n = 10$</th>
+<th>$n = 20$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.99</td>
+<td>0.951</td>
+<td>0.904</td>
+<td>0.818</td>
+</tr>
+<tr>
+<td>0.95</td>
+<td>0.774</td>
+<td>0.599</td>
+<td>0.358</td>
+</tr>
+<tr>
+<td>0.90</td>
+<td>0.590</td>
+<td>0.349</td>
+<td>0.122</td>
+</tr>
+</tbody>
+</table>
+<p>A loop that is 95% reliable per step has a 36% chance of finishing twenty steps. That is why the design goal is fewer, larger, more reliable steps, and why a 20-step agent is a different engineering problem from a 5-step one.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="The agent loop, and where it breaks" class="fig-svg"><defs><marker id="agent-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><circle cx="220.0" cy="170.0" r="74.0" fill="none" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.4" stroke-dasharray="5 5"/><circle cx="220.0" cy="170.0" r="34.0" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.8"/><text x="220.0" y="176.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="13" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">LLM</text><rect x="164.0" y="54.0" width="112.0" height="32.0" rx="16" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.4"/><text x="220.0" y="75.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="650">observe</text><rect x="284.0" y="154.0" width="112.0" height="32.0" rx="16" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.4"/><text x="340.0" y="175.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="650">plan</text><rect x="164.0" y="256.0" width="112.0" height="32.0" rx="16" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4"/><text x="220.0" y="277.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">act / call tool</text><rect x="44.0" y="154.0" width="112.0" height="32.0" rx="16" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.4"/><text x="100.0" y="175.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">observe result</text><line x1="220.0" y1="86.0" x2="220.0" y2="134.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.3" stroke-linecap="round" marker-end="url(#agent-ah)"/><line x1="308.0" y1="170.0" x2="284.0" y2="170.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.3" stroke-linecap="round" marker-end="url(#agent-ah)"/><line x1="220.0" y1="204.0" x2="220.0" y2="238.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.3" stroke-linecap="round" marker-end="url(#agent-ah)"/><line x1="164.0" y1="170.0" x2="136.0" y2="170.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.3" stroke-linecap="round" marker-end="url(#agent-ah)"/><rect x="500.0" y="54.0" width="320.0" height="130.0" rx="10" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.2"/><text x="518.0" y="78.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="650">where agents actually fail</text><text x="518.0" y="102.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">· compounding error over steps</text><text x="518.0" y="122.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">· loops that look like progress</text><text x="518.0" y="142.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">· hallucinated tool arguments</text><text x="518.0" y="162.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">· context exhaustion mid-task</text><rect x="500.0" y="200.0" width="320.0" height="96.0" rx="10" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="518.0" y="224.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">if each step is 95% reliable,</text><text x="518.0" y="246.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">20 steps succeed 0.95²⁰ ≈ 36% of the time.</text><text x="518.0" y="272.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">reliability per step is the whole game.</text><text x="220.0" y="312.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">the loop, not the model, is usually the thing to fix</text></svg><figcaption>Trace one full cycle and note where state accumulates: every observation is appended to the context, so the prompt grows monotonically and cost per step rises with the step index.</figcaption></figure></p>
+<h3 id="context-engineering-memory-and-multi-agent-costs">Context engineering, memory, and multi-agent costs</h3>
+<p><strong>Intuition.</strong> Context engineering is deciding what the model sees <em>now</em>, not what it might need later. Memory is deciding what to keep at all.</p>
+<p><strong>Formal definition.</strong> Three tiers: <strong>parametric</strong> memory in the weights (fixed at training), the <strong>working context</strong> (the current window, edited every step), and <strong>external memory</strong> (a store the model queries, which is retrieval again). Context engineering is the policies over the working tier: what to include, in what order, at what fidelity, and what to summarise or drop when the budget is exceeded.</p>
+<p><strong>Why it is built this way.</strong> Every token in the window competes with every other for attention and budget, so ordering is a design decision: instructions early, the question late, retrieved evidence in the middle only if you must, and truncate tool output at the tool rather than at the prompt. Summarisation and compaction keep a long-running agent inside its budget at the cost of exact detail — which is why summarised state must preserve identifiers verbatim.</p>
+<p><strong>Worked micro-example.</strong> A three-agent pipeline where each agent receives an 8k-token shared context and they exchange results four times costs $3 \times 8\text{k} \times 4 = 96$k input tokens, against roughly 24k for one agent doing the same work — a 4× multiplier before any quality gain, plus 4× the latency and a much harder debugging surface. Orchestration pays when subtasks are genuinely parallel or need genuinely different tools and permissions; it loses whenever the work is sequential, because the coordination tokens are pure overhead.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="Where the money goes" class="fig-svg"><defs><marker id="cost-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="80.0" y1="276.0" x2="480.0" y2="276.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="280.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1×</text><line x1="80.0" y1="207.2" x2="480.0" y2="207.2" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="211.2" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10×</text><line x1="80.0" y1="138.5" x2="480.0" y2="138.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="142.5" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">100×</text><line x1="80.0" y1="69.8" x2="480.0" y2="69.8" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="73.8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1000×</text><line x1="80.0" y1="276.0" x2="480.0" y2="276.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M80.0,276.0 L82.5,276.0 L85.0,275.9 L87.5,275.6 L90.0,275.3 L92.5,274.9 L95.0,274.4 L97.5,273.8 L100.0,273.1 L102.5,272.2 L105.0,271.3 L107.5,270.3 L110.0,269.3 L112.5,268.1 L115.0,266.9 L117.5,265.7 L120.0,264.4 L122.5,263.0 L125.0,261.6 L127.5,260.2 L130.0,258.8 L132.5,257.3 L135.0,255.9 L137.5,254.4 L140.0,253.0 L142.5,251.5 L145.0,250.0 L147.5,248.5 L150.0,247.1 L152.5,245.6 L155.0,244.2 L157.5,242.8 L160.0,241.3 L162.5,239.9 L165.0,238.6 L167.5,237.2 L170.0,235.8 L172.5,234.5 L175.0,233.2 L177.5,231.9 L180.0,230.6 L182.5,229.3 L185.0,228.0 L187.5,226.8 L190.0,225.6 L192.5,224.3 L195.0,223.2 L197.5,222.0 L200.0,220.8 L202.5,219.7 L205.0,218.5 L207.5,217.4 L210.0,216.3 L212.5,215.2 L215.0,214.2 L217.5,213.1 L220.0,212.1 L222.5,211.0 L225.0,210.0 L227.5,209.0 L230.0,208.0 L232.5,207.1 L235.0,206.1 L237.5,205.2 L240.0,204.2 L242.5,203.3 L245.0,202.4 L247.5,201.5 L250.0,200.6 L252.5,199.7 L255.0,198.8 L257.5,198.0 L260.0,197.1 L262.5,196.3 L265.0,195.4 L267.5,194.6 L270.0,193.8 L272.5,193.0 L275.0,192.2 L277.5,191.4 L280.0,190.6 L282.5,189.9 L285.0,189.1 L287.5,188.3 L290.0,187.6 L292.5,186.9 L295.0,186.1 L297.5,185.4 L300.0,184.7 L302.5,184.0 L305.0,183.3 L307.5,182.6 L310.0,181.9 L312.5,181.2 L315.0,180.5 L317.5,179.9 L320.0,179.2 L322.5,178.6 L325.0,177.9 L327.5,177.3 L330.0,176.6 L332.5,176.0 L335.0,175.4 L337.5,174.8 L340.0,174.1 L342.5,173.5 L345.0,172.9 L347.5,172.3 L350.0,171.7 L352.5,171.2 L355.0,170.6 L357.5,170.0 L360.0,169.4 L362.5,168.9 L365.0,168.3 L367.5,167.7 L370.0,167.2 L372.5,166.6 L375.0,166.1 L377.5,165.6 L380.0,165.0 L382.5,164.5 L385.0,164.0 L387.5,163.4 L390.0,162.9 L392.5,162.4 L395.0,161.9 L397.5,161.4 L400.0,160.9 L402.5,160.4 L405.0,159.9 L407.5,159.4 L410.0,158.9 L412.5,158.4 L415.0,157.9 L417.5,157.4 L420.0,157.0 L422.5,156.5 L425.0,156.0 L427.5,155.6 L430.0,155.1 L432.5,154.6 L435.0,154.2 L437.5,153.7 L440.0,153.3 L442.5,152.8 L445.0,152.4 L447.5,151.9 L450.0,151.5 L452.5,151.1 L455.0,150.6 L457.5,150.2 L460.0,149.8 L462.5,149.4 L465.0,148.9 L467.5,148.5 L470.0,148.1 L472.5,147.7 L475.0,147.3 L477.5,146.9 L480.0,146.5" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M80.0,276.0 L82.5,275.5 L85.0,275.1 L87.5,274.6 L90.0,274.2 L92.5,273.8 L95.0,273.3 L97.5,272.9 L100.0,272.5 L102.5,272.1 L105.0,271.7 L107.5,271.3 L110.0,270.9 L112.5,270.5 L115.0,270.1 L117.5,269.7 L120.0,269.3 L122.5,269.0 L125.0,268.6 L127.5,268.2 L130.0,267.9 L132.5,267.5 L135.0,267.2 L137.5,266.8 L140.0,266.5 L142.5,266.2 L145.0,265.8 L147.5,265.5 L150.0,265.2 L152.5,264.8 L155.0,264.5 L157.5,264.2 L160.0,263.9 L162.5,263.6 L165.0,263.3 L167.5,263.0 L170.0,262.7 L172.5,262.4 L175.0,262.1 L177.5,261.8 L180.0,261.5 L182.5,261.2 L185.0,260.9 L187.5,260.7 L190.0,260.4 L192.5,260.1 L195.0,259.8 L197.5,259.6 L200.0,259.3 L202.5,259.0 L205.0,258.8 L207.5,258.5 L210.0,258.2 L212.5,258.0 L215.0,257.7 L217.5,257.5 L220.0,257.2 L222.5,257.0 L225.0,256.7 L227.5,256.5 L230.0,256.3 L232.5,256.0 L235.0,255.8 L237.5,255.5 L240.0,255.3 L242.5,255.1 L245.0,254.8 L247.5,254.6 L250.0,254.4 L252.5,254.2 L255.0,253.9 L257.5,253.7 L260.0,253.5 L262.5,253.3 L265.0,253.1 L267.5,252.8 L270.0,252.6 L272.5,252.4 L275.0,252.2 L277.5,252.0 L280.0,251.8 L282.5,251.6 L285.0,251.4 L287.5,251.2 L290.0,251.0 L292.5,250.8 L295.0,250.6 L297.5,250.4 L300.0,250.2 L302.5,250.0 L305.0,249.8 L307.5,249.6 L310.0,249.4 L312.5,249.2 L315.0,249.0 L317.5,248.8 L320.0,248.6 L322.5,248.5 L325.0,248.3 L327.5,248.1 L330.0,247.9 L332.5,247.7 L335.0,247.5 L337.5,247.4 L340.0,247.2 L342.5,247.0 L345.0,246.8 L347.5,246.7 L350.0,246.5 L352.5,246.3 L355.0,246.1 L357.5,246.0 L360.0,245.8 L362.5,245.6 L365.0,245.5 L367.5,245.3 L370.0,245.1 L372.5,245.0 L375.0,244.8 L377.5,244.6 L380.0,244.5 L382.5,244.3 L385.0,244.1 L387.5,244.0 L390.0,243.8 L392.5,243.7 L395.0,243.5 L397.5,243.4 L400.0,243.2 L402.5,243.0 L405.0,242.9 L407.5,242.7 L410.0,242.6 L412.5,242.4 L415.0,242.3 L417.5,242.1 L420.0,242.0 L422.5,241.8 L425.0,241.7 L427.5,241.5 L430.0,241.4 L432.5,241.2 L435.0,241.1 L437.5,241.0 L440.0,240.8 L442.5,240.7 L445.0,240.5 L447.5,240.4 L450.0,240.2 L452.5,240.1 L455.0,240.0 L457.5,239.8 L460.0,239.7 L462.5,239.5 L465.0,239.4 L467.5,239.3 L470.0,239.1 L472.5,239.0 L475.0,238.9 L477.5,238.7 L480.0,238.6" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><text x="400.0" y="111.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="end" font-weight="400">training</text><text x="400.0" y="227.9" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="end" font-weight="400">inference</text><text x="280.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">relative spend →</text><rect x="520.0" y="76.0" width="280.0" height="180.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="538.0" y="100.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">cost per token</text><text x="538.0" y="124.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">≈ 2 · N · P FLOPs</text><text x="538.0" y="146.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">≈ 2 · P FLOPs / token</text><text x="538.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Training is a one-off; serving</text><text x="538.0" y="185.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">is per token, forever. A model</text><text x="538.0" y="198.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">that is 30% better but 3× more</text><text x="538.0" y="211.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">expensive may simply lose.</text><text x="538.0" y="240.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">this is why small models keep winning</text></svg><figcaption>Read the cost as a function of tokens and hops, not of model size. Multi-agent systems move along the token axis fast, and the extra hops multiply the whole expression.</figcaption></figure></p>
+<h3 id="agent-failure-modes">Agent failure modes</h3>
+<p><strong>Intuition.</strong> Agents fail differently from models: the model can be right and the system still wrong, because the wrong thing was fed back in.</p>
+<p><strong>Formal definition.</strong> The recurring taxonomy: <strong>hallucinated tool calls</strong> (a tool that does not exist, or arguments violating the schema); <strong>argument grounding errors</strong> (right tool, wrong value, usually a mis-transcribed identifier); <strong>loops</strong> (repeating an action because progress is not detected); <strong>premature termination</strong> (declaring success without verification); <strong>cascading errors</strong> (one bad observation corrupting later steps); and <strong>injection through observations</strong> (attacker-controlled tool output redefining the task).</p>
+<p><strong>Why it is built this way.</strong> Each corresponds to a missing check, and each check is cheap relative to the failure. Schema validation and a tool allowlist stop hallucinated calls; echoing identifiers back through a deterministic path stops grounding errors; hashing observations to detect repetition stops loops; an independent verifier stops premature termination; privilege separation bounds injection.</p>
+<p><strong>Worked micro-example.</strong> Measure four numbers, not one: task success rate, steps to success, cost per task, and tool-call validity rate. A change that raises success from 71% to 78% while doubling mean steps from 6 to 12 and tripling cost is usually a regression in disguise, and only the four-number report makes that visible.</p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<p>A retrieval-augmented request, end to end.</p>
+<ol>
+<li><strong>Rewrite the query</strong> into a standalone search string, resolving pronouns against conversation history.</li>
+<li><strong>Retrieve</strong> $k_{\text{first}} = 50$ candidates by BM25 and dense search in parallel, each from its own index.</li>
+<li><strong>Fuse</strong> the two rankings with $\text{score}_i = \sum_j w_j/(60 + \text{rank}_{j,i})$.</li>
+<li><strong>Rerank</strong> the top 50 with a cross-encoder and keep $k_{\text{final}} = 5$.</li>
+<li><strong>Assemble the context</strong>: system instructions, then evidence with source ids, then the question last.</li>
+<li><strong>Generate</strong> with a citation requirement, so an uncited claim is visibly unsupported.</li>
+<li><strong>Verify</strong> that every cited source id exists in the assembled context; fail loudly if not.</li>
+<li><strong>Log</strong> the retrieved ids, their ranks, and the answer, so a later failure can be attributed.</li>
+</ol>
+<p>```text
+candidates = bm25(q, k=50) + dense(q, k=50)          # two independent retrievers
+fused      = rrf([rank(bm25_scores), rank(dense_scores)], weights=[1, 2])
+evidence   = cross_encoder_rerank(q, fused[:50])[:5]
+ctx        = system + format(evidence) + question
+answer     = llm(ctx, require_citations=True)
+assert all(c in evidence_ids for c in answer.citations)   # fail loudly
+log(q, evidence_ids, answer, cost)
+```</p>
+<p><strong>Complexity.</strong> Retrieval is $O(k)$ graph or list probes plus $O(50 \cdot T_{\text{chunk}} \cdot d)$ for the reranker; generation is $O(T_{\text{ctx}}^2 d)$ per layer for prefill. The economically important term is the last one, which is why $k_{\text{final}}$ is usually 3 to 10 and why reranking the whole index is never affordable.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="1-the-infonce-gradient">1. The InfoNCE gradient</h3>
+<p>Write $s_i = \langle \mathbf{e}_q, \mathbf{e}_{d_i}\rangle/\tau$ and $p_i = e^{s_i}/\sum_j e^{s_j}$, the softmax over the batch. With the positive at index $+$,</p>
+<p>$$
+\mathcal{L} = -\log p_{+} = -s_{+} + \log \sum_j e^{s_j} .
+$$</p>
+<p>Differentiating with respect to a score $s_i$,</p>
+<p>$$
+\begin{aligned}
+\frac{\partial \mathcal{L}}{\partial s_i} &= -\delta_{i,+} + \frac{e^{s_i}}{\sum_j e^{s_j}} = p_i - \delta_{i,+}, \\[2pt]
+\frac{\partial \mathcal{L}}{\partial s_{+}} &= -(1 - p_{+}), \text{ and } \frac{\partial \mathcal{L}}{\partial s_j} = p_j \text{ for } j \ne +.
+\end{aligned}
+$$</p>
+<p>Three facts follow. The pull on the positive is weighted by $(1 - p_{+})$: once the positive dominates, its gradient vanishes and further training does nothing. Every negative is pushed down with weight equal to its own probability, so the <em>hardest</em> negatives dominate — which is why mined hard negatives help and a batch of easy negatives trains slowly. And because the gradient depends only on $p$, the scale of the similarity is irrelevant except through the temperature, which sets the scale of $s$. The objective is also a bound: $\mathcal{L} \ge \log|\mathcal{B}| - I(q;d)$, so minimising it maximises a lower bound on the mutual information between query and document, up to $\log|\mathcal{B}|$ — the formal reason larger batches help.</p>
+<h3 id="2-where-bm25s-saturation-and-length-terms-come-from">2. Where BM25's saturation and length terms come from</h3>
+<p>Treat retrieval as binary classification of documents into relevant $R$ and non-relevant $\bar{R}$, and ask which class a document is more likely under:</p>
+<p>$$
+\log \frac{P(d \mid R)}{P(d \mid \bar{R})} = \sum_{t} \log \frac{P(t \text{ occurs in } d \mid R)}{P(t \text{ occurs in } d \mid \bar{R})} ,
+$$</p>
+<p>which sums per-term evidence — the origin of the sum over query terms. Under a two-Poisson model of term occurrence the per-term ratio grows with frequency and then flattens: a document mentioning "cache" forty times is not forty times more about caching than one mentioning it twice. The standard parameterisation of that flattening is</p>
+<p>$$
+\frac{f_{t,d}\,(k_1+1)}{f_{t,d} + k_1(1-b+b\frac{|d|}{\mathrm{avgdl}})} ,
+$$</p>
+<p>whose limit as $f_{t,d}$ grows is $k_1 + 1$, and whose value at $f_{t,d} = 1$ for an average-length document is $(k_1+1)/(1+k_1) = 1$. So $k_1$ controls how fast the contribution saturates — small $k_1$ saturates almost immediately, large $k_1$ approaches linear counting — and $b$ controls how much long documents are penalised, from none at $b=0$ to fully proportional at $b=1$.</p>
+<h3 id="3-compounding-reliability-in-a-multi-step-agent">3. Compounding reliability in a multi-step agent</h3>
+<p>Model each step as an independent Bernoulli success with probability $p$. The loop succeeds only if all $n$ steps succeed:</p>
+<p>$$
+P(\text{success}) = p^n, \text{ and } \mathbb{E}[\text{steps until first failure}] = \frac{1}{1-p} .
+$$</p>
+<p>The second expression is why agents drift into loops: at $p = 0.95$ a failure arrives on average every 20 steps, and an agent without a progress check cannot distinguish "I have not succeeded yet" from "I am succeeding slowly". Taking logs, $\log P = n\log p \approx -n(1-p)$ for $p$ near 1, so failure probability grows roughly linearly in $n(1-p)$: to keep end-to-end success above 0.9 over 20 steps you need $p > 0.9^{1/20} = 0.9947$. That is the quantitative case for making each step more reliable <em>or</em> the loop shorter, and why verification steps that look redundant are worth their cost.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>BM25, reciprocal rank fusion, and the retrieval metrics, with no dependencies. The point of interest is the last block: BM25 misses a paraphrase completely, and fusion rescues it into the top three without beating the strong list.</p>
+<p>```python
+import math, re
+from collections import Counter
+
+def tok(s):
+    return re.findall(r"[a-z0-9]+", s.lower())
+
+class BM25:
+    """Lexical scoring: tf saturation through k1, length normalisation through b."""
+    def __init__(self, docs, k1=1.5, b=0.75):
+        self.D = [tok(d) for d in docs]
+        self.k1, self.b = k1, b
+        self.avgdl = sum(len(d) for d in self.D) / len(self.D)
+        self.df = Counter(w for d in self.D for w in set(d))
+        self.N = len(self.D)
+
+    def idf(self, w):
+        n = self.df.get(w, 0)
+        return math.log(1 + (self.N - n + 0.5) / (n + 0.5))      # smoothed: always > 0
+
+    def scores(self, q):
+        out = []
+        for d in self.D:
+            tf = Counter(d)
+            s = 0.0
+            for w in tok(q):
+                f = tf.get(w, 0)
+                if f:
+                    s += self.idf(w) * f * (self.k1 + 1) / (
+                        f + self.k1 * (1 - self.b + self.b * len(d) / self.avgdl))
+            out.append(s)
+        return out
+
+def rrf(rankings, weights=None, k=60):
+    """Reciprocal rank fusion: score_i = sum over lists of w_j / (k + rank_i)."""
+    weights = weights or [1.0] * len(rankings)
+    fused = Counter()
+    for w, ranking in zip(weights, rankings):
+        for rank, i in enumerate(ranking, start=1):
+            fused[i] += w / (k + rank)
+    return [i for i, _ in fused.most_common()]
+
+def mrr(ranking, gold):
+    return 1.0 / (1 + ranking.index(gold))
+
+def recall_at_k(ranking, gold, k):
+    return float(ranking.index(gold) < k)
+
+docs = [
+    "hybrid search fuses lexical and dense retrieval with reciprocal rank fusion",
+    "paged attention allocates KV cache in fixed size blocks and releases them",
+    "an agent loop calls tools and observes results until the task completes",
+    "quantization reduces the number of bytes stored per weight",
+    "continuous batching admits new requests into a running batch",
+    "BM25 ranks documents by term frequency and inverse document frequency",
+]
+q, gold = "which scoring function should I use for keyword search", 5
+lexical = sorted(range(len(docs)), key=lambda i: -BM25(docs).scores(q)[i])
+# In production this list comes from a bi-encoder; supplied here so the fusion
+# arithmetic is visible without embedding a model.
+semantic = [5, 0, 1, 2, 3, 4]
+lists = {"lexical": lexical, "semantic": semantic,
+         "rrf(equal)": rrf([lexical, semantic]),
+         "rrf(1:3)": rrf([lexical, semantic], weights=[1.0, 3.0])}
+for name, r in lists.items():
+    print(f"{name:11s} gold_rank={r.index(gold)+1}  MRR={mrr(r, gold):.3f}"
+          f"  recall@3={recall_at_k(r, gold, 3):.0f}")
+```</p>
+<p><strong>What to expect.</strong></p>
+<p>```text
+lexical     gold_rank=6  MRR=0.167  recall@3=0
+semantic    gold_rank=1  MRR=1.000  recall@3=1
+rrf(equal)  gold_rank=3  MRR=0.333  recall@3=1
+rrf(1:3)    gold_rank=2  MRR=0.500  recall@3=1
+```</p>
+<p>The query shares no terms with the gold document, so BM25 ranks it last of six: a complete miss, and a very common one. Fusion does not recover the rank-1 answer, because unweighted RRF treats both lists as equally trustworthy; it does restore recall@3 from 0 to 1, which is what matters when a reranker follows. Weighting the better retriever 3:1 improves MRR to 0.50 without changing recall. That is the honest case for hybrid search: a robustness measure against one retriever failing, not a way to beat your best retriever.</p>
+<h2 id="worked-example">Worked example</h2>
+<p>Diagnosing a RAG system that answers 62% of questions correctly on a 300-question evaluation set.</p>
+<table>
+<thead>
+<tr>
+<th>Measurement</th>
+<th>Value</th>
+<th>Reading</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>End-to-end accuracy</td>
+<td>0.62</td>
+<td>the headline</td>
+</tr>
+<tr>
+<td>recall@5 of the retriever</td>
+<td>0.71</td>
+<td>the ceiling if generation were perfect</td>
+</tr>
+<tr>
+<td>Accuracy given gold in context</td>
+<td>0.94</td>
+<td>generation is not the problem</td>
+</tr>
+<tr>
+<td>Accuracy with gold inserted by hand</td>
+<td>0.95</td>
+<td>confirms the 0.71 ceiling</td>
+</tr>
+<tr>
+<td>Accuracy with $k=1$</td>
+<td>0.58</td>
+<td>over-retrieval is mild</td>
+</tr>
+<tr>
+<td>Accuracy with $k=20$</td>
+<td>0.60</td>
+<td>adding distractors costs 2 points</td>
+</tr>
+<tr>
+<td>Abstention on unanswerable items</td>
+<td>0.12</td>
+<td>the model answers when it should not</td>
+</tr>
+</tbody>
+</table>
+<p>The arithmetic makes the decision for you. With recall@5 at 0.71 and conditional accuracy at 0.94, the attainable end-to-end score is $0.71 \times 0.94 = 0.667$, and the measured 0.62 is only 4.7 points below it. Moving generation accuracy from 0.94 to 0.97 would gain at most $0.71 \times 0.03 = 2$ points; moving recall@5 from 0.71 to 0.85 would gain $0.14 \times 0.94 = 13$ points. Any effort spent on the prompt is misallocated by a factor of six.</p>
+<p>The abstention number is the second finding: 12% is not a capability, it is an accident, and a system that answers unanswerable questions is more dangerous than one that answers fewer questions correctly, because the failure is silent.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="rag-solves-hallucination">"RAG solves hallucination"</h3>
+<p>Retrieval changes the <em>input distribution</em>; it does not change the generation process. A model given five passages still produces fluent unsupported text when the passages do not contain the answer, and it does so more confidently because the context looks authoritative. What reduces hallucination is measurement — ablation on <em>is the answer in the context</em> — plus an abstention policy and citation verification.</p>
+<h3 id="bigger-chunks-are-better-because-they-carry-more-context">"Bigger chunks are better because they carry more context"</h3>
+<p>Larger chunks dilute the embedding: a 2000-token chunk where 30 tokens matter gives the answer about 1.5% of the pooled vector. They also spend more budget per retrieval. The usual resolution is small chunks for retrieval with parent-document expansion for generation — retrieve on the precise span, hand the model its enclosing section.</p>
+<h3 id="a-better-embedding-model-will-fix-our-retrieval">"A better embedding model will fix our retrieval"</h3>
+<p>Sometimes. But recall@$k$ failures are just as often chunking artefacts (the answer split across a boundary), metadata failures (the chunk does not say what section it came from), or query failures (a pronoun with no antecedent). Swap the embedder last, after measuring which of these it is; swapping it first is the most common expensive non-fix in the field.</p>
+<h3 id="multi-agent-systems-are-more-capable-than-single-agents">"Multi-agent systems are more capable than single agents"</h3>
+<p>They are more <em>parallel</em> and more <em>isolated</em>, which helps when subtasks are independent or need different permissions. For sequential reasoning they are strictly worse: each handoff re-sends context, so cost multiplies, and each hop is another place for an error to enter and be amplified. The published wins are mostly on already-decomposable tasks, and the coordination overhead is rarely reported.</p>
+<h3 id="if-the-agent-loop-works-on-my-ten-test-cases-it-will-work-in-production">"If the agent loop works on my ten test cases it will work in production"</h3>
+<p>Ten cases cannot distinguish $p = 0.95$ from $p = 0.99$, and those give end-to-end success of 0.36 and 0.82 over twenty steps. Agent reliability must be measured per step on a set large enough to estimate a rate, or you are shipping a system whose failure probability you have not measured.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>1.</strong> A 300-token chunk contains a 15-token sentence that answers the query. What fraction of a mean-pooled embedding comes from that sentence, and what does it imply for chunk size?</p>
+<details><summary>Solution</summary>
+
+$15/300 = 5$ percent. Similarity is dominated by the other 95 percent, so a chunk containing the answer and a chunk merely *about* the topic score similarly. Halving the chunk to 150 tokens doubles the signal share to 10 percent, which is why retrieval chunks are typically 200–500 tokens.
+
+</details>
+
+<p><strong>2.</strong> What is the KV-cache cost of a single 50k-token request with $L=32$, $n_{kv}=8$, $d_h=128$, bf16?</p>
+<details><summary>Solution</summary>
+
+$k = 2 \cdot 32 \cdot 8 \cdot 128 \cdot 2 = 131{,}072$ bytes $= 128$ KiB per token, so $50{,}000 \times 128\ \text{KiB} = 6.4$ GB for one request. That is why long-context serving is a memory problem and why concurrent long-context users are few.
+
+</details>
+
+<p><strong>3.</strong> In the BM25 formula, what happens to a term's contribution as its frequency grows, and why is that desirable?</p>
+<details><summary>Solution</summary>
+
+It saturates at $k_1 + 1$. Relevance is not linear in frequency: a document mentioning "cache" fifty times is not fifty times more about caching than one mentioning it five times. Without saturation, keyword-stuffed documents dominate the ranking.
+
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>4.</strong> Derive the InfoNCE gradient and explain what happens to the training signal when $p_{+} = 0.99$.</p>
+<details><summary>Solution</summary>
+
+$\mathcal{L} = -s_{+} + \log\sum_j e^{s_j}$, so $\partial\mathcal{L}/\partial s_i = p_i - \delta_{i,+}$, giving $-(1-p_{+})$ on the positive and $p_j$ on each negative. At $p_{+} = 0.99$ the positive's gradient is 0.01 and the total negative mass is 0.01 — the example contributes almost nothing. That is the easy-negative problem; fixes are larger batches, higher temperature, or mined hard negatives.
+
+</details>
+
+<p><strong>5.</strong> An agent has $p = 0.97$ per step. What is the largest $n$ keeping end-to-end success above 0.5, and above 0.8?</p>
+<details><summary>Solution</summary>
+
+$p^n > 0.5$ gives $n < \log 0.5/\log 0.97 = 22.8$, so $n \le 22$. For 0.8, $n < \log 0.8/\log 0.97 = 7.4$, so $n \le 7$. A 97% per-step rate sounds excellent and caps you at seven steps for an 80% target — the argument for making steps larger and fewer.
+
+</details>
+
+<p><strong>6.</strong> A 768-dimensional float32 index holds 10 million vectors. Give the raw size and the size with IVF-PQ at $m = 96$ subspaces and 8-bit codes.</p>
+<details><summary>Solution</summary>
+
+Raw: $10^7 \times 768 \times 4 = 30.7$ GB. PQ: $10^7 \times 96 \times 1 = 960$ MB, a 32-fold reduction. That is what makes a 10M-vector index fit on one machine, at the cost of approximate distances — which is why `nprobe` and recall must be measured, not assumed.
+
+</details>
+
+<p><strong>7.</strong> A system has recall@5 = 0.68 and conditional accuracy given correct retrieval = 0.90. What is the attainable end-to-end accuracy, and how much does fixing recall to 0.85 gain versus improving generation to 0.96?</p>
+<details><summary>Solution</summary>
+
+Attainable is $0.68 \times 0.90 = 0.612$. Recall to 0.85 gives $0.85 \times 0.90 = 0.765$, a gain of 15.3 points. Generation to 0.96 gives $0.68 \times 0.96 = 0.653$, a gain of 4.1 points. Retrieval is worth roughly four times as much here — the calculation teams skip.
+
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>8.</strong> Extend the implementation to sweep $k$ from 1 to 20 and plot recall@$k$ and MRR. Then add hard-negative mining: for each query, add the highest-scoring non-gold document to the negative set and re-measure.</p>
+<details><summary>Hint</summary>
+
+Recall@$k$ is monotone in $k$ by construction, so its usefulness is in showing where the curve flattens — that plateau is your retrievable ceiling. Hard negatives change the BM25 side only if you re-weight idf; the real experiment is on the dense side, where you should see the largest MRR gain from a handful of mined negatives, because InfoNCE's gradient is dominated by the negatives with the largest $p_j$.
+
+</details>
+
+<p><strong>9.</strong> Build an agent-loop reliability harness: simulate $n$-step loops with a per-step success probability drawn from a table of failure modes, and report how end-to-end success changes when you add a verification step that catches 70% of errors at the cost of one extra step.</p>
+<details><summary>Hint</summary>
+
+Model the loop as a Markov chain: each step succeeds with $p$, fails silently with $q(1-r)$, and fails detectably with $qr$, where $r$ is the verification's catch rate. A detectable failure triggers a retry, which costs a step but not the episode. Verification is worth its cost precisely when $p$ is already high; at low $p$, retries dominate and the extra step just adds latency.
+
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>Give the two cost terms that make stuffing context expensive and say which dominates at long context.</li>
+<li>Write the InfoNCE loss and state why hard negatives matter in terms of its gradient.</li>
+<li>Name BM25's three factors and what each controls.</li>
+<li>What does reciprocal rank fusion compute, and what is its main assumption?</li>
+<li>State the oracle test for a RAG failure and what each outcome implies.</li>
+<li>Why does a 20-step agent with 95% per-step reliability usually fail, in one number?</li>
+<li>Give two agent failure modes, each with its cheapest mitigation.</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. Attention compute per layer $O(T^2 d)$ and KV cache $O(T)$ per layer; at long context the cache binds concurrency and the quadratic prefill binds latency.
+2. $\mathcal{L} = -\log(e^{s_+}/\sum_j e^{s_j})$; the positive's gradient is $-(1-p_{+})$ and each negative's is $p_j$, so only negatives with substantial probability contribute — which is what mining arranges.
+3. $\operatorname{idf}$ for rarity, the saturation fraction for frequency (plateau $k_1+1$), and $b$ for length normalisation between none and full.
+4. $\sum_j w_j/(60 + \text{rank}_{j,i})$ over the lists being fused. It assumes the lists are comparably trustworthy and that low ranks carry the signal; it needs weights when one retriever is much stronger.
+5. Insert the gold passage by hand. If accuracy jumps sharply, retrieval binds; if it does not, generation binds and retrieval tuning will not help.
+6. $0.95^{20} = 0.358$ — a 36% chance of completing the task.
+7. Hallucinated tool calls: schema validation plus a tool allowlist. Loops: hash the observation to detect repetition, plus a step budget. (Also argument grounding via deterministic id propagation, and premature termination via an independent verifier.)
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><strong>Karpukhin et al., "Dense Passage Retrieval for Open-Domain Question Answering" (EMNLP 2020).</strong> The bi-encoder plus in-batch-negatives recipe most retrieval stacks still follow; read the ablation on batch size and negative sampling.</li>
+<li><strong>Oord, Li, and Vinyals, "Representation Learning with Contrastive Predictive Coding" (2018).</strong> Where InfoNCE is introduced and shown to bound mutual information; this module's derivation follows their Section 2.</li>
+<li><strong>Robertson and Zaragoza, "The Probabilistic Relevance Framework: BM25 and Beyond" (2009).</strong> The definitive account of where saturation and length normalisation come from; the historical derivation explains parameters that are otherwise arbitrary.</li>
+<li><strong>Malkov and Yashunin, "Efficient and Robust Approximate Nearest Neighbor Search Using Hierarchical Navigable Small World Graphs" (2018).</strong> Read for what <code>M</code> and <code>ef</code> control, then measure your own recall/latency curve.</li>
+<li><strong>Liu et al., "Lost in the Middle: How Language Models Use Long Contexts" (2023).</strong> The empirical basis for the claim that position within a long context matters a great deal; the effect is large and changes how you order a prompt.</li>
+<li><strong>Yao et al., "ReAct: Synergizing Reasoning and Acting in Language Models" (ICLR 2023).</strong> The canonical interleaved loop; read the failure examples, which are more instructive than the successes.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when you can, without notes:</p>
+<ul>
+<li>Compute the context and KV-cache cost of a retrieval configuration and say why $k$ is usually small.</li>
+<li>Derive the InfoNCE gradient and explain the easy-negative problem from it.</li>
+<li>Write BM25 from memory and explain what $k_1$ and $b$ do.</li>
+<li>Fuse two rankings with RRF and state when weighting is needed.</li>
+<li>Apply the oracle test to a RAG failure and name the fix the result implies.</li>
+<li>Compute $p^n$ for an agent loop and say what it implies about step count.</li>
+<li>List four agent failure modes and the cheapest mitigation for each.</li>
+</ul><div class="pager"><a id="prevlink" href="../m/21-interpretability-safety.html"><small>← previous</small><b>M21 · Interpretability and Safety</b></a><a id="nextlink" class="next" href="../m/23-multimodality.html"><small>next →</small><b>M23 · Multimodality</b></a></div></article>
+</main>
+</div>
+</body></html>

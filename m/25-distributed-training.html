@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M25 · Distributed Training — From Zero to Frontier</title>
+<meta name="description" content="Every parallelism scheme is a different answer to the same memory equation.">
+<meta property="og:title" content="M25 · Distributed Training — From Zero to Frontier">
+<meta property="og:description" content="Every parallelism scheme is a different answer to the same memory equation.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Systems and scale / M25</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M25">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M25</span><span class="pill d5">difficulty 5/5</span><span class="pill">2 weeks</span><span class="pill">prereqs: M24, M16</span><span class="pill">8,055 words</span></div><h1>Distributed Training</h1><p class="tagline">Every parallelism scheme is a different answer to the same memory equation.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>A 7B-parameter model needs 112 GB before it stores a single activation, and no accelerator has that much. Everything that follows — ZeRO, tensor parallelism, pipeline parallelism, activation recomputation — is one equation being rearranged. Learn the equation and the zoo of named techniques collapses into five terms, each with a known owner and a known price in bandwidth. Skip it and "FSDP with TP=8 and PP=4" is a configuration incantation; learn it and you can derive the plan for an unfamiliar cluster on paper, predict the step time, and know in advance which of the five terms will run out first. <strong>M24</strong> supplied the roofline that prices every one of these trades in bytes and FLOPs; this module spends it.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<p>If you miss two or more, revisit <strong>M24</strong> (first three) or <strong>M16</strong> (last two).</p>
+<ol>
+<li>On an H100, how many FLOPs can the tensor cores execute in the time HBM takes to deliver one byte?</li>
+<li>What is the arithmetic intensity of a $4096\times4096$ bf16 matmul, and is it compute or memory bound?</li>
+<li>Why does a ring all-reduce move $2(N-1)/N \cdot S$ bytes per rank rather than $S$?</li>
+<li>Why is training compute conventionally estimated as $6N$ FLOPs per token?</li>
+<li>If you double the batch size and halve the number of steps, what happens to the number of tokens processed?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $\pi/\beta = 989.4/3.35 \approx 295$ FLOP per byte. That single ratio governs every trade in this module.
+2. $I \approx 1365$ FLOP/byte, four times the ridge point, so compute bound — but only if it is tiled with an L2-resident super-tile.
+3. Because it is a reduce-scatter of $N-1$ chunks followed by an all-gather of $N-1$ chunks, each of size $S/N$: $2(N-1)\cdot S/N$.
+4. Forward is $2N$ per token (one multiply–add per weight per token), and backward is $4N$ (two matmuls of the same size, one for the input gradient and one for the weight gradient).
+5. The number of tokens is unchanged: $2 \times \text{batch} \times (\text{steps}/2) = \text{batch} \times \text{steps}$. This is why batch size and step count trade off almost freely, and why the *global* batch is the quantity that matters for the learning rate.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<ul>
+<li>Write down the memory consumed by a training run as an explicit sum over parameters, gradients, optimizer states and activations, and evaluate it for any model and parallel layout.</li>
+<li>Derive the per-rank communication volume of a ring all-reduce and use it to compute the fraction of step time spent communicating.</li>
+<li>Explain what each ZeRO stage shards, give the per-GPU bytes for each, and state the communication each adds.</li>
+<li>Derive the Megatron column-parallel/row-parallel split of a transformer block and place every all-reduce in the forward and backward graphs.</li>
+<li>Derive the pipeline bubble fraction and compute the micro-batch count needed for a target efficiency.</li>
+<li>Decide, for a stated model and cluster, whether to spend memory on activations, recomputation, or more devices, and justify it arithmetically.</li>
+<li>Compute the optimal checkpoint interval from cluster MTBF and checkpoint cost.</li>
+<li>Compose a complete parallelization plan (TP/PP/DP/ZeRO degrees, micro-batch, accumulation) for a stated run and predict its step time and peak memory.</li>
+<li>Identify the three ways a distributed run can fail silently — non-deterministic replay, unbalanced pipeline stages, and a stale data loader — and prevent each.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$P$</td>
+<td>number of parameters</td>
+</tr>
+<tr>
+<td>$N$</td>
+<td>number of devices (GPUs) in the job</td>
+</tr>
+<tr>
+<td>$s, b, h$</td>
+<td>sequence length, micro-batch size (sequences), model hidden width</td>
+</tr>
+<tr>
+<td>$L$</td>
+<td>number of transformer layers</td>
+</tr>
+<tr>
+<td>$a$</td>
+<td>number of attention heads</td>
+</tr>
+<tr>
+<td>$S$</td>
+<td>size of the gradient buffer in bytes, $S = 2P$ in bf16</td>
+</tr>
+<tr>
+<td>$p$</td>
+<td>pipeline-parallel degree (number of stages)</td>
+</tr>
+<tr>
+<td>$m$</td>
+<td>number of micro-batches per pipeline step</td>
+</tr>
+<tr>
+<td>$v$</td>
+<td>number of virtual stages per device (interleaved schedule)</td>
+</tr>
+<tr>
+<td>$t_p, t_b$</td>
+<td>forward and backward time for one micro-batch</td>
+</tr>
+<tr>
+<td>$\delta$</td>
+<td>cost of writing one checkpoint</td>
+</tr>
+<tr>
+<td>$\tau$</td>
+<td>checkpoint interval</td>
+</tr>
+</tbody>
+</table>
+<p>Bytes are counted in mixed precision throughout: bf16 copies at 2 bytes per parameter, fp32 master weights gradients and Adam moments at 4. The term "activation" means any tensor saved for the backward pass.</p>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="the-memory-wall-exactly-what-occupies-vram">The memory wall: exactly what occupies VRAM</h3>
+<p><strong>Intuition.</strong> A training step keeps four things alive at once: the weights (needed for the forward pass), the gradients (produced by the backward pass), the optimizer's memories of the last two steps (needed by Adam), and every intermediate activation the backward pass will need. The weights are the smallest of the four.</p>
+<p><strong>Formal definition.</strong> For each parameter, mixed-precision Adam holds:</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Bytes/param</th>
+<th>Why it exists</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bf16 weight (forward copy)</td>
+<td>2</td>
+<td>what the matmuls read</td>
+</tr>
+<tr>
+<td>bf16 gradient</td>
+<td>2</td>
+<td>produced by backward, consumed by the optimizer</td>
+</tr>
+<tr>
+<td>fp32 master weight</td>
+<td>4</td>
+<td>the bf16 weight is a rounded view; updates must not be</td>
+</tr>
+<tr>
+<td>Adam first moment $m$</td>
+<td>4</td>
+<td>exponential average of the gradient</td>
+</tr>
+<tr>
+<td>Adam second moment $v$</td>
+<td>4</td>
+<td>exponential average of the squared gradient</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>16</strong></td>
+<td>$2+2+4+4+4$</td>
+</tr>
+</tbody>
+</table>
+<p>So the model state alone is $16P$ bytes. Activations add $L \cdot A$ where, counting one tensor per saved intermediate in bf16 (layer-norm inputs and outputs, Q, K, V, the attention output, both MLP hidden activations, and the residual), a literal count gives</p>
+<p>$$A \;\approx\; 36\,sbh \;+\; 4abs^2,$$</p>
+<p>with the second term present only if the $s \times s$ attention matrix is materialised. The published Megatron accounting gives $34sbh + 5abs^2$ — a different bookkeeping of the same tensors, and the 5% disagreement is the point: the <em>structure</em> of the sum is what you must be able to write down, not the constant.</p>
+<p><strong>Why it is built this way.</strong> fp32 master weights exist because an update $\theta_{t+1} = \theta_t - \eta\, \hat{m}_t/(\sqrt{\hat{v}_t}+\epsilon)$ applied to a bf16 weight loses the update entirely when $|\eta\hat{m}/\sqrt{\hat{v}}| < 2^{-8}|\theta|$, which happens routinely for small learning rates and large weights. Saving activations exists because recomputing them costs a forward pass. Every design decision in distributed training is a choice about which of these five lines to shrink, and the answer is different for each line.</p>
+<p><strong>Worked micro-example.</strong> A 7B model: $16 \times 7\times10^9 = 112$ GB of state, against 80 GB on an H100. The model does not fit on one device even with zero activations. At $s = 4096$, $b = 8$ the activations are $36 \times 4096 \times 8 \times 4096 = 4.8$ GB per layer, or 155 GB over 32 layers — and the un-flashed attention term is $4abs^2 = 4 \times 32 \times 8 \times 4096^2 = 17$ GB <em>per layer</em>, 550 GB in total. Whether you keep the score matrix or not is a 4$\times$ difference in total memory.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 340" width="100%" role="img" aria-label="The GPU memory hierarchy, with orders of magnitude" class="fig-svg"><defs><marker id="mem-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="30.0" y="50.0" width="700.0" height="44.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.6"/><text x="44.0" y="76.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="650">registers</text><text x="716.0" y="68.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">~256 KB / SM</text><text x="716.0" y="82.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="end" font-weight="400">~20 TB/s</text><rect x="75.0" y="102.0" width="610.0" height="42.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6"/><text x="89.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="650">shared memory / L1</text><text x="671.0" y="120.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">~228 KB / SM</text><text x="671.0" y="134.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="end" font-weight="400">~33 TB/s</text><rect x="120.0" y="154.0" width="520.0" height="40.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.6"/><text x="134.0" y="180.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-violet,#a78bfa)" text-anchor="start" font-weight="650">L2 cache</text><text x="626.0" y="172.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">50-126 MB</text><text x="626.0" y="186.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="end" font-weight="400">~10 TB/s</text><rect x="165.0" y="206.0" width="430.0" height="38.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.6"/><text x="179.0" y="232.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="650">HBM (global)</text><text x="581.0" y="224.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">40-192 GB</text><text x="581.0" y="238.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="end" font-weight="400">3.35 TB/s</text><rect x="210.0" y="258.0" width="340.0" height="36.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6"/><text x="224.0" y="284.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="650">host DRAM</text><text x="536.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">hundreds of GB</text><text x="536.0" y="290.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="end" font-weight="400">~64 GB/s over PCIe</text><text x="430.0" y="322.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.2" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">each level is roughly 10x larger and 3-10x slower. Tiling exists to keep work in the top two rows.</text></svg><figcaption>Read the capacity column against the 112 GB requirement: no single level of the hierarchy can hold a 7B training state, which is why the answer is not a bigger cache but distributing the four line items across devices. Every technique in the rest of this module moves one of those items to the far side of a network link.</figcaption></figure></p>
+<h3 id="data-parallelism-the-all-reduce-that-makes-it-work-and-why-it-stops">Data parallelism: the all-reduce that makes it work, and why it stops</h3>
+<p><strong>Intuition.</strong> Give every worker a complete copy of the model and a different slice of the data. Each computes a gradient on its own slice; average the gradients and everyone applies the same update. The workers never disagree, so it is exactly equivalent to one enormous batch.</p>
+<p><strong>Formal definition.</strong> With $N$ replicas and $B$ samples each, the update uses gradient</p>
+<p>$$\mathbf{g} = \frac{1}{N}\sum_{i=1}^{N} \mathbf{g}_i,$$</p>
+<p>which requires a <em>reduce</em> of $N$ buffers of $S = 2P$ bytes followed by a broadcast of the result — an <strong>all-reduce</strong>. Implemented as a ring, each rank sends $2(N-1)/N \cdot S$ bytes (derived in D1), so the per-rank volume is essentially $2S$ for large $N$.</p>
+<p><strong>Why it is built this way.</strong> Averaging gradients rather than models keeps the parameter update identical on every rank, so no divergence is possible and no locking is needed. The cost is that every rank must hold the <em>complete</em> model state, which is precisely what fails at 112 GB.</p>
+<p><strong>Worked micro-example.</strong> 7B in bf16 gradients: $S = 14$ GB. On 8 GPUs inside one node at 450 GB/s of unidirectional NVLink, the ring moves $2 \times \frac{7}{8} \times 14 = 24.5$ GB per rank, taking $24.5/450 = 54$ ms. Across nodes over 400 Gb/s InfiniBand (50 GB/s), the same all-reduce takes 490 ms. If a step's compute is 1.2 s, intra-node DP costs 4.5% of the step and cross-node DP costs 41%. That ratio, not any algorithmic property, is what forces hierarchical topologies and what makes "data parallel across 1024 GPUs" require very large batches.</p>
+<p>Two refinements matter in practice. <em>Gradient bucketing</em>: instead of one all-reduce after the backward pass, bucket gradients by layer and start each bucket's all-reduce as soon as its backward is finished, overlapping communication with the remaining backward compute. The bucket size trades launch overhead (small buckets, many messages, latency-bound) against overlap window (large buckets, fewer messages, less overlap) — the usual sweet spot is 25–100 MB. <em><code>no_sync</code></em>: with gradient accumulation, run the all-reduce only on the last micro-batch, cutting DP communication by the accumulation factor at no cost.</p>
+<p>Plain DP stops scaling for two independent reasons. Memory: it replicates $16P$ bytes per device, so it cannot fit a model that does not fit on one device. Bandwidth: the all-reduce is $O(S)$ <em>per step</em>, independent of batch, so as you add devices the batch must grow to keep the compute-to-communication ratio constant, and beyond a certain size the batch no longer helps convergence.</p>
+<h3 id="zero-sharding-the-four-things">ZeRO: sharding the four things</h3>
+<p><strong>Intuition.</strong> Data parallelism is wasteful in a specific way: every worker keeps a complete copy of a 112 GB state, but at any instant a worker is using only one of the four line items. Shard each line item across the workers and let them fetch what they need — the same computation, spread over the same memory, with a network bill.</p>
+<p><strong>Formal definition.</strong> ZeRO is a sequence of three shardings, applied to the memory equation's terms:</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Bytes per param</th>
+<th>7B on $N=8$</th>
+<th>7B on $N=64$</th>
+<th>Comm per step</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plain DP</td>
+<td>$16$</td>
+<td>112 GB</td>
+<td>112 GB</td>
+<td>$2S$</td>
+</tr>
+<tr>
+<td>ZeRO-1: shard optimizer states</td>
+<td>$4 + 12/N$</td>
+<td>38.5 GB</td>
+<td>29.3 GB</td>
+<td>$2S$</td>
+</tr>
+<tr>
+<td>ZeRO-2: + shard gradients</td>
+<td>$2 + 14/N$</td>
+<td>26.3 GB</td>
+<td>15.5 GB</td>
+<td>$2S$</td>
+</tr>
+<tr>
+<td>ZeRO-3: + shard parameters</td>
+<td>$16/N$</td>
+<td>14.0 GB</td>
+<td>1.75 GB</td>
+<td>$3S$</td>
+</tr>
+</tbody>
+</table>
+<p>FSDP in PyTorch is ZeRO-3 restructured around module boundaries: it keeps parameters unsharded only for the duration of a layer's forward, all-gathering just-in-time and re-sharding immediately after, so peak memory is one layer's worth rather than the whole model's.</p>
+<p><strong>Why it is built this way.</strong> The three stages are ordered by <em>how rarely the data is used</em>. Optimizer states are touched once per step, so sharding them costs one extra communication per step. Gradients are touched once per step too but are produced incrementally, so they can be reduce-scattered during the backward pass, bucket by bucket, at no extra round trips. Parameters are touched on every forward and every backward of every micro-batch, so sharding them requires an all-gather in the critical path — which is why ZeRO-3 costs 1.5$\times$ the traffic of ZeRO-2 and why it is the last resort rather than the first.</p>
+<p><strong>Worked micro-example.</strong> 7B on 64 GPUs. Plain DP needs 112 GB per device — impossible. ZeRO-1 at $N=64$ gives $4 + 12/64 = 4.19$ bytes per parameter, 29.3 GB, which fits; but the activations of 155 GB do not, so activation recomputation is still required. ZeRO-3 gives 1.75 GB of state, freeing the entire budget for activations and enabling micro-batches 5–10$\times$ larger. Notice that no sharding reduces the <em>activation</em> term: that is the next four sections' job.</p>
+<h3 id="tensor-parallelism-splitting-within-a-layer">Tensor parallelism: splitting within a layer</h3>
+<p><strong>Intuition.</strong> A single matmul can be cut two ways: give each worker a slice of the output columns (nobody needs anyone else's answer), or give each worker a slice of the input columns (everyone now needs everyone else's partial sum). The first is free, the second costs one all-reduce, and a transformer is built so that the two alternate.</p>
+<p><strong>Formal definition.</strong> For $\mathbf{Y} = \mathbf{X}\mathbf{W}$ with $\mathbf{W} \in \mathbb{R}^{d \times d'}$:</p>
+<ul>
+<li><strong>Column-parallel</strong> splits $\mathbf{W} = [\mathbf{W}_1 \mid \ldots \mid \mathbf{W}_N]$ along the output dimension. Rank $i$ computes $\mathbf{Y}_i = \mathbf{X}\mathbf{W}_i$ using the <em>full</em> $\mathbf{X}$. No communication during the matmul; the concatenated output is already correctly distributed.</li>
+<li><strong>Row-parallel</strong> splits $\mathbf{W} = [\mathbf{W}_1^\top \mid \ldots \mid \mathbf{W}_N^\top]^\top$ along the input dimension and requires $\mathbf{X}$ already split into $\mathbf{X}_i$. Rank $i$ computes $\mathbf{Y}_i = \mathbf{X}_i\mathbf{W}_i$, a <strong>partial sum</strong>, and</li>
+</ul>
+<p>$$\mathbf{Y} = \sum_{i=1}^{N} \mathbf{Y}_i \quad \text{requires one all-reduce.}$$</p>
+<p><strong>Why it is built this way.</strong> Every transformer block decomposes into exactly two column→row pairs, and both work for a structural reason:</p>
+<ul>
+<li><em>Attention.</em> The QKV projection is column-parallel: heads are independent, and if you split $3d$ into $N$ slices of $3d/N$, each aligned to whole heads, rank $i$ owns $a/N$ heads outright. Attention over those heads needs no communication and no masking coordination. The output projection then consumes the head-concatenation, which is already split by head, so it is row-parallel by construction — one all-reduce.</li>
+<li><em>Feed-forward.</em> The first linear maps $d \to d_{ff}$ and is column-parallel; the activation is elementwise, hence also independent per slice; the second linear maps $d_{ff} \to d$ and is row-parallel — one all-reduce.</li>
+</ul>
+<p>So the block needs exactly two all-reduces in the forward pass and two in the backward pass, and the activation stays sharded <em>between</em> them. Splitting anywhere else would need a communication per matmul.</p>
+<p><strong>Worked micro-example.</strong> $N = 8$, $h = 4096$, $s = 2048$, $b = 1$, bf16. Each all-reduce moves $2sbh$ bytes of activation, and a ring all-reduce costs each rank $\approx 2$ times the buffer, so the forward pass costs $2 \times 2 \times 2sbh = 8sbh = 8 \times 2048 \times 4096 = 67$ MB per layer. The layer's compute is 863 GFLOP, so each of 8 ranks performs 108 GFLOP, 109 $\mu$s at peak against 67 MB / 450 GB/s = 149 $\mu$s of NVLink time. <strong>The communication is larger than the compute</strong>, and both scale with the token count, so no batch size fixes the ratio. This is why TP is confined to the fastest links inside a node and why Megatron's kernels overlap the all-reduce of one block with the column-parallel GEMM of the next.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 380" width="100%" role="img" aria-label="Data, tensor, and pipeline parallelism" class="fig-svg"><defs><marker id="par-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="150.0" y="34.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">data parallel</text><rect x="52.0" y="50.0" width="52.0" height="40.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2"/><text x="78.0" y="75.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">GPU0</text><rect x="108.0" y="50.0" width="52.0" height="40.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2"/><text x="134.0" y="75.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">GPU1</text><rect x="164.0" y="50.0" width="52.0" height="40.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2"/><text x="190.0" y="75.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">GPU2</text><rect x="220.0" y="50.0" width="52.0" height="40.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2"/><text x="246.0" y="75.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">GPU3</text><rect x="52.0" y="98.0" width="220.0" height="26.0" rx="5" fill="rgba(34,211,238,0.2)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1"/><text x="162.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">all-reduce gradients</text><line x1="78.0" y1="92.0" x2="78.0" y2="96.0" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1" stroke-linecap="round" marker-end="url(#par-ah)"/><line x1="134.0" y1="92.0" x2="134.0" y2="96.0" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1" stroke-linecap="round" marker-end="url(#par-ah)"/><line x1="190.0" y1="92.0" x2="190.0" y2="96.0" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1" stroke-linecap="round" marker-end="url(#par-ah)"/><line x1="246.0" y1="92.0" x2="246.0" y2="96.0" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1" stroke-linecap="round" marker-end="url(#par-ah)"/><text x="162.0" y="142.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">each GPU holds the whole model</text><text x="490.0" y="34.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="700">tensor parallel</text><rect x="400.0" y="50.0" width="54.0" height="38.0" rx="5" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.2"/><text x="427.0" y="73.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">W[0,0]</text><rect x="460.0" y="50.0" width="54.0" height="38.0" rx="5" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.2"/><text x="487.0" y="73.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">W[0,1]</text><rect x="400.0" y="94.0" width="54.0" height="38.0" rx="5" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.2"/><text x="427.0" y="117.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">W[1,0]</text><rect x="460.0" y="94.0" width="54.0" height="38.0" rx="5" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.2"/><text x="487.0" y="117.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="7.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">W[1,1]</text><text x="490.0" y="152.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">one layer split across GPUs</text><text x="490.0" y="168.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">needs all-reduce after each split</text><text x="750.0" y="34.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="700">pipeline parallel</text><rect x="660.0" y="46.0" width="170.0" height="26.0" rx="5" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2"/><text x="745.0" y="63.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">layers 0-7</text><line x1="700.0" y1="72.0" x2="700.0" y2="74.0" stroke="var(--fig-green,#34d399)" stroke-width="1" stroke-linecap="round" marker-end="url(#par-ah)"/><rect x="660.0" y="78.0" width="170.0" height="26.0" rx="5" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2"/><text x="745.0" y="95.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">layers 8-15</text><line x1="700.0" y1="104.0" x2="700.0" y2="106.0" stroke="var(--fig-green,#34d399)" stroke-width="1" stroke-linecap="round" marker-end="url(#par-ah)"/><rect x="660.0" y="110.0" width="170.0" height="26.0" rx="5" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2"/><text x="745.0" y="127.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">layers 16-23</text><line x1="700.0" y1="136.0" x2="700.0" y2="138.0" stroke="var(--fig-green,#34d399)" stroke-width="1" stroke-linecap="round" marker-end="url(#par-ah)"/><rect x="660.0" y="142.0" width="170.0" height="26.0" rx="5" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2"/><text x="745.0" y="159.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">layers 24-31</text><text x="745.0" y="190.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">bubble = idle time at the edges</text><rect x="30.0" y="214.0" width="820.0" height="140.0" rx="10" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="48.0" y="238.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">in practice a frontier run combines all three, plus sequence and context parallelism</text><text x="48.0" y="266.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">data parallel</text><text x="240.0" y="266.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">cheap, bandwidth-heavy at scale</text><text x="48.0" y="290.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">tensor parallel</text><text x="240.0" y="290.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">within a node, needs fast interconnect</text><text x="48.0" y="314.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">pipeline parallel</text><text x="240.0" y="314.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">across nodes, wastes some compute</text></svg><figcaption>Look at where the arrows cross device boundaries. Data parallelism crosses once per step and carries gradients; tensor parallelism crosses twice per layer and carries activations; pipeline parallelism crosses once per micro-batch and carries the whole activation tensor between stages. The three differ only in what crosses, how often, and how much.</figcaption></figure></p>
+<h3 id="pipeline-parallelism-splitting-between-layers">Pipeline parallelism: splitting <em>between</em> layers</h3>
+<p><strong>Intuition.</strong> An assembly line. Each worker owns a contiguous block of layers and passes the activations to the next. No worker ever holds the whole model, and only the boundary tensor crosses the wire. The price is that during fill and drain, most of the line is idle.</p>
+<p><strong>Formal definition.</strong> With $p$ stages and $m$ micro-batches, a naive (GPipe) schedule takes $(m + p - 1)$ stage-times to complete $m$ micro-batches of work, so</p>
+<p>$$\text{efficiency} = \frac{m}{m + p - 1}, \qquad \text{bubble fraction} = \frac{p-1}{m+p-1}.$$</p>
+<p>Derived in D2. The 1F1B schedule keeps the same total but runs one forward and one backward per stage in a steady state, which reduces the <em>memory</em> of in-flight activations from $m$ to $p$ micro-batches — the bubble is unchanged, the footprint is not.</p>
+<p><strong>Why it is built this way.</strong> Pipeline parallelism is the only scheme whose communication volume is independent of both the model size and the batch size — it moves $2sbh$ bytes per micro-batch per stage boundary, no matter how big the model. That makes it the natural fit for slow inter-node links. Its cost is the bubble, which is why it is combined with gradient accumulation: the micro-batches that fill the pipeline <em>are</em> accumulation steps.</p>
+<p><strong>Worked micro-example.</strong> $p = 4$, $m = 16$: efficiency $16/19 = 84\%$, so 16% of every step is idle. To reach 90% you need $m \ge 9(p-1) = 27$ micro-batches, which at $s = 4096$ and 3 micro-batches per accumulation group means a long step. With virtual stages (each device holding $v$ non-contiguous chunks of layers, interleaved), the bubble becomes $(p-1)/(vm + p-1)$: $v = 2$ and $m = 16$ recovers efficiency $32/35 = 91\%$ at the cost of doubling the number of boundary sends.</p>
+<h3 id="sequence-and-context-parallelism">Sequence and context parallelism</h3>
+<p><strong>Intuition.</strong> Tensor parallelism shards everything in a layer <em>except</em> the parts that operate along the sequence — the norms, the residuals, the dropout. Those stay replicated, which is a waste of exactly the memory you were trying to save. So shard those along the sequence too.</p>
+<p><strong>Formal definition.</strong> In the tensor-parallel block, the layer-norm and residual tensors are replicated across TP ranks with shape $[s, b, h]$ even though the QKV projections are split. <em>Sequence parallelism</em> shards those along $s$: rank $i$ holds rows $i, i+N, \ldots$ (or a contiguous block), performs the norm on its shard, and the subsequent column-parallel GEMM does an all-gather that is now needed anyway.</p>
+<p>Beyond a single layer, <em>context parallelism</em> applies the same idea to attention itself: split the sequence across devices so that each holds a slice of $\mathbf{Q}$ and must see all of $\mathbf{K}, \mathbf{V}$. <strong>Ring attention</strong> does this by circulating key/value blocks around a ring while each device computes its partial attention over the block it currently holds, using the online-softmax trick to accumulate across blocks. Because FlashAttention already streams over KV blocks, the block loop simply becomes a ring, and the communication overlaps with the compute almost completely.</p>
+<p><strong>Why it is built this way.</strong> Attention is the only operation whose cost grows with $s^2$, and its <em>state</em> — the KV cache — grows linearly with $s$ per sequence. At some context length, one sequence's cache exceeds a device's memory, and then no amount of TP/PP/DP helps because they shard the model, not the sequence.</p>
+<p><strong>Worked micro-example.</strong> For a 7B model ($L = 32$, $a = 32$, $d_h = 128$) the KV cache of a single 4096-token sequence is</p>
+<p>$$2 \times L \times a \times s \times d_h \times 2\ \text{bytes} = 2 \times 32 \times 32 \times 4096 \times 128 \times 2 = 4.3\ \text{GB}.$$</p>
+<p>At 128k tokens it is 137 GB — larger than the weights — for <em>one</em> sequence. Serving that requires the sequence itself to be distributed, which is exactly what context parallelism does.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" width="100%" role="img" aria-label="The KV cache: what is stored per layer, and how it grows" class="fig-svg"><defs><marker id="kv-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="120.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">without cache</text><rect x="30.0" y="56.0" width="180.0" height="120.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.4"/><rect x="44.0" y="70.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="83.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 1</text><rect x="44.0" y="94.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="107.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 2</text><rect x="44.0" y="118.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="131.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 3</text><rect x="44.0" y="142.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="155.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 4</text><text x="120.0" y="198.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">O(T²) work per token</text><line x1="226.0" y1="116.0" x2="268.0" y2="116.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#kv-ah)"/><text x="360.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">with KV cache</text><text x="286.0" y="72.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L0</text><rect x="292.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="56.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="106.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L1</text><rect x="292.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="90.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="140.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L2</text><rect x="292.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="124.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L3</text><rect x="292.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="158.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="457.0" y="206.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">one column per cached token, per layer, for both K and V</text><rect x="660.0" y="56.0" width="172.0" height="150.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="746.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">memory</text><text x="746.0" y="104.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">2 · L · H · T · dₕ</text><text x="746.0" y="124.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">· bytes per element</text><text x="746.0" y="152.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">7B, T=8192, bf16</text><text x="746.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">≈ 2 GB / sequence</text><text x="746.0" y="194.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">grows linearly, forever</text><text x="430.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">decode costs a matrix-vector product per step; the cache turns O(T) recompute into O(T) memory</text></svg><figcaption>Watch the cache term grow linearly with sequence length while the weight term stays fixed. The crossover point, where one sequence's cache exceeds the model, is where sequence-level sharding stops being an optimisation and becomes mandatory.</figcaption></figure></p>
+<h3 id="activation-recomputation-decided-by-the-roofline">Activation recomputation, decided by the roofline</h3>
+<p><strong>Intuition.</strong> If an activation is cheaper to recompute than to store, do not store it. The question is "cheaper" in which currency — and the roofline converts both into seconds.</p>
+<p><strong>Formal definition.</strong> Storing an activation costs $B$ bytes of memory and saves $F$ FLOPs of recomputation. Recomputation is worth it when the time saved moving those bytes exceeds the time spent recomputing:</p>
+<p>$$\frac{B}{\beta} > \frac{F}{\pi} \quad \text{ if and only if } \quad \frac{F}{B} < \frac{\pi}{\beta} = I_{\mathrm{ridge}}.$$</p>
+<p><strong>Recompute every tensor whose arithmetic intensity is below the ridge point.</strong> Full recomputation (store only each layer's input, $2sbh$ bytes) multiplies per-token FLOPs from $6N$ to $8N$ — a 33% compute tax — and reduces the activation term from $36sbh$ to $2sbh$ per layer, an 18$\times$ saving. Selective recomputation recomputes only the cheap-and-memory-hungry tensors (layer-norm outputs, the attention block's internals) and stores the outputs of the expensive matmuls, achieving most of the memory saving for a few percent of extra compute.</p>
+<p><strong>Why it is built this way.</strong> Because the trade is not symmetric: memory is per-device and finite, compute is per-device and parallel. You spend the resource that has slack. Since every elementwise and reduction op in a transformer has $I \approx 0.5$–1, recomputing them costs about 0.3% of the peak-time budget while saving 18$\times$ their memory.</p>
+<p><strong>Worked micro-example.</strong> 7B, $s = 4096$, $b = 8$: activations go from 155 GB to $32 \times 2sbh = 8.6$ GB. Per-token FLOPs go from $6N$ to $8N$, so the step takes 33% longer in a compute-bound regime. Trading 18$\times$ memory for 1.33$\times$ time is almost always correct, which is why every large run does it.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 392" width="100%" role="img" aria-label="The roofline model, with real operations placed on it" class="fig-svg"><defs><marker id="roof-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="92.0" y1="284.0" x2="532.0" y2="284.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="288.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e10</text><line x1="92.0" y1="242.1" x2="532.0" y2="242.1" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="246.1" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e11</text><line x1="92.0" y1="200.3" x2="532.0" y2="200.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="204.3" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e12</text><line x1="92.0" y1="158.4" x2="532.0" y2="158.4" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="162.4" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e13</text><line x1="92.0" y1="116.6" x2="532.0" y2="116.6" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="120.6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e14</text><line x1="92.0" y1="74.7" x2="532.0" y2="74.7" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="78.7" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e15</text><text x="92.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e-2</text><text x="202.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e0</text><text x="312.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e2</text><text x="422.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e4</text><text x="532.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e6</text><line x1="92.0" y1="284.0" x2="532.0" y2="284.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><line x1="92.0" y1="58.0" x2="92.0" y2="284.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M92.0,262.0 L93.5,260.9 L94.9,259.8 L96.4,258.7 L97.9,257.6 L99.3,256.4 L100.8,255.3 L102.3,254.2 L103.7,253.1 L105.2,252.0 L106.7,250.9 L108.1,249.7 L109.6,248.6 L111.1,247.5 L112.5,246.4 L114.0,245.3 L115.5,244.2 L116.9,243.1 L118.4,241.9 L119.9,240.8 L121.3,239.7 L122.8,238.6 L124.3,237.5 L125.7,236.4 L127.2,235.2 L128.7,234.1 L130.1,233.0 L131.6,231.9 L133.1,230.8 L134.5,229.7 L136.0,228.5 L137.5,227.4 L138.9,226.3 L140.4,225.2 L141.9,224.1 L143.3,223.0 L144.8,221.8 L146.3,220.7 L147.7,219.6 L149.2,218.5 L150.7,217.4 L152.1,216.3 L153.6,215.2 L155.1,214.0 L156.5,212.9 L158.0,211.8 L159.5,210.7 L160.9,209.6 L162.4,208.5 L163.9,207.3 L165.3,206.2 L166.8,205.1 L168.3,204.0 L169.7,202.9 L171.2,201.8 L172.7,200.6 L174.1,199.5 L175.6,198.4 L177.1,197.3 L178.5,196.2 L180.0,195.1 L181.5,193.9 L182.9,192.8 L184.4,191.7 L185.9,190.6 L187.3,189.5 L188.8,188.4 L190.3,187.3 L191.7,186.1 L193.2,185.0 L194.7,183.9 L196.1,182.8 L197.6,181.7 L199.1,180.6 L200.5,179.4 L202.0,178.3 L203.5,177.2 L204.9,176.1 L206.4,175.0 L207.9,173.9 L209.3,172.7 L210.8,171.6 L212.3,170.5 L213.7,169.4 L215.2,168.3 L216.7,167.2 L218.1,166.0 L219.6,164.9 L221.1,163.8 L222.5,162.7 L224.0,161.6 L225.5,160.5 L226.9,159.3 L228.4,158.2 L229.9,157.1 L231.3,156.0 L232.8,154.9 L234.3,153.8 L235.7,152.7 L237.2,151.5 L238.7,150.4 L240.1,149.3 L241.6,148.2 L243.1,147.1 L244.5,146.0 L246.0,144.8 L247.5,143.7 L248.9,142.6 L250.4,141.5 L251.9,140.4 L253.3,139.3 L254.8,138.1 L256.3,137.0 L257.7,135.9 L259.2,134.8 L260.7,133.7 L262.1,132.6 L263.6,131.4 L265.1,130.3 L266.5,129.2 L268.0,128.1 L269.5,127.0 L270.9,125.9 L272.4,124.8 L273.9,123.6 L275.3,122.5 L276.8,121.4 L278.3,120.3 L279.7,119.2 L281.2,118.1 L282.7,116.9 L284.1,115.8 L285.6,114.7 L287.1,113.6 L288.5,112.5 L290.0,111.4 L291.5,110.2 L292.9,109.1 L294.4,108.0 L295.9,106.9 L297.3,105.8 L298.8,104.7 L300.3,103.5 L301.7,102.4 L303.2,101.3 L304.7,100.2 L306.1,99.1 L307.6,98.0 L309.1,96.9 L310.5,95.7 L312.0,94.6 L313.5,93.8 L314.9,93.8 L316.4,93.8 L317.9,93.8 L319.3,93.8 L320.8,93.8 L322.3,93.8 L323.7,93.8 L325.2,93.8 L326.7,93.8 L328.1,93.8 L329.6,93.8 L331.1,93.8 L332.5,93.8 L334.0,93.8 L335.5,93.8 L336.9,93.8 L338.4,93.8 L339.9,93.8 L341.3,93.8 L342.8,93.8 L344.3,93.8 L345.7,93.8 L347.2,93.8 L348.7,93.8 L350.1,93.8 L351.6,93.8 L353.1,93.8 L354.5,93.8 L356.0,93.8 L357.5,93.8 L358.9,93.8 L360.4,93.8 L361.9,93.8 L363.3,93.8 L364.8,93.8 L366.3,93.8 L367.7,93.8 L369.2,93.8 L370.7,93.8 L372.1,93.8 L373.6,93.8 L375.1,93.8 L376.5,93.8 L378.0,93.8 L379.5,93.8 L380.9,93.8 L382.4,93.8 L383.9,93.8 L385.3,93.8 L386.8,93.8 L388.3,93.8 L389.7,93.8 L391.2,93.8 L392.7,93.8 L394.1,93.8 L395.6,93.8 L397.1,93.8 L398.5,93.8 L400.0,93.8 L401.5,93.8 L402.9,93.8 L404.4,93.8 L405.9,93.8 L407.3,93.8 L408.8,93.8 L410.3,93.8 L411.7,93.8 L413.2,93.8 L414.7,93.8 L416.1,93.8 L417.6,93.8 L419.1,93.8 L420.5,93.8 L422.0,93.8 L423.5,93.8 L424.9,93.8 L426.4,93.8 L427.9,93.8 L429.3,93.8 L430.8,93.8 L432.3,93.8 L433.7,93.8 L435.2,93.8 L436.7,93.8 L438.1,93.8 L439.6,93.8 L441.1,93.8 L442.5,93.8 L444.0,93.8 L445.5,93.8 L446.9,93.8 L448.4,93.8 L449.9,93.8 L451.3,93.8 L452.8,93.8 L454.3,93.8 L455.7,93.8 L457.2,93.8 L458.7,93.8 L460.1,93.8 L461.6,93.8 L463.1,93.8 L464.5,93.8 L466.0,93.8 L467.5,93.8 L468.9,93.8 L470.4,93.8 L471.9,93.8 L473.3,93.8 L474.8,93.8 L476.3,93.8 L477.7,93.8 L479.2,93.8 L480.7,93.8 L482.1,93.8 L483.6,93.8 L485.1,93.8 L486.5,93.8 L488.0,93.8 L489.5,93.8 L490.9,93.8 L492.4,93.8 L493.9,93.8 L495.3,93.8 L496.8,93.8 L498.3,93.8 L499.7,93.8 L501.2,93.8 L502.7,93.8 L504.1,93.8 L505.6,93.8 L507.1,93.8 L508.5,93.8 L510.0,93.8 L511.5,93.8 L512.9,93.8 L514.4,93.8 L515.9,93.8 L517.3,93.8 L518.8,93.8 L520.3,93.8 L521.7,93.8 L523.2,93.8 L524.7,93.8 L526.1,93.8 L527.6,93.8 L529.1,93.8 L530.5,93.8 L532.0,93.8" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/><line x1="313.0" y1="58.0" x2="313.0" y2="284.0" stroke="var(--fig-amber,#f5b544)" stroke-width="1" stroke-linecap="round" stroke-dasharray="5 4"/><text x="313.0" y="50.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">ridge ≈ 104 FLOPs/byte</text><circle cx="125.0" cy="236.9" r="5.0" fill="var(--fig-rose,#fb7185)"/><text x="135.0" y="240.9" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">elementwise</text><circle cx="169.0" cy="203.4" r="5.0" fill="var(--fig-rose,#fb7185)"/><text x="179.0" y="207.4" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">layernorm</text><circle cx="207.5" cy="174.1" r="5.0" fill="var(--fig-amber,#f5b544)"/><text x="217.5" y="178.1" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">GEMV (batch 1)</text><circle cx="279.0" cy="119.7" r="5.0" fill="var(--fig-violet,#a78bfa)"/><text x="289.0" y="123.7" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-violet,#a78bfa)" text-anchor="start" font-weight="400">attention, cached</text><circle cx="383.5" cy="93.8" r="5.0" fill="var(--fig-green,#34d399)"/><text x="393.5" y="97.8" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-green,#34d399)" text-anchor="start" font-weight="400">GEMM K=4096</text><text x="312.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">arithmetic intensity, FLOPs per byte (log)</text><text x="92.0" y="46.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">attainable FLOP/s (log)</text><rect x="590.0" y="78.0" width="246.0" height="174.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="608.0" y="102.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">read the slope</text><text x="608.0" y="126.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Left of the ridge, performance</text><text x="608.0" y="139.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">is set by bandwidth, not by</text><text x="608.0" y="152.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">FLOPs. Most of an LLM at</text><text x="608.0" y="165.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">inference lives on the slope,</text><text x="608.0" y="178.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">which is why batching and</text><text x="608.0" y="191.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">quantization help and bigger</text><text x="608.0" y="204.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">kernels do not.</text><text x="608.0" y="232.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.4" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">FlashAttention moves ops rightward</text></svg><figcaption>Place a layer-norm and a matmul on the plot, then ask what each costs to redo. The norm sits at $I \approx 1$, far left of the knee: recomputing it is nearly free and storing it is pure waste. The matmul sits far right: recomputing it would cost the full FLOPs, so its output is always kept. The knee is the decision boundary.</figcaption></figure></p>
+<h3 id="fault-tolerance-and-checkpointing">Fault tolerance and checkpointing</h3>
+<p><strong>Intuition.</strong> At 1000 GPUs, something is broken almost all the time. A run is not a computation that occasionally saves state; it is a checkpointing loop that occasionally computes.</p>
+<p><strong>Formal definition.</strong> With cluster mean time between failures $T$ and checkpoint cost $\delta$, the fraction of time lost is $\delta/\tau$ (writing checkpoints) plus $\tau/(2T)$ (expected work lost per failure, half an interval on average). Minimising over $\tau$ gives Young's result:</p>
+<p>$$\tau_{\mathrm{opt}} = \sqrt{2\delta T}.$$</p>
+<p><strong>Why it is built this way.</strong> The two terms pull in opposite directions and both are linear in $\tau$ or $1/\tau$, so the optimum is a square root, not a corner. Note the consequence: doubling the checkpoint size increases the optimal interval only by $\sqrt{2}$, so slow checkpointing is punished sub-linearly — which is why asynchronous checkpointing (copy to host memory, then write to disk in the background) is worth the complexity.</p>
+<p><strong>Worked micro-example.</strong> 64 GPUs with a per-GPU MTBF of 50,000 hours give $T = 50{,}000/64 = 780$ h $= 2.8\times10^6$ s. With $\delta = 30$ s (112 GB of optimizer state to a parallel filesystem), $\tau_{\mathrm{opt}} = \sqrt{2 \times 30 \times 2.8\times10^6} = 1.3\times10^4$ s, about 3.6 hours.</p>
+<p>Three failure modes are silent rather than loud, and all three must be handled deliberately: <em>non-deterministic replay</em> (resume must restore RNG state, data-loader position, and any counter-based sampling, or the run quietly trains on a different distribution after every restart); <em>stage imbalance</em> (pipeline stages that do not have equal compute make the slowest stage the tick rate, and it shows up only as an unexplained 20% loss); and <em>stale data</em> (a resumed loader that restarts from epoch 0 leaks repeated data into the run).</p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<p>The procedure below is what a training-infrastructure engineer does before launching anything. Its output is a <em>plan</em>: a tuple of degrees, a micro-batch size, an accumulation count, and a predicted step time and peak memory. If the prediction and the measurement disagree by more than 20%, the model of the machine (this module) is wrong somewhere and you find out on paper, not after three days of probing.</p>
+<ol>
+<li><strong>Compose the memory sum.</strong> State bytes $= 16P$ (or $4P + 12P/N$ with ZeRO-1), activations $= L\,(36sbh + 4abs^2)$, buffers $\approx$ one bucket per layer, workspace for the largest GEMM.</li>
+<li><strong>Compose the FLOP sum.</strong> Per token: $6N$ for training, $8N$ with full recomputation, plus $4\,\text{words}\cdot h \cdot a \cdot s$ for attention at sequence length $s$ — the last term is negligible until $s$ is large.</li>
+<li><strong>Pick the tensor-parallel degree $N_t$</strong>: the largest that divides $a$ and $d_{ff}$, and whose measured all-reduce time is under a third of the layer compute time (D3). In practice $N_t = 8$ inside a node and never across nodes unless the model demands it.</li>
+<li><strong>Pick the pipeline degree $N_p$</strong>: the smallest value that makes the state fit, because every stage adds a boundary and a bubble. Then check the bubble at the intended $m$ (D2).</li>
+<li><strong>Set $N_d = N/(N_t N_p)$</strong> for data parallelism, and verify the all-reduce fraction (D1) is acceptable.</li>
+<li><strong>Choose the ZeRO stage</strong> that makes the residual state fit. Prefer the lowest stage that fits, since each stage costs bandwidth.</li>
+<li><strong>Choose the micro-batch $b$</strong> so the activation term fits with recomputation, then verify that the TP communication ratio is still acceptable.</li>
+<li><strong>Set gradient accumulation</strong> $g$ to reach the target global batch: $B_{\text{global}} = b \cdot g \cdot N_d \cdot s$ tokens.</li>
+<li><strong>Predict and check.</strong> Step time $= g\,\left(\text{FLOPs/token}\times b\cdot s\,/\,(\text{MFU}\cdot \pi \cdot N\right)$, and peak memory from step 1. If either is outside 20% of what you need, go back to step 3 with a different trade.</li>
+</ol>
+<p>```text
+procedure PLAN(P, L, h, a, d_ff, N_gpus, link_gbps, per_gpu_mem):
+    state_per_rank  <- 16 * P / (Np * Nt)          # ZeRO-3 assumption; recompute for lower stages
+    acts_per_rank   <- L * 2 * s * b * h / Nt      # with full recomputation
+    for Nt in [8, 4, 2, 1] where a % Nt == 0:      # prefer the fastest interconnect
+        for Np in divisors(N_gpus / Nt):
+            for Nd in [N_gpus / (Nt * Np)]:
+                if state_per_rank + acts_per_rank + slack > per_gpu_mem: continue
+                t_comm_tp <- 8 * s * b * h * L / (link_gbps * 1e9)      # forward all-reduces
+                t_comp    <- 6 * P * s * b * L / (mfu * peak_flops * Nt)
+                if t_comm_tp > 0.33 * t_comp: continue
+                return (Nt, Np, Nd, feasible)
+    return INFEASIBLE   # shrink the model or add devices
+```</p>
+<p><strong>Cost.</strong> Steps 1–2 are $O(1)$ arithmetic; the search in step 3–5 enumerates at most a few dozen $(N_t, N_p)$ pairs; the whole plan is a spreadsheet, not a search. Its value is that every number in it can be checked independently against a measurement.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="d1-the-ring-all-reduce-i187-bytes-per-rank">D1. The ring all-reduce: $2(N-1)S/N$ bytes per rank</h3>
+<p><strong>Step 1 — setup.</strong> $N$ ranks each hold an $S$-byte buffer. Split each buffer into $N$ chunks of $S/N$ bytes. Call rank $i$'s chunk $j$ as $c_i^{(j)}$.</p>
+<p><strong>Step 2 — reduce-scatter.</strong> In step $k = 1, \ldots, N-1$, rank $i$ sends chunk $(i-k) \operatorname{mod} N$ to rank $(i+1) \operatorname{mod} N$ and accumulates what it receives from rank $(i-1) \operatorname{mod} N$. After $N-1$ steps, rank $i$ holds the fully reduced version of chunk $(i - (N-1)) \operatorname{mod} N$ — exactly one chunk of the answer. Bytes sent by any rank during this phase: $(N-1) \cdot S/N$.</p>
+<p><strong>Step 3 — all-gather.</strong> In $N-1$ steps, circulate the reduced chunks the same way. Each rank sends $(N-1) \cdot S/N$ bytes and ends with all $N$ reduced chunks.</p>
+<p><strong>Step 4 — total.</strong> Per rank,</p>
+<p>$$\text{bytes} = \frac{2(N-1)}{N}\,S \;\to\; 2S \text{ as } N \to \infty.$$</p>
+<p><strong>Step 5 — time.</strong> With $\gamma$ the per-rank link bandwidth and $\alpha$ the per-message latency,</p>
+<p>$$T_{\text{ring}} = \frac{2(N-1)}{N}\cdot\frac{S}{\gamma} + 2(N-1)\alpha.$$</p>
+<p>The payload term saturates at $2S/\gamma$: <strong>adding ranks does not increase the per-rank communication once the ring is large</strong>, which is the property that makes data parallelism scale at all. The latency term grows linearly, which is why small buffers must be bucketed.</p>
+<p><strong>Step 6 — evaluate.</strong> $S = 14$ GB, $\gamma = 450$ GB/s, $N = 8$: payload $= 24.5$ GB, $T = 54$ ms plus 14 latency hops (negligible at these sizes). The same buffer over 8 nodes of InfiniBand at 50 GB/s per rank: 490 ms.</p>
+<h3 id="d2-the-pipeline-bubble">D2. The pipeline bubble</h3>
+<p><strong>Step 1 — timeline.</strong> Let $t$ be the time for one stage to process one micro-batch (assume a balanced pipeline). At clock 0, stage 1 starts micro-batch 1; stage 2 can start only at $t$, stage $p$ only at $(p-1)t$.</p>
+<p><strong>Step 2 — finish time.</strong> Stage $p$ finishes micro-batch 1 at $pt$. Micro-batch $m$ therefore finishes at $pt + (m-1)t = (p + m - 1)\,t$.</p>
+<p><strong>Step 3 — useful work.</strong> Each stage performs $m$ micro-batches of work, i.e. $mt$ of busy time, out of a wall-clock span of $(p+m-1)t$. Hence</p>
+<p>$$E = \frac{m}{m+p-1}, \qquad \text{bubble} = 1 - E = \frac{p-1}{m+p-1}.$$</p>
+<p><strong>Step 4 — the micro-batch rule.</strong> Requiring a bubble below $\epsilon$:</p>
+<p>$$\frac{p-1}{m+p-1} < \epsilon \;\text{ if and only if }\; m > \frac{(1-\epsilon)(p-1)}{\epsilon}.$$</p>
+<p>For $\epsilon = 0.1$ this is $m > 9(p-1)$; a 4-stage pipeline needs 28 micro-batches to be 90% efficient.</p>
+<p><strong>Step 5 — interleaving.</strong> If each device instead owns $v$ discontiguous chunks of layers, it can work on a different chunk while another chunk's micro-batch is in flight, and the fill/drain cost is paid once per chunk rather than once per stage:</p>
+<p>$$\text{bubble} = \frac{p-1}{vm + p-1}.$$</p>
+<p>$v = 2$ halves the bubble, at the cost of $2\times$ the boundary sends and $2\times$ the activation storage per device.</p>
+<p><strong>Step 6 — why 1F1B matters even though the bubble is the same.</strong> GPipe's schedule runs all $m$ forwards, then all $m$ backwards: every device stores the activations of all $m$ micro-batches, $m \cdot 2sbh$ bytes. 1F1B interleaves one forward with one backward, so at steady state only $p$ micro-batches are in flight: $p \cdot 2sbh$ bytes. Same bubble, drastically less memory — the whole reason 1F1B was invented.</p>
+<h3 id="d3-why-tensor-parallelism-and-data-parallelism-age-differently">D3. Why tensor parallelism and data parallelism age differently</h3>
+<p><strong>Step 1 — DP volume per step.</strong> $V_{\text{DP}} = 2S \approx 4P$ bytes per rank, independent of the batch.</p>
+<p><strong>Step 2 — TP volume per step.</strong> Per layer, four all-reduces (two forward, two backward) on buffers of $2sbh$ bytes, each costing $\approx 2$ buffers per rank:</p>
+<p>$$V_{\text{TP}} = 4 \times 2 \times 2sbh \times L = 16\,s\,b\,h\,L\ \text{bytes per rank}.$$</p>
+<p><strong>Step 3 — divide by the compute on the same timescale.</strong> DP's $2S = 4P$ bytes are spent once per optimiser step, whose compute on one rank is $6P \cdot s b g N_d / N$. TP's $8sbh$ per layer are spent once per layer on one micro-batch, whose <em>forward</em> compute on one rank is $2P s b/(L N_t N_p)$. Converting bytes to time with $\gamma$ and FLOPs to time with $\pi$:</p>
+<p>$$\rho_{\text{DP}} = \frac{2S/\gamma}{6P\,s\,b\,g\,N_d\,\pi^{-1}/N} = \frac{2}{3}\cdot\frac{\pi}{\gamma}\cdot\frac{N_t N_p}{s\,b\,g}, \qquad \rho_{\text{TP}} = \frac{8sbh/\gamma}{2P\,s\,b\,\pi^{-1}/(L N_t N_p)} = 4\cdot\frac{\pi}{\gamma}\cdot\frac{h\,L\,N_t N_p}{P}.$$</p>
+<p><strong>Step 4 — read the two formulas.</strong> $\rho_{\text{DP}}$ has the step's token count $s\,b\,g$ in its denominator: a bigger batch amortises data-parallel communication. $\rho_{\text{TP}}$ contains no batch term at all — it is fixed by the model's <em>shape</em>, the parallel degrees and the link speed. Doubling the global batch halves DP's relative cost and leaves TP's exactly where it was.</p>
+<p><strong>Step 5 — evaluate, 7B, $N_t = 8$, $N_p = 1$, $\gamma = 450$ GB/s, so $\pi/\gamma = 2198$.</strong> $\rho_{\text{TP}} = 4 \times 2198 \times 4096 \times 32 \times 8 / 7\times10^9 = 1.32$: at degree 8 the tensor-parallel all-reduces cost <em>more than the layer's own compute</em>, which is why they must overlap with it. With $s b g = 4096 \times 8 \times 5 = 164$k tokens per rank-step, $\rho_{\text{DP}} = \frac{2}{3} \times 2198 \times 8/164000 = 0.072$: 7% for the entire optimiser all-reduce.</p>
+<p><strong>Step 6 — the design rule.</strong> Put TP where the links are fastest and keep the degree as small as the model allows; grow DP with the batch, since that is the only knob that reduces its relative cost; use PP across the slowest links, since its volume is batch-independent and small. That ordering — TP within a node, PP across slow links, DP as large as the batch permits — is not a convention, it is what the two formulas say.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>The one algorithm in this module worth writing by hand is the ring all-reduce: it is short, it is the reason data parallelism scales, and its byte count is the basis of every communication estimate above. The code below runs all $N$ ranks in one process so you can print every hop; the assertion at the end checks it against <code>np.sum</code>.</p>
+<p>```python
+# ring_allreduce.py — D1's protocol, verified. Ranks share one process for legibility.
+import numpy as np
+
+
+def ring_allreduce(buffers):
+    """buffers: N arrays, rank i's copy of the same buffer. Returns (reduced, bytes/rank)."""
+    N = len(buffers)
+    bufs = [b.astype(np.float64).copy() for b in buffers]
+    S = bufs[0].size
+    assert S % N == 0, "the buffer must split into N equal chunks"
+    chunk = S // N
+
+    def sl(j):
+        return slice(j * chunk, (j + 1) * chunk)
+
+    sent = 0
+    # Phase 1, reduce-scatter: N-1 steps. At step k, rank i forwards chunk (i-k) % N
+    # to rank (i+1) % N. Each rank ends up owning exactly one fully reduced chunk.
+    for k in range(N - 1):
+        out = [((i - k) % N, bufs[i][sl((i - k) % N)].copy()) for i in range(N)]
+        for i in range(N):                      # all sends simultaneous: gather first
+            j, data = out[i]
+            bufs[(i + 1) % N][sl(j)] += data    # accumulate, do not overwrite
+            sent += data.nbytes / N             # bytes moved by ONE rank
+
+    # Phase 2, all-gather: N-1 steps. At step k, rank i forwards chunk (i-k+1) % N,
+    # the chunk it received on the previous step, so reduced chunks circulate.
+    for k in range(N - 1):
+        out = [((i - k + 1) % N, bufs[i][sl((i - k + 1) % N)].copy()) for i in range(N)]
+        for i in range(N):
+            j, data = out[i]
+            bufs[(i + 1) % N][sl(j)] = data     # overwrite, do not accumulate
+            sent += data.nbytes / N
+    return bufs, sent
+
+
+if __name__ == "__main__":
+    rng = np.random.default_rng(1)
+    for N in (2, 4, 8):
+        S = 8 * N * 64
+        data = [rng.normal(size=S) for _ in range(N)]
+        reduced, moved = ring_allreduce(data)
+        assert all(np.allclose(r, np.sum(data, axis=0)) for r in reduced)
+        print(f"N={N}: {int(moved)} bytes/rank, formula 2(N-1)/N*S*8 = {2*(N-1)/N*S*8:.0f}")
+```</p>
+<p><strong>What to expect.</strong> Every assertion passes, and the printed byte counts match $2(N-1)S/N$ to the byte: for $N = 4$ and $S = 2048$ fp64 elements that is $2 \times \frac{3}{4} \times 2048 \times 8 = 24{,}576$ bytes. Raise $N$ and watch the per-rank volume <em>converge to</em> $2S$ from below rather than grow — that plateau is the numerical reason data parallelism is viable at all.</p>
+<h2 id="worked-example">Worked example</h2>
+<p><strong>Goal: train a 7B model on 64 H100s (8 nodes of 8), target 40% MFU.</strong> Two plans, same hardware, computed before launch.</p>
+<p><em>Plan A — the instinctive one.</em> Tensor-parallel inside each node, pipeline-parallel across four groups of layers, data-parallel for the rest: $N_t = 8$, $N_p = 4$, $N_d = 2$.</p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Plan A</th>
+<th>Plan B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parallel degrees</td>
+<td>TP 8 $\times$ PP 4 $\times$ DP 2</td>
+<td>TP 8 $\times$ DP 8, ZeRO-1</td>
+</tr>
+<tr>
+<td>State per GPU</td>
+<td>$16P/(8\cdot4) = 3.5$ GB</td>
+<td>$4P/8 + 12P/64 = 4.8$ GB</td>
+</tr>
+<tr>
+<td>Activations per GPU</td>
+<td>8 layers $\times 2sbh/8 = 0.27$ GB</td>
+<td>32 layers $\times 2sbh/8 = 1.07$ GB</td>
+</tr>
+<tr>
+<td>Peak memory</td>
+<td>$\approx 4$ GB of 80</td>
+<td>$\approx 6$ GB of 80</td>
+</tr>
+<tr>
+<td>Pipeline bubble ($m=5$)</td>
+<td>37.5%</td>
+<td>0%</td>
+</tr>
+<tr>
+<td>DP all-reduce</td>
+<td>1.75 GB/rank over IB, 35 ms</td>
+<td>3.06 GB/rank over IB, 61 ms</td>
+</tr>
+<tr>
+<td>Step compute (328k tokens)</td>
+<td>0.544 s</td>
+<td>0.544 s</td>
+</tr>
+<tr>
+<td><strong>Effective step</strong></td>
+<td><strong>0.87 s</strong></td>
+<td><strong>0.605 s</strong></td>
+</tr>
+<tr>
+<td><strong>Throughput</strong></td>
+<td><strong>376k tokens/s</strong></td>
+<td><strong>542k tokens/s</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Plan A is the plan most people write first, and it is 1.44$\times$ worse for one reason: <strong>the pipeline was solving a memory problem that sharding had already solved.</strong> With ZeRO-1 the whole 16-byte state fits 64 ways over, so the four stages exist only to create a 37.5% bubble. Plan B deletes them.</p>
+<p>The numbers to notice:</p>
+<ul>
+<li><strong>State.</strong> $4P/N_t$ for the weights and gradients plus $12P/(N_t N_d)$ for the optimizer is 4.8 GB. Reducing the model to 70B: $4 \times 70\times10^9/8 + 12\times 70\times10^9/64 = 48$ GB per GPU — still fits, still without a pipeline. Pipeline parallelism enters only when the <em>state</em> stops fitting even with ZeRO-3, which for 80 GB parts is around the 300B-parameter mark.</li>
+<li><strong>The bubble is the whole difference.</strong> $m = 5$ micro-batches against $p = 4$ stages gives $(4-1)/(5+4-1) = 37.5\%$ idle. Raising $m$ to 28 would fix the efficiency but multiply the global batch by 5.6, which the learning rate may not tolerate.</li>
+<li><strong>Communication is not the bottleneck in either plan.</strong> 61 ms against 544 ms of compute is 11%, and gradient bucketing hides most of it inside the backward pass. The intuition that "distributed training is network-bound" is wrong at this scale; it is <em>bubble-bound and memory-bound</em>.</li>
+</ul>
+<p>With Plan B in hand, the remaining decisions follow: micro-batch $b = 10$ sequences of 4096 tokens, $g = 1$, giving a 328k-token global step; a 32-way ZeRO-1 sharding of optimizer state; and a checkpoint every 3.6 hours by D1's sibling formula for $\tau_{\mathrm{opt}}$.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="Where the money goes" class="fig-svg"><defs><marker id="cost-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="80.0" y1="276.0" x2="480.0" y2="276.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="280.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1×</text><line x1="80.0" y1="207.2" x2="480.0" y2="207.2" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="211.2" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10×</text><line x1="80.0" y1="138.5" x2="480.0" y2="138.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="142.5" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">100×</text><line x1="80.0" y1="69.8" x2="480.0" y2="69.8" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="73.8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1000×</text><line x1="80.0" y1="276.0" x2="480.0" y2="276.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M80.0,276.0 L82.5,276.0 L85.0,275.9 L87.5,275.6 L90.0,275.3 L92.5,274.9 L95.0,274.4 L97.5,273.8 L100.0,273.1 L102.5,272.2 L105.0,271.3 L107.5,270.3 L110.0,269.3 L112.5,268.1 L115.0,266.9 L117.5,265.7 L120.0,264.4 L122.5,263.0 L125.0,261.6 L127.5,260.2 L130.0,258.8 L132.5,257.3 L135.0,255.9 L137.5,254.4 L140.0,253.0 L142.5,251.5 L145.0,250.0 L147.5,248.5 L150.0,247.1 L152.5,245.6 L155.0,244.2 L157.5,242.8 L160.0,241.3 L162.5,239.9 L165.0,238.6 L167.5,237.2 L170.0,235.8 L172.5,234.5 L175.0,233.2 L177.5,231.9 L180.0,230.6 L182.5,229.3 L185.0,228.0 L187.5,226.8 L190.0,225.6 L192.5,224.3 L195.0,223.2 L197.5,222.0 L200.0,220.8 L202.5,219.7 L205.0,218.5 L207.5,217.4 L210.0,216.3 L212.5,215.2 L215.0,214.2 L217.5,213.1 L220.0,212.1 L222.5,211.0 L225.0,210.0 L227.5,209.0 L230.0,208.0 L232.5,207.1 L235.0,206.1 L237.5,205.2 L240.0,204.2 L242.5,203.3 L245.0,202.4 L247.5,201.5 L250.0,200.6 L252.5,199.7 L255.0,198.8 L257.5,198.0 L260.0,197.1 L262.5,196.3 L265.0,195.4 L267.5,194.6 L270.0,193.8 L272.5,193.0 L275.0,192.2 L277.5,191.4 L280.0,190.6 L282.5,189.9 L285.0,189.1 L287.5,188.3 L290.0,187.6 L292.5,186.9 L295.0,186.1 L297.5,185.4 L300.0,184.7 L302.5,184.0 L305.0,183.3 L307.5,182.6 L310.0,181.9 L312.5,181.2 L315.0,180.5 L317.5,179.9 L320.0,179.2 L322.5,178.6 L325.0,177.9 L327.5,177.3 L330.0,176.6 L332.5,176.0 L335.0,175.4 L337.5,174.8 L340.0,174.1 L342.5,173.5 L345.0,172.9 L347.5,172.3 L350.0,171.7 L352.5,171.2 L355.0,170.6 L357.5,170.0 L360.0,169.4 L362.5,168.9 L365.0,168.3 L367.5,167.7 L370.0,167.2 L372.5,166.6 L375.0,166.1 L377.5,165.6 L380.0,165.0 L382.5,164.5 L385.0,164.0 L387.5,163.4 L390.0,162.9 L392.5,162.4 L395.0,161.9 L397.5,161.4 L400.0,160.9 L402.5,160.4 L405.0,159.9 L407.5,159.4 L410.0,158.9 L412.5,158.4 L415.0,157.9 L417.5,157.4 L420.0,157.0 L422.5,156.5 L425.0,156.0 L427.5,155.6 L430.0,155.1 L432.5,154.6 L435.0,154.2 L437.5,153.7 L440.0,153.3 L442.5,152.8 L445.0,152.4 L447.5,151.9 L450.0,151.5 L452.5,151.1 L455.0,150.6 L457.5,150.2 L460.0,149.8 L462.5,149.4 L465.0,148.9 L467.5,148.5 L470.0,148.1 L472.5,147.7 L475.0,147.3 L477.5,146.9 L480.0,146.5" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M80.0,276.0 L82.5,275.5 L85.0,275.1 L87.5,274.6 L90.0,274.2 L92.5,273.8 L95.0,273.3 L97.5,272.9 L100.0,272.5 L102.5,272.1 L105.0,271.7 L107.5,271.3 L110.0,270.9 L112.5,270.5 L115.0,270.1 L117.5,269.7 L120.0,269.3 L122.5,269.0 L125.0,268.6 L127.5,268.2 L130.0,267.9 L132.5,267.5 L135.0,267.2 L137.5,266.8 L140.0,266.5 L142.5,266.2 L145.0,265.8 L147.5,265.5 L150.0,265.2 L152.5,264.8 L155.0,264.5 L157.5,264.2 L160.0,263.9 L162.5,263.6 L165.0,263.3 L167.5,263.0 L170.0,262.7 L172.5,262.4 L175.0,262.1 L177.5,261.8 L180.0,261.5 L182.5,261.2 L185.0,260.9 L187.5,260.7 L190.0,260.4 L192.5,260.1 L195.0,259.8 L197.5,259.6 L200.0,259.3 L202.5,259.0 L205.0,258.8 L207.5,258.5 L210.0,258.2 L212.5,258.0 L215.0,257.7 L217.5,257.5 L220.0,257.2 L222.5,257.0 L225.0,256.7 L227.5,256.5 L230.0,256.3 L232.5,256.0 L235.0,255.8 L237.5,255.5 L240.0,255.3 L242.5,255.1 L245.0,254.8 L247.5,254.6 L250.0,254.4 L252.5,254.2 L255.0,253.9 L257.5,253.7 L260.0,253.5 L262.5,253.3 L265.0,253.1 L267.5,252.8 L270.0,252.6 L272.5,252.4 L275.0,252.2 L277.5,252.0 L280.0,251.8 L282.5,251.6 L285.0,251.4 L287.5,251.2 L290.0,251.0 L292.5,250.8 L295.0,250.6 L297.5,250.4 L300.0,250.2 L302.5,250.0 L305.0,249.8 L307.5,249.6 L310.0,249.4 L312.5,249.2 L315.0,249.0 L317.5,248.8 L320.0,248.6 L322.5,248.5 L325.0,248.3 L327.5,248.1 L330.0,247.9 L332.5,247.7 L335.0,247.5 L337.5,247.4 L340.0,247.2 L342.5,247.0 L345.0,246.8 L347.5,246.7 L350.0,246.5 L352.5,246.3 L355.0,246.1 L357.5,246.0 L360.0,245.8 L362.5,245.6 L365.0,245.5 L367.5,245.3 L370.0,245.1 L372.5,245.0 L375.0,244.8 L377.5,244.6 L380.0,244.5 L382.5,244.3 L385.0,244.1 L387.5,244.0 L390.0,243.8 L392.5,243.7 L395.0,243.5 L397.5,243.4 L400.0,243.2 L402.5,243.0 L405.0,242.9 L407.5,242.7 L410.0,242.6 L412.5,242.4 L415.0,242.3 L417.5,242.1 L420.0,242.0 L422.5,241.8 L425.0,241.7 L427.5,241.5 L430.0,241.4 L432.5,241.2 L435.0,241.1 L437.5,241.0 L440.0,240.8 L442.5,240.7 L445.0,240.5 L447.5,240.4 L450.0,240.2 L452.5,240.1 L455.0,240.0 L457.5,239.8 L460.0,239.7 L462.5,239.5 L465.0,239.4 L467.5,239.3 L470.0,239.1 L472.5,239.0 L475.0,238.9 L477.5,238.7 L480.0,238.6" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><text x="400.0" y="111.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="end" font-weight="400">training</text><text x="400.0" y="227.9" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="end" font-weight="400">inference</text><text x="280.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">relative spend →</text><rect x="520.0" y="76.0" width="280.0" height="180.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="538.0" y="100.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">cost per token</text><text x="538.0" y="124.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">≈ 2 · N · P FLOPs</text><text x="538.0" y="146.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">≈ 2 · P FLOPs / token</text><text x="538.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Training is a one-off; serving</text><text x="538.0" y="185.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">is per token, forever. A model</text><text x="538.0" y="198.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">that is 30% better but 3× more</text><text x="538.0" y="211.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">expensive may simply lose.</text><text x="538.0" y="240.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">this is why small models keep winning</text></svg><figcaption>Move the model size and the batch independently. Training cost is linear in tokens and quadratic-ish in parameters through the attention term, but *step time* is linear in tokens and independent of the parallel degrees — the degrees buy memory, not speed. The only thing that changes throughput at fixed hardware is the efficiency fraction, which is exactly the bubble and the MFU you computed above.</figcaption></figure></p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="data-parallelism-distributes-the-model">"Data parallelism distributes the model"</h3>
+<p>It distributes the <em>data</em>. Every rank holds a complete copy of the $16P$ state, which is why DP alone cannot train a model that does not fit on one device, and why the all-reduce exists at all.</p>
+<h3 id="zero-3-is-strictly-better-than-zero-2">"ZeRO-3 is strictly better than ZeRO-2"</h3>
+<p>ZeRO-3 costs 1.5$\times$ the communication of ZeRO-2 ($3S$ versus $2S$) and puts an all-gather of the parameters in the critical path of every forward pass. Use the lowest stage that fits, not the highest stage that exists.</p>
+<h3 id="tensor-and-pipeline-parallelism-are-two-ways-to-do-the-same-thing">"Tensor and pipeline parallelism are two ways to do the same thing"</h3>
+<p>They fail differently. TP communicates $8sbh$ bytes <em>per layer</em> on the fastest link and is batch-independent in relative cost; PP communicates $2sbh$ bytes <em>per micro-batch per boundary</em> on the slowest link and pays a bubble that grows with $p$. TP is limited by link bandwidth, PP by the number of micro-batches you can afford.</p>
+<h3 id="more-pipeline-stages-increase-throughput">"More pipeline stages increase throughput"</h3>
+<p>Throughput per device scales as $m/(m+p-1)$. Adding a stage adds a device and a bubble; for fixed $m$ it can <em>lower</em> total throughput. Pipeline stages are a memory device, not a speed device.</p>
+<h3 id="activation-checkpointing-always-costs-a-third-of-your-speed">"Activation checkpointing always costs a third of your speed"</h3>
+<p>Full recomputation turns $6N$ into $8N$ FLOPs, which costs 33% <em>only in a compute-bound regime</em>. A layer whose activation traffic already dominates loses nothing measurable, and a run that would otherwise OOM gains everything.</p>
+<h3 id="a-checkpoint-lets-you-resume-exactly">"A checkpoint lets you resume exactly"</h3>
+<p>Only if you also restore the RNG state, the data-loader position, and the optimizer's step counter. Most silent "resumed but slower" incidents are a loader that restarted at epoch 0, so the model saw the same documents again and the loss curve kinked without anyone noticing.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>1.</strong> Write out the 16 bytes per parameter and say which of them must be fp32 and why.</p>
+<p><strong>2.</strong> For $S = 2P$ and $N = 16$ ranks, how many bytes does one rank send in a ring all-reduce of a 13B model's gradients?</p>
+<details><summary>Solution</summary>
+
+**1.** bf16 weight (2), bf16 gradient (2), fp32 master weight (4), Adam $m$ (4), Adam $v$ (4). The master weight and both moments must be fp32 because the update $\eta\hat{m}/(\sqrt{\hat{v}}+\epsilon)$ is typically $10^{-3}$ to $10^{-4}$ relative to $\theta$; applied to a bf16 weight whose gap at $\theta$ is $2^{-8}|\theta|$, most updates would round to zero.
+
+**2.** $S = 2 \times 13\times10^9 = 26$ GB. Per rank $= 2(N-1)/N \cdot S = 2 \times \frac{15}{16} \times 26 = 48.75$ GB. As $N\to\infty$ this approaches $2S = 52$ GB, so going from 16 to 16,000 ranks changes the per-rank volume by 6%.
+
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>3.</strong> A 13B model with ZeRO-2 on 32 GPUs: how many bytes of state per GPU, and does it fit in 80 GB alongside 4 GB of activations?</p>
+<p><strong>4.</strong> A pipeline has $p = 6$ stages. How many micro-batches are needed for 90% efficiency, and what does that imply for the global batch if each micro-batch is 2 sequences of 4096 tokens?</p>
+<p><strong>5.</strong> Using $\rho_{\text{TP}} = 4(\pi/\gamma)hLN_tN_p/P$, compute the tensor-parallel communication ratio for a 7B on A100s ($\pi = 312$ TFLOP/s, $\gamma = 300$ GB/s) and on H100s, at $N_t = 8$. What does the difference say about why TP degrees grew more expensive over time?</p>
+<details><summary>Solution</summary>
+
+**3.** ZeRO-2 gives $2 + 14/N$ bytes per parameter $= 2 + 14/32 = 2.4375$, so $13\times10^9 \times 2.4375 = 31.7$ GB. Plus 4 GB of activations and ~2 GB of buffers: about 38 GB, which fits comfortably.
+
+**4.** $9(p-1) = 45$ micro-batches. At 2 sequences $\times$ 4096 tokens each, the global batch is $45 \times 2 \times 4096 = 368{,}640$ tokens. That is a large batch, which is why pipelines shorter than 6 stages are preferred: $p = 4$ needs only 27.
+
+**5.** $\pi/\gamma$ is $1040$ on A100 and $2198$ on H100. So $\rho_{\text{TP}}$ is $4 \times 1040 \times 4096 \times 32 \times 8/7\times10^9 = 0.62$ on A100 and $1.32$ on H100. Compute per byte of link bandwidth grew twice as fast as the link, so the same tensor-parallel degree became twice as expensive in relative terms — the arithmetic reason parallelism plans for the same model changed between hardware generations.
+
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>6.</strong> You are given 512 H100s and a 70B model. Write a full plan (TP, PP, DP, ZeRO stage, micro-batch, accumulation) with a predicted peak memory per GPU and step time at 40% MFU, assuming 4k-token sequences.</p>
+<p><strong>7.</strong> Derive the maximum tensor-parallel degree a 7B model can use on 8 GPUs before the per-layer forward all-reduce exceeds the layer's forward compute, holding $h$, $L$ and $P$ fixed and treating $\pi/\gamma$ as a constant. Then explain why exceeding it is still sometimes correct.</p>
+<p><strong>8.</strong> Your 64-GPU run resumes from a checkpoint and the loss curve jumps upward for 300 steps before recovering. Give three distinct causes consistent with the memory equation and the failure modes in this module, and the check that distinguishes them.</p>
+<details><summary>Solution</summary>
+
+**6.** State per GPU with TP 8, DP 64, ZeRO-1: $4\times70\times10^9/8 + 12\times70\times10^9/(8\times64) = 35 + 1.64 = 36.6$ GB. Activations with full recompute at $b = 2$, all 32 layers, TP-split: $32 \times 2 \times 4096 \times 2 \times 4096/8 = 0.27$ GB, plus attention workspace. Peak $\approx 40$ GB of 80. Global batch $= b\,g\,N_d\,s = 2 \cdot g \cdot 64 \cdot 4096$; with $g = 2$ that is 1.05M tokens, and $\text{FLOPs} = 6 \times 70\times10^9 \times 1.05\times10^6 = 4.4\times10^{17}$, so at $0.4 \times 512 \times 989\times10^{12} = 2.02\times10^{17}$ FLOP/s the step takes 2.2 s. DP all-reduce: $S = 2P/N_t = 17.5$ GB, per rank $2 \times \frac{63}{64} \times 17.5 = 34$ GB over IB at 50 GB/s $= 0.69$ s — 31% of the step, so bucketed overlap is mandatory, or raise $g$.
+
+**7.** Setting $\rho_{\text{TP}} < 1$: $N_t < P/(4(\pi/\gamma)hL)$. For 7B on H100 that is $7\times10^9/(4\times2198\times4096\times32) = 6.1$, so degree 8 already exceeds it and degree 4 is the largest "free" one. Exceeding it is still correct when the model does not fit otherwise, and because the all-reduce after a row-parallel GEMM can overlap with the *next* block's column-parallel GEMM — the arithmetic cost is real but hideable.
+
+**8.** (a) *Stale data*: the loader restarted at epoch 0, so early documents were repeated; check by logging a hash of the first batch's token ids and comparing with the pre-crash log. (b) *RNG not restored*: dropout and any sampling-based data mixing reset; check by asserting the loss on a fixed held-out batch is bit-identical across the restart. (c) *Optimizer state*: the moments were saved in bf16 or the step counter reset, so the first updates are mis-scaled by $1/(1-\beta_1^t)$; check by comparing the first post-restart update norm with the pre-crash average. All three produce a transient bump; only the hash check identifies which.
+
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>What are the five components of the 16 bytes per parameter?</li>
+<li>Which ZeRO stage shards gradients, and what does sharding them cost in communication?</li>
+<li>Why is the row-parallel split — not the column-parallel one — the one that needs an all-reduce?</li>
+<li>Give the pipeline efficiency formula and its value for $p = 4$, $m = 12$.</li>
+<li>Which activation term does sequence parallelism reduce, and which does context parallelism reduce?</li>
+<li>State the recomputation decision rule in terms of arithmetic intensity.</li>
+<li>What is the optimal checkpoint interval when $\delta = 60$ s and the cluster MTBF is 500 hours?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. bf16 weight, bf16 gradient, fp32 master weight, Adam first moment, Adam second moment: $2+2+4+4+4$.
+2. ZeRO-2. It costs nothing extra in bandwidth — $2S$ either way — because gradients are produced incrementally and can be reduce-scattered during the backward pass.
+3. Because row-parallel splits the *input* dimension, so each rank computes a partial sum that must be added across ranks; column-parallel gives each rank a disjoint slice of the output.
+4. $m/(m+p-1) = 12/15 = 80\%$.
+5. Sequence parallelism reduces the replicated $sbh$ terms (layer-norms, dropout, residuals) inside a tensor-parallel block; context parallelism reduces the $s^2$ attention term and the per-sequence KV cache.
+6. Recompute when $F/B < \pi/\beta$ — that is, when the tensor's arithmetic intensity is below the ridge point, so the memory it saves costs more time than recomputing it.
+7. $\tau_{\mathrm{opt}} = \sqrt{2\delta T} = \sqrt{2 \times 60 \times 1.8\times10^6} = 1.47\times10^4$ s $\approx 4.1$ hours.
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li>Rajbhandari, Samyam, Shaden Smith, Jeff Rasley and Yuxiong He, <em>ZeRO: Memory Optimizations Toward Training Trillion Parameter Models</em> (SC 2020). The canonical statement of the sharding stages; take the memory table and the communication-volume analysis.</li>
+<li>Shoeybi, Mohammad, Mostofa Patwary, Raul Puri, Patrick LeGresley, Jared Casper and Bryan Catanzaro, <em>Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism</em> (2019). Where the column/row split with one all-reduce per block is worked out; read the figure legend carefully.</li>
+<li>Narayanan et al., <em>Efficient Large-Scale Language Model Training on GPU Clusters Using Megatron-LM</em> (SC 2021). 1F1B and interleaved schedules with the bubble arithmetic; the source of the $m \ge 9(p-1)$ style reasoning.</li>
+<li>Korthikanti, Vijay Anand, Lars Sastry, et al., <em>Reducing Activation Recomputation in Large Transformer Models</em> (MLSys 2023). Sequence parallelism and selective activation recomputation, with the $34sbh + 5abs^2$ accounting this module reconstructs.</li>
+<li>Huang et al., <em>GPipe: Efficient Training of Giant Neural Networks using Pipeline Parallelism</em> (NeurIPS 2019). The original bubble analysis.</li>
+<li>Zhao, Yanli, Andrew Gu, et al., <em>PyTorch FSDP: Experiences on Scaling Fully Sharded Data Parallel</em> (2023). ZeRO-3 as an engineering artefact, including the parts that bite.</li>
+<li>Daly, Roger P., <em>A higher order estimate of the optimum checkpoint interval for restart dumps</em> (Future Generation Computer Systems, 2006). The corrected version of Young's square-root rule used here.</li>
+<li>Dubey et al., <em>The Llama 3 Herd of Models</em> (2024). A published, complete parallelization plan for a 405B run; read the infrastructure section as a worked example of this module.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when you can, without notes:</p>
+<ul>
+<li>Write the memory equation for a training run and evaluate it for any model, dtype and device count.</li>
+<li>Derive the ring all-reduce volume and state the fraction of step time it consumes on a named link.</li>
+<li>Say what each ZeRO stage shards, what it costs in bandwidth, and pick the lowest stage that fits.</li>
+<li>Draw a transformer block with every all-reduce in the forward and backward graph, and justify each placement.</li>
+<li>Derive the pipeline bubble, compute the micro-batch count for a target efficiency, and explain why 1F1B exists.</li>
+<li>Decide between recomputation and more devices for a stated memory shortfall, using the ridge point.</li>
+<li>Produce a full plan (degrees, micro-batch, accumulation) for a stated model and cluster, with a predicted step time that a measurement can falsify.</li>
+</ul><div class="pager"><a id="prevlink" href="../m/24-gpu-cuda.html"><small>← previous</small><b>M24 · GPU Architecture and CUDA</b></a><a id="nextlink" class="next" href="../m/26-efficiency-engineering.html"><small>next →</small><b>M26 · Efficiency Engineering</b></a></div></article>
+</main>
+</div>
+</body></html>

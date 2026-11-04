@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M27 · Research Method: Reading, Reproducing, and Writing — From Zero to Frontier</title>
+<meta name="description" content="Most published improvements are noise wearing a confidence interval's clothing.">
+<meta property="og:title" content="M27 · Research Method: Reading, Reproducing, and Writing — From Zero to Frontier">
+<meta property="og:description" content="Most published improvements are noise wearing a confidence interval's clothing.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="on" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Practice / M27</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M27">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M27</span><span class="pill d2">difficulty 2/5</span><span class="pill">2 weeks</span><span class="pill">prereqs: M20</span><span class="pill">7,428 words</span></div><h1>Research Method: Reading, Reproducing, and Writing</h1><p class="tagline">Most published improvements are noise wearing a confidence interval's clothing.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>Everything you have built so far assumes you know what question you are asking. Real research is the discipline of finding out that you did not. A paper's abstract states a claim, its table states a number, and the two are connected by a chain of decisions — which baseline, which seed, which metric, which subset, which hyperparameter budget — that the paper mostly does not show you. If you cannot reconstruct that chain you will spend your career three ways wrong at once: reading results as facts, mistaking your own reproduction failure for your own incompetence, and writing claims your evidence cannot carry. <strong>M20</strong> taught you to measure. This module teaches you to read a measurement made by someone else, to decide whether it is real, and to make one of your own that survives a stranger's scrutiny. It is the last prerequisite for <strong>M28</strong>, where you will produce artefacts that other people judge.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<p>Answer before reading on. If you miss two or more, revisit <strong>M20</strong>.</p>
+<ol>
+<li>A benchmark has 1,000 items and your system scores 72.0 percent. Give the standard error and a 95 percent interval, and say what the interval is an interval <em>over</em>.</li>
+<li>What is the difference between an evaluation item and a training example, and why does contamination inflate a score?</li>
+<li>Name three quantities that a benchmark score silently averages over.</li>
+<li>If system A beats system B by 0.8 points on one seed each, what have you learned?</li>
+<li>What does a paired bootstrap resample, and why does it give a tighter interval than treating two scores as independent samples?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $\hat\sigma = \sqrt{0.72\times0.28/1000} = 0.0142$, so the 95 percent interval is $0.720 \pm 1.96(0.0142) = [0.692, 0.748]$. The interval is over *resampling of the item set* — over the hypothetical population of benchmark items you did not use — not over training runs.
+2. An evaluation item is held out and never optimised against; a training example is. Contamination means evaluation items (or near-duplicates) appeared in pretraining data, so the score measures recall of seen text rather than generalisation.
+3. Prompt format and few-shot count, answer-extraction rules, decoding settings (greedy versus sampled, temperature, max tokens), and the effective sample after unparseable answers are dropped — any of these can move a number by more than the effect being claimed.
+4. Almost nothing: one seed per system gives you one draw from each system's run-to-run distribution, and run-to-run standard deviations on small fine-tuning jobs are routinely 0.5 to 2 points. The gap is inside the noise.
+5. A paired bootstrap resamples *items*, keeping the same items for both systems in each resample, so the item-difficulty component of variance cancels in the difference. The interval is over the paired difference and is typically several times tighter than the interval on either score alone.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<p>By the end of this module you can, without notes:</p>
+<ul>
+<li>Execute the three-pass reading protocol on an unfamiliar paper and state the distinct artefact each pass must produce.</li>
+<li>Reconstruct an architecture diagram into a shape table and a parameter count, and say which parts share weights.</li>
+<li>Read a results table and list, unprompted, the four things it does not tell you.</li>
+<li>Compute a confidence interval for an accuracy, a paired difference, and a seed-averaged result, and decide whether a reported gain survives.</li>
+<li>Write the sample-size calculation for a planned experiment and say what effect size you can afford to detect.</li>
+<li>Run a reproduction attempt from the checklist alone, and diagnose a failure into one of five named causes.</li>
+<li>Design an honest ablation: one factor, matched budget, matched tuning, and your own contribution included.</li>
+<li>Rewrite an overclaiming abstract sentence into a claim its evidence supports.</li>
+<li>Review a paper and produce the three things a review must contain.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$n$</td>
+<td>number of evaluation items</td>
+</tr>
+<tr>
+<td>$\hat p$</td>
+<td>measured accuracy, a proportion in $[0,1]$</td>
+</tr>
+<tr>
+<td>$\hat\sigma_{\hat p}$</td>
+<td>standard error of $\hat p$, $\sqrt{\hat p(1-\hat p)/n}$</td>
+</tr>
+<tr>
+<td>$\Delta$</td>
+<td>the reported improvement, usually $\hat p_A - \hat p_B$</td>
+</tr>
+<tr>
+<td>$\delta$</td>
+<td>the smallest true improvement you care to detect (the effect size)</td>
+</tr>
+<tr>
+<td>$\rho$</td>
+<td>correlation between two systems' per-item outcomes</td>
+</tr>
+<tr>
+<td>$\sigma_{\text{seed}}$</td>
+<td>run-to-run standard deviation across training seeds</td>
+</tr>
+<tr>
+<td>$k$</td>
+<td>number of configurations, seeds, or comparisons examined</td>
+</tr>
+<tr>
+<td>$\alpha$</td>
+<td>false-positive rate you accept, conventionally 0.05</td>
+</tr>
+<tr>
+<td>$1-\beta$</td>
+<td>power: probability of detecting a true effect of size $\delta$</td>
+</tr>
+<tr>
+<td>$z_q$</td>
+<td>the $q$-quantile of the standard normal, $z_{0.975}=1.96$</td>
+</tr>
+<tr>
+<td>$m$</td>
+<td>number of independent training runs contributing to a mean</td>
+</tr>
+<tr>
+<td>$\mathcal{H}$</td>
+<td>a hypothesis under test, in the ordinary scientific sense</td>
+</tr>
+</tbody>
+</table>
+<p>One convention throughout: a quantity written $\hat{\cdot}$ is estimated from data; the same symbol without a hat is the population value you cannot see. When this module says "real", it always means <em>would recur if you reran the experiment on fresh data</em> — never "large" and never "published".</p>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="three-passes-three-artefacts">Three passes, three artefacts</h3>
+<p><strong>Intuition.</strong> A paper is a compressed artefact written by people who already know the answer, for readers who mostly do not need it. Reading it linearly — title to conclusion — maximises the chance you absorb the rhetoric and miss the claim. Read it the way a surveyor reads terrain: a coarse pass to fix the shape, a medium pass for the argument, a fine pass for the parts you intend to build on.</p>
+<p><strong>Formal definition.</strong> The three-pass method (popularised by S. Keshav) assigns each pass a fixed time budget and a fixed output.</p>
+<table>
+<thead>
+<tr>
+<th>Pass</th>
+<th>Time</th>
+<th>Read</th>
+<th>Must produce</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>5–10 min</td>
+<td>title, abstract, headings, figures, tables, conclusion</td>
+<td>a one-sentence claim, a category, and a decision: continue, cite, or discard</td>
+</tr>
+<tr>
+<td>2</td>
+<td>~1 hour</td>
+<td>everything except proofs and appendices</td>
+<td>a summary of the evidence for the claim, the gaps, and whether the claim survives the evidence</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4–5 hours</td>
+<td>everything, plus reimplementation of key steps</td>
+<td>a reconstruction: what you would have to do to reproduce it, and where it would break</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why it is built this way.</strong> The scarce resource is not reading speed but <em>attention allocation</em>. Most papers you encounter deserve five minutes. Without a protocol you spend forty minutes on each and remember nothing; with one you spend five, discard 80 percent, and reserve depth for the two papers a month that matter. The requirement of an artefact per pass is the load-bearing part: a pass that produces nothing is a pass you did not do.</p>
+<p><strong>Worked micro-example.</strong> You have eight papers for a literature scan and one afternoon. Pass 1 on all eight: 8 × 8 min ≈ 65 min, leaving three discs, five cites, discard two. Pass 2 on the three discs: 3 × 50 min = 150 min. Pass 3 on the one paper you must build on: 4 hours, deferred to tomorrow. Total today ≈ 3.6 hours and the afternoon is used, instead of 8 × 40 min spent linearly and unproductively on all eight.</p>
+<h3 id="reading-an-architecture-diagram-into-shapes">Reading an architecture diagram into shapes</h3>
+<p><strong>Intuition.</strong> A block diagram is a program drawn sideways. If you cannot annotate every arrow with a tensor shape, you are looking at a picture, not reading a specification.</p>
+<p><strong>Formal definition.</strong> Reading a diagram means extracting five things in order: (i) the <em>shape</em> of the input and output of every block; (ii) the <em>shared parameters</em> — which boxes appear twice and therefore tie weights; (iii) the <em>frozen</em> versus <em>trained</em> status of each box; (iv) every <em>nonlinearity</em> (a missing one collapses the block to a linear map); and (v) every <em>residual path</em>, because it determines what gradient can flow where. Then check the whole against the parameter count the paper reports.</p>
+<p><strong>Why it is built this way.</strong> Papers omit, and diagrams lie by omission. The two most common omissions are where the normalisation sits (pre-LN versus post-LN changes training stability completely) and whether a projection is shared between the attention and MLP branches. Both are invisible unless you count parameters.</p>
+<p><strong>Worked micro-example.</strong> A diagram shows "attention → concat → linear". Parameter count reported: 4 matrices of $d\times d$, biasless. A $d=512$ block of multi-head attention with input projection $W_Q,W_K,W_V$ and output $W_O$ has $4d^2 = 4(512)^2 = 1{,}048{,}576$ parameters. If the paper reports $3d^2$, the output projection is missing from the diagram or tied. If it reports $2d^2$, it is multi-query or the diagram is wrong. The reconciliation <em>is</em> the reading.</p>
+<h3 id="reading-a-results-table">Reading a results table</h3>
+<p><strong>Intuition.</strong> A results table is an argument rendered as digits. Your job is to find what the argument needs you not to notice.</p>
+<p><strong>Formal definition.</strong> For every row, extract: the baseline and whether it is <em>strong</em> (reproduced by the authors, tuned to the same budget) or <em>quoted</em> (copied from its own paper, tuned against a different protocol); the number of training runs and whether an error bar appears; the compute and data parity between rows; the metric definition and the decoding or evaluation protocol; and the selection rule — was this the best of $k$ runs, and does the table say so.</p>
+<p><strong>Why it is built this way.</strong> The dominant failure in applied ML reading is comparing your well-tuned model against someone else's under-tuned baseline, or the reverse. Both are invisible in the numbers and both are decisive in practice; a "3-point gain" between an untuned baseline and a tuned method is usually 1 point of method and 2 points of tuning.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 340" width="100%" role="img" aria-label="Reading a benchmark table critically" class="fig-svg"><defs><marker id="eval-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="120.0" y="36.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">what the number claims</text><rect x="24.0" y="58.0" width="240.0" height="28.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><text x="38.0" y="77.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">accuracy 84.2%</text><text x="276.0" y="77.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">?</text><text x="292.0" y="77.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">which split? how many items?</text><rect x="24.0" y="92.0" width="240.0" height="28.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><text x="38.0" y="111.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">+2.1 over baseline</text><text x="276.0" y="111.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">?</text><text x="292.0" y="111.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">is that inside the confidence interval?</text><rect x="24.0" y="126.0" width="240.0" height="28.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><text x="38.0" y="145.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">SOTA</text><text x="276.0" y="145.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">?</text><text x="292.0" y="145.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">on one benchmark, for one prompt format</text><rect x="24.0" y="160.0" width="240.0" height="28.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><text x="38.0" y="179.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">92% win rate</text><text x="276.0" y="179.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">?</text><text x="292.0" y="179.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">against which judge, in which order?</text><rect x="24.0" y="208.0" width="812.0" height="110.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="42.0" y="232.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="650">the three questions that defuse most benchmark claims</text><text x="42.0" y="258.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">1. Was the test data excluded from pretraining, and how do you know?</text><text x="42.0" y="278.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2. How many items, and therefore how wide is the interval?</text><text x="42.0" y="298.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">3. Does the gain survive a prompt-format change and a different seed?</text></svg><figcaption>Every path by which an evaluation number can become inflated: contamination, tuning-on-test, best-of-$k$ selection, and the arithmetic of the interval around a score. Trace a single row of a results table backwards through these and you know what the number is worth.</figcaption></figure></p>
+<p><strong>Worked micro-example.</strong> Rows: "Baseline 68.1, Ours 71.4". Footnotes: baseline number is quoted from a 2021 paper; Ours is best of 5 seeds; evaluation uses the standard test set. Decomposition: best-of-5 on a metric with seed SD 1.2 inflates by roughly $1.2\sqrt{2\ln 5}\approx 2.2$ points, so the honest comparison is 71.4 − 2.2 = 69.2 against a baseline that may itself have improved under modern recipes. The claimed 3.3-point gain becomes a contested 1.1-point gain — still possibly real, now a question worth asking rather than a fact.</p>
+<h3 id="signal-and-noise-the-five-things-that-fake-a-gain">Signal and noise: the five things that fake a gain</h3>
+<p><strong>Intuition.</strong> A measured improvement is a claim about the future: that on new data, the method will win again. Five mechanisms manufacture that claim without any real effect.</p>
+<p><strong>Formal definition.</strong> The five are: (1) <strong>sampling noise</strong> on the evaluation items; (2) <strong>seed noise</strong> across training runs; (3) <strong>selection bias</strong> from reporting the best of $k$; (4) <strong>contamination</strong>, where test items or their paraphrases sit in the training corpus; (5) <strong>shifting protocol</strong>, where the winner differs in prompt format, decoding, or extraction. Each has an arithmetic fingerprint, and each is checked by a different experiment.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="How many questions does a benchmark need?" class="fig-svg"><defs><marker id="ci-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="80.0" y1="276.0" x2="500.0" y2="276.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="280.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">0%</text><line x1="80.0" y1="202.7" x2="500.0" y2="202.7" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="206.7" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">2%</text><line x1="80.0" y1="129.3" x2="500.0" y2="129.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="133.3" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">4%</text><line x1="80.0" y1="56.0" x2="500.0" y2="56.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="60.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">6%</text><line x1="80.0" y1="276.0" x2="500.0" y2="276.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><line x1="80.0" y1="56.0" x2="80.0" y2="276.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M80.0,-3317.3 L82.6,-45.4 L85.2,48.7 L87.9,90.4 L90.5,115.3 L93.1,132.3 L95.8,144.8 L98.4,154.5 L101.0,162.4 L103.6,168.9 L106.2,174.4 L108.9,179.1 L111.5,183.2 L114.1,186.9 L116.8,190.1 L119.4,193.0 L122.0,195.7 L124.6,198.0 L127.2,200.2 L129.9,202.3 L132.5,204.1 L135.1,205.9 L137.8,207.5 L140.4,209.0 L143.0,210.4 L145.6,211.7 L148.2,213.0 L150.9,214.1 L153.5,215.3 L156.1,216.3 L158.8,217.3 L161.4,218.3 L164.0,219.2 L166.6,220.1 L169.2,220.9 L171.9,221.7 L174.5,222.4 L177.1,223.2 L179.8,223.9 L182.4,224.5 L185.0,225.2 L187.6,225.8 L190.2,226.4 L192.9,227.0 L195.5,227.5 L198.1,228.1 L200.8,228.6 L203.4,229.1 L206.0,229.6 L208.6,230.1 L211.2,230.5 L213.9,231.0 L216.5,231.4 L219.1,231.9 L221.8,232.3 L224.4,232.7 L227.0,233.1 L229.6,233.4 L232.2,233.8 L234.9,234.2 L237.5,234.5 L240.1,234.8 L242.8,235.2 L245.4,235.5 L248.0,235.8 L250.6,236.1 L253.2,236.4 L255.9,236.7 L258.5,237.0 L261.1,237.3 L263.8,237.6 L266.4,237.9 L269.0,238.1 L271.6,238.4 L274.2,238.6 L276.9,238.9 L279.5,239.1 L282.1,239.4 L284.8,239.6 L287.4,239.8 L290.0,240.1 L292.6,240.3 L295.2,240.5 L297.9,240.7 L300.5,240.9 L303.1,241.1 L305.8,241.3 L308.4,241.5 L311.0,241.7 L313.6,241.9 L316.2,242.1 L318.9,242.3 L321.5,242.5 L324.1,242.7 L326.8,242.9 L329.4,243.0 L332.0,243.2 L334.6,243.4 L337.2,243.5 L339.9,243.7 L342.5,243.9 L345.1,244.0 L347.8,244.2 L350.4,244.3 L353.0,244.5 L355.6,244.6 L358.2,244.8 L360.9,244.9 L363.5,245.1 L366.1,245.2 L368.8,245.4 L371.4,245.5 L374.0,245.6 L376.6,245.8 L379.2,245.9 L381.9,246.0 L384.5,246.2 L387.1,246.3 L389.8,246.4 L392.4,246.5 L395.0,246.7 L397.6,246.8 L400.2,246.9 L402.9,247.0 L405.5,247.1 L408.1,247.3 L410.8,247.4 L413.4,247.5 L416.0,247.6 L418.6,247.7 L421.2,247.8 L423.9,247.9 L426.5,248.0 L429.1,248.1 L431.8,248.2 L434.4,248.3 L437.0,248.4 L439.6,248.5 L442.2,248.6 L444.9,248.7 L447.5,248.8 L450.1,248.9 L452.8,249.0 L455.4,249.1 L458.0,249.2 L460.6,249.3 L463.2,249.4 L465.9,249.5 L468.5,249.6 L471.1,249.7 L473.8,249.8 L476.4,249.8 L479.0,249.9 L481.6,250.0 L484.2,250.1 L486.9,250.2 L489.5,250.3 L492.1,250.3 L494.8,250.4 L497.4,250.5 L500.0,250.6" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="82.1" cy="-83.3" r="4.5" fill="var(--fig-amber,#f5b544)"/><text x="82.1" y="9.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">±9.8</text><circle cx="101.0" cy="162.4" r="4.5" fill="var(--fig-amber,#f5b544)"/><text x="101.0" y="152.4" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">±3.1</text><circle cx="185.0" cy="225.2" r="4.5" fill="var(--fig-amber,#f5b544)"/><text x="185.0" y="215.2" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">±1.4</text><circle cx="500.0" cy="250.6" r="4.5" fill="var(--fig-amber,#f5b544)"/><text x="500.0" y="240.6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">±0.7</text><text x="290.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">number of test items</text><text x="80.0" y="44.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">95% confidence half-width (percentage points)</text><rect x="540.0" y="76.0" width="260.0" height="160.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="558.0" y="100.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">± 1.96√(p(1−p)/n)</text><text x="558.0" y="126.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">At n = 1,000 the interval is</text><text x="558.0" y="139.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">about ±3 points. A claimed</text><text x="558.0" y="152.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">1-point improvement is inside</text><text x="558.0" y="165.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">the noise.</text><text x="558.0" y="196.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">report intervals, always</text><text x="420.0" y="322.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">variance across seeds and prompt formats is usually larger than the interval</text></svg><figcaption>The same measured score with its interval, at four evaluation-set sizes. Watch the interval narrow as the item count quadruples, and notice that the 95 percent interval on a 1,000-item benchmark at 70 percent is already $\pm 2.8$ points — wider than most published gains.</figcaption></figure></p>
+<p><strong>Why it is built this way.</strong> Because a single number cannot distinguish these five, and each demands a different remedy: more items for (1), more seeds for (2), pre-registration for (3), a decontamination audit for (4), and a matched harness for (5). Naming the mechanism tells you which experiment to run; without the naming you run all five experiments badly or none.</p>
+<p><strong>Worked micro-example.</strong> You have 500 evaluation items and score 71.0 versus 69.0. The standard error of the difference, treating systems as independent, is $\sqrt{2 \times 0.70 \times 0.30/500} = 0.029$, so a 2-point gap is 0.69 standard errors — pure noise by any standard. Because the systems answer the <em>same</em> items, the paired standard error with $\rho=0.7$ is $\sqrt{2 \cdot 0.21/500 \cdot (1-0.7)} = 0.0159$, and the same gap is 1.26 standard errors. You still cannot claim it. Recognising the pairing tightened your interval by 1.8× and changed nothing about the conclusion — which is the honest outcome more often than papers admit.</p>
+<h3 id="reproducing-a-result-the-checklist-and-the-five-failure-modes">Reproducing a result: the checklist and the five failure modes</h3>
+<p><strong>Intuition.</strong> A reproduction is not "does the code run" but "does the number come back".</p>
+<p><strong>Formal definition.</strong> A reproduction attempt has seven checkable layers, and a failure is localised by walking them in order: <strong>environment</strong> (framework and CUDA version, deterministic kernels), <strong>data</strong> (exact snapshot, split, deduplication, preprocessing), <strong>code</strong> (commit hash, and whether the released branch is the one that produced the table), <strong>hyperparameters</strong> (including the ones not in the appendix), <strong>seeds and nondeterminism</strong> (which operations are nondeterministic, and the spread they induce), <strong>metric definition</strong> (the exact extraction and normalisation), and <strong>hardware-dependent numerics</strong> (reduced-precision reductions, different kernel selection). The five observed causes of failure, in decreasing frequency: an unstated hyperparameter, a data-processing difference, a metric-definition difference, a genuine bug in the released code, and a result that was never reproducible.</p>
+<p><strong>Why it is built this way.</strong> Because "it didn't reproduce" is not a diagnosis, and the response to it differs wildly by layer. Environment failures take an hour; data-processing failures take a week and are the most common; a result that was never reproducible should change how you cite the paper forever.</p>
+<p><strong>Worked micro-example.</strong> You reproduce a fine-tuning result and get 84.1 against the reported 86.3. Walking the layers: environment identical, data identical, hyperparameters identical except the paper never states the warmup ratio; you used 0.03, the authors' config file (found in the repo's <code>configs/</code>) shows 0.06. Rerunning: 86.0. The failure was layer 4, unstated hyperparameter, resolved in ninety minutes by reading the repository rather than the paper — which is itself the lesson: the repository is part of the paper.</p>
+<h3 id="what-makes-an-ablation-honest">What makes an ablation honest</h3>
+<p><strong>Intuition.</strong> An ablation is a controlled experiment whose only difference is the thing you claim matters. Most published ablations are not controlled experiments; they are a list of variants.</p>
+<p><strong>Formal definition.</strong> An ablation is honest when four conditions hold: (i) <strong>one factor changes per row</strong>, with everything else — data, schedule, tuning budget — matched; (ii) <strong>the tuning budget is matched</strong>, meaning the ablated variant got the same search as the full method, not the leftover hyperparameters; (iii) <strong>the baseline being ablated is the method itself</strong>, so the row "full method minus X" is present and is the row that matters; (iv) <strong>the metric is the one in the claim</strong>, not a proxy that happens to move. An ablation that removes a component and also removes its hyperparameters measures the hyperparameters.</p>
+<p><strong>Why it is built this way.</strong> Because removing a component usually <em>changes the optimal hyperparameters</em>, and an untuned removal understates the component's contribution while overstating yours. Matched-budget ablations frequently show that a paper's central contribution is worth one third of what the headline claims and that a boring component is worth more.</p>
+<p><strong>Worked micro-example.</strong> A method adds an auxiliary loss with weight $\lambda=0.1$, tuned over $\{0.01, 0.05, 0.1, 0.5\}$. The ablation row "no auxiliary loss" reports 82.0 against the full method's 84.6. But the base model without the loss needs a different learning rate; retuned it reaches 83.4 on its own. The auxiliary loss is worth 1.2 points, not 2.6, and $\lambda$ was doing 1.4 points of work that belongs to the tuning procedure.</p>
+<h3 id="negative-results-and-what-they-are-worth">Negative results, and what they are worth</h3>
+<p><strong>Intuition.</strong> A negative result is a measurement that says "this did not help", and it is only as valuable as the experiment behind it was controlled. "It did not work" is worthless; "it did not work in 40 runs, on 3 seeds each, with matched tuning, and here is the ablation that localises why" is a contribution.</p>
+<p><strong>Formal definition.</strong> A negative result is publishable when it is (i) <em>powered</em> — the experiment could have detected the effect had it existed, stated as $\delta_{\min}$; (ii) <em>controlled</em> — the comparison matches on everything but the factor; and (iii) <em>localised</em> — it says which step failed, not merely that the endpoint was not reached.</p>
+<p><strong>Why it is built this way.</strong> Because the field's visible record is a biased sample: failed attempts are not written up, so every technique you read about appears to work, and you re-run the same dead ends others already ran. The bias is not just inefficiency — it distorts the literature's implied success rate, which is what young researchers calibrate on.</p>
+<p><strong>Worked micro-example.</strong> "We tried curriculum learning on our corpus and it did not help." Useless: no $\delta_{\min}$, no control, no localisation. Rewritten: "Curriculum ordering over 4 stages, 3 seeds per arm, matched token budget, moved final validation loss by $+0.004 \pm 0.012$ nats — a $\delta_{\min}$ of 0.02 nats at this seed count, so the effect is bounded below 2 percent and the ordering was verified to be applied correctly by logging the first 500 examples." Now a reader can decide whether their setting is inside that bound.</p>
+<h3 id="the-claim-evidence-structure-and-why-abstracts-overclaim">The claim-evidence structure, and why abstracts overclaim</h3>
+<p><strong>Intuition.</strong> A paper is one claim and the minimum set of measurements that make it credible. Every sentence in the abstract is a compression of that structure, and compression loses the conditions.</p>
+<p><strong>Formal definition.</strong> The claim-evidence structure has four slots: the <strong>claim</strong> (what is asserted, with its scope), the <strong>evidence</strong> (the measurement that would be different if the claim were false), the <strong>warrant</strong> (why that measurement bears on that claim), and the <strong>qualifier</strong> (the conditions under which it holds). An abstract overclaims when it states the claim and drops the qualifier — "X improves reasoning" instead of "X improves accuracy on GSM8K by 2 points at fixed inference budget, on models of 7B scale". The drop is not usually dishonest; the qualifier is long and the abstract is 150 words.</p>
+<p><strong>Why it is built this way.</strong> Because the qualifier is the part you need. A claim without its scope cannot be combined with other claims, cannot be falsified, and cannot be applied — which is why reading only abstracts produces a field of contradictory facts rather than a body of knowledge.</p>
+<p><strong>Worked micro-example.</strong> Abstract sentence: "Our method doubles sample efficiency." Method section: on one task, at one scale, with the baseline's learning rate. The recovered claim is "at 125M parameters, with a fixed learning rate, on one synthetic task, our method reaches the baseline's final loss in 51 percent of the steps". That is a real and interesting result. The abstract version cannot be used to predict anything, and would be wrong applied to a fine-tuning run — which is where you will try to apply it.</p>
+<h3 id="writing-the-method-section">Writing the method section</h3>
+<p><strong>Intuition.</strong> The method section is not a description of your code; it is the minimum information a competent stranger needs to rebuild your result and get your number. Write it for the person who will fail to reproduce you — because they will.</p>
+<p><strong>Formal definition.</strong> A method section carries five things in a fixed order: the <strong>problem statement</strong> (what is optimised, in symbols, with the loss written out); the <strong>data</strong> (source, size, split, preprocessing, deduplication, and for LLMs the token count); the <strong>model or algorithm</strong> (shapes and equations, not framework names); the <strong>training procedure</strong> (optimiser, learning rate and schedule, batch size, steps, hardware, wall-clock, and every hyperparameter you actually set); and the <strong>evaluation protocol</strong> (prompt format, decoding, metric, extraction rules). Anything you tuned, you report, including the search space — the search space is part of the method.</p>
+<p><strong>Why it is built this way.</strong> Because the reproducibility failures in this module's checklist are mostly <em>omissions</em>, and every omission is someone deciding a detail was too small to mention. The rule that fixes it is mechanical: for each of the five parts, ask what you would need to know to reimplement it, and write that.</p>
+<p><strong>Worked micro-example.</strong> Compare "we fine-tune LLaMA-2 7B with LoRA for 3 epochs" with "LoRA with $r=16$, $\alpha=32$, dropout 0.05 on all linear projections except the LM head; 3 epochs over 52k examples, effective batch 64, cosine schedule with 3 percent warmup, peak LR $2\times10^{-4}$, bf16, 2×A100-80GB, 4.5 hours; the peak LR was chosen from $\{1,2,4\}\times10^{-4}$ on a 2k held-out split". The second sentence is the method section; the first is a table of contents.</p>
+<h3 id="reviewing-a-paper">Reviewing a paper</h3>
+<p><strong>Intuition.</strong> A review is not a verdict on whether the authors are good; it is a structured argument about whether the evidence supports the claim, delivered early enough to be useful.</p>
+<p><strong>Formal definition.</strong> Three things are mandatory: a <strong>summary</strong> in your own words (which demonstrates you read it and lets the authors check you understood), a <strong>list of major issues</strong> each stated as <em>threat to validity → why it matters → what would fix it</em>, and a <strong>list of minor issues</strong> (clarity, missing baselines, notation). A review is honest when every major issue names the experiment or analysis that would change the reviewer's mind.</p>
+<p><strong>Why it is built this way.</strong> Because an issue without a remedy is a complaint, and a review without a summary is unreliable — reviewers who misunderstand a paper reject it for the wrong reason, and the summary is the only cheap defence against that.</p>
+<p><strong>Worked micro-example.</strong> Bad: "The baselines are weak. Reject." Better: "The comparison in Table 2 quotes the 2021 baseline at its published 62.1, while the method is tuned over 12 configurations on the same split; a matched-tuning baseline would likely gain 1–2 points, which is the size of the claimed margin. Reproducing the baseline under the authors' tuning protocol would settle it." The second review can be acted on, argued with, and checked.</p>
+<h3 id="experimental-design-on-a-small-budget-and-pre-registration">Experimental design on a small budget, and pre-registration</h3>
+<p><strong>Intuition.</strong> A small team has no cluster, which rules out some questions entirely and makes others cheap — and the difference is whether the effect you are chasing is large relative to run-to-run variance.</p>
+<p><strong>Formal definition.</strong> Your detectable effect is set by your variance and your run count: with $m$ seeds per arm and per-seed standard deviation $\sigma_{\text{seed}}$, the standard error of a difference is $\sigma_{\text{seed}}\sqrt{2/m}$, so the smallest detectable difference at 95 percent confidence with 80 percent power is</p>
+<p>$$\delta_{\min} \approx (1.96 + 0.84)\,\sigma_{\text{seed}}\sqrt{\frac{2}{m}}.$$</p>
+<p>Pre-registration means writing, before running anything: the hypothesis, the primary metric, the number of seeds, the stopping rule, and the analysis — in a file with a timestamp, so a later reader (including you) can tell prediction from post-hoc story.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 430" width="100%" role="img" aria-label="Every module, its phase, its weight, and its difficulty" class="fig-svg"><defs><marker id="map-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="28.0" y="72.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-blue,#5b8cff)" text-anchor="start" font-weight="700">P1</text><text x="62.0" y="72.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Mathematical foundations</text><rect x="300.0" y="56.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2" opacity="0.61"/><text x="325.0" y="75.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M01</text><rect x="356.0" y="56.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2" opacity="0.74"/><text x="381.0" y="75.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M02</text><rect x="412.0" y="56.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2" opacity="0.74"/><text x="437.0" y="75.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M03</text><rect x="468.0" y="56.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2" opacity="0.74"/><text x="493.0" y="75.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M04</text><text x="28.0" y="122.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-violet,#a78bfa)" text-anchor="start" font-weight="700">P2</text><text x="62.0" y="122.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Machine learning bedrock</text><rect x="300.0" y="106.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.2" opacity="0.61"/><text x="325.0" y="125.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M05</text><text x="28.0" y="172.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="700">P3</text><text x="62.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">The neural network core</text><rect x="300.0" y="156.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.2" opacity="0.61"/><text x="325.0" y="175.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M06</text><rect x="356.0" y="156.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.2" opacity="0.87"/><text x="381.0" y="175.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M07</text><rect x="412.0" y="156.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.2" opacity="0.87"/><text x="437.0" y="175.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M08</text><rect x="468.0" y="156.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.2" opacity="0.74"/><text x="493.0" y="175.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M09</text><text x="28.0" y="222.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="700">P4</text><text x="62.0" y="222.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Architectures</text><rect x="300.0" y="206.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.2" opacity="0.74"/><text x="325.0" y="225.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M10</text><rect x="356.0" y="206.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.2" opacity="0.74"/><text x="381.0" y="225.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M11</text><rect x="412.0" y="206.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.2" opacity="1.0"/><text x="437.0" y="225.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M12</text><rect x="468.0" y="206.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.2" opacity="1.0"/><text x="493.0" y="225.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M13</text><text x="28.0" y="272.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="start" font-weight="700">P5</text><text x="62.0" y="272.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Large language models</text><rect x="300.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.61"/><text x="325.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M14</text><rect x="356.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.74"/><text x="381.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M15</text><rect x="412.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="1.0"/><text x="437.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M16</text><rect x="468.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.74"/><text x="493.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M17</text><rect x="524.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="1.0"/><text x="549.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M18</text><rect x="580.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.87"/><text x="605.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M19</text><rect x="636.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.74"/><text x="661.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M20</text><rect x="692.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.87"/><text x="717.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M21</text><rect x="748.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.74"/><text x="773.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M22</text><rect x="804.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.87"/><text x="829.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M23</text><text x="28.0" y="322.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="700">P6</text><text x="62.0" y="322.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Systems and scale</text><rect x="300.0" y="306.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.2" opacity="0.87"/><text x="325.0" y="325.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M24</text><rect x="356.0" y="306.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.2" opacity="1.0"/><text x="381.0" y="325.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M25</text><rect x="412.0" y="306.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.2" opacity="0.87"/><text x="437.0" y="325.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M26</text><text x="28.0" y="372.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-lime,#a3e635)" text-anchor="start" font-weight="700">P7</text><text x="62.0" y="372.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Practice</text><rect x="300.0" y="356.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-lime,#a3e635)" stroke-width="1.2" opacity="0.48"/><text x="325.0" y="375.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M00</text><rect x="356.0" y="356.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-lime,#a3e635)" stroke-width="1.2" opacity="0.61"/><text x="381.0" y="375.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M27</text><rect x="412.0" y="356.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-lime,#a3e635)" stroke-width="1.2" opacity="0.74"/><text x="437.0" y="375.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M28</text><rect x="468.0" y="356.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-lime,#a3e635)" stroke-width="1.2" opacity="0.61"/><text x="493.0" y="375.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M29</text><text x="300.0" y="420.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">opacity = difficulty (1-5). Phase 5 is the longest, by design.</text><text x="300.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">modules</text></svg><figcaption>Where this module sits: the last phase, after every measurement tool the curriculum builds. Everything left of it is the apparatus you now point at other people's papers.</figcaption></figure></p>
+<p><strong>Why it is built this way.</strong> Because the alternative to pre-registration is garden-of-forking-paths: with enough metrics and enough subsets, something will be significant, and you will report that one. Pre-registration costs twenty minutes and converts an exploratory study into a test that can fail — which is the only kind that produces knowledge.</p>
+<p><strong>Worked micro-example.</strong> $\sigma_{\text{seed}} = 0.8$ points on a 1B-parameter fine-tuning task, three seeds per arm. Then $\delta_{\min} = 2.80 \times 0.8 \times \sqrt{2/3} = 1.83$ points. If your method's plausible effect is 0.5 points, you cannot measure it with three seeds — you need $m \ge 2(2.80 \times 0.8/0.5)^2 = 40$ seeds, i.e. 120 runs. The budget answer is not "run more"; it is "this question is unanswerable here, so either find a lower-variance proxy metric or change the question". That decision, made in twenty minutes, is the entire value of the calculation.</p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<p>You will run this procedure on every headline number you meet, including your own.</p>
+<ol>
+<li><strong>Locate the claim.</strong> Write it as a comparison with a scope: "A beats B on metric M, over dataset D, at scale S, by $\Delta$". If a sentence in the abstract cannot be put in this form, mark it as unsupported and move on.</li>
+<li><strong>Locate the baseline.</strong> Is it quoted, reproduced, or re-tuned? If quoted, find the original number and check the protocol matches. A protocol mismatch invalidates the row.</li>
+<li><strong>Count the runs.</strong> Extract $m$, the number of seeds per arm. If $m=1$ and no error bar is given, you cannot compute anything yet; go to step 6.</li>
+<li><strong>Recover the variance.</strong> From the paper's own error bars if present, from an appendix table, or from your own prior on $\sigma_{\text{seed}}$ at that scale — you have one, from <strong>M20</strong>'s exercises. State it explicitly as an assumption.</li>
+<li><strong>Compute the interval on the difference.</strong> Paired if you have per-item outcomes, unpaired otherwise; with seeds, the two-level interval: within-seed and across-seed.</li>
+<li><strong>Check the selection rule.</strong> Best-of-$k$? Tuned-on-test? Early stopping on the test metric? If yes, deflate: the expected inflation is roughly $\sigma\sqrt{2\ln k}$.</li>
+<li><strong>Check contamination and protocol drift.</strong> Post-cutoff benchmark? Decontamination audit? Same prompt format, same decoding, same extraction?</li>
+<li><strong>Write the verdict with its condition.</strong> One of: "reproducible gain of $\Delta \pm w$", "not distinguishable from zero at this sample size", or "uninterpretable because of $X$". Attach the number that decided it.</li>
+</ol>
+<p>```text
+decide(read):
+    claim      <- parse_comparison(abstract)
+    for arm in claim.arms:
+        arm.baseline_kind <- classify(arm)          # quoted | reproduced | retuned
+        arm.m         <- seeds_of(arm)
+        arm.sigma     <- error_bar(arm) or prior_sd(scale)
+    if any(arm.baseline_kind == quoted and protocol_mismatch(arm)):
+        return UNINTERPRETABLE("protocol")
+    delta  <- claim.delta
+    se     <- paired_se(items) if items_available else sigma*sqrt(2/m)
+    lo, hi <- delta - z*se, delta + z*se
+    if claim.selection == best_of_k:
+        delta <- delta - sigma*sqrt(2*log(k))
+    if claim.post_cutoff is False and no_decontamination_audit(claim):
+        flag(contamination_risk = "unquantified")
+    return VERDICT(delta, lo, hi, flags)
+```</p>
+<p><strong>Complexity.</strong> The whole procedure is $O(1)$ arithmetic plus one pass over per-item outcomes, $O(n)$ time and memory to compute a paired interval. The expensive step is never the statistics — it is step 2, finding the baseline's protocol, which can take an hour of reading appendices and is the step people skip.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="1-the-interval-on-a-proportion-and-why-pairing-changes-it">1. The interval on a proportion, and why pairing changes it</h3>
+<p>Let $c_i \in \{0,1\}$ be the correctness of evaluation item $i$, with $\mathbb{E}[c_i] = p$ and $\mathrm{Var}[c_i] = p(1-p)$. For $n$ independent items, $\hat p = \frac{1}{n}\sum_i c_i$, so</p>
+<p>$$\mathrm{Var}[\hat p] = \frac{1}{n^2}\sum_{i=1}^n \mathrm{Var}[c_i] = \frac{p(1-p)}{n}, \qquad \hat\sigma_{\hat p} = \sqrt{\frac{\hat p(1-\hat p)}{n}}.$$</p>
+<p>For a difference of two systems measured on the <em>same</em> items, let $d_i = A_i - B_i \in \{-1,0,1\}$. Then $\hat\Delta = \frac{1}{n}\sum_i d_i$ and</p>
+<p>$$\mathrm{Var}[\hat\Delta] = \frac{\mathrm{Var}[d_i]}{n}, \qquad \mathrm{Var}[d_i] = \mathrm{Var}[A_i] + \mathrm{Var}[B_i] - 2\,\mathrm{Cov}[A_i,B_i].$$</p>
+<p>Writing the covariance as $\rho\sigma_A\sigma_B$ with $\sigma_A = \sigma_B = \sigma = \sqrt{p(1-p)}$ for two similarly accurate systems,</p>
+<p>$$\mathrm{Var}[\hat\Delta] = \frac{2\sigma^2(1-\rho)}{n}.$$</p>
+<p>Two things follow. First, the paired interval is $\sqrt{1-\rho}$ times the unpaired one — at $\rho = 0.7$ that is $0.55\times$, a 1.8× tightening for free. Second, $\rho$ is large whenever the two systems are similar, which is exactly the regime of a claimed incremental improvement, so the pairing gain is largest precisely where papers usually report no interval at all.</p>
+<p>Counting disagreements is equivalent and more robust. Let $b$ be the number of items only A gets right and $c$ the number only B gets right. Then $\hat\Delta = (b-c)/n$ and, since the concordant items contribute zero variance,</p>
+<p>$$\mathrm{Var}[\hat\Delta] = \frac{1}{n^2}\Big[(b+c) - \frac{(b-c)^2}{n}\Big].$$</p>
+<p>The term $(b-c)^2/n$ is a finite-sample correction; for $(b+c)\gg(b-c)^2/n$ the standard error is approximately $\sqrt{b+c}/n$, the McNemar standard error. This is the derivation behind the rule of thumb: <strong>only the disagreements carry information about the difference.</strong></p>
+<h3 id="2-why-best-of-i91-manufactures-a-gain">2. Why "best of $k$" manufactures a gain</h3>
+<p>Let $k$ independent runs of the <em>same</em> configuration produce scores $S_1,\ldots,S_k \sim \mathcal{N}(\mu, \sigma^2)$, and report $\max_j S_j$. Its expectation exceeds $\mu$. To first order, take $t = \mu + z\sigma$ and ask when the maximum is likely to exceed $t$:</p>
+<p>$$\mathbb{P}\Big(\max_j S_j > t\Big) = 1 - \Phi(z)^k \approx 1 - \big(1 - \bar\Phi(z)\big)^k \approx k\,\bar\Phi(z),$$</p>
+<p>where $\bar\Phi$ is the standard normal tail. Setting this to $1/2$ and using the tail approximation $\bar\Phi(z) \approx \phi(z)/z$ with $\phi(z) = e^{-z^2/2}/\sqrt{2\pi}$:</p>
+<p>$$\frac{k e^{-z^2/2}}{z\sqrt{2\pi}} = \frac{1}{2} \;\Longrightarrow\; z^2 = 2\ln\frac{2k}{z\sqrt{2\pi}} \approx 2\ln k \;\text{for moderate } k.$$</p>
+<p>Hence</p>
+<p>$$\mathbb{E}\Big[\max_j S_j\Big] \approx \mu + \sigma\sqrt{2\ln k},$$</p>
+<p>so best-of-5 inflates by $1.79\sigma$ and best-of-20 by $2.45\sigma$ — before any real improvement exists. When a paper reports a 2-point gain on a metric with 1.1-point seed noise and admits to 5 seeds, the deflated gain is 0.03 points. That is not a rhetorical flourish; it is the arithmetic of step 6.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>A decision tool that takes per-item correctness for two systems and a list of per-seed scores, and returns a verdict. It implements the paired bootstrap, McNemar's test, the seed-level interval, and the best-of-$k$ deflation.</p>
+<p>```python
+import numpy as np
+from math import log, sqrt
+
+def paired_verdict(a, b, b_only=None, c_only=None, scores_a=None, k=1):
+    """a, b: boolean per-item correctness arrays (same items, same order)."""
+    a, b = np.asarray(a, bool), np.asarray(b, bool)
+    n = len(a)
+    d = a.astype(int) - b.astype(int)
+    delta = d.mean()
+    # disagreement counts
+    b_only = int((~a & b).sum())          # items only B gets right
+    c_only = int((a & ~b).sum())          # items only A gets right
+    # paired standard error, exact form
+    var_d = (b_only + c_only) - (b_only - c_only) ** 2 / n
+    se = sqrt(max(var_d, 0.0)) / n
+    lo, hi = delta - 1.96 * se, delta + 1.96 * se
+    # McNemar: chi-square with continuity correction, 1 dof
+    chi2 = (abs(b_only - c_only) - 1) ** 2 / max(b_only + c_only, 1)
+    # item-level bootstrap for a robust interval
+    rng = np.random.default_rng(0)
+    idx = rng.integers(0, n, size=(4000, n))
+    boot = d[idx].mean(axis=1)
+    blo, bhi = np.quantile(boot, [0.025, 0.975])
+    out = {"delta": delta, "se": se, "ci_wald": (lo, hi), "ci_boot": (blo, bhi),
+           "n": n, "b_only": b_only, "c_only": c_only, "mcnemar_chi2": chi2}
+    # optional seed-level view: how much of the gap survives rerunning
+    if scores_a is not None:
+        s = np.asarray(scores_a, float)
+        m = len(s)
+        out["seed_mean"] = s.mean()
+        out["seed_ci"] = (s.mean() - 1.96 * s.std(ddof=1) / sqrt(m),
+                          s.mean() + 1.96 * s.std(ddof=1) / sqrt(m))
+    if k > 1:                              # deflate a best-of-k headline
+        out["deflated_delta"] = delta - se * sqrt(2 * log(k)) * sqrt(n)
+    return out
+
+# expect: delta = 0.019, se = 0.0103, ci_wald = (0.0012, 0.0393),
+# mcnemar_chi2 = 3.37 (p ~ 0.066), so "not distinguishable at 95 percent".
+```</p>
+<p>Two things to notice when you run it. The bootstrap interval and the Wald interval agree closely here because $n$ is large and $\hat\Delta$ is far from 0 and 1; they diverge for small $n$ or scores near the ceiling, which is where you should trust the bootstrap. And the McNemar $\chi^2$ of 3.37 corresponds to $p \approx 0.066$: the point estimate is positive but the evidence does not clear the conventional bar. <strong>A positive point estimate is not a result.</strong></p>
+<h2 id="worked-example">Worked example</h2>
+<p>Two systems are compared on a 1,000-item benchmark. Per-item outcomes are recorded, so every quantity below is computed rather than assumed.</p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Value</th>
+<th>How obtained</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A correct</td>
+<td>712 / 1000 = 71.2%</td>
+<td>$\hat p_A$</td>
+</tr>
+<tr>
+<td>B correct</td>
+<td>731 / 1000 = 73.1%</td>
+<td>$\hat p_B$</td>
+</tr>
+<tr>
+<td>both correct</td>
+<td>649</td>
+<td>concordant</td>
+</tr>
+<tr>
+<td>only B correct ($b$)</td>
+<td>82</td>
+<td>disagreement</td>
+</tr>
+<tr>
+<td>only A correct ($c$)</td>
+<td>63</td>
+<td>disagreement</td>
+</tr>
+<tr>
+<td>both wrong</td>
+<td>206</td>
+<td>concordant</td>
+</tr>
+<tr>
+<td>difference</td>
+<td>(82 − 63)/1000 = +1.9 pts</td>
+<td>(B − A)</td>
+</tr>
+<tr>
+<td>disagreements</td>
+<td>145</td>
+<td>$b+c$</td>
+</tr>
+<tr>
+<td>paired SE</td>
+<td>$\sqrt{145 - 19^2/1000}/1000 = 0.0120$</td>
+<td>exact form</td>
+</tr>
+<tr>
+<td>95% interval on $\Delta$</td>
+<td>$[+0.19, +3.61]$ pts</td>
+<td>$\pm 1.96\sigma$</td>
+</tr>
+<tr>
+<td>McNemar $\chi^2$</td>
+<td>$(|82-63|-1)^2/145 = 2.23$</td>
+<td>1 dof, $p\approx0.135$</td>
+</tr>
+</tbody>
+</table>
+<p>Read the table in two directions. Column-wise, B looks like a 1.9-point winner. Row-wise, 85.5 percent of items are concordant and carry no information about the difference at all; the entire comparison rests on 145 items, of which 82 favour B and 63 favour A. The unpaired interval — treating the two scores as independent draws with $\hat\sigma\approx1.43$ points — would be $\pm 3.96$ points, more than twice as wide, and would have concluded "no difference" without ever examining whether the pairing helped.</p>
+<p>Now add seeds. Suppose each system was run three times and the per-seed accuracies were A: 71.2, 70.4, 72.1 and B: 73.1, 71.9, 73.6. The seed-level standard error of the difference is $\sqrt{0.85^2/3 + 0.87^2/3} = 0.70$ points, and with 2 degrees of freedom the $t$ multiplier is 4.30, giving $1.64 \pm 3.01$ points: $[-1.37, +4.65]$. Item noise and seed noise describe different populations and cannot simply be added in quadrature; the seed is the unit of replication, so the seed-level interval is the one a replication attempt experiences. The honest conclusion: this experiment cannot distinguish a 1.9-point gain from zero, and no re-analysis of the existing 1,000 items will fix that.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="a-p-value-below-005-means-the-effect-is-large">"A p-value below 0.05 means the effect is large."</h3>
+<p>A p-value answers "how surprising is this data if the effect were exactly zero". It says nothing about magnitude, and with $n = 10^5$ evaluation items a 0.1-point difference is "significant". Report the interval, not the p-value; the interval carries both magnitude and uncertainty.</p>
+<h3 id="reproducing-a-paper-means-re-running-the-authors-code">"Reproducing a paper means re-running the authors' code."</h3>
+<p>Re-running the authors' code reproduces their <em>artefact</em>. Reproducing the <em>result</em> means getting the number from the described method, ideally with your own implementation or a clean environment. Only the second tests whether the paper's description is sufficient — which is the property that matters to everyone who cites it.</p>
+<h3 id="a-failed-reproduction-means-the-paper-is-wrong">"A failed reproduction means the paper is wrong."</h3>
+<p>Five causes, only one of which is a wrong result: unstated hyperparameter, data-processing difference, metric-definition difference, released-code bug, and irreproducible claim. The first three are far more common and are documentation failures, not fabrication.</p>
+<h3 id="more-seeds-always-help">"More seeds always help."</h3>
+<p>Seeds reduce seed noise, and nothing else. If your interval is dominated by item sampling — usually the case on a 500-item benchmark — tripling the seeds from 3 to 9 narrows the total interval by less than 10 percent. Compute the variance decomposition before buying compute.</p>
+<h3 id="an-ablation-shows-which-component-matters">"An ablation shows which component matters."</h3>
+<p>An ablation with an unmatched tuning budget shows which component matters <em>when its hyperparameters are frozen at the values the full method chose</em>. Retuning the ablated variant routinely halves the apparent contribution, and sometimes reverses the sign. Match the budget or label the row as "component removed, no retuning".</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>1.</strong> A paper reports 64.2 percent on a 400-item benchmark and 65.0 percent after its change, one seed each. What can you conclude?</p>
+<details><summary>Solution</summary>
+
+Almost nothing. The unpaired standard error of the difference is $\sqrt{2(0.64)(0.36)/400} = 0.034$, so 0.8 points is 0.24 standard errors; the paired version would be somewhat tighter but still far from significant. With one seed per arm you also cannot estimate $\sigma_{\text{seed}}$, which on fine-tuning tasks is frequently larger than the effect. The correct conclusion is "uninformative at this sample size", not "small improvement".
+
+</details>
+
+<p><strong>2.</strong> Why does the three-pass protocol forbid reading the appendix on pass 1?</p>
+<details><summary>Solution</summary>
+
+Because pass 1's job is to decide *whether* to invest in the paper, and the appendix contains the detail that only matters after that decision. Reading it first inverts the cost structure: you spend the expensive attention on the 80 percent of papers you will discard. The appendix is pass 3 material.
+
+</details>
+
+<p><strong>3.</strong> In the worked example above, why is the seed-level interval so much wider than the item-level one, even though both describe "uncertainty in the same number"?</p>
+<details><summary>Solution</summary>
+
+They describe different populations. The item-level interval asks how the score would change with a different sample of *items*; the seed-level interval asks how it would change with a different *training run*. The latter includes optimisation noise, data-order noise and initialisation noise, and its variance is typically an order of magnitude larger. Both are real; the seed-level one is what a replication attempt experiences.
+
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>4.</strong> You want to detect a 1-point improvement with 80 percent power at $\alpha = 0.05$, using a 2,000-item benchmark where per-item outcomes are paired with $\rho = 0.6$. How many seeds per arm do you need if $\sigma_{\text{seed}} = 0.9$ points?</p>
+<details><summary>Solution</summary>
+
+Only the seed-level variance can be reduced by adding seeds; the item-level variance is fixed by the benchmark. The item-level paired SE is $\sqrt{2(0.7)(0.3)(0.4)/2000} = 0.0092$, i.e. 0.92 points — already at your target effect, so the item noise alone nearly fills the budget. Adding seeds cannot fix that. The honest answer: this benchmark is too small for a 1-point claim; use a 10,000-item set, which reduces the item-level SE to 0.41 points, then $m \ge 2(2.8\times0.9/0.8)^2 \approx 20$ seeds for the residual. The lesson is the decomposition, not the arithmetic.
+
+</details>
+
+<p><strong>5.</strong> A method's gain is 2.0 points; the authors report it as the best of 8 runs; the metric's seed SD is estimated at 1.0 point from their own appendix. Deflate the claim.</p>
+<details><summary>Solution</summary>
+
+$\sigma\sqrt{2\ln 8} = 1.0\times2.04 = 2.04$ points of expected selection inflation, so the deflated gain is $2.0 - 2.04 \approx 0$. The honest statement is "indistinguishable from no improvement at this noise level", which is exactly what the appendix data supported all along.
+
+</details>
+
+<p><strong>6.</strong> Two systems have 145 total disagreements and a difference of 19. Compute the McNemar statistic and the paired interval, and state whether a 3-point difference would have been significant at the same disagreement count.</p>
+<details><summary>Solution</summary>
+
+$\chi^2 = (19-1)^2/145 = 2.23$, $p\approx0.135$: not significant. SE $= \sqrt{145 - 361/1000}/1000 = 0.0120$, so a 95 percent interval on a 1.9-point difference is $[0.19, 3.61]$ — barely excludes zero on the Wald scale but not under McNemar, which is the discrepancy that tells you to bootstrap. A 3-point difference with the same 145 disagreements would give $\chi^2 = (30-1)^2/145 = 5.8$, $p\approx0.016$: significant. The disagreement count, not the item count, is the effective sample size.
+
+</details>
+
+<p><strong>7.</strong> Design the smallest experiment that could detect a 0.5-point gain on a 5,000-item benchmark with $\sigma_{\text{seed}} = 0.6$, and say whether it is affordable.</p>
+<details><summary>Solution</summary>
+
+Item-level paired SE: $\sqrt{2(0.75)(0.25)(0.4)/5000} = 0.0055$ = 0.55 points, already above the target effect — so no number of seeds makes a 0.5-point claim testable on this benchmark. You need roughly 4× the items (20,000) to bring item noise to 0.27 points, then $m\ge2(2.8\times0.6/0.4)^2\approx35$ seeds. That is 70 training runs to detect a half point. The right move is usually to change the question — find a metric with lower variance — rather than buy the runs.
+
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>8.</strong> Take any paper from the last year with a results table and no error bars. Compute the interval the missing error bars would have had, using a prior on $\sigma_{\text{seed}}$ for that scale, and state whether the headline claim survives.</p>
+<details><summary>Hint</summary>
+
+Use $\sigma_{\text{seed}} \approx 0.5$–1.5 points for full fine-tuning at 1B scale, 0.2–0.5 for large-scale pretraining evaluations with many items, and 2–5 for small RLHF runs. Then ask what fraction of the claimed margin lies inside $\pm1.96\sigma_{\text{seed}}/\sqrt{m}$. Most such tables fail; the productive part of the exercise is discovering *how* they fail — usually the margin is 1 to 2 seed SDs, which is exactly the ambiguous zone.
+
+</details>
+
+<p><strong>9.</strong> Write a pre-registration for an experiment you actually plan to run: hypothesis, primary metric, seed count, stopping rule, and the analysis. Then run the experiment and diff your prediction against the outcome.</p>
+<details><summary>Hint</summary>
+
+The value is in the diff, not the outcome. Record what you expected the effect size to be *before* running; the error in your own prior is the most useful number you will get all month, because it calibrates every future sample-size calculation you make. Keep the file with a timestamp — a git commit is enough.
+
+</details>
+
+<p><strong>10.</strong> Implement the deflation from derivation 2 as a simulation: draw $k$ samples from $\mathcal{N}(0,1)$, take the max, repeat, and compare the empirical mean max against $\sigma\sqrt{2\ln k}$ for $k = 2, 5, 20, 100$.</p>
+<details><summary>Hint</summary>
+
+The approximation is accurate to within a few percent for $k \ge 5$ and understates the max for small $k$ (at $k=2$ the exact value is $1/\sqrt{\pi}\approx0.564$ versus $1.177$ from the formula — the asymptotic is bad at $k=2$). This is worth seeing: the standard rule of thumb is $O(\sqrt{\log k})$ but its constant is wrong at small $k$, which is the regime most papers operate in.
+
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>State the three passes, their time budgets, and the artefact each must produce.</li>
+<li>Given a $d=768$ encoder block with $Q,K,V,O$ each $d\times d$, biasless, what parameter count should the paper report, and what does a mismatch tell you?</li>
+<li>Write the paired standard error of an accuracy difference in terms of $b$, $c$, and $n$.</li>
+<li>Why does best-of-$k$ selection inflate a headline number, and by how much at $k=10$, $\sigma=0.7$?</li>
+<li>Name the five layers of a reproduction attempt and the five observed causes of failure.</li>
+<li>State the four conditions that make an ablation honest.</li>
+<li>A claim reads "our method improves reasoning". Rewrite it in claim-evidence-warrant-qualifier form.</li>
+<li>You have 3 seeds and $\sigma_{\text{seed}}=1.0$; what is the smallest difference you can detect at 80 percent power?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. Pass 1, 5–10 min, produces a one-sentence claim plus a continue/discard decision. Pass 2, ~1 hour, produces a summary of the evidence and its gaps. Pass 3, 4–5 hours, produces a reconstruction sufficient to reimplement.
+2. $4d^2 = 2{,}359{,}296$. A reported $3d^2$ means the diagram omits the output projection or the block ties something; $2d^2$ means multi-query or an error. Either way the reconciliation is the reading.
+3. $\mathrm{SE} = \frac{1}{n}\sqrt{(b+c) - (b-c)^2/n}$.
+4. Because you are reporting an order statistic, not a mean; $\mathbb{E}[\max] \approx \mu + \sigma\sqrt{2\ln k} = 0.7\sqrt{4.605} = 1.50$ points of pure invention.
+5. Layers: environment, data, code, hyperparameters, seeds/nondeterminism, metric definition, hardware numerics. Causes: unstated hyperparameter, data processing, metric definition, code bug, irreproducible claim.
+6. One factor per row; matched tuning budget; the method itself as the ablated baseline; the metric the claim uses.
+7. Claim: method X improves reasoning accuracy. Evidence: +2.1 points on GSM8K at fixed inference budget versus an equally tuned baseline. Warrant: GSM8K accuracy is a proxy for multi-step arithmetic reasoning, valid only if contamination is excluded. Qualifier: at 7B scale, with 3 seeds, on benchmarks published before the training cutoff.
+8. $\delta_{\min} = 2.8(1.0)\sqrt{2/3} = 2.29$ points.
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ol>
+<li><strong>S. Keshav, "How to Read a Paper" (ACM SIGCOMM Computer Communication Review, 2007).</strong> The original three-pass protocol; read it for the pass budgets and the "five Cs" checklist, then adapt the artefacts to ML papers.</li>
+<li><strong>J. Pineau et al., "Improving Reproducibility in Machine Learning Research" (JMLR, 2021).</strong> The NeurIPS reproducibility programme's report: what the checklist contains, and empirical data on how often submissions fail each item. Extract the checklist itself.</li>
+<li><strong>R. Bouthillier et al., "Accounting for Variance in Machine Learning Benchmarks" (2021).</strong> The clearest published treatment of why single-seed comparisons are meaningless; extract their variance decomposition and the study-level versus run-level distinction.</li>
+<li><strong>X. Bouthillier et al.</strong> — see above; for the seed-noise numbers specifically, <strong>P. Henderson et al., "Deep Reinforcement Learning That Matters" (AAAI 2018)</strong> remains the best demonstration that seed choice can reverse a ranking.</li>
+<li><strong>A. Karpathy, "A Recipe for Training Neural Networks" (blog, 2019).</strong> Not about reading papers but about the other half of reproduction: how to get from a broken run to a working one by bisecting the pipeline. Extract the "become one with the data" step.</li>
+<li><strong>R. A. Fisher, "The Design of Experiments" (1935).</strong> Still the source for randomisation, blocking, and factorial design; the pairing argument in this module is his. Read chapters 1–3 for the logic, not the agriculture.</li>
+</ol>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when you can, without notes:</p>
+<ul>
+<li>Run the three-pass protocol on a paper and name the artefact each pass produced.</li>
+<li>Take a results table and list, in under two minutes, its four silent omissions.</li>
+<li>Compute the paired interval and the McNemar statistic for a two-system comparison from $b$, $c$, $n$, and state the verdict.</li>
+<li>Deflate a best-of-$k$ headline by $\sigma\sqrt{2\ln k}$ and say what remains.</li>
+<li>Walk the seven reproduction layers and localise a failure to one of the five causes.</li>
+<li>State the four conditions for an honest ablation and identify which one a given paper violates.</li>
+</ul><div class="pager"><a id="prevlink" href="../m/26-efficiency-engineering.html"><small>← previous</small><b>M26 · Efficiency Engineering</b></a><a id="nextlink" class="next" href="../m/28-capstone-ladder.html"><small>next →</small><b>M28 · The Capstone Ladder</b></a></div></article>
+</main>
+</div>
+</body></html>

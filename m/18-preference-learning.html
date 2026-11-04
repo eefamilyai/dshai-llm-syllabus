@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M18 · Preference Learning: RLHF, DPO, and Reasoning RL — From Zero to Frontier</title>
+<meta name="description" content="From human comparisons to a policy, and what each shortcut to that policy costs.">
+<meta property="og:title" content="M18 · Preference Learning: RLHF, DPO, and Reasoning RL — From Zero to Frontier">
+<meta property="og:description" content="From human comparisons to a policy, and what each shortcut to that policy costs.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Large language models / M18</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M18">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M18</span><span class="pill d5">difficulty 5/5</span><span class="pill">3 weeks</span><span class="pill">prereqs: M17</span><span class="pill">9,054 words</span></div><h1>Preference Learning: RLHF, DPO, and Reasoning RL</h1><p class="tagline">From human comparisons to a policy, and what each shortcut to that policy costs.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>Supervised fine-tuning tells a model what to say. It cannot tell it which of two acceptable answers is better, and it has no mechanism for improving past the quality of its demonstrations. Preference learning is that mechanism, and it is the stage that turned instruction-tuned models into the systems people actually use. It is also the stage where the mathematics is most often recited rather than understood: DPO is routinely described as "RLHF without the reward model" by people who cannot derive it, and GRPO as "PPO without the critic" by people who cannot say what replaces the critic or why that is legitimate. This module derives all of it — the Bradley–Terry model, the KL-regularized optimum, PPO's clipping, the exact DPO reparameterization, and GRPO's group-relative advantage — and then states plainly what each method cannot do, because the failure modes here are where deployed systems actually break.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<p>If two or more are shaky, revisit <strong>M17</strong> and <strong>M03</strong>.</p>
+<ol>
+<li>Write the log-likelihood of a language model over a response $y$ given a prompt $x$.</li>
+<li>What is $D_{\mathrm{KL}}(\pi\|\pi_{\mathrm{ref}})$ for two categorical distributions, and when is it zero?</li>
+<li>Differentiate $\log\sigma(z)$ with respect to $z$.</li>
+<li>If $f(\theta) = \log g(\theta)$ and you want to maximize $\mathbb{E}_{a\sim\pi_\theta}[R(a)]$, what does the identity $\nabla_\theta\pi_\theta = \pi_\theta\nabla_\theta\log\pi_\theta$ buy you?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $\log\pi_\theta(y\mid x) = \sum_{t=1}^{|y|}\log\pi_\theta(y_t\mid x, y_{<t})$.
+2. $\sum_y \pi(y)\log(\pi(y)/\pi_{\mathrm{ref}}(y))$; zero iff $\pi = \pi_{\mathrm{ref}}$ everywhere.
+3. $\frac{d}{dz}\log\sigma(z) = \sigma(-z) = 1-\sigma(z)$.
+4. It converts a gradient of an expectation into an expectation of a gradient that can be estimated by sampling — the score-function or REINFORCE estimator.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<ul>
+<li>Derive the Bradley–Terry preference model and its loss from the assumption that preference probability is a monotone function of a reward difference, and state the gauge freedom it leaves.</li>
+<li>Derive the closed-form optimal policy for the KL-regularized RLHF objective, with every algebraic step.</li>
+<li>Derive DPO completely, showing that the partition function cancels, and verify the result numerically.</li>
+<li>State the PPO clipped objective, derive its four cases, and explain what the clip prevents.</li>
+<li>Derive the GAE advantage and show the telescoping that reduces it to a reward-to-go minus a baseline for a single terminal reward.</li>
+<li>Derive GRPO's group-relative advantage, prove the baseline is unbiased, and state the exact variance-minimizing baseline — which is not the mean.</li>
+<li>Explain what a reward model cannot capture and name four distinct reward-hacking mechanisms.</li>
+<li>Describe RLVR and state honestly which claims about reasoning RL are supported and which are contested.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$x$</td>
+<td>prompt</td>
+</tr>
+<tr>
+<td>$y$, $y_w$, $y_l$</td>
+<td>response; the preferred and dispreferred response</td>
+</tr>
+<tr>
+<td>$\pi_\theta$</td>
+<td>the policy being trained</td>
+</tr>
+<tr>
+<td>$\pi_{\mathrm{ref}}$</td>
+<td>the frozen reference policy (usually the SFT model)</td>
+</tr>
+<tr>
+<td>$r_\phi(x,y)$</td>
+<td>reward model with parameters $\phi$</td>
+</tr>
+<tr>
+<td>$\beta$</td>
+<td>KL regularization strength</td>
+</tr>
+<tr>
+<td>$\sigma$</td>
+<td>logistic sigmoid</td>
+</tr>
+<tr>
+<td>$Z(x)$</td>
+<td>partition function, $\sum_y \pi_{\mathrm{ref}}(y\mid x)\exp(r(x,y)/\beta)$</td>
+</tr>
+<tr>
+<td>$r_t(\theta)$</td>
+<td>PPO importance ratio $\pi_\theta/\pi_{\theta_{\mathrm{old}}}$</td>
+</tr>
+<tr>
+<td>$\hat{A}_t$</td>
+<td>estimated advantage at step $t$</td>
+</tr>
+<tr>
+<td>$\epsilon$</td>
+<td>PPO clip range</td>
+</tr>
+<tr>
+<td>$G$</td>
+<td>GRPO group size (responses per prompt)</td>
+</tr>
+<tr>
+<td>$\gamma,\ \lambda$</td>
+<td>discount factor and GAE trace parameter</td>
+</tr>
+</tbody>
+</table>
+<p>Note that $r$ is overloaded: $r_\phi$ or $r(x,y)$ is a reward, $r_t(\theta)$ is an importance ratio. The subscript distinguishes them, and confusing the two is the most common reading error in this literature.</p>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="the-alignment-problem-as-a-learning-problem">The alignment problem as a learning problem</h3>
+<p><strong>(1) Intuition.</strong> You cannot write down the loss for "be helpful". But you can show two answers to the same question to a person and ask which is better, and that comparison is a training signal. Everything in this module is a way of converting comparisons into a gradient.</p>
+<p><strong>(2) Formal definition.</strong> The problem: find $\pi$ maximizing $\mathbb{E}_{x\sim\mathcal{D},\,y\sim\pi}[R^{\star}(x,y)]$ where $R^{\star}$ is a human preference functional you cannot evaluate. You have access only to samples: comparisons $(x, y_w, y_l)$, or scores, or a verifier. The field's structure follows from that asymmetry.</p>
+<p><strong>(3) Why it is built this way.</strong> Two-stage decomposition: first learn a <em>model</em> of $R^{\star}$ from comparisons (the reward model), then optimize the policy against the learned model with a penalty keeping it close to the reference. The penalty exists because the learned model is wrong off-distribution, so you want to optimize it only where it is trustworthy — a trust region expressed as a KL divergence.</p>
+<p><strong>(4) Worked micro-example.</strong> 100,000 comparisons at 2 seconds of annotator time each is 55 annotator-hours. Every method here can be run on that. The bottleneck is never the algorithm; it is that 100,000 comparisons cover a vanishingly small part of the input space, which is why the trust region and the reward-hacking analysis matter more than the optimizer choice.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 300" width="100%" role="img" aria-label="What each stage of the post-training pipeline actually changes" class="fig-svg"><defs><marker id="pipe-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="24.0" y="54.0" width="186.0" height="168.0" rx="11" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.7"/><text x="117.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="700">pretraining</text><text x="117.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">raw text</text><text x="117.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">next-token prediction</text><text x="117.0" y="146.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">learns: language, facts, circuits</text><line x1="210.0" y1="138.0" x2="230.0" y2="138.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#pipe-ah)"/><rect x="234.0" y="54.0" width="186.0" height="168.0" rx="11" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.7"/><text x="327.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">SFT</text><text x="327.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">instruction pairs</text><text x="327.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">imitate demonstrations</text><text x="327.0" y="146.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">learns: format, task framing</text><line x1="420.0" y1="138.0" x2="440.0" y2="138.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#pipe-ah)"/><rect x="444.0" y="54.0" width="186.0" height="168.0" rx="11" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.7"/><text x="537.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="700">preference</text><text x="537.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">chosen / rejected</text><text x="537.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">optimise judged quality</text><text x="537.0" y="146.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">learns: helpfulness, tone, refusal</text><line x1="630.0" y1="138.0" x2="650.0" y2="138.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#pipe-ah)"/><rect x="654.0" y="54.0" width="186.0" height="168.0" rx="11" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.7"/><text x="747.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="700">reasoning RL</text><text x="747.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">verifiable reward</text><text x="747.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">search for correct traces</text><text x="747.0" y="146.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">learns: deliberation, checking</text><text x="430.0" y="254.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">each stage narrows the model toward a behaviour, and each one costs some of what came before</text><text x="430.0" y="278.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">that trade is the alignment tax, and it is why the ordering matters</text></svg><figcaption>Preference tuning is the third of four stages, and it changes something SFT cannot: which of several acceptable behaviours the model prefers. Note that each stage needs the previous stage's output as its reference, which is why the reference model in this module is the SFT checkpoint and not the base model.</figcaption></figure></p>
+<h3 id="reward-modeling-bradleyterry">Reward modeling: Bradley–Terry</h3>
+<p><strong>(1) Intuition.</strong> Assume each response has a latent score, and that the probability a person prefers $y_w$ to $y_l$ depends only on the difference of their scores, through a logistic curve. Fit the scores.</p>
+<p><strong>(2) Formal definition.</strong> Bradley–Terry assumes $P(y_w\succ y_l\mid x) = \sigma(r(x,y_w)-r(x,y_l))$. Given a dataset of comparisons, fit $r_\phi$ by minimizing</p>
+<p>$$\mathcal{L}_{\mathrm{RM}}(\phi) = -\mathbb{E}_{(x,y_w,y_l)}\left[\log\sigma\left(r_\phi(x,y_w)-r_\phi(x,y_l)\right)\right]$$</p>
+<p><strong>(3) Why it is built this way.</strong> The logistic link is the natural choice for a binary outcome with a latent additive score, and it makes the loss a smooth surrogate for pairwise ranking accuracy. It is also the <em>only</em> link for which the KL-regularized RLHF problem has a closed-form solution, which is what makes DPO possible — the entire DPO derivation depends on this choice, a point that its critiques correctly identify.</p>
+<p><strong>(4) Worked micro-example.</strong> Scores $r_w = 2.0$, $r_l = 1.2$. Then $\Delta = 0.8$, $\sigma(0.8) = 0.690$, so the model believes the preferred response wins 69% of the time and the loss is $-\log 0.690 = 0.371$. If the annotators agreed 95% of the time, the loss should be $-\log 0.95 = 0.051$, so $\Delta$ needs to be about $\ln(0.95/0.05) = 2.94$. The loss is a calibration objective, not a ranking objective, and that distinction matters when labels are noisy.</p>
+<h3 id="what-a-reward-model-cannot-capture">What a reward model cannot capture</h3>
+<p><strong>(1) Intuition.</strong> The reward model is a small model trained on a small sample of human judgments. It is a proxy, and optimizing hard against a proxy finds its errors, not your preferences.</p>
+<p><strong>(2) Formal definition.</strong> Four distinct failure mechanisms, worth keeping separate because the fixes differ:</p>
+<p><em>Proxy error.</em> $r_\phi \ne R^{\star}$ off the comparison distribution; optimizing $\pi$ moves off that distribution, so the gap widens as you optimize. This is Goodhart's law with a specific mechanism.</p>
+<p><em>Distribution shift.</em> Comparisons were collected on SFT-model outputs. The RL policy generates different outputs, on which $r_\phi$ is extrapolating.</p>
+<p><em>Label noise and disagreement.</em> Human preferences are not a function: the same pair gets different answers from the same annotator on different days, and different annotators disagree systematically by demographic and cultural background. Bradley–Terry with a single scalar $r$ averages over that, which is a modelling choice with ethical consequences.</p>
+<p><em>Unrepresentable criteria.</em> Truthfulness, harm, and long-horizon coherence are not well captured by a scalar that a rater can assess in 30 seconds. A reward model trained on fast judgments learns fast-judgment proxies: confidence, length, formatting, and agreeableness.</p>
+<p><strong>(3) Why it is built this way.</strong> Each mechanism suggests a different mitigation — more on-policy comparisons, ensembles and pessimism, better annotation protocols, process supervision — and conflating them is why "RLHF makes models worse" debates go nowhere.</p>
+<p><strong>(4) Worked micro-example.</strong> Reward-model over-optimization curves are the standard measurement: train a policy against $r_\phi$ for more and more steps, and plot both the proxy reward (rising monotonically) and a held-out gold reward (rising, peaking, then falling). The gap at the peak of the gold curve is the usable optimization budget, and it is typically small — a few hundred to a few thousand PPO steps.</p>
+<h3 id="rlhf-the-kl-regularized-objective-and-its-closed-form">RLHF: the KL-regularized objective and its closed form</h3>
+<p><strong>(1) Intuition.</strong> Maximize reward, but do not wander far from the reference model. The penalty is not a technicality; it is the only thing keeping you inside the region where the reward model is meaningful.</p>
+<p><strong>(2) Formal definition.</strong></p>
+<p>$$\max_{\pi}\ \mathbb{E}_{x\sim\mathcal{D}}\left[\mathbb{E}_{y\sim\pi(\cdot\mid x)}\left[r(x,y)\right] - \beta\,D_{\mathrm{KL}}\left(\pi(\cdot\mid x)\,\|\,\pi_{\mathrm{ref}}(\cdot\mid x)\right)\right]$$</p>
+<p><strong>(3) Why it is built this way.</strong> The KL term has two jobs: it regularizes against reward hacking and it prevents the policy from collapsing to a single high-reward string. Derivation 2 shows the objective has an exact closed-form maximizer, and that the whole problem is equivalent to a KL minimization toward a tilted reference distribution.</p>
+<p><strong>(4) Worked micro-example.</strong> Two candidate responses, $r = (1,0)$, $\beta = 1$, $\pi_{\mathrm{ref}} = (0.5,0.5)$. The partition function is $Z = 0.5e^{1}+0.5e^{0} = 1.8591$, so the optimum is $\pi^{*} = (1.3591, 0.5)/1.8591 = (0.7311, 0.2689)$. Expected reward rises from $0.5$ to $0.7311$ (a gain of $0.2311$) and the KL is $0.7311\ln(0.7311/0.5) + 0.2689\ln(0.2689/0.5) = 0.2778 - 0.1668 = 0.1109$, so the objective is $0.7311 - 0.1109 = 0.6202$. That matches the derived value $\beta\log Z = \log 1.8591 = 0.6201$ exactly — a check worth doing every time you implement this. The penalty does not prevent improvement; it prices it at $\beta$ nats per unit of divergence.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="The RLHF loop" class="fig-svg"><defs><marker id="rlhf-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="30.0" y="40.0" width="200.0" height="68.0" rx="11" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.8"/><text x="130.0" y="68.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">policy model</text><text x="130.0" y="88.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">generates responses</text><rect x="600.0" y="40.0" width="200.0" height="68.0" rx="11" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.8"/><text x="700.0" y="68.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">preference data</text><text x="700.0" y="88.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">humans rank pairs</text><rect x="600.0" y="202.0" width="200.0" height="68.0" rx="11" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.8"/><text x="700.0" y="230.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">reward model</text><text x="700.0" y="250.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">learned scorer</text><rect x="30.0" y="202.0" width="200.0" height="68.0" rx="11" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.8"/><text x="130.0" y="230.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">PPO update</text><text x="130.0" y="250.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">clipped policy gradient</text><line x1="232.0" y1="66.0" x2="598.0" y2="66.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#rlhf-ah)"/><text x="415.0" y="54.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">sample completions</text><line x1="700.0" y1="110.0" x2="700.0" y2="200.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#rlhf-ah)"/><text x="714.0" y="158.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">train on pairs</text><line x1="598.0" y1="240.0" x2="232.0" y2="240.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#rlhf-ah)"/><text x="415.0" y="228.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">scalar rewards</text><line x1="130.0" y1="202.0" x2="130.0" y2="110.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#rlhf-ah)"/><text x="112.0" y="158.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">grad step</text><rect x="300.0" y="140.0" width="240.0" height="56.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.2"/><text x="420.0" y="162.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">objective</text><text x="420.0" y="180.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">E[r(x,y)] − β KL(π ‖ π_ref)</text><text x="420.0" y="322.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">the KL term is what stops the policy from drifting into reward-hacking nonsense</text></svg><figcaption>The four-stage cycle. Note where the reward model's gradient does and does not flow: it scores sampled responses and is then frozen while the policy is updated, so the only parameters that move are the policy's.</figcaption></figure></p>
+<h3 id="ppo-the-clipped-surrogate">PPO: the clipped surrogate</h3>
+<p><strong>(1) Intuition.</strong> You have a batch of trajectories generated by the current policy. You want to take several gradient steps on that batch, but not so many that the policy moves far from the one that produced the data. Clipping the importance ratio enforces that.</p>
+<p><strong>(2) Formal definition.</strong></p>
+<p>$$L^{\mathrm{CLIP}}(\theta) = \mathbb{E}_t\left[\min\left(r_t(\theta)\hat{A}_t,\ \operatorname{clip}\left(r_t(\theta), 1-\epsilon, 1+\epsilon\right)\hat{A}_t\right)\right], \qquad r_t(\theta) = \frac{\pi_\theta(a_t\mid s_t)}{\pi_{\theta_{\mathrm{old}}}(a_t\mid s_t)}$$</p>
+<p><strong>(3) Why it is built this way.</strong> The <code>min</code> makes the objective a <em>pessimistic</em> bound: it takes the worse of the clipped and unclipped values, so the gradient disappears exactly when the update would push a good action's probability up too far, or a bad action's probability down too far. It is a cheap approximation to a trust region — cheaper than TRPO's constrained solve, and good enough.</p>
+<p><strong>(4) Worked micro-example.</strong> $\hat{A} = +1$, $\epsilon = 0.2$. At $r = 1.0$: $\min(1.0, \min(1.0, 1.2)) = 1.0$, gradient flows. At $r = 1.5$: $\min(1.5, 1.2) = 1.2$, gradient zero — the action's probability has already risen 50% and the objective refuses to reward further increase. At $r = 0.5$: $\min(0.5, 0.8) = 0.5$, gradient flows, because decreasing a good action's probability should be opposed. With $\hat{A} = -1$ the cases mirror: at $r = 0.5$ the value is $\max$... carefully, $\min(-0.5, -0.8) = -0.8$, clamped, gradient zero; at $r = 1.5$, $\min(-1.5, -1.2) = -1.5$, gradient flows.</p>
+<h3 id="gae-and-the-value-head">GAE and the value head</h3>
+<p><strong>(1) Intuition.</strong> The advantage is "how much better was this action than expected". You can estimate it with one step of bootstrapping (low variance, high bias) or with the full return (no bias, huge variance). GAE is the exponential interpolation between them.</p>
+<p><strong>(2) Formal definition.</strong> With TD residual $\delta_t = r_t + \gamma V(s_{t+1}) - V(s_t)$,</p>
+<p>$$\hat{A}_t^{\mathrm{GAE}(\gamma,\lambda)} = \sum_{l=0}^{\infty}(\gamma\lambda)^{l}\delta_{t+l}$$</p>
+<p><strong>(3) Why it is built this way.</strong> $\lambda = 0$ gives one-step TD (biased, low variance); $\lambda = 1$ gives the Monte-Carlo return minus a baseline (unbiased, high variance). The value head $V_\psi$ is a second output on the same backbone, trained by regression onto the observed returns. Its role is to be the baseline, and the baseline is what makes the policy gradient's variance manageable.</p>
+<p><strong>(4) Worked micro-example.</strong> For language models the reward is usually a single terminal scalar $R$ and $\gamma = 1$. Then all $\delta_t = V_{t+1}-V_t$ except the last, and the sum telescopes (Derivation 4c) to $\hat{A}_t = R - V(s_t)$ — the return minus the baseline, for every token in the response. GAE is then doing nothing more than a subtraction, which is exactly why GRPO can replace the learned $V$ with a sample average.</p>
+<h3 id="dpo-the-closed-form-shortcut">DPO: the closed-form shortcut</h3>
+<p><strong>(1) Intuition.</strong> The RLHF optimum has a closed form in which the reward is written as $\beta\log(\pi^{*}/\pi_{\mathrm{ref}})$ plus a constant. Substitute that into the Bradley–Terry loss and the constant cancels. What remains is a loss on the policy itself, with no reward model and no RL loop.</p>
+<p><strong>(2) Formal definition.</strong></p>
+<p>$$\mathcal{L}_{\mathrm{DPO}}(\theta) = -\mathbb{E}_{(x,y_w,y_l)}\left[\log\sigma\left(\beta\log\frac{\pi_\theta(y_w\mid x)}{\pi_{\mathrm{ref}}(y_w\mid x)} - \beta\log\frac{\pi_\theta(y_l\mid x)}{\pi_{\mathrm{ref}}(y_l\mid x)}\right)\right]$$</p>
+<p><strong>(3) Why it is built this way.</strong> It removes the two hardest parts of RLHF — training a reward model and running a stable on-policy RL loop — and replaces them with a supervised classification problem on pairs, which is as easy to train as SFT. The cost is that it is only equivalent to RLHF <em>under</em> the Bradley–Terry assumption with a particular KL strength, and it has no exploration: it can only reweight behaviour present in the preference data.</p>
+<p><strong>(4) Worked micro-example.</strong> Numbers from a verified run below (Worked example): $\log\pi_\theta(y_w) = -8.039$, $\log\pi_{\mathrm{ref}}(y_w) = -6.497$, $\log\pi_\theta(y_l) = -5.011$, $\log\pi_{\mathrm{ref}}(y_l) = -5.212$. The implicit rewards are $r_w = 0.1(-1.543) = -0.154$ and $r_l = 0.1(0.200) = 0.020$, so the model currently prefers the <em>dispreferred</em> response, $\Delta = -0.174$, and the loss is $-\log\sigma(-0.174) = 0.784$ — worse than the $0.693$ of a coin flip, as it should be for a policy that has the pair backwards.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 372" width="100%" role="img" aria-label="RLHF pipeline versus DPO" class="fig-svg"><defs><marker id="dpo-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="220.0" y="36.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">RLHF: four models moving at once</text><rect x="40.0" y="58.0" width="150.0" height="34.0" rx="7" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2"/><text x="115.0" y="80.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">policy π</text><rect x="40.0" y="100.0" width="150.0" height="34.0" rx="7" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2"/><text x="115.0" y="122.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">reference π_ref</text><rect x="40.0" y="142.0" width="150.0" height="34.0" rx="7" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2"/><text x="115.0" y="164.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">reward r</text><rect x="40.0" y="184.0" width="150.0" height="34.0" rx="7" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2"/><text x="115.0" y="206.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">value V</text><rect x="210.0" y="58.0" width="190.0" height="160.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.3"/><text x="305.0" y="132.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="16" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="700">PPO</text><text x="305.0" y="156.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">4 forward passes</text><text x="305.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">per step</text><line x1="430.0" y1="40.0" x2="430.0" y2="300.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1" stroke-linecap="round" stroke-dasharray="5 5"/><text x="650.0" y="36.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">DPO: one model, one loss</text><rect x="470.0" y="58.0" width="150.0" height="34.0" rx="7" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.3"/><text x="545.0" y="80.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">policy π_θ</text><rect x="470.0" y="142.0" width="150.0" height="34.0" rx="7" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2"/><text x="545.0" y="164.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">frozen ref π_ref</text><rect x="650.0" y="58.0" width="186.0" height="118.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.3"/><text x="743.0" y="92.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">preference loss</text><text x="743.0" y="112.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">−log σ(</text><text x="743.0" y="130.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">β·Δlogπ</text><text x="743.0" y="150.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">− β·Δlogπ_ref)</text><line x1="620.0" y1="76.0" x2="648.0" y2="96.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.3" stroke-linecap="round" marker-end="url(#dpo-ah)"/><line x1="620.0" y1="158.0" x2="648.0" y2="130.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.3" stroke-linecap="round" marker-end="url(#dpo-ah)"/><rect x="40.0" y="232.0" width="380.0" height="92.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="56.0" y="254.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">needs a reward model, a value model,</text><text x="56.0" y="272.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">and the reference model simultaneously.</text><text x="56.0" y="298.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">more moving parts, more instability</text><rect x="470.0" y="232.0" width="366.0" height="92.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="486.0" y="254.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">closed form: the optimal policy under the KL constraint</text><text x="486.0" y="274.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">is an implicit reward model, so you can optimise</text><text x="486.0" y="294.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">the policy directly on preference pairs.</text><text x="653.0" y="318.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">no reward model, no sampling loop</text></svg><figcaption>The two pipelines side by side: RLHF optimizes a policy against a learned reward, DPO regresses the policy's log-ratio directly onto the preference. Follow the arrows to see that DPO has no sampling step at all — which is both its speed and its limitation.</figcaption></figure></p>
+<h3 id="the-variants-ipo-kto-orpo-simpo">The variants: IPO, KTO, ORPO, SimPO</h3>
+<p><strong>(1) Intuition.</strong> Each variant removes one assumption or one cost of DPO. IPO replaces the unbounded classification loss with a bounded regression. KTO removes the need for pairs. ORPO folds SFT and preference tuning into one stage. SimPO removes the reference model and fixes length bias.</p>
+<p><strong>(2) Formal definition.</strong></p>
+<p><em>IPO</em> replaces the log-sigmoid with a squared loss on the margin against a fixed target:</p>
+<p>$$\mathcal{L}_{\mathrm{IPO}} = \left(\log\frac{\pi_\theta(y_w\mid x)}{\pi_{\mathrm{ref}}(y_w\mid x)} - \log\frac{\pi_\theta(y_l\mid x)}{\pi_{\mathrm{ref}}(y_l\mid x)} - \frac{1}{2\beta}\right)^{2}$$</p>
+<p><em>KTO</em> uses unpaired binary feedback (a response is desirable or not) with an asymmetric loss that weights losses more heavily than gains, drawn from prospect theory; it needs no pairs, only labels on individual responses.</p>
+<p><em>ORPO</em> adds an odds-ratio penalty to the SFT loss, with no reference model:</p>
+<p>$$\mathcal{L}_{\mathrm{ORPO}} = \mathcal{L}_{\mathrm{SFT}} + \lambda\,\mathcal{L}_{\mathrm{OR}}, \qquad \mathcal{L}_{\mathrm{OR}} = -\log\sigma\left(\log\frac{\pi_\theta(y_w)}{1-\pi_\theta(y_w)} - \log\frac{\pi_\theta(y_l)}{1-\pi_\theta(y_l)}\right)$$</p>
+<p><em>SimPO</em> uses the length-normalized average log-likelihood as the implicit reward and adds a target margin $\gamma$, again with no reference model:</p>
+<p>$$\mathcal{L}_{\mathrm{SimPO}} = -\log\sigma\left(\frac{\beta}{|y_w|}\log\pi_\theta(y_w\mid x) - \frac{\beta}{|y_l|}\log\pi_\theta(y_l\mid x) - \gamma\right)$$</p>
+<p><strong>(3) Why it is built this way.</strong> DPO's margin is unbounded (the loss goes to zero as $\Delta\to\infty$), which pushes the implicit reward difference ever wider and lets the policy drift arbitrarily far from the reference — IPO's bounded target fixes that. DPO needs a reference model in memory, which is a doubling of cost; SimPO and ORPO remove it. DPO needs pairs, which doubles annotation cost; KTO removes that.</p>
+<p><strong>(4) Worked micro-example.</strong> Same pair, $\beta = 0.1$, $\log$-ratio difference $= -1.543 - 0.200 = -1.743$. DPO loss: $-\log\sigma(0.1\cdot(-1.743)) = -\log\sigma(-0.174) = 0.784$. IPO: $(-1.743 - 5)^{2} = 45.5$ — note the enormous scale difference, which is why IPO needs a different learning rate. SimPO with $\gamma = 0.5$, $\beta = 2$, and average log-probs of $-1.2$ and $-1.0$: $-1.2\cdot2/|y_w| \cdot |y_w|$… in practice the length normalization means $\beta(\bar{\ell}_w - \bar{\ell}_l) - \gamma = 2(-1.2+1.0)-0.5 = -0.9$, loss $= -\log\sigma(-0.9) = 1.24$. Every variant is the same idea — logistic or squared loss on a margin between two responses — with a different definition of the margin. That is the thing worth remembering.</p>
+<h3 id="rlvr-verifiable-rewards-and-grpo">RLVR, verifiable rewards, and GRPO</h3>
+<p><strong>(1) Intuition.</strong> For mathematics and code, you do not need a human or a learned reward model: you can <em>check</em> the answer. A verifier is a perfect reward on a narrow domain, and that changes the problem from reward modelling to search.</p>
+<p><strong>(2) Formal definition.</strong> RLVR (RL with verifiable rewards) sets $r(x,y) = 1$ if a program or a reference answer confirms $y$, else $0$. GRPO (Group Relative Policy Optimization) estimates the advantage from a group of $G$ responses sampled for the same prompt:</p>
+<p>$$\hat{A}_{i} = \frac{r_i - \operatorname{mean}(r_1,\ldots,r_G)}{\operatorname{std}(r_1,\ldots,r_G)}$$</p>
+<p>applied identically to every token of response $i$, and optimizes the clipped surrogate with a KL penalty, exactly as PPO does but with $\hat{A}_i$ in place of a critic's estimate.</p>
+<p><strong>(3) Why it is built this way.</strong> A learned critic for a language model is a second network of comparable size, trained on a non-stationary target, and it is a major source of instability. But for a single terminal reward with $\gamma=1$, GAE reduces to $R - V(s)$ (Concept 6, Derivation 4c), so all you need from $V$ is a per-prompt baseline. The group mean is a Monte-Carlo estimate of exactly that, computed from samples you already generated. No critic network, no value loss, no bootstrapping.</p>
+<p><strong>(4) Worked micro-example.</strong> Group of 4 responses with rewards $(1,0,1,0)$: mean 0.5, population standard deviation 0.5, so $\hat{A} = (1, -1, 1, -1)$. The two correct responses get reinforced and the two incorrect ones suppressed, with no reference to how hard the prompt was — prompt difficulty cancels because it is inside the mean. Now a group of 4 with rewards $(1,1,1,1)$: mean 1, std 0, advantages all zero, no gradient. That degenerate case is why GRPO wastes compute on prompts the model always solves and always fails, and why curriculum filtering of prompts is standard practice.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 360" width="100%" role="img" aria-label="GRPO: score a group, use the group as the baseline" class="fig-svg"><defs><marker id="grpo-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="30.0" y="54.0" width="120.0" height="40.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.4"/><text x="90.0" y="79.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="400">prompt q</text><rect x="190.0" y="58.0" width="200.0" height="48.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2"/><text x="204.0" y="78.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">r₁: sampled completion</text><text x="204.0" y="96.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">reasoning steps ...</text><line x1="130.0" y1="74.0" x2="188.0" y2="82.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#grpo-ah)"/><rect x="414.0" y="70.0" width="46.0" height="26.0" rx="13" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.3"/><text x="437.0" y="88.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">1.0</text><text x="470.0" y="88.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">verifier</text><rect x="190.0" y="124.0" width="200.0" height="48.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2"/><text x="204.0" y="144.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">r₂: sampled completion</text><text x="204.0" y="162.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">reasoning steps ...</text><line x1="130.0" y1="74.0" x2="188.0" y2="148.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#grpo-ah)"/><rect x="414.0" y="136.0" width="46.0" height="26.0" rx="13" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.3"/><text x="437.0" y="154.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="650">0.0</text><text x="470.0" y="154.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">verifier</text><rect x="190.0" y="190.0" width="200.0" height="48.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2"/><text x="204.0" y="210.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">r₃: sampled completion</text><text x="204.0" y="228.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">reasoning steps ...</text><line x1="130.0" y1="74.0" x2="188.0" y2="214.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#grpo-ah)"/><rect x="414.0" y="202.0" width="46.0" height="26.0" rx="13" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.3"/><text x="437.0" y="220.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">1.0</text><text x="470.0" y="220.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">verifier</text><rect x="190.0" y="256.0" width="200.0" height="48.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2"/><text x="204.0" y="276.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">r₄: sampled completion</text><text x="204.0" y="294.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">reasoning steps ...</text><line x1="130.0" y1="74.0" x2="188.0" y2="280.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#grpo-ah)"/><rect x="414.0" y="268.0" width="46.0" height="26.0" rx="13" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.3"/><text x="437.0" y="286.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="650">0.0</text><text x="470.0" y="286.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">verifier</text><rect x="548.0" y="70.0" width="96.0" height="26.0" rx="6" fill="none" stroke="var(--fig-green,#34d399)" stroke-width="1.3"/><text x="596.0" y="88.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">A = +1.0</text><line x1="464.0" y1="82.0" x2="546.0" y2="82.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#grpo-ah)"/><rect x="548.0" y="136.0" width="96.0" height="26.0" rx="6" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="1.3"/><text x="596.0" y="154.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="650">A = -1.0</text><line x1="464.0" y1="148.0" x2="546.0" y2="148.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#grpo-ah)"/><rect x="548.0" y="202.0" width="96.0" height="26.0" rx="6" fill="none" stroke="var(--fig-green,#34d399)" stroke-width="1.3"/><text x="596.0" y="220.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">A = +1.0</text><line x1="464.0" y1="214.0" x2="546.0" y2="214.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#grpo-ah)"/><rect x="548.0" y="268.0" width="96.0" height="26.0" rx="6" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="1.3"/><text x="596.0" y="286.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="650">A = -1.0</text><line x1="464.0" y1="280.0" x2="546.0" y2="280.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#grpo-ah)"/><text x="596.0" y="320.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">advantage relative to the group mean</text><rect x="660.0" y="58.0" width="158.0" height="200.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="739.0" y="84.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="650">no critic</text><text x="676.0" y="108.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">The group mean</text><text x="676.0" y="122.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">replaces the</text><text x="676.0" y="136.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">learned value</text><text x="676.0" y="150.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">function, so there</text><text x="676.0" y="164.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">is one fewer large</text><text x="676.0" y="178.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">model to train.</text><text x="739.0" y="234.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">cost: G samples per prompt</text><text x="420.0" y="336.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">works when the reward is verifiable: a checker, a unit test, a known answer</text></svg><figcaption>A group of sampled responses scored by a verifier, with advantages computed relative to the group mean. Look at the right-hand panel: as the group's reward variance collapses to zero, the advantage — and therefore the gradient — collapses with it.</figcaption></figure></p>
+<h3 id="outcome-versus-process-rewards-and-test-time-compute">Outcome versus process rewards, and test-time compute</h3>
+<p><strong>(1) Intuition.</strong> An outcome reward model scores the final answer. A process reward model scores each step. The first is cheap and sparse; the second is expensive and dense, and it is also where the interesting failure modes live.</p>
+<p><strong>(2) Formal definition.</strong> An ORM is $r(x,y)$ on complete responses. A PRM is $r(x, s_1, \ldots, s_k)$ scoring each reasoning step $s_i$; it can be used as a dense reward during training, or as a search guide at inference — sample $n$ partial trajectories, score the steps, and continue only the most promising. Test-time compute scaling is the second use: with a verifier and $n$ samples, the probability at least one is correct is $1-(1-p)^{n}$ where $p$ is the per-sample success rate.</p>
+<p><strong>(3) Why it is built this way.</strong> Outcome rewards are objectively checkable but assign credit to a whole trajectory, so a correct answer reached by invalid reasoning is reinforced. Process rewards fix the credit assignment and introduce a new problem: the PRM is itself a learned proxy, so optimizing against it during training invites reward hacking, and PRMs are expensive to label (step-level human annotation). The common compromise is an ORM or verifier for training and a PRM only for inference-time search.</p>
+<p><strong>(4) Worked micro-example.</strong> Per-sample success $p = 0.1$. With $n = 16$: $1-0.9^{16} = 0.815$. With $n = 64$: $1-0.9^{64} = 0.999$. Now suppose the verifier has a 5% false-positive rate: at $n=64$, $1-(1-0.1-0.045)^{64}$ for a spuriously-accepted wrong answer, so roughly $1-0.855^{64} = 0.99996$ — the verifier's error rate, not the model, is now the ceiling. <strong>Verifier quality bounds test-time scaling</strong>, and a verifier that is right 95% of the time caps you well below what 64 samples would otherwise buy.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="Where the money goes" class="fig-svg"><defs><marker id="cost-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="80.0" y1="276.0" x2="480.0" y2="276.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="280.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1×</text><line x1="80.0" y1="207.2" x2="480.0" y2="207.2" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="211.2" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10×</text><line x1="80.0" y1="138.5" x2="480.0" y2="138.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="142.5" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">100×</text><line x1="80.0" y1="69.8" x2="480.0" y2="69.8" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="73.8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1000×</text><line x1="80.0" y1="276.0" x2="480.0" y2="276.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M80.0,276.0 L82.5,276.0 L85.0,275.9 L87.5,275.6 L90.0,275.3 L92.5,274.9 L95.0,274.4 L97.5,273.8 L100.0,273.1 L102.5,272.2 L105.0,271.3 L107.5,270.3 L110.0,269.3 L112.5,268.1 L115.0,266.9 L117.5,265.7 L120.0,264.4 L122.5,263.0 L125.0,261.6 L127.5,260.2 L130.0,258.8 L132.5,257.3 L135.0,255.9 L137.5,254.4 L140.0,253.0 L142.5,251.5 L145.0,250.0 L147.5,248.5 L150.0,247.1 L152.5,245.6 L155.0,244.2 L157.5,242.8 L160.0,241.3 L162.5,239.9 L165.0,238.6 L167.5,237.2 L170.0,235.8 L172.5,234.5 L175.0,233.2 L177.5,231.9 L180.0,230.6 L182.5,229.3 L185.0,228.0 L187.5,226.8 L190.0,225.6 L192.5,224.3 L195.0,223.2 L197.5,222.0 L200.0,220.8 L202.5,219.7 L205.0,218.5 L207.5,217.4 L210.0,216.3 L212.5,215.2 L215.0,214.2 L217.5,213.1 L220.0,212.1 L222.5,211.0 L225.0,210.0 L227.5,209.0 L230.0,208.0 L232.5,207.1 L235.0,206.1 L237.5,205.2 L240.0,204.2 L242.5,203.3 L245.0,202.4 L247.5,201.5 L250.0,200.6 L252.5,199.7 L255.0,198.8 L257.5,198.0 L260.0,197.1 L262.5,196.3 L265.0,195.4 L267.5,194.6 L270.0,193.8 L272.5,193.0 L275.0,192.2 L277.5,191.4 L280.0,190.6 L282.5,189.9 L285.0,189.1 L287.5,188.3 L290.0,187.6 L292.5,186.9 L295.0,186.1 L297.5,185.4 L300.0,184.7 L302.5,184.0 L305.0,183.3 L307.5,182.6 L310.0,181.9 L312.5,181.2 L315.0,180.5 L317.5,179.9 L320.0,179.2 L322.5,178.6 L325.0,177.9 L327.5,177.3 L330.0,176.6 L332.5,176.0 L335.0,175.4 L337.5,174.8 L340.0,174.1 L342.5,173.5 L345.0,172.9 L347.5,172.3 L350.0,171.7 L352.5,171.2 L355.0,170.6 L357.5,170.0 L360.0,169.4 L362.5,168.9 L365.0,168.3 L367.5,167.7 L370.0,167.2 L372.5,166.6 L375.0,166.1 L377.5,165.6 L380.0,165.0 L382.5,164.5 L385.0,164.0 L387.5,163.4 L390.0,162.9 L392.5,162.4 L395.0,161.9 L397.5,161.4 L400.0,160.9 L402.5,160.4 L405.0,159.9 L407.5,159.4 L410.0,158.9 L412.5,158.4 L415.0,157.9 L417.5,157.4 L420.0,157.0 L422.5,156.5 L425.0,156.0 L427.5,155.6 L430.0,155.1 L432.5,154.6 L435.0,154.2 L437.5,153.7 L440.0,153.3 L442.5,152.8 L445.0,152.4 L447.5,151.9 L450.0,151.5 L452.5,151.1 L455.0,150.6 L457.5,150.2 L460.0,149.8 L462.5,149.4 L465.0,148.9 L467.5,148.5 L470.0,148.1 L472.5,147.7 L475.0,147.3 L477.5,146.9 L480.0,146.5" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M80.0,276.0 L82.5,275.5 L85.0,275.1 L87.5,274.6 L90.0,274.2 L92.5,273.8 L95.0,273.3 L97.5,272.9 L100.0,272.5 L102.5,272.1 L105.0,271.7 L107.5,271.3 L110.0,270.9 L112.5,270.5 L115.0,270.1 L117.5,269.7 L120.0,269.3 L122.5,269.0 L125.0,268.6 L127.5,268.2 L130.0,267.9 L132.5,267.5 L135.0,267.2 L137.5,266.8 L140.0,266.5 L142.5,266.2 L145.0,265.8 L147.5,265.5 L150.0,265.2 L152.5,264.8 L155.0,264.5 L157.5,264.2 L160.0,263.9 L162.5,263.6 L165.0,263.3 L167.5,263.0 L170.0,262.7 L172.5,262.4 L175.0,262.1 L177.5,261.8 L180.0,261.5 L182.5,261.2 L185.0,260.9 L187.5,260.7 L190.0,260.4 L192.5,260.1 L195.0,259.8 L197.5,259.6 L200.0,259.3 L202.5,259.0 L205.0,258.8 L207.5,258.5 L210.0,258.2 L212.5,258.0 L215.0,257.7 L217.5,257.5 L220.0,257.2 L222.5,257.0 L225.0,256.7 L227.5,256.5 L230.0,256.3 L232.5,256.0 L235.0,255.8 L237.5,255.5 L240.0,255.3 L242.5,255.1 L245.0,254.8 L247.5,254.6 L250.0,254.4 L252.5,254.2 L255.0,253.9 L257.5,253.7 L260.0,253.5 L262.5,253.3 L265.0,253.1 L267.5,252.8 L270.0,252.6 L272.5,252.4 L275.0,252.2 L277.5,252.0 L280.0,251.8 L282.5,251.6 L285.0,251.4 L287.5,251.2 L290.0,251.0 L292.5,250.8 L295.0,250.6 L297.5,250.4 L300.0,250.2 L302.5,250.0 L305.0,249.8 L307.5,249.6 L310.0,249.4 L312.5,249.2 L315.0,249.0 L317.5,248.8 L320.0,248.6 L322.5,248.5 L325.0,248.3 L327.5,248.1 L330.0,247.9 L332.5,247.7 L335.0,247.5 L337.5,247.4 L340.0,247.2 L342.5,247.0 L345.0,246.8 L347.5,246.7 L350.0,246.5 L352.5,246.3 L355.0,246.1 L357.5,246.0 L360.0,245.8 L362.5,245.6 L365.0,245.5 L367.5,245.3 L370.0,245.1 L372.5,245.0 L375.0,244.8 L377.5,244.6 L380.0,244.5 L382.5,244.3 L385.0,244.1 L387.5,244.0 L390.0,243.8 L392.5,243.7 L395.0,243.5 L397.5,243.4 L400.0,243.2 L402.5,243.0 L405.0,242.9 L407.5,242.7 L410.0,242.6 L412.5,242.4 L415.0,242.3 L417.5,242.1 L420.0,242.0 L422.5,241.8 L425.0,241.7 L427.5,241.5 L430.0,241.4 L432.5,241.2 L435.0,241.1 L437.5,241.0 L440.0,240.8 L442.5,240.7 L445.0,240.5 L447.5,240.4 L450.0,240.2 L452.5,240.1 L455.0,240.0 L457.5,239.8 L460.0,239.7 L462.5,239.5 L465.0,239.4 L467.5,239.3 L470.0,239.1 L472.5,239.0 L475.0,238.9 L477.5,238.7 L480.0,238.6" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><text x="400.0" y="111.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="end" font-weight="400">training</text><text x="400.0" y="227.9" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="end" font-weight="400">inference</text><text x="280.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">relative spend →</text><rect x="520.0" y="76.0" width="280.0" height="180.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="538.0" y="100.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">cost per token</text><text x="538.0" y="124.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">≈ 2 · N · P FLOPs</text><text x="538.0" y="146.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">≈ 2 · P FLOPs / token</text><text x="538.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Training is a one-off; serving</text><text x="538.0" y="185.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">is per token, forever. A model</text><text x="538.0" y="198.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">that is 30% better but 3× more</text><text x="538.0" y="211.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">expensive may simply lose.</text><text x="538.0" y="240.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">this is why small models keep winning</text></svg><figcaption>Test-time compute and training compute are the same budget spent differently. Increase the sample count and watch the marginal return per FLOP: it is steep while $n \cdot p \ll 1$ and flattens immediately after, which is why small models with many samples beat large models with one only in a narrow, verifier-limited regime.</figcaption></figure></p>
+<h3 id="the-honest-limits">The honest limits</h3>
+<p><strong>(1) Intuition.</strong> Every method here optimizes a proxy, and every proxy is gameable. The failures are not exotic; they are the default outcome of optimizing hard.</p>
+<p><strong>(2) Formal definition — four named mechanisms.</strong></p>
+<p><em>Reward hacking.</em> The policy finds inputs where the proxy and the true objective diverge. The measured shape is a proxy reward rising monotonically while held-out quality peaks and declines.</p>
+<p><em>Length hacking.</em> Length is correlated with apparent quality in human ratings, so a reward model trained on human comparisons learns "longer is better", and a policy optimized against it learns to be verbose. This is a documented, quantified bias and it is why length-controlled evaluation and length penalties exist.</p>
+<p><em>Sycophancy.</em> Raters prefer agreement, so the reward model learns agreement, and the policy learns to agree with the user's stated (possibly wrong) premise. This is a direct consequence of optimizing a proxy built from approval.</p>
+<p><em>Benchmark overfitting.</em> Training on data that resembles a benchmark, or selecting checkpoints by benchmark score, moves the benchmark without moving capability. With many checkpoints and a few hundred evaluation items, selection alone produces apparent gains of several points.</p>
+<p><strong>(3) Why it is built this way.</strong> Each mechanism has a diagnostic and a mitigation, and none has a fix. Length: measure score per token and control for length. Sycophancy: evaluate on prompts where the user asserts something false. Reward hacking: hold out a gold reward you never optimize against. Benchmark overfitting: report confidence intervals and use a held-out suite.</p>
+<p><strong>(4) Worked micro-example.</strong> A 300-item benchmark, accuracy 0.70. The standard error is $\sqrt{0.7\cdot0.3/300} = 0.026$, so a 95% interval is $\pm0.052$ — 5.2 points. Select the best of 8 checkpoints by that benchmark and you have selected on noise: the expected maximum of 8 draws is roughly $1.4$ standard errors above the mean, so about 3.7 points of pure selection effect. Report the interval or the number is not a measurement.</p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<p><strong>RLHF, three phases.</strong></p>
+<ol>
+<li><strong>SFT</strong> on demonstrations, producing $\pi_{\mathrm{ref}}$ (see <strong>M17</strong>).</li>
+<li><strong>Collect comparisons.</strong> Sample pairs $(y_1,y_2)\sim\pi_{\mathrm{ref}}$ for prompts $x$; annotate which is preferred; store $(x, y_w, y_l)$.</li>
+<li><strong>Fit the reward model</strong> by minimizing $-\log\sigma(r_\phi(x,y_w)-r_\phi(x,y_l))$; initialize from the SFT model with a scalar head, and normalize so $\mathbb{E}[r]=0$.</li>
+<li><strong>Optimize the policy</strong> with PPO: sample responses from the current $\pi_\theta$, score with $r_\phi$, compute per-token KL against $\pi_{\mathrm{ref}}$ as an additional per-token penalty, compute advantages with GAE, and take clipped policy-gradient steps.</li>
+<li><strong>Repeat</strong> phases 2–4 with fresh on-policy comparisons, which is what keeps the reward model inside its valid region.</li>
+</ol>
+<p><strong>DPO, one phase.</strong> Build pairs, compute four log-probabilities per pair (policy and reference, on both responses), form the margin, take the log-sigmoid, backpropagate into the policy only.</p>
+<p>```text
+function DPO_STEP(batch, pi, pi_ref, beta):
+    loss <- 0
+    for (x, y_w, y_l) in batch:
+        logp_w    <- sum_t log pi(y_w[t] | x, y_w[:t])
+        logp_l    <- sum_t log pi(y_l[t] | x, y_l[:t])
+        with no_grad:
+            ref_w <- sum_t log pi_ref(y_w[t] | x, y_w[:t])
+            ref_l <- sum_t log pi_ref(y_l[t] | x, y_l[:t])
+        margin <- beta * ((logp_w - ref_w) - (logp_l - ref_l))
+        loss  += -log_sigmoid(margin)
+    loss <- loss / len(batch)
+    loss.backward()                       # only pi's parameters have requires_grad
+    return loss
+```</p>
+<p><strong>Complexity.</strong> DPO: one forward and backward pass of the policy plus one forward pass of the reference, over two responses per pair — roughly 3x the cost of an SFT step on the same tokens, with no sampling and no reward model. PPO: sampling a response of length $L$ costs $L$ sequential forward passes (the KV cache makes each one cheap but they are serial), then a scoring pass, then a backward pass over the batch — dominated by generation, which is why PPO is one to two orders of magnitude more expensive per update than DPO.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="derivation-1-bradleyterry-from-a-latent-score-and-its-gauge-freedom">Derivation 1: Bradley–Terry from a latent score, and its gauge freedom</h3>
+<p><strong>Step 1 — the assumption.</strong> Each response has a latent score $s(x,y)\in\mathbb{R}$. Assume the preference probability depends only on the difference, through the logistic CDF:</p>
+<p>$$P(y_w\succ y_l\mid x) = F\left(s(x,y_w)-s(x,y_l)\right) \quad\text{with}\quad F(z) = \sigma(z) = \frac{1}{1+e^{-z}}$$</p>
+<p>Writing $r = s$ and taking logs of the likelihood over independent comparisons gives</p>
+<p>$$\log P(\mathcal{D}\mid r) = \sum_{(x,y_w,y_l)}\log\sigma\left(r(x,y_w)-r(x,y_l)\right)$$</p>
+<p>and maximizing it is minimizing the negative, which is $\mathcal{L}_{\mathrm{RM}}$.</p>
+<p><strong>Step 2 — the gradient.</strong> With $\Delta = r(x,y_w)-r(x,y_l)$ and $\frac{d}{d\Delta}\log\sigma(\Delta) = \sigma(-\Delta) = 1-\sigma(\Delta)$:</p>
+<p>$$\frac{\partial \mathcal{L}_{\mathrm{RM}}}{\partial r(x,y_w)} = -\left(1-\sigma(\Delta)\right), \qquad \frac{\partial \mathcal{L}_{\mathrm{RM}}}{\partial r(x,y_l)} = +\left(1-\sigma(\Delta)\right)$$</p>
+<p>So the loss is a soft-margin ranking loss: the gradient magnitude is the model's <em>error</em> in the preference probability, and it vanishes only when the preference is already predicted with certainty. No saturation means no vanishing gradient, which is why BT is easy to fit.</p>
+<p><strong>Step 3 — gauge freedom.</strong> Adding any function $c(x)$ to every score, $r(x,y)\to r(x,y)+c(x)$, leaves every difference — and therefore every probability and the entire loss — unchanged. Two consequences you must handle in practice: (i) the reward is identified only up to a per-prompt constant, so an RM's absolute values are meaningless and comparisons must only be made within a prompt; (ii) the RM must be centered (typically by subtracting the mean reward on a reference set) before being used as an RL reward, otherwise a constant offset shifts every advantage and biases the KL term.</p>
+<p><strong>Step 4 — what the model cannot represent.</strong> Since only differences matter, BT cannot represent intransitive preferences. If a majority prefers $A\succ B$, $B\succ C$, and $C\succ A$ — which happens with real annotators and multi-criteria judgments — no scalar $r$ fits, and the fit produces a compromise that mispredicts all three. That is a <em>modelling</em> limitation, not a data problem, and it is the strongest argument for the multi-objective and personalization approaches that replace the single scalar.</p>
+<h3 id="derivation-2-the-closed-form-optimal-policy">Derivation 2: the closed-form optimal policy</h3>
+<p><strong>Step 1 — write the objective per prompt.</strong> Since prompts are independent, fix $x$ and optimize over the conditional $\pi(\cdot\mid x)$ subject to $\sum_y\pi(y\mid x)=1$:</p>
+<p>$$\max_{\pi}\ \sum_y \pi(y\mid x)r(x,y) - \beta\sum_y\pi(y\mid x)\log\frac{\pi(y\mid x)}{\pi_{\mathrm{ref}}(y\mid x)}$$</p>
+<p><strong>Step 2 — define the tilted reference.</strong> Let</p>
+<p>$$Z(x) = \sum_y \pi_{\mathrm{ref}}(y\mid x)\exp\left(\frac{r(x,y)}{\beta}\right)$$</p>
+<p>which is a normalizing constant depending on $x$ but not on $y$, and define the candidate</p>
+<p>$$\pi^{*}(y\mid x) = \frac{1}{Z(x)}\pi_{\mathrm{ref}}(y\mid x)\exp\left(\frac{r(x,y)}{\beta}\right)$$</p>
+<p>This is a valid distribution because $\sum_y\pi^{*} = Z/Z = 1$.</p>
+<p><strong>Step 3 — rewrite the objective as a KL.</strong> Add and subtract $\beta\log Z(x)$, which does not depend on $\pi$:</p>
+<p>$$\sum_y\pi\log\frac{\pi}{\pi_{\mathrm{ref}}} = \sum_y\pi\log\frac{\pi}{\pi_{\mathrm{ref}}\exp(r/\beta)/Z} - \sum_y\pi\log Z + \sum_y\pi\frac{r}{\beta}$$</p>
+<p>The first term on the right is $D_{\mathrm{KL}}(\pi\|\pi^{*})$, the second is $-\log Z$ since $\sum_y\pi = 1$, and the third is $\frac{1}{\beta}\sum_y\pi r$. So</p>
+<p>$$\sum_y\pi\log\frac{\pi}{\pi_{\mathrm{ref}}} = D_{\mathrm{KL}}(\pi\|\pi^{*}) - \log Z + \frac{1}{\beta}\mathbb{E}_\pi[r]$$</p>
+<p>Multiply by $-\beta$ and add $\mathbb{E}_\pi[r]$:</p>
+<p>$$\mathcal{J}(\pi) = \mathbb{E}_\pi[r] - \beta D_{\mathrm{KL}}(\pi\|\pi_{\mathrm{ref}}) = -\beta\,D_{\mathrm{KL}}(\pi\|\pi^{*}) + \beta\log Z(x)$$</p>
+<p><strong>Step 4 — maximize.</strong> $\beta\log Z(x)$ does not depend on $\pi$, and $D_{\mathrm{KL}}\ge0$ with equality iff $\pi = \pi^{*}$. Therefore</p>
+<p>$$\pi^{*}(y\mid x) = \arg\max_\pi \mathcal{J}(\pi)\quad\text{and}\quad \mathcal{J}(\pi^{*}) = \beta\log Z(x)$$</p>
+<p>and the optimum is <em>exactly</em> the tilted reference — no approximation, no iteration.</p>
+<p><strong>Step 5 — invert it.</strong> Taking logs of the definition of $\pi^{*}$:</p>
+<p>$$\log\pi^{*}(y\mid x) = \log\pi_{\mathrm{ref}}(y\mid x) + \frac{r(x,y)}{\beta} - \log Z(x)$$</p>
+<p>and rearranging for the reward:</p>
+<p>$$r(x,y) = \beta\log\frac{\pi^{*}(y\mid x)}{\pi_{\mathrm{ref}}(y\mid x)} + \beta\log Z(x)$$</p>
+<p>This is the key identity: <strong>the reward is recoverable from the optimal policy up to a prompt-dependent constant.</strong> Everything that follows is a substitution of this identity into the Bradley–Terry loss, where the constant will cancel.</p>
+<h3 id="derivation-3-dpo-completely">Derivation 3: DPO, completely</h3>
+<p><strong>Step 1 — substitute the identity into Bradley–Terry.</strong> Under the BT model with the <em>optimal</em> reward $r = r^{*}$, the probability of a preference is</p>
+<p>$$P(y_w\succ y_l\mid x) = \sigma\left(r^{*}(x,y_w)-r^{*}(x,y_l)\right)$$</p>
+<p><strong>Step 2 — compute the difference.</strong> Using Step 5 of Derivation 2 for both responses:</p>
+<p>$$r^{*}(x,y_w) - r^{*}(x,y_l) = \left[\beta\log\frac{\pi^{*}(y_w\mid x)}{\pi_{\mathrm{ref}}(y_w\mid x)} + \beta\log Z(x)\right] - \left[\beta\log\frac{\pi^{*}(y_l\mid x)}{\pi_{\mathrm{ref}}(y_l\mid x)} + \beta\log Z(x)\right]$$</p>
+<p><strong>Step 3 — the cancellation.</strong> The two $\beta\log Z(x)$ terms are identical — same prompt, same partition function — so they subtract to zero:</p>
+<p>$$r^{*}(x,y_w)-r^{*}(x,y_l) = \beta\log\frac{\pi^{*}(y_w\mid x)}{\pi_{\mathrm{ref}}(y_w\mid x)} - \beta\log\frac{\pi^{*}(y_l\mid x)}{\pi_{\mathrm{ref}}(y_l\mid x)}$$</p>
+<p>This is the entire trick. The intractable sum over all possible responses never has to be computed, because it appears once per response with the same value and cancels.</p>
+<p><strong>Step 4 — the loss.</strong> Substitute into $-\log\sigma(\cdot)$ and replace the unknown optimum $\pi^{*}$ with the parameterized policy $\pi_\theta$ being trained:</p>
+<p>$$\mathcal{L}_{\mathrm{DPO}}(\theta) = -\mathbb{E}_{(x,y_w,y_l)}\left[\log\sigma\left(\beta\log\frac{\pi_\theta(y_w\mid x)}{\pi_{\mathrm{ref}}(y_w\mid x)} - \beta\log\frac{\pi_\theta(y_l\mid x)}{\pi_{\mathrm{ref}}(y_l\mid x)}\right)\right]$$</p>
+<p><strong>Step 5 — the gradient.</strong> Write $\hat{r}_\theta(x,y) = \beta\log\frac{\pi_\theta(y\mid x)}{\pi_{\mathrm{ref}}(y\mid x)}$ (the <em>implicit reward</em>) and $\Delta = \hat{r}_\theta(x,y_w)-\hat{r}_\theta(x,y_l)$. Since $\frac{\partial}{\partial\theta}\log\sigma(\Delta) = \sigma(-\Delta)\frac{\partial\Delta}{\partial\theta}$,</p>
+<p>$$\nabla_\theta\mathcal{L}_{\mathrm{DPO}} = -\beta\,\sigma\left(\hat{r}_\theta(x,y_l)-\hat{r}_\theta(x,y_w)\right)\left[\nabla_\theta\log\pi_\theta(y_w\mid x) - \nabla_\theta\log\pi_\theta(y_l\mid x)\right]$$</p>
+<p>Note that $\pi_{\mathrm{ref}}$ contributes no gradient — it is frozen. Read the structure: the bracket is a <em>policy gradient</em> that increases the log-probability of the preferred response and decreases that of the dispreferred one; the scalar in front is the model's error in the preference probability, so a pair already correctly ranked contributes almost nothing, and a pair ranked backwards contributes almost a full unit. <strong>DPO is a policy gradient with the advantage replaced by the implicit reward difference</strong> — which is why it is a valid RL method and not merely a classifier.</p>
+<p><strong>Step 6 — numerical verification.</strong> With $V=5$, $T=3$, $\beta = 0.1$:</p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th style="text-align: right;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\log\pi_\theta(y_w\mid x)$</td>
+<td style="text-align: right;">$-8.039202$</td>
+</tr>
+<tr>
+<td>$\log\pi_\theta(y_l\mid x)$</td>
+<td style="text-align: right;">$-5.011080$</td>
+</tr>
+<tr>
+<td>$\log\pi_{\mathrm{ref}}(y_w\mid x)$</td>
+<td style="text-align: right;">$-6.496558$</td>
+</tr>
+<tr>
+<td>$\log\pi_{\mathrm{ref}}(y_l\mid x)$</td>
+<td style="text-align: right;">$-5.211604$</td>
+</tr>
+<tr>
+<td>$\hat{r}_\theta(y_w)$</td>
+<td style="text-align: right;">$-0.154264$</td>
+</tr>
+<tr>
+<td>$\hat{r}_\theta(y_l)$</td>
+<td style="text-align: right;">$+0.020052$</td>
+</tr>
+<tr>
+<td>$\Delta$</td>
+<td style="text-align: right;">$-0.174317$</td>
+</tr>
+<tr>
+<td>$\sigma(\Delta)$</td>
+<td style="text-align: right;">$0.456531$</td>
+</tr>
+<tr>
+<td>$\mathcal{L}$</td>
+<td style="text-align: right;">$0.784099$</td>
+</tr>
+</tbody>
+</table>
+<p>The analytic gradient with respect to the policy logits is $\pm0.054347$ on exactly the tokens appearing in $y_w$ and $y_l$ (zero elsewhere), and it agrees with a finite-difference estimate to $3.8\times10^{-11}$. Two structural facts are visible in the numbers: the gradient is supported <em>only</em> on tokens present in the two responses, and adding any constant $c$ to both implicit rewards leaves the loss at $0.784099$ — the numerical shadow of the $Z$ cancellation in Step 3.</p>
+<h3 id="derivation-4-ppos-clip-and-the-gae-telescoping">Derivation 4: PPO's clip and the GAE telescoping</h3>
+<p><strong>(a) The four cases.</strong> Define $u = r_t(\theta)\hat{A}_t$ and $v = \operatorname{clip}(r_t,1-\epsilon,1+\epsilon)\hat{A}_t$, and recall the objective is $\min(u,v)$.</p>
+<p><em>Case 1: $\hat{A}>0$ and $r>1+\epsilon$.</em> Then $v = (1+\epsilon)\hat{A} < r\hat{A} = u$, so the min is $v$, which is constant in $\theta$: <strong>gradient zero.</strong> The action's probability has already increased by more than $\epsilon$; the objective refuses to reward more.</p>
+<p><em>Case 2: $\hat{A}>0$ and $r<1-\epsilon$.</em> Then $v=(1-\epsilon)\hat{A} > r\hat{A}$, so the min is $u = r\hat{A}$: <strong>gradient flows</strong>, pushing the probability up — correct, since a good action was down-weighted.</p>
+<p><em>Case 3: $\hat{A}<0$ and $r<1-\epsilon$.</em> Then $v = (1-\epsilon)\hat{A}$ and $u = r\hat{A}$ with $r < 1-\epsilon$; multiplying the inequality by the negative $\hat{A}$ flips it, giving $r\hat{A} > (1-\epsilon)\hat{A}$, so the min is $v$, constant: <strong>gradient zero.</strong> A bad action's probability has already been cut by more than $\epsilon$.</p>
+<p><em>Case 4: $\hat{A}<0$ and $r>1+\epsilon$.</em> Then $v=(1+\epsilon)\hat{A}$ and $u = r\hat{A} < (1+\epsilon)\hat{A}$ since $r>1+\epsilon$ and $\hat{A}<0$; the min is $u$: <strong>gradient flows</strong>, cutting the probability.</p>
+<p><strong>In every case the clip removes the incentive to move further than $\epsilon$ in the direction already taken.</strong> The objective is a lower bound on the unclipped surrogate, so maximizing it cannot be gamed by an unbounded ratio. What it does <em>not</em> do is bound the KL divergence — a sequence of small clipped steps can still accumulate a large policy change, which is why a separate KL penalty is used in RLHF.</p>
+<p><strong>(b) GAE by unrolling.</strong> With $\delta_t = r_t + \gamma V(s_{t+1}) - V(s_t)$, expand for $\lambda$:</p>
+<p>$$\hat{A}_t = \delta_t + \gamma\lambda\delta_{t+1} + (\gamma\lambda)^{2}\delta_{t+2}+\cdots = \sum_{l\ge0}(\gamma\lambda)^{l}\delta_{t+l}$$</p>
+<p>At $\lambda=0$ only $\delta_t$ survives — one-step TD, biased by $V$'s error. At $\lambda=1$ the sum telescopes:</p>
+<p>$$\sum_{l\ge0}\gamma^{l}\delta_{t+l} = \sum_{l\ge0}\gamma^{l}r_{t+l} + \sum_{l\ge0}\gamma^{l}\left[\gamma V(s_{t+l+1})-V(s_{t+l})\right] = \sum_{l\ge0}\gamma^{l}r_{t+l} - V(s_t)$$</p>
+<p>because the second sum telescopes ($\gamma V_{t+1}-V_t + \gamma^2V_{t+2}-\gamma V_{t+1}+\cdots$) and the tail vanishes as $l\to\infty$. So $\lambda=1$ is the discounted return minus the baseline — unbiased if $V$ is only used as a baseline, which it is.</p>
+<p><strong>(c) The language-model case.</strong> With a single terminal reward $R$, $\gamma=1$, and $V(s_T)=0$:</p>
+<p>$$\hat{A}_t = \sum_{l\ge0}\delta_{t+l} = R - V(s_t)$$</p>
+<p>for every token $t$ in the response. All the structure of GAE collapses to a subtraction, and the only thing the value head must supply is a per-prompt baseline.</p>
+<h3 id="derivation-5-grpos-advantage-is-an-unbiased-variance-reduced-estimator">Derivation 5: GRPO's advantage is an unbiased, variance-reduced estimator</h3>
+<p><strong>Step 1 — the score-function estimator.</strong> For a policy $\pi_\theta$ over responses and a reward $R$,</p>
+<p>$$\nabla_\theta\mathbb{E}_{y\sim\pi_\theta}[R(y)] = \mathbb{E}_{y\sim\pi_\theta}\left[R(y)\nabla_\theta\log\pi_\theta(y)\right]$$</p>
+<p>because $\nabla_\theta\pi_\theta = \pi_\theta\nabla_\theta\log\pi_\theta$ and the gradient moves inside the sum.</p>
+<p><strong>Step 2 — any baseline is unbiased.</strong> Let $b$ be any quantity not depending on $y$ (in particular, depending only on $x$). Then</p>
+<p>$$\mathbb{E}_{y\sim\pi_\theta}\left[b\,\nabla_\theta\log\pi_\theta(y)\right] = b\sum_y\nabla_\theta\pi_\theta(y) = b\,\nabla_\theta\underbrace{\sum_y\pi_\theta(y)}_{=1} = 0$$</p>
+<p>So subtracting $b$ changes the estimator's value in expectation not at all. This is what licenses using a sample mean as a baseline: <strong>it cannot bias the gradient, only change its variance.</strong></p>
+<p><strong>Step 3 — the variance-minimizing baseline.</strong> Write the estimator as $g = s(y)(R(y)-b)$ with $s = \nabla_\theta\log\pi_\theta(y)$. Then</p>
+<p>$$\mathrm{Var}(g) = \mathbb{E}\left[\|s\|^{2}(R-b)^{2}\right] - \|\mathbb{E}[g]\|^{2}$$</p>
+<p>The second term does not depend on $b$. Differentiating the first with respect to the scalar $b$:</p>
+<p>$$\frac{d}{db}\mathbb{E}\left[\|s\|^{2}(R-b)^{2}\right] = -2\mathbb{E}\left[\|s\|^{2}(R-b)\right] = 0 \implies b^{*} = \frac{\mathbb{E}\left[\|s\|^{2}R\right]}{\mathbb{E}\left[\|s\|^{2}\right]}$$</p>
+<p>So the exact minimizer is a <em>score-norm-weighted</em> average of rewards, not $\mathbb{E}[R]$. The two coincide only when $\|s\|^{2}$ is uncorrelated with $R$. GRPO uses the unweighted group mean $\bar{R}$ — a Monte-Carlo estimate of $\mathbb{E}[R]$ — which is the standard practical choice, is exactly the minimizer in the regression-style analysis where the score norm is treated as constant, and is very cheap. Being precise about this matters: "the mean is the optimal baseline" is a common over-claim.</p>
+<p><strong>Step 4 — group normalization.</strong> Dividing by the group standard deviation,</p>
+<p>$$\hat{A}_i = \frac{R_i-\bar{R}}{\mathrm{std}(R)}\quad\Longrightarrow\quad \nabla_\theta\mathcal{L} \propto \frac{1}{\mathrm{std}(R)}\sum_i (R_i-\bar{R})\nabla_\theta\log\pi_\theta(y_i)$$</p>
+<p>is a positive scalar times the baseline-subtracted estimator. If the optimizer's step size were fixed in absolute terms this would matter; with Adam, which normalizes by the gradient's second moment, dividing by a constant is nearly a no-op on the update direction and changes only the effective step scale. The normalization therefore mostly serves numerical conditioning across prompts of different difficulty, and it has a failure mode: when all $G$ rewards are equal, $\mathrm{std}=0$ and the advantage is $0/0$ — handled in practice by adding a small epsilon and discarding such groups.</p>
+<p><strong>Step 5 — why no critic is needed.</strong> From Derivation 4(c), for a single terminal reward with $\gamma=1$, the exact advantage is $R - V(s_t)$, and the only role of $V$ is to be a per-prompt baseline. $\bar{R}$ estimated from $G$ samples of that same prompt <em>is</em> a per-prompt baseline, and by Step 2 substituting it cannot bias the estimator. GRPO therefore trades a learned, non-stationary, expensive critic for a higher-variance but unbiased and free Monte-Carlo baseline. That is the whole argument, and its cost is visible in the group size: variance falls as $1/G$, so you pay $G$ generations per prompt to buy back what the critic would have given you for one.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>```python
+import numpy as np
+
+
+def log_softmax(z):
+    z = z - z.max()
+    return z - np.log(np.exp(z).sum())
+
+
+def seq_logprob(logits, seq):
+    """log pi(seq) for an autoregressive model. logits: (T, V); seq: list of T ids."""
+    return float(sum(log_softmax(logits[t])[tok] for t, tok in enumerate(seq)))
+
+
+def dpo_loss_and_grad(theta, theta_ref, yw, yl, beta):
+    """DPO loss and its gradient with respect to theta (the policy logits)."""
+    lp_w = seq_logprob(theta, yw)
+    lp_l = seq_logprob(theta, yl)
+    ref_w = seq_logprob(theta_ref, yw)
+    ref_l = seq_logprob(theta_ref, yl)
+
+    r_w = beta * (lp_w - ref_w)          # implicit reward of the preferred response
+    r_l = beta * (lp_l - ref_l)          # ... and of the dispreferred one
+    delta = r_w - r_l
+    loss = -np.log(1.0 / (1.0 + np.exp(-delta)))       # -log sigmoid(delta)
+
+    # dL/dtheta = -beta * sigma(r_l - r_w) * (grad log pi(y_w) - grad log pi(y_l))
+    coef = -beta * (1.0 / (1.0 + np.exp(delta)))       # = -beta * sigma(-delta)
+    grad = np.zeros_like(theta)
+    for seq, sign in ((yw, +1.0), (yl, -1.0)):
+        for t, tok in enumerate(seq):
+            p = np.exp(log_softmax(theta[t]))
+            grad[t] += sign * coef * (np.eye(len(p))[tok] - p)
+    return loss, grad, dict(lp_w=lp_w, lp_l=lp_l, ref_w=ref_w, ref_l=ref_l,
+                            r_w=r_w, r_l=r_l, delta=delta)
+
+
+if __name__ == "__main__":
+    rng = np.random.default_rng(0)
+    V, T, beta = 5, 3, 0.1
+    yw, yl = [1, 3, 2], [4, 0, 1]
+    theta = rng.normal(0, 1, (T, V))
+    theta_ref = rng.normal(0, 1, (T, V))
+
+    loss, grad, info = dpo_loss_and_grad(theta, theta_ref, yw, yl, beta)
+    for k, v in info.items():
+        print(f"{k:6s} {v:+.6f}")
+    print(f"loss   {loss:.6f}")
+
+    # the beta * log Z(x) term cancels: shift both implicit rewards by any constant c
+    for c in (-5.0, 0.0, 3.7):
+        shifted = -np.log(1 / (1 + np.exp(-((info["r_w"] + c) - (info["r_l"] + c)))))
+        print(f"shift {c:+.1f} -> loss {shifted:.6f}")
+
+    # finite-difference check of the gradient
+    eps, num = 1e-6, np.zeros_like(theta)
+    for i in range(T):
+        for j in range(V):
+            tp, tm = theta.copy(), theta.copy()
+            tp[i, j] += eps
+            tm[i, j] -= eps
+            num[i, j] = (dpo_loss_and_grad(tp, theta_ref, yw, yl, beta)[0]
+                         - dpo_loss_and_grad(tm, theta_ref, yw, yl, beta)[0]) / (2 * eps)
+    print("max |analytic - numeric|:", np.abs(grad - num).max())
+```</p>
+<p><strong>What to expect.</strong> The printed quantities reproduce the table in Derivation 3 exactly: <code>lp_w -8.039202</code>, <code>ref_w -6.496558</code>, <code>r_w -0.154264</code>, <code>delta -0.174317</code>, <code>loss 0.784099</code>. The loss is identical for all three reward shifts — the numerical proof that $\beta\log Z(x)$ cancels. The finite-difference check agrees to about $4\times10^{-11}$, and the gradient is nonzero only at the six (position, token) pairs appearing in $y_w$ and $y_l$.</p>
+<h2 id="worked-example">Worked example</h2>
+<p><strong>Setting.</strong> $V=5$, $T=3$, $\beta = 0.1$, $y_w = (1,3,2)$, $y_l = (4,0,1)$, policy logits and reference logits drawn at random with a fixed seed.</p>
+<p><strong>Step 1 — four log-probabilities.</strong> Each is a sum of three log-softmax values: $\log\pi_\theta(y_w) = -8.039202$, $\log\pi_\theta(y_l) = -5.011080$, $\log\pi_{\mathrm{ref}}(y_w) = -6.496558$, $\log\pi_{\mathrm{ref}}(y_l) = -5.211604$. The policy assigns higher probability to the <em>dispreferred</em> response — these are random logits, so this is expected half the time.</p>
+<p><strong>Step 2 — implicit rewards.</strong> $\hat r_w = 0.1(-8.039202+6.496558) = 0.1(-1.542644) = -0.154264$; $\hat r_l = 0.1(-5.011080+5.211604) = 0.1(0.200476) = +0.020052$. Note what these mean: the policy has moved <em>away</em> from the preferred response relative to the reference (negative reward) and toward the dispreferred one.</p>
+<p><strong>Step 3 — margin and loss.</strong> $\Delta = -0.174317$; $\sigma(\Delta) = 0.456531$; $\mathcal{L} = -\log 0.456531 = 0.784099$. A coin-flip policy would score $0.6931$; this policy is worse than a coin flip on this pair, as it should be.</p>
+<p><strong>Step 4 — gradient coefficient.</strong> $-\beta\sigma(-\Delta) = -0.1\cdot0.543469 = -0.054347$. Multiply by $\nabla\log\pi_\theta(y_w) - \nabla\log\pi_\theta(y_l)$; for a softmax the gradient at position $t$ with target token $c$ is $\mathbf{e}_c-\mathbf{p}_t$. The resulting gradient is $-0.0543$ at the $(0,\text{token }1)$ entry, which under gradient descent <em>raises</em> logit 1 — increasing the preferred response's probability, exactly as intended, with the opposite pattern at the dispreferred response's tokens.</p>
+<p><strong>Step 5 — the cancellation check.</strong> Recompute the loss with both implicit rewards shifted by $c\in\{-5, 0, 3.7\}$: $0.784099$ every time. This is $\beta\log Z(x)$ being the same for both responses of the same prompt. Had the two responses come from <em>different</em> prompts, the shift would not cancel and the comparison would be invalid — which is why DPO requires pairs, not a bag of labelled responses.</p>
+<p><strong>Step 6 — the reference model's role.</strong> $\pi_{\mathrm{ref}}$ enters only through $\hat r$; it has no gradient. If $\pi_\theta = \pi_{\mathrm{ref}}$ exactly, then $\hat r_w = \hat r_l = 0$, $\Delta = 0$, and the loss is $\log 2 = 0.6931$ for every pair — the maximum-entropy starting point. Training can only improve by moving the policy relative to a fixed reference, which is what makes the method stable and also what caps how far it can go.</p>
+<p><strong>Step 7 — the corresponding RLHF view.</strong> Under Derivation 2, the optimal policy for this pair with $\beta = 0.1$ and rewards $(1,0)$ would satisfy $\pi^{*}(y_w)/\pi_{\mathrm{ref}}(y_w) \propto e^{10}$ and $\pi^{*}(y_l)/\pi_{\mathrm{ref}}(y_l)\propto 1$, a log-ratio of about 10. DPO never computes that; it pushes the log-ratio difference upward by an amount set by the gradient, and it will asymptote wherever the data's preference signal balances. <strong>DPO does not target the same optimum as RLHF unless the Bradley–Terry model is exactly correct</strong>, which is the substance of the IPO critique.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="dpo-is-rlhf-without-the-reward-model">"DPO is RLHF without the reward model"</h3>
+<p>It is RLHF's <em>optimum</em> reparameterized as a loss, derived by substituting the closed-form optimal reward into the Bradley–Terry likelihood. It is not an approximation to RLHF in the sense of skipping a step; it is a different algorithm that coincides with RLHF's solution under a specific assumption (BT preference model, fixed $\beta$, reference policy fixed). It has no on-policy sampling, so it cannot discover responses absent from the preference data — a limitation RLHF does not share.</p>
+<h3 id="the-reward-model-is-the-models-reward-so-maximizing-it-maximizes-quality">"The reward model is the model's reward, so maximizing it maximizes quality"</h3>
+<p>The reward model is a proxy fit to a finite sample of human judgments, and optimizing it hard moves the policy off the distribution where it was fit. Measured over-optimization curves show proxy reward rising while held-out quality peaks and falls. The KL term and early stopping exist precisely to keep you on the left of that peak.</p>
+<h3 id="the-mean-reward-is-the-variance-minimizing-baseline">"The mean reward is the variance-minimizing baseline"</h3>
+<p>It is the standard and usually good choice, and it is exactly what makes GRPO's critic-free advantage legitimate. But the exact variance minimizer for a scalar baseline is $\mathbb{E}[\|s\|^{2}R]/\mathbb{E}[\|s\|^{2}]$, where $s$ is the score function — a score-norm-weighted average. The mean is optimal only when the score norm is uncorrelated with the reward. The distinction rarely changes practice; it changes whether you understand the estimator.</p>
+<h3 id="grpo-removes-the-value-function-so-it-is-just-reinforce">"GRPO removes the value function, so it is just REINFORCE"</h3>
+<p>It removes the <em>learned</em> value function and replaces it with a Monte-Carlo per-prompt baseline, then normalizes by the group's standard deviation. REINFORCE with no baseline has far higher variance; the group mean is what makes it practical. The price is group size: variance falls as $1/G$, so GRPO pays $G$ generations per prompt where a critic would have cost one extra forward pass.</p>
+<h3 id="rlvr-teaches-the-model-new-reasoning-abilities">"RLVR teaches the model new reasoning abilities"</h3>
+<p>This is contested and the honest answer is that the evidence is mixed. Verifiable-reward RL reliably improves pass@1 on in-distribution verifiable tasks and reliably lengthens the model's outputs, and there is good evidence that much of the gain is <em>sharper sampling of what the base model could already do</em> rather than the acquisition of new capability — measured by comparing pass@k for large $k$ before and after, where the base model often matches the RL model. Whether any capability is genuinely new is an open question, not a settled one, and claims in either direction should be read against that.</p>
+<h3 id="if-the-benchmark-score-went-up-the-model-got-better">"If the benchmark score went up, the model got better"</h3>
+<p>At 300 items the 95% confidence interval is about $\pm5$ points. Select the best of eight checkpoints and you have ~3.7 points of pure selection effect. Without intervals, without a held-out suite, and without length control, a reported gain is indistinguishable from noise plus verbosity.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>1.</strong> With $r(x,y_w) = 2.5$ and $r(x,y_l) = 1.0$, what preference probability does Bradley–Terry predict, and what is the loss?</p>
+<p><strong>2.</strong> For the two-response example with $\beta = 1$, $\pi_{\mathrm{ref}} = (0.5,0.5)$, $r=(1,0)$, verify the optimal policy is $(0.731, 0.269)$.</p>
+<p><strong>3.</strong> In GRPO with a group of rewards $(0,0,1,1)$, what are the advantages, and what if the group is $(1,1,1,1)$?</p>
+<details><summary>Solution</summary>
+
+1. $\Delta = 1.5$, $\sigma(1.5) = 0.8176$, loss $= -\log 0.8176 = 0.2014$. To reach 95% confidence you would need $\Delta = \ln 19 = 2.944$.
+2. $\pi^{*}\propto \pi_{\mathrm{ref}}e^{r/\beta} = (0.5e^{1}, 0.5e^{0}) = (1.3591, 0.5)$, sum $1.8591$, normalized to $(0.7311, 0.2689)$. Check: $\mathbb{E}_{\pi^{*}}[r] = 0.7311$, $D_{\mathrm{KL}} = 0.7311\ln(0.7311/0.5)+0.2689\ln(0.2689/0.5) = 0.2778-0.1668 = 0.1109$, so $\mathcal{J} = 0.7311-0.1109 = 0.6202$, matching $\beta\log Z = 0.6201$. The reference policy scores $0.5$, so the optimum is better by $0.12$ nats of objective.
+3. $(0,0,1,1)$: mean 0.5, std 0.5, advantages $(-1,-1,+1,+1)$. $(1,1,1,1)$: mean 1, std 0, advantages are $0/0$ — degenerate, no gradient, group discarded.
+
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>4.</strong> Derive the DPO gradient from the loss, step by step.</p>
+<details><summary>Solution</summary>
+
+$\mathcal{L} = -\log\sigma(\Delta)$ with $\Delta = \beta[(\log\pi_\theta(y_w)-\log\pi_{\mathrm{ref}}(y_w)) - (\log\pi_\theta(y_l)-\log\pi_{\mathrm{ref}}(y_l))]$. Then $\partial\mathcal{L}/\partial\Delta = -\sigma(-\Delta)$, and $\partial\Delta/\partial\theta = \beta[\nabla\log\pi_\theta(y_w) - \nabla\log\pi_\theta(y_l)]$ since $\pi_{\mathrm{ref}}$ is frozen. Multiplying: $\nabla_\theta\mathcal{L} = -\beta\sigma(-\Delta)[\nabla\log\pi_\theta(y_w)-\nabla\log\pi_\theta(y_l)]$. Since $\sigma(-\Delta) = \sigma(\hat r_l - \hat r_w)$, this is a policy-gradient step weighted by the model's preference error.
+
+</details>
+
+<p><strong>5.</strong> A PPO batch has $\hat A_t = 2$ for one token and $\hat A_{t'} = -0.5$ for another, with $\epsilon = 0.2$. For $r_t \in \{0.6, 0.9, 1.0, 1.3, 2.0\}$, compute the clipped objective value for each and say whether the gradient flows.</p>
+<details><summary>Solution</summary>
+
+For $\hat A = 2$: the clip is $[0.8,1.2]$, so the clipped term is $2\min(r,1.2)$ clipped — compute $\min(2r, 2\cdot\operatorname{clip}(r))$: $r=0.6\to\min(1.2,1.6)=1.2$ (flows, pushes up); $r=0.9\to\min(1.8,1.8)=1.8$ (flows); $r=1.0\to 2.0$ (flows); $r=1.3\to\min(2.6,2.4)=2.4$ (**blocked**); $r=2.0\to\min(4.0,2.4)=2.4$ (**blocked**).
+For $\hat A = -0.5$: $r=0.6\to\min(-0.3,-0.4)=-0.4$ (**blocked**); $r=0.9\to\min(-0.45,-0.45)=-0.45$ (flows); $r=1.0\to -0.5$ (flows); $r=1.3\to\min(-0.65,-0.6)=-0.65$ (flows); $r=2.0\to\min(-1.0,-0.6)=-1.0$ (flows).
+The pattern: blocked exactly when the ratio has already moved more than $\epsilon$ in the direction the advantage wants, and never otherwise.
+
+</details>
+
+<p><strong>6.</strong> Derive the GAE telescoping for $\gamma = 1$, $\lambda = 1$, a single terminal reward $R$, and $V(s_T) = 0$.</p>
+<details><summary>Solution</summary>
+
+$\delta_t = r_t + V_{t+1}-V_t$ where all $r_t = 0$ except $r_{T} = R$ (assign the terminal reward to the last step). Then $\hat A_t = \sum_{l\ge0}\delta_{t+l} = \sum_{l\ge0}(r_{t+l}+V_{t+l+1}-V_{t+l})$. With $V_T = 0$ and no reward until $T$, the sum of differences telescopes to $V_{T+1}-V_t = -V_t$, and the reward contributes $R$. So $\hat A_t = R - V(s_t)$ for every $t$.
+
+</details>
+
+<p><strong>7.</strong> Show that adding a constant $c(x)$ to every reward for a fixed prompt leaves the KL-regularized optimum's <em>relative</em> probabilities unchanged, and explain what does change.</p>
+<details><summary>Solution</summary>
+
+The optimum is $\pi^{*}\propto\pi_{\mathrm{ref}}e^{(r+c)/\beta} = e^{c/\beta}\pi_{\mathrm{ref}}e^{r/\beta}$; the factor $e^{c/\beta}$ is the same for every $y$, so it is absorbed by normalization and $\pi^{*}$ is unchanged as a distribution. What changes is $Z(x) \to e^{c/\beta}Z(x)$, and therefore the optimal objective value $\beta\log Z$, which shifts by $c$. In a PPO implementation the constant does change things, because the advantage $R - \bar R$ is computed per batch, not per prompt; a prompt-dependent offset that is constant across responses cancels in the advantage, but a batch-level offset does not.
+
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>8.</strong> Implement GRPO's advantage and demonstrate the degenerate-group problem. Then propose and test a fix.</p>
+<details><summary>Solution</summary>
+
+```python
+import numpy as np
+def advantages(rewards, eps=1e-4):
+    r = np.asarray(rewards, dtype=float)
+    return (r - r.mean()) / (r.std() + eps)
+
+print(advantages([1,0,1,0]))    # [-1. -1.  1.  1.]
+print(advantages([1,1,1,1]))    # [0. 0. 0. 0.]  -> no gradient
+```
+The fix is to filter prompts by their empirical success rate: keep prompts where the group's mean reward is strictly between 0 and 1, since a prompt the model always solves carries no learning signal and one it never solves carries no *positive* signal either (with all-zero rewards every advantage is zero too). A more principled version uses difficulty-targeted sampling to target prompts near 50% success, which maximizes the group's reward variance and therefore the gradient's information per sample. Report the fraction of discarded groups — if it is high, your curriculum is mis-tuned and you are paying for generations that teach nothing.
+
+</details>
+
+<p><strong>9.</strong> Construct a reward-hacking demonstration on paper: design a reward model and a policy change that increases the proxy while decreasing true quality, and say what measurement detects it.</p>
+<details><summary>Solution</summary>
+
+Reward model: a BT model trained on human comparisons over a helpfulness dataset. Because raters systematically prefer thorough answers, it learns a positive coefficient on length and on the presence of headers and bullet lists. Policy change: append a summary section, a "Key takeaways" list, and restate the question — none of which adds information but all of which raise the learned reward. The proxy rises by, say, 0.3; true helpfulness, as measured by a fresh blinded comparison against the SFT model, falls because the answer is now three times longer with the same content. Detection: (i) plot score against response length and report the partial correlation; (ii) run length-controlled evaluation, comparing at matched token counts; (iii) hold out a gold reward model trained on a different annotation protocol and never optimized against — its curve peaks and falls while the proxy's keeps climbing. Any one of these would catch it; the reason it happens anyway is that none is standard practice.
+
+</details>
+
+<p><strong>10.</strong> With a verifier that is correct on 97% of submissions, how many samples can you usefully draw before the verifier's error dominates? Compute for a task with per-sample success $p = 0.05$.</p>
+<details><summary>Solution</summary>
+
+A wrong answer is accepted if the verifier false-positives, probability $0.03$ per sample. Over $n$ samples, the probability at least one false acceptance occurs is $1-0.97^{n}$: $n=16\to 0.386$, $n=32\to 0.62$, $n=64\to 0.858$. Meanwhile the probability of at least one *correct* answer is $1-0.95^{n}$: $n=16\to 0.560$, $n=32\to 0.806$, $n=64\to 0.962$. At $n=16$ correct answers outnumber false accepts; by $n=64$ the ratio is 1.12:1 and the verifier is nearly as likely to bless a wrong answer as to find a right one. So the useful range is roughly $n \le 1/(1-p)\cdot\ln(1/\epsilon_{\mathrm{ver}})$ — a few tens of samples, not thousands — and the binding constraint is verifier precision, not sample budget.
+
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>Write the Bradley–Terry preference probability and the reward-model loss.</li>
+<li>What is the gauge freedom in BT, and what two practical steps does it force?</li>
+<li>Derive the KL-regularized optimum, naming the tilted reference and the partition function.</li>
+<li>Invert that optimum to express the reward in terms of the policy, and say what cancels in DPO and why.</li>
+<li>Write the DPO loss and its gradient.</li>
+<li>State the PPO clipped objective and the four cases; say what the clip prevents and what it does not.</li>
+<li>Show that the GAE telescopes to $R - V(s_t)$ for a single terminal reward with $\gamma=\lambda=1$.</li>
+<li>Prove that any action-independent baseline leaves the policy gradient unbiased, and state the exact variance-minimizing baseline.</li>
+<li>What replaces the critic in GRPO, and what does that cost?</li>
+<li>Name four reward-hacking mechanisms and the measurement that detects each.</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $P(y_w\succ y_l) = \sigma(r(x,y_w)-r(x,y_l))$; $\mathcal{L}_{\mathrm{RM}} = -\mathbb{E}\log\sigma(r(x,y_w)-r(x,y_l))$.
+2. Only reward *differences* are identified, so adding any $c(x)$ leaves the loss unchanged. Hence: the RM must be centered before use as a reward, and rewards may only be compared within a prompt. It also means BT cannot represent intransitive preferences.
+3. $\pi^{*}(y\mid x) = \pi_{\mathrm{ref}}(y\mid x)e^{r(x,y)/\beta}/Z(x)$ with $Z(x) = \sum_y\pi_{\mathrm{ref}}(y\mid x)e^{r(x,y)/\beta}$; the objective equals $-\beta D_{\mathrm{KL}}(\pi\|\pi^{*})+\beta\log Z(x)$, maximized at $\pi=\pi^{*}$.
+4. $r(x,y) = \beta\log(\pi^{*}/\pi_{\mathrm{ref}}) + \beta\log Z(x)$. Substituted into BT, the $\beta\log Z(x)$ term appears once for $y_w$ and once for $y_l$ with the same value for the same prompt, so it cancels — eliminating the intractable sum over all responses.
+5. $\mathcal{L} = -\mathbb{E}\log\sigma(\beta\log\frac{\pi_\theta(y_w)}{\pi_{\mathrm{ref}}(y_w)} - \beta\log\frac{\pi_\theta(y_l)}{\pi_{\mathrm{ref}}(y_l)})$; $\nabla = -\beta\sigma(\hat r_l-\hat r_w)[\nabla\log\pi_\theta(y_w)-\nabla\log\pi_\theta(y_l)]$.
+6. $\mathbb{E}[\min(r_t\hat A_t, \operatorname{clip}(r_t,1-\epsilon,1+\epsilon)\hat A_t)]$. Cases: $\hat A>0, r>1+\epsilon$ blocked; $\hat A>0, r<1-\epsilon$ flows; $\hat A<0, r<1-\epsilon$ blocked; $\hat A<0, r>1+\epsilon$ flows. It prevents unbounded ratio-driven steps but does not bound the cumulative KL.
+7. $\hat A_t = \sum_l(r_{t+l}+V_{t+l+1}-V_{t+l})$; the $V$ terms telescope and the tail vanishes, leaving the discounted return minus $V(s_t)$; with one terminal reward $R$ this is $R-V(s_t)$.
+8. $\mathbb{E}[b\nabla\log\pi_\theta] = b\nabla\sum_y\pi_\theta(y) = b\nabla 1 = 0$. The minimizer of $\mathbb{E}[\|s\|^2(R-b)^2]$ is $b^{*} = \mathbb{E}[\|s\|^{2}R]/\mathbb{E}[\|s\|^{2}]$; the mean is optimal only when the score norm is reward-independent.
+9. The group mean of $G$ sampled rewards for the same prompt, which is a Monte-Carlo estimate of the baseline $V(s)$. It is unbiased by the baseline identity, but its variance falls only as $1/G$, so you pay $G$ generations per prompt instead of one critic forward pass.
+10. Length hacking (score-versus-length partial correlation, length-controlled evaluation); sycophancy (prompts asserting a false premise); reward-model over-optimization (a held-out gold reward never optimized against); benchmark overfitting (confidence intervals and a held-out suite). Add intransitivity/personalization if you want a fifth.
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><strong>Christiano et al., "Deep Reinforcement Learning from Human Preferences" (2017).</strong> The origin of learning a reward from comparisons. Extract the preference-model training and the surrogate-reward loop.</li>
+<li><strong>Stiennon et al., "Learning to Summarize from Human Feedback" (2020).</strong> The first convincing language-model-scale RLHF result, including the reward-model over-optimization curves.</li>
+<li><strong>Ouyang et al., "Training Language Models to Follow Instructions with Human Feedback" (2022).</strong> InstructGPT: the three-stage pipeline, and the measurements of the alignment tax on public benchmarks.</li>
+<li><strong>Rafailov et al., "Direct Preference Optimization" (2023).</strong> The DPO derivation; read §4 line by line against Derivation 3 here, and the appendix for the reward-model equivalence.</li>
+<li><strong>Schulman et al., "Proximal Policy Optimization Algorithms" (2017).</strong> The clipped objective and its four cases. Short, and the ablation against other trust-region methods is the useful part.</li>
+<li><strong>Shao et al., "DeepSeekMath" (2024).</strong> Where GRPO is introduced, with the group-relative advantage and the training curves. Extract §4.</li>
+<li><strong>Azar et al., "A General Theoretical Paradigm to Understand Learning from Human Preferences" (2023).</strong> IPO, and the sharpest published critique of what DPO's Bradley–Terry assumption costs.</li>
+<li><strong>Gao, Schulman, Hilton, "Scaling Laws for Reward Model Overoptimization" (2023).</strong> The quantitative over-optimization curves, including how they change with reward-model size and the number of PPO steps.</li>
+<li><strong>Sutton and Barto, <em>Reinforcement Learning: An Introduction</em> (free PDF), chapters 3 and 13.</strong> Policy gradients and the baseline/variance argument, done more carefully than any LLM paper does it.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when you can, without notes:</p>
+<ul>
+<li>Derive Bradley–Terry's loss and gradient, and state the gauge freedom and what it forbids.</li>
+<li>Derive the KL-regularized optimum and its inversion, with the partition function explicit at every step.</li>
+<li>Derive DPO completely, including the cancellation, and write both the loss and the gradient.</li>
+<li>Reproduce the four PPO clip cases and say what the clip does and does not guarantee.</li>
+<li>Derive GRPO's advantage, prove the baseline is unbiased, and explain what the group size costs.</li>
+<li>Name four reward-hacking mechanisms with their diagnostics, and state honestly what is and is not known about RLVR's effect on capability.</li>
+</ul><div class="pager"><a id="prevlink" href="../m/17-sft-peft.html"><small>← previous</small><b>M17 · Supervised Fine-Tuning and Parameter-Efficient Tuning</b></a><a id="nextlink" class="next" href="../m/19-inference-serving.html"><small>next →</small><b>M19 · Inference Engineering and Serving</b></a></div></article>
+</main>
+</div>
+</body></html>

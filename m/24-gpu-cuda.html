@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M24 · GPU Architecture and CUDA — From Zero to Frontier</title>
+<meta name="description" content="Why the GPU is a bandwidth machine wearing a compute machine's costume.">
+<meta property="og:title" content="M24 · GPU Architecture and CUDA — From Zero to Frontier">
+<meta property="og:description" content="Why the GPU is a bandwidth machine wearing a compute machine's costume.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="on" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Systems and scale / M24</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M24">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M24</span><span class="pill d4">difficulty 4/5</span><span class="pill">2 weeks</span><span class="pill">prereqs: M02</span><span class="pill">8,330 words</span></div><h1>GPU Architecture and CUDA</h1><p class="tagline">Why the GPU is a bandwidth machine wearing a compute machine's costume.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>Every performance question in this curriculum eventually reduces to two numbers: the floating-point operations a kernel must perform, and the bytes it must move to perform them. Without those two numbers a slow step is unattributable — you cannot tell whether 40% of peak is your bug, the framework's bug, or the speed of light on that particular chip. Skip this module and "GPU utilisation" stays a talisman; work through it and you can compute, before running anything, the best a kernel can possibly do, and therefore whether rewriting it is worth the week. The model built here is reused three times later: <strong>M25</strong> uses it to decide what is worth recomputing across devices, <strong>M26</strong> uses it to decide what to fuse and when a benchmark is lying, and <strong>M19</strong> uses it to explain why serving throughput falls off a cliff at long context.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<p>Answer before reading on. If you miss two or more, revisit <strong>M02</strong>.</p>
+<ol>
+<li>How many floating-point operations are in $\mathbf{C} = \mathbf{A}\mathbf{B}$ for $\mathbf{A} \in \mathbb{R}^{m \times k}$, $\mathbf{B} \in \mathbb{R}^{k \times n}$?</li>
+<li>A $1024 \times 1024$ matmul with a $1024 \times 1024$ operand: how many FLOPs?</li>
+<li>In row-major storage, how far apart in memory are $\mathbf{W}_{ij}$ and $\mathbf{W}_{i,j+1}$ for an fp32 matrix?</li>
+<li>Given $\mathbf{Y} = \mathbf{X}\mathbf{W}$, what is $\partial \mathcal{L} / \partial \mathbf{X}$ in terms of $\partial \mathcal{L}/\partial \mathbf{Y}$?</li>
+<li>A kernel must read 1 GB from a memory that sustains 3 TB/s. What is the floor on its running time?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $2mkn$ — $mkn$ multiply–add pairs, two FLOPs each. The 2 is a multiply plus an add, and it appears in every FLOP count in this course.
+2. $2 \times 1024^3 \approx 2.15 \times 10^9$ FLOPs, about 2 GFLOP.
+3. Exactly 4 bytes. Elements along the last axis are contiguous; that fact is the whole basis of memory coalescing.
+4. $\partial \mathcal{L}/\partial \mathbf{X} = (\partial \mathcal{L}/\partial \mathbf{Y})\,\mathbf{W}^\top$ from **M02**. Note it is a matmul with the *weight*, which is why the backward pass costs twice the forward pass.
+5. $1\,\text{GB} / 3\,\text{TB/s} \approx 0.33$ ms. No amount of extra arithmetic units changes that floor.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<ul>
+<li>Compute the arithmetic intensity of any kernel from its tensor shapes and place it on a roofline diagram.</li>
+<li>Derive, from a chip's bandwidth and memory latency, how many bytes must be in flight to saturate HBM, and predict whether a kernel at a given occupancy can reach it.</li>
+<li>State the cost of a warp divergence in issued instructions, and identify the common cases where divergence costs nothing.</li>
+<li>Derive HBM traffic for a tiled matmul as a function of tile size, and choose the tile that crosses the ridge point.</li>
+<li>Diagnose an uncoalesced access and a 32-way bank conflict from source code alone, and fix each.</li>
+<li>Given a value, say whether it is representable in fp32, tf32, fp16, bf16 and fp8-e4m3, whether it overflows, and the relative error it incurs.</li>
+<li>Explain why FlashAttention improves attention's roofline position while performing exactly the same FLOPs.</li>
+<li>Read the "Speed of Light" panel of Nsight Compute and name the next optimisation it implies.</li>
+<li>Write a fused Triton layernorm and predict its speedup over the naive PyTorch expression from bytes moved alone.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$F$</td>
+<td>floating-point operations performed by a kernel (a count, not a rate)</td>
+</tr>
+<tr>
+<td>$B$</td>
+<td>bytes moved between HBM and the chip</td>
+</tr>
+<tr>
+<td>$\pi$</td>
+<td>peak floating-point rate, FLOP/s (a rate)</td>
+</tr>
+<tr>
+<td>$\beta$</td>
+<td>peak HBM bandwidth, bytes/s</td>
+</tr>
+<tr>
+<td>$I = F/B$</td>
+<td>arithmetic intensity, FLOP per byte</td>
+</tr>
+<tr>
+<td>$I_{\mathrm{ridge}} = \pi/\beta$</td>
+<td>the ridge point, in FLOP per byte</td>
+</tr>
+<tr>
+<td>$S$</td>
+<td>streaming multiprocessors (SMs) on the chip</td>
+</tr>
+<tr>
+<td>$T$</td>
+<td>tile or block edge length, in elements</td>
+</tr>
+<tr>
+<td>$R$</td>
+<td>registers per thread</td>
+</tr>
+<tr>
+<td>$n, d, d_{ff}$</td>
+<td>sequence length, model width, feed-forward width</td>
+</tr>
+</tbody>
+</table>
+<p>"FLOPs" is a count; "FLOP/s" is a rate. Datasheets quote rates, analyses need counts, and conflating them is the most common arithmetic error in this subject. All hardware numbers below are for an NVIDIA H100 SXM5 (132 SMs, 1.98 GHz boost, 80 GB HBM3, 3.35 TB/s, 989.4 TFLOP/s dense bf16) unless stated; the arguments, not the constants, are what transfer.</p>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="simt-one-instruction-thirty-two-lanes">SIMT: one instruction, thirty-two lanes</h3>
+<p><strong>Intuition.</strong> A drill sergeant shouts one command at a platoon of 32; every soldier performs the same motion on different ground. You pay for one shout, not 32. That is the GPU's entire economic argument: amortise instruction fetch, decode and scheduling over 32 lanes, and spend the saved transistors on arithmetic units.</p>
+<p><strong>Formal definition.</strong> A kernel launches a <em>grid</em> of <em>blocks</em>; a block of up to 1024 threads is placed on one SM and cannot migrate; its threads are partitioned into <em>warps</em> of 32 consecutive threads. All 32 lanes of a warp execute the same instruction in the same clock, each on its own registers. An SM has four warp schedulers, each issuing one warp-instruction per clock, so an SM retires at most $4 \times 32 = 128$ lane-instructions per clock.</p>
+<p><strong>Why it is built this way.</strong> A CPU core devotes most of its area to out-of-order issue, branch prediction and multi-megabyte caches, because its workload is one instruction stream with unpredictable dependencies. A GPU has $\sim 10^5$ independent instruction streams available, so it does not need to predict anything — it switches. Latency is hidden by parallelism rather than by speculation, which is cheaper in transistors and useless for serial code.</p>
+<p><strong>Worked micro-example.</strong> $128$ lanes $\times 1$ FMA per lane per clock $= 256$ FLOP per clock per SM. At $1.98 \times 10^9$ clocks/s that is $507$ GFLOP/s per SM; times 132 SMs, $66.9$ TFLOP/s. The H100 datasheet says 66.9 TFLOP/s fp32. The advertised number is nothing more than lanes $\times$ clock $\times 2$ — a bound that assumes no memory system at all.</p>
+<h3 id="latency-hiding-and-the-arithmetic-behind-occupancy">Latency hiding, and the arithmetic behind occupancy</h3>
+<p><strong>Intuition.</strong> A kitchen with one cook per dish finishes nothing quickly, because each dish spends most of its life in the oven. A kitchen with 64 dishes in flight finishes 64 dishes in the time one dish spends baking. Throughput comes from the <em>number of things in flight</em>, not from working faster.</p>
+<p><strong>Formal definition.</strong> Let $\ell$ be the memory latency in seconds and $B_{\text{flight}}$ the bytes a chip has requested but not yet received. Little's law gives the sustained bandwidth</p>
+<p>$$\beta_{\text{achieved}} = \frac{B_{\text{flight}}}{\ell}.$$</p>
+<p><em>Occupancy</em> is the fraction of an SM's maximum resident warps (64 on this part) that are actually resident, which is limited by whichever of registers, shared memory, or block size runs out first.</p>
+<p><strong>Why it is built this way.</strong> HBM latency is roughly 500 clocks while an FMA retires in one. A single instruction stream issuing a load stalls for 500 clocks. The hardware answer is to keep dozens of warps resident so the scheduler always has someone to issue. Occupancy is therefore not a virtue in itself: it is the knob that sets $B_{\text{flight}}$.</p>
+<p><strong>Worked micro-example.</strong> With $\beta = 3.35$ TB/s and $\ell \approx 250$ ns, the chip needs $3.35 \times 10^{12} \times 2.5 \times 10^{-7} \approx 838$ KB in flight, or $838\,\text{KB}/132 \approx 6.35$ KB per SM. One warp issuing a coalesced load of 32 fp32 values requests 128 bytes, so you need about 50 warps' worth of outstanding requests per SM to saturate HBM — 78% occupancy. Derivation and the register-pressure counterexample are in <strong>Derivations D1</strong>.</p>
+<h3 id="the-memory-hierarchy-with-numbers">The memory hierarchy, with numbers</h3>
+<p><strong>Intuition.</strong> A desk, a shelf, and a warehouse. Nobody builds a warehouse next to their elbow, because a warehouse that size cannot be that close — the wire is too long and light takes time to cross it. Capacity and latency are locked together by physics, so every fast machine is a <em>stack</em> of levels with a reuse policy between them.</p>
+<p><strong>Formal definition.</strong> Levels, from the SM outward, with capacity, aggregate bandwidth and latency:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Per SM</th>
+<th>Chip total</th>
+<th>Bandwidth</th>
+<th>Latency</th>
+<th>Who manages it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Registers</td>
+<td>256 KB</td>
+<td>33.8 MB</td>
+<td>$\sim$3 TB/s per SM</td>
+<td>1 clock</td>
+<td>compiler</td>
+</tr>
+<tr>
+<td>Shared memory / L1</td>
+<td>228 KB</td>
+<td>30 MB</td>
+<td>253 GB/s per SM ($\approx$33 TB/s)</td>
+<td>$\sim$30 clocks</td>
+<td>you (explicit)</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>—</td>
+<td>50 MB</td>
+<td>$\approx$7 TB/s</td>
+<td>$\sim$200 clocks</td>
+<td>hardware</td>
+</tr>
+<tr>
+<td>HBM3</td>
+<td>—</td>
+<td>80 GB</td>
+<td>3.35 TB/s</td>
+<td>$\sim$500 clocks</td>
+<td>hardware (with your access pattern)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why it is built this way.</strong> A memory cell must be physically small to be dense and physically close to be fast, and those requirements conflict. The hierarchy resolves the conflict by keeping <em>copies</em>: 99% of accesses hit a level whose bandwidth is 10× to 100× HBM's, and the engineering problem becomes making the copy pattern match the access pattern. Every optimisation in <strong>M26</strong> — fusion, tiling, packing — is a manipulation of that copy pattern.</p>
+<p><strong>Worked micro-example.</strong> Move 1 GB from HBM at 3.35 TB/s: 299 $\mu$s. The same gigabyte from L2 at 7 TB/s: 143 $\mu$s. From shared memory aggregated over 132 SMs: 30 $\mu$s. The spread is about 10$\times$ end to end, and the top of the stack (registers) is faster again. That ratio is why "just add more FLOPs" does not work and why "move fewer bytes" always does.</p>
+<p>The same hierarchy in the currency that decides chip design, energy per access (order-of-magnitude figures from Mark Horowitz's 2014 ISSCC analysis, at 45 nm): a 32-bit integer add costs $\sim$0.1 pJ, a 32-bit float add $\sim$0.9 pJ, a 32-bit SRAM read $\sim$5 pJ, and a DRAM read $\sim$640 pJ. Moving a number from DRAM costs roughly 700 arithmetic operations' worth of energy. That single ratio predicts the entire modern stack: fusion, low precision, and weight-stationary dataflow.</p>
+<h3 id="the-machine-balance-and-the-roofline-model">The machine balance, and the roofline model</h3>
+<p><strong>Intuition.</strong> A factory with one machine and one conveyor belt. Output is set by whichever is slower: a fast machine starved by a slow belt produces at the belt's rate, and a slow machine fed by a fast belt produces at the machine's rate. There is a single operating point where they match.</p>
+<p><strong>Formal definition.</strong> For a kernel requiring $F$ FLOPs and $B$ bytes, the two lower bounds on running time are $F/\pi$ and $B/\beta$, and they overlap:</p>
+<p>$$T \;\ge\; \max\!\left(\frac{F}{\pi},\; \frac{B}{\beta}\right), \qquad P \;=\; \frac{F}{T} \;\le\; \min\!\left(\pi,\; \beta I\right), \qquad I = \frac{F}{B}.$$</p>
+<p>$I$ is <em>arithmetic intensity</em>. The two regimes meet at the <em>ridge point</em> $I_{\mathrm{ridge}} = \pi/\beta$.</p>
+<p>Numbers for this chip: $\pi = 989.4$ TFLOP/s and $\beta = 3.35$ TB/s give</p>
+<p>$$I_{\mathrm{ridge}} = \frac{989.4 \times 10^{12}}{3.35 \times 10^{12}} \approx 295\ \text{FLOP/byte}.$$</p>
+<p>Read that number as a sentence: <em>the chip can execute about 300 floating-point operations in the time HBM takes to deliver one byte.</em> The gap between the two engines has widened from roughly 139 FLOP/byte on a V100 (fp16 tensor cores) and 161 on an A100 to 295 here — to first order, a hundredfold, and growing faster than bandwidth.</p>
+<p><strong>Why it is built this way.</strong> It converts a performance question ("why is this slow?") into an arithmetic question with two candidate answers, each implying a different fix. If $I < I_{\mathrm{ridge}}$ you are memory bound: no arithmetic change helps, you must move fewer bytes. If $I > I_{\mathrm{ridge}}$ you are compute bound: no memory change helps, you must use faster arithmetic or better instruction shapes. Before the roofline, "optimisation" was folklore; after it, it is a division.</p>
+<p><strong>Worked micro-example.</strong> Two kernels on the same chip.</p>
+<p><em>LayerNorm</em> over a row of $d$ fp32 values: about 7 FLOPs per element (one add for the mean, one subtract, one multiply-and-accumulate for the variance, one multiply by the reciprocal standard deviation, one multiply by $\gamma$, one add for $\beta$) and $4 + 4 = 8$ bytes per element. $I \approx 7/8 = 0.875$, so</p>
+<p>$$P \le 3.35 \times 10^{12} \times 0.875 = 2.9\ \text{TFLOP/s} \approx 0.3\%\ \text{of peak}.$$</p>
+<p><em>Matmul</em> $\mathbf{A}\mathbf{B}$ with $\mathbf{A},\mathbf{B}$ both $1024 \times 1024$ in bf16: $2 \times 1024^3 = 2.15$ GFLOP against a compulsory $3 \times 1024^2 \times 2 = 6.3$ MB, so $I = 341$. That is above the ridge, so it is compute bound and can in principle run at 989 TFLOP/s. Same chip, same second, a 300$\times$ difference in what the FLOPs are worth.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 392" width="100%" role="img" aria-label="The roofline model, with real operations placed on it" class="fig-svg"><defs><marker id="roof-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="92.0" y1="284.0" x2="532.0" y2="284.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="288.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e10</text><line x1="92.0" y1="242.1" x2="532.0" y2="242.1" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="246.1" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e11</text><line x1="92.0" y1="200.3" x2="532.0" y2="200.3" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="204.3" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e12</text><line x1="92.0" y1="158.4" x2="532.0" y2="158.4" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="162.4" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e13</text><line x1="92.0" y1="116.6" x2="532.0" y2="116.6" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="120.6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e14</text><line x1="92.0" y1="74.7" x2="532.0" y2="74.7" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.32"/><text x="84.0" y="78.7" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e15</text><text x="92.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e-2</text><text x="202.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e0</text><text x="312.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e2</text><text x="422.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e4</text><text x="532.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1e6</text><line x1="92.0" y1="284.0" x2="532.0" y2="284.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><line x1="92.0" y1="58.0" x2="92.0" y2="284.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M92.0,262.0 L93.5,260.9 L94.9,259.8 L96.4,258.7 L97.9,257.6 L99.3,256.4 L100.8,255.3 L102.3,254.2 L103.7,253.1 L105.2,252.0 L106.7,250.9 L108.1,249.7 L109.6,248.6 L111.1,247.5 L112.5,246.4 L114.0,245.3 L115.5,244.2 L116.9,243.1 L118.4,241.9 L119.9,240.8 L121.3,239.7 L122.8,238.6 L124.3,237.5 L125.7,236.4 L127.2,235.2 L128.7,234.1 L130.1,233.0 L131.6,231.9 L133.1,230.8 L134.5,229.7 L136.0,228.5 L137.5,227.4 L138.9,226.3 L140.4,225.2 L141.9,224.1 L143.3,223.0 L144.8,221.8 L146.3,220.7 L147.7,219.6 L149.2,218.5 L150.7,217.4 L152.1,216.3 L153.6,215.2 L155.1,214.0 L156.5,212.9 L158.0,211.8 L159.5,210.7 L160.9,209.6 L162.4,208.5 L163.9,207.3 L165.3,206.2 L166.8,205.1 L168.3,204.0 L169.7,202.9 L171.2,201.8 L172.7,200.6 L174.1,199.5 L175.6,198.4 L177.1,197.3 L178.5,196.2 L180.0,195.1 L181.5,193.9 L182.9,192.8 L184.4,191.7 L185.9,190.6 L187.3,189.5 L188.8,188.4 L190.3,187.3 L191.7,186.1 L193.2,185.0 L194.7,183.9 L196.1,182.8 L197.6,181.7 L199.1,180.6 L200.5,179.4 L202.0,178.3 L203.5,177.2 L204.9,176.1 L206.4,175.0 L207.9,173.9 L209.3,172.7 L210.8,171.6 L212.3,170.5 L213.7,169.4 L215.2,168.3 L216.7,167.2 L218.1,166.0 L219.6,164.9 L221.1,163.8 L222.5,162.7 L224.0,161.6 L225.5,160.5 L226.9,159.3 L228.4,158.2 L229.9,157.1 L231.3,156.0 L232.8,154.9 L234.3,153.8 L235.7,152.7 L237.2,151.5 L238.7,150.4 L240.1,149.3 L241.6,148.2 L243.1,147.1 L244.5,146.0 L246.0,144.8 L247.5,143.7 L248.9,142.6 L250.4,141.5 L251.9,140.4 L253.3,139.3 L254.8,138.1 L256.3,137.0 L257.7,135.9 L259.2,134.8 L260.7,133.7 L262.1,132.6 L263.6,131.4 L265.1,130.3 L266.5,129.2 L268.0,128.1 L269.5,127.0 L270.9,125.9 L272.4,124.8 L273.9,123.6 L275.3,122.5 L276.8,121.4 L278.3,120.3 L279.7,119.2 L281.2,118.1 L282.7,116.9 L284.1,115.8 L285.6,114.7 L287.1,113.6 L288.5,112.5 L290.0,111.4 L291.5,110.2 L292.9,109.1 L294.4,108.0 L295.9,106.9 L297.3,105.8 L298.8,104.7 L300.3,103.5 L301.7,102.4 L303.2,101.3 L304.7,100.2 L306.1,99.1 L307.6,98.0 L309.1,96.9 L310.5,95.7 L312.0,94.6 L313.5,93.8 L314.9,93.8 L316.4,93.8 L317.9,93.8 L319.3,93.8 L320.8,93.8 L322.3,93.8 L323.7,93.8 L325.2,93.8 L326.7,93.8 L328.1,93.8 L329.6,93.8 L331.1,93.8 L332.5,93.8 L334.0,93.8 L335.5,93.8 L336.9,93.8 L338.4,93.8 L339.9,93.8 L341.3,93.8 L342.8,93.8 L344.3,93.8 L345.7,93.8 L347.2,93.8 L348.7,93.8 L350.1,93.8 L351.6,93.8 L353.1,93.8 L354.5,93.8 L356.0,93.8 L357.5,93.8 L358.9,93.8 L360.4,93.8 L361.9,93.8 L363.3,93.8 L364.8,93.8 L366.3,93.8 L367.7,93.8 L369.2,93.8 L370.7,93.8 L372.1,93.8 L373.6,93.8 L375.1,93.8 L376.5,93.8 L378.0,93.8 L379.5,93.8 L380.9,93.8 L382.4,93.8 L383.9,93.8 L385.3,93.8 L386.8,93.8 L388.3,93.8 L389.7,93.8 L391.2,93.8 L392.7,93.8 L394.1,93.8 L395.6,93.8 L397.1,93.8 L398.5,93.8 L400.0,93.8 L401.5,93.8 L402.9,93.8 L404.4,93.8 L405.9,93.8 L407.3,93.8 L408.8,93.8 L410.3,93.8 L411.7,93.8 L413.2,93.8 L414.7,93.8 L416.1,93.8 L417.6,93.8 L419.1,93.8 L420.5,93.8 L422.0,93.8 L423.5,93.8 L424.9,93.8 L426.4,93.8 L427.9,93.8 L429.3,93.8 L430.8,93.8 L432.3,93.8 L433.7,93.8 L435.2,93.8 L436.7,93.8 L438.1,93.8 L439.6,93.8 L441.1,93.8 L442.5,93.8 L444.0,93.8 L445.5,93.8 L446.9,93.8 L448.4,93.8 L449.9,93.8 L451.3,93.8 L452.8,93.8 L454.3,93.8 L455.7,93.8 L457.2,93.8 L458.7,93.8 L460.1,93.8 L461.6,93.8 L463.1,93.8 L464.5,93.8 L466.0,93.8 L467.5,93.8 L468.9,93.8 L470.4,93.8 L471.9,93.8 L473.3,93.8 L474.8,93.8 L476.3,93.8 L477.7,93.8 L479.2,93.8 L480.7,93.8 L482.1,93.8 L483.6,93.8 L485.1,93.8 L486.5,93.8 L488.0,93.8 L489.5,93.8 L490.9,93.8 L492.4,93.8 L493.9,93.8 L495.3,93.8 L496.8,93.8 L498.3,93.8 L499.7,93.8 L501.2,93.8 L502.7,93.8 L504.1,93.8 L505.6,93.8 L507.1,93.8 L508.5,93.8 L510.0,93.8 L511.5,93.8 L512.9,93.8 L514.4,93.8 L515.9,93.8 L517.3,93.8 L518.8,93.8 L520.3,93.8 L521.7,93.8 L523.2,93.8 L524.7,93.8 L526.1,93.8 L527.6,93.8 L529.1,93.8 L530.5,93.8 L532.0,93.8" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/><line x1="313.0" y1="58.0" x2="313.0" y2="284.0" stroke="var(--fig-amber,#f5b544)" stroke-width="1" stroke-linecap="round" stroke-dasharray="5 4"/><text x="313.0" y="50.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">ridge ≈ 104 FLOPs/byte</text><circle cx="125.0" cy="236.9" r="5.0" fill="var(--fig-rose,#fb7185)"/><text x="135.0" y="240.9" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">elementwise</text><circle cx="169.0" cy="203.4" r="5.0" fill="var(--fig-rose,#fb7185)"/><text x="179.0" y="207.4" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">layernorm</text><circle cx="207.5" cy="174.1" r="5.0" fill="var(--fig-amber,#f5b544)"/><text x="217.5" y="178.1" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">GEMV (batch 1)</text><circle cx="279.0" cy="119.7" r="5.0" fill="var(--fig-violet,#a78bfa)"/><text x="289.0" y="123.7" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-violet,#a78bfa)" text-anchor="start" font-weight="400">attention, cached</text><circle cx="383.5" cy="93.8" r="5.0" fill="var(--fig-green,#34d399)"/><text x="393.5" y="97.8" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.2" fill="var(--fig-green,#34d399)" text-anchor="start" font-weight="400">GEMM K=4096</text><text x="312.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">arithmetic intensity, FLOPs per byte (log)</text><text x="92.0" y="46.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">attainable FLOP/s (log)</text><rect x="590.0" y="78.0" width="246.0" height="174.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="608.0" y="102.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">read the slope</text><text x="608.0" y="126.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Left of the ridge, performance</text><text x="608.0" y="139.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">is set by bandwidth, not by</text><text x="608.0" y="152.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">FLOPs. Most of an LLM at</text><text x="608.0" y="165.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">inference lives on the slope,</text><text x="608.0" y="178.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">which is why batching and</text><text x="608.0" y="191.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">quantization help and bigger</text><text x="608.0" y="204.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">kernels do not.</text><text x="608.0" y="232.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.4" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">FlashAttention moves ops rightward</text></svg><figcaption>Find the two sloped segments and the knee. The diagonal line is the bandwidth limit $\beta I$; the flat line is $\pi$. Any kernel's position on the x-axis is fixed by its shape, and its distance below the upper envelope is the performance you left on the table.</figcaption></figure></p>
+<h3 id="tiling-deriving-the-block-size-from-the-ridge-point">Tiling: deriving the block size from the ridge point</h3>
+<p><strong>Intuition.</strong> To make 1000 sandwiches you do not walk to the pantry 1000 times. You carry a tray of ingredients to the counter once and make as many sandwiches as the tray allows. The tray is shared memory; the number of sandwiches per trip is the reuse that buys arithmetic intensity.</p>
+<p><strong>Formal definition.</strong> Partition $\mathbf{C} = \mathbf{A}\mathbf{B}$ ($n \times n$, all bf16) into $T \times T$ output tiles. Producing output tile $(i,j)$ requires block-row $i$ of $\mathbf{A}$ ($T \times n$ elements) and block-column $j$ of $\mathbf{B}$ ($n \times T$ elements). There are $(n/T)^2$ tiles, so</p>
+<p>$$B \;=\; 2 \cdot \underbrace{(n/T)^2 \cdot 2nT}_{\text{A and B panels}} \;+\; \underbrace{2n^2}_{\text{write } \mathbf{C}} \;=\; \frac{4n^3}{T} + 2n^2 \ \text{bytes}, \qquad I \;\approx\; \frac{T}{2}\ \text{for large } n.$$</p>
+<p><strong>Why it is built this way.</strong> Without blocking ($T = 1$, the naive triple loop) the traffic is $4n^3$ bytes and intensity decays like $1/n$: the kernel gets <em>relatively slower</em> as the matrix grows. Blocking makes intensity <em>increase</em> with $T$, which is the only way to reach the compute roof. The tile size is therefore a hardware decision, not a matter of taste: you pick the largest $T$ whose two panels fit in the level below.</p>
+<p><strong>Worked micro-example.</strong> A 128$\times$128 shared-memory tile gives $I = 64$, i.e. 22% of peak, 217 TFLOP/s. The 50 MB L2 that sits between shared memory and HBM affords a <em>second</em> level of blocking: two panels of 8192 columns ($2 \times 8192 \times 2$ bytes per row $= 32.8$ KB per row) fit $50\,\text{MB}/32.8\,\text{KB} \approx 1525$ rows, so an L2-resident super-tile of about $1525$ gives $I \approx 760$ — comfortably compute bound. That hierarchy of blocking, not any single tile, is why cuBLAS reaches 70% of peak where a textbook shared-memory kernel reaches 20%.</p>
+<h3 id="why-matmul-is-fast-and-elementwise-ops-are-not">Why matmul is fast and elementwise ops are not</h3>
+<p><strong>Intuition.</strong> A matmul is a room full of people each of whom can serve many customers from one trip; an elementwise op is a delivery driver who must return to the depot for every parcel. The difference is not the arithmetic, it is the <em>reuse</em>.</p>
+<p><strong>Formal definition.</strong> Arithmetic intensity is bounded above by the compulsory traffic: every input element must arrive at least once and every output must leave once. For an $n \times n$ matmul that bound is $I \le 2n^3 / (6n^2) = n/3$; for an elementwise op on $N$ elements it is $F/B = (cN)/(4N + 4N) = c/8$ with $c$ the FLOPs per element, typically 1 to 5.</p>
+<table>
+<thead>
+<tr>
+<th>Kernel</th>
+<th>Shape</th>
+<th>$I$ (FLOP/byte)</th>
+<th>Ceiling on this chip</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>y = x + b</code> (add bias)</td>
+<td>elementwise</td>
+<td>0.125</td>
+<td>0.4 TFLOP/s</td>
+</tr>
+<tr>
+<td>SiLU</td>
+<td>elementwise</td>
+<td>$\approx$0.6</td>
+<td>2 TFLOP/s</td>
+</tr>
+<tr>
+<td>LayerNorm</td>
+<td>row-wise reduction</td>
+<td>$\approx$0.9</td>
+<td>2.9 TFLOP/s</td>
+</tr>
+<tr>
+<td>Softmax</td>
+<td>row-wise reduction</td>
+<td>$\approx$0.7</td>
+<td>2.3 TFLOP/s</td>
+</tr>
+<tr>
+<td>Matmul $n=512$</td>
+<td>GEMM</td>
+<td>171</td>
+<td>572 TFLOP/s</td>
+</tr>
+<tr>
+<td>Matmul $n=1024$</td>
+<td>GEMM</td>
+<td>341</td>
+<td>989 TFLOP/s (roof)</td>
+</tr>
+<tr>
+<td>Matmul $n=8192$</td>
+<td>GEMM</td>
+<td>2731</td>
+<td>989 TFLOP/s (roof)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why it is built this way.</strong> An elementwise kernel has <em>nothing to reuse</em>: each output depends on its own input and nothing else, so no arrangement of memory makes one byte serve two FLOPs. That is why the only lever on elementwise ops is reducing traversals — fusion — and why a "simple" activation function can consume more wall-clock than a matmul a hundred times its FLOP count.</p>
+<p><strong>Worked micro-example.</strong> A chain of 4 elementwise fp32 ops over $N = 10^8$ elements, each written the obvious way (read $N$, write $N$): $4 \times 2 \times 4N = 3.2$ GB of traffic, $0.96$ ms at 3.35 TB/s. Fused into one kernel: read $4N$ + write $4N$ = 0.8 GB, $0.24$ ms. Four times faster with identical FLOPs, obtained by deleting memory traffic, which is precisely what the roofline said to do.</p>
+<h3 id="coalescing-bank-conflicts-and-divergence">Coalescing, bank conflicts, and divergence</h3>
+<p><strong>Intuition.</strong> A bus that picks up one passenger per stop is not faster because it is a bus. Thirty-two lanes each asking for a different 4-byte address in a different 128-byte line forces 32 separate trips; thirty-two lanes asking for adjacent addresses take one.</p>
+<p><strong>Formal definition.</strong> HBM and L2 traffic is moved in 32-byte <em>sectors</em> grouped into 128-byte <em>lines</em>. A warp's load is <em>coalesced</em> when the 32 lanes' 4-byte requests fall within as few lines as possible: 32 contiguous fp32 values = 128 bytes = 1 line = 1 transaction. Shared memory is organised as 32 <em>banks</em> of 4-byte words, addressable one word per bank per clock; lane $i$ hits bank $(i \cdot s) \operatorname{mod} 32$ for stride $s$, so a stride that shares a factor with 32 collides.</p>
+<p><strong>Why it is built this way.</strong> The hardware cannot gather: it fetches whole sectors. Given a fixed sector size, the only variable is whether your 32 lanes' addresses land inside the sectors you actually need. Alignment and contiguity are therefore <em>part of the algorithm</em>, not a detail below it.</p>
+<p><strong>Worked micro-example.</strong> Reading a column of a row-major $4096 \times 4096$ fp32 matrix: consecutive lanes differ by $4096 \times 4 = 16384$ bytes, so each 4-byte request lands in its own 32-byte sector. You fetch $32 \times 32 = 1024$ bytes to use 128 — 8$\times$ waste, and the kernel runs at 1/8 of achievable bandwidth. In shared memory, a $32 \times 33$ tile read column-wise: stride 33 is coprime with 32, so the 32 lanes hit 32 distinct banks and the read completes in one clock. Declaring the array as <code>[32][32]</code> instead of <code>[32][33]</code> turns that into a 32-way conflict costing 32 clocks — a single character, 32$\times$.</p>
+<p><em>Divergence</em> is the control-flow version of the same idea. A warp executes both sides of an <code>if</code> if its lanes disagree, so a two-way branch where one lane goes left costs $|A| + |B|$ issued instructions rather than $\max(|A|,|B|)$, and the one lane on the left path uses 1/32 of the machine while it runs. Divergence is <em>free</em> when the branch condition is warp-uniform — which is why branching on <code>blockIdx</code>, on a loop counter, or on a spatially local mask costs nothing, while branching on a data-dependent per-element value costs up to 32$\times$. Note also that <code>y = max(x, 0)</code> does <strong>not</strong> diverge: it compiles to a single predicated select, not a branch. Data-dependent <em>arithmetic</em> is cheap; data-dependent <em>control flow</em> is what hurts.</p>
+<p>Related warp-level primitives let 32 lanes cooperate without going through memory: <code>__shfl_sync</code> exchanges a register between lanes, and a full 32-lane reduction takes $\log_2 32 = 5$ shuffle steps instead of a shared-memory round trip, replacing a ~30-clock latency plus a barrier with 5 register operations.</p>
+<h3 id="mixed-precision-the-rangeprecision-trade-off-numerically">Mixed precision: the range/precision trade-off, numerically</h3>
+<p><strong>Intuition.</strong> A number is written in scientific notation with a limited number of digits and a limited exponent. You can spend your budget on <em>digits</em> (precision) or on <em>exponent</em> (range). You cannot have both, and different parts of training need different halves of that budget.</p>
+<p><strong>Formal definition.</strong> A format has one sign bit, $e$ exponent bits, and $m$ mantissa bits. It has $m+1$ significant binary digits, so the spacing of representable numbers just above 1.0 is $2^{-m}$, and the largest magnitude is about $2^{2^{e-1}}$.</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>exp / mantissa</th>
+<th>Largest</th>
+<th>Smallest normal</th>
+<th>Gap at 1.0</th>
+<th>Typical use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fp32</td>
+<td>8 / 23</td>
+<td>$3.4\times10^{38}$</td>
+<td>$1.2\times10^{-38}$</td>
+<td>$6.0\times10^{-8}$</td>
+<td>master weights, reductions, loss</td>
+</tr>
+<tr>
+<td>tf32</td>
+<td>8 / 10</td>
+<td>$3.4\times10^{38}$</td>
+<td>$1.2\times10^{-38}$</td>
+<td>$4.9\times10^{-4}$</td>
+<td>matmul inputs, no code change</td>
+</tr>
+<tr>
+<td>bf16</td>
+<td>8 / 7</td>
+<td>$3.4\times10^{38}$</td>
+<td>$1.2\times10^{-38}$</td>
+<td>$3.9\times10^{-3}$</td>
+<td>default training dtype</td>
+</tr>
+<tr>
+<td>fp16</td>
+<td>5 / 10</td>
+<td>$65504$</td>
+<td>$6.1\times10^{-5}$</td>
+<td>$4.9\times10^{-4}$</td>
+<td>inference, loss-scaled training</td>
+</tr>
+<tr>
+<td>fp8 e4m3</td>
+<td>4 / 3</td>
+<td>$448$</td>
+<td>$1.6\times10^{-2}$</td>
+<td>$6.3\times10^{-2}$</td>
+<td>forward-only, scaled</td>
+</tr>
+<tr>
+<td>fp8 e5m2</td>
+<td>5 / 2</td>
+<td>$57344$</td>
+<td>$6.1\times10^{-5}$</td>
+<td>$1.25\times10^{-1}$</td>
+<td>gradients, scaled</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why it is built this way.</strong> fp16 and bf16 are the two coherent answers to "keep 16 bits". fp16 keeps 10 mantissa bits and sacrifices the exponent: excellent precision, range so narrow that gradients underflow and activations overflow. bf16 keeps fp32's 8-bit exponent and sacrifices mantissa bits: it can never overflow where fp32 would not, and it is coarse. Modern training chose bf16 because <em>dynamic range failures are fatal and precision failures are merely noisy</em> — and because, as D3 shows, the noise averages out over a dot product. fp8 exists because the tensor cores can go 2$\times$ faster again, and its 3 mantissa bits are only survivable with per-tensor or per-block scaling factors carried alongside.</p>
+<p><strong>Worked micro-example.</strong> Take $x = 1.001$.
+- fp32: representable to $6\times10^{-8}$; error $0$.
+- tf32: gap at 1.0 is $4.9\times10^{-4}$, so $x$ rounds to $1.0009766$; error $2.4\times10^{-5}$.
+- bf16: gap is $3.9\times10^{-3}$, so $x$ <strong>rounds to 1.0</strong>; relative error $10^{-3}$. Nine of the sixteen mantissa positions you might have wanted do not exist.
+- fp16: $4.9\times10^{-4}$ spacing, same as tf32; error $2.4\times10^{-5}$.
+- fp8 e4m3: gap $6.3\times10^{-2}$, so $x$ rounds to $1.0$ or $1.0625$; error up to 6%.</p>
+<p>Now the range half. A gradient of $10^{-8}$ is below fp16's smallest subnormal ($5.96\times10^{-8}$) and <em>flushes to zero</em> — training silently stops learning. Multiply the loss by $S = 2^{16} = 65536$ and that gradient becomes $6.6\times10^{-4}$, comfortably normal, while a large gradient of $10^{-2}$ becomes $655$, still far below 65504. Choosing $S$ by trial (double it every 2000 successful steps, halve it and skip the step on overflow) is <em>dynamic loss scaling</em>; bf16 needs none of it, which is the practical reason it won.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 400" width="100%" role="img" aria-label="Numeric formats: precision versus range" class="fig-svg"><defs><marker id="quant-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="30.0" y="52.0" width="110.0" height="40.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.5"/><text x="85.0" y="77.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="700">fp32</text><text x="152.0" y="69.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">23-bit mantissa</text><text x="152.0" y="84.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">4 bytes</text><rect x="300.0" y="60.0" width="400.0" height="24.0" rx="4" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="300.0" y="60.0" width="12.5" height="24.0" rx="4" fill="var(--fig-blue,#5b8cff)" stroke="none" stroke-width="1.5" opacity="0.9"/><rect x="312.5" y="60.0" width="100.0" height="24.0" rx="0" fill="var(--fig-blue,#5b8cff)" stroke="none" stroke-width="1.5" opacity="0.55"/><rect x="412.5" y="60.0" width="287.5" height="24.0" rx="0" fill="var(--fig-blue,#5b8cff)" stroke="none" stroke-width="1.5" opacity="0.28"/><text x="308.0" y="77.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="#0b0f1c" text-anchor="middle" font-weight="400">s</text><text x="362.5" y="77.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="#0b0f1c" text-anchor="middle" font-weight="400">exp 8</text><text x="556.2" y="77.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">mantissa 23</text><rect x="30.0" y="106.0" width="110.0" height="40.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.5"/><text x="85.0" y="131.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">bf16</text><text x="152.0" y="123.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">same range as fp32</text><text x="152.0" y="138.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">2 bytes</text><rect x="300.0" y="114.0" width="400.0" height="24.0" rx="4" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="300.0" y="114.0" width="25.0" height="24.0" rx="4" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><rect x="325.0" y="114.0" width="200.0" height="24.0" rx="0" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.55"/><rect x="525.0" y="114.0" width="175.0" height="24.0" rx="0" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.28"/><text x="308.0" y="131.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="#0b0f1c" text-anchor="middle" font-weight="400">s</text><text x="425.0" y="131.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="#0b0f1c" text-anchor="middle" font-weight="400">exp 8</text><text x="612.5" y="131.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">mantissa 7</text><rect x="30.0" y="160.0" width="110.0" height="40.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.5"/><text x="85.0" y="185.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="700">fp16</text><text x="152.0" y="177.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">overflows past 65504</text><text x="152.0" y="192.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">2 bytes</text><rect x="300.0" y="168.0" width="400.0" height="24.0" rx="4" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="300.0" y="168.0" width="25.0" height="24.0" rx="4" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.9"/><rect x="325.0" y="168.0" width="125.0" height="24.0" rx="0" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.55"/><rect x="450.0" y="168.0" width="250.0" height="24.0" rx="0" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.28"/><text x="308.0" y="185.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="#0b0f1c" text-anchor="middle" font-weight="400">s</text><text x="387.5" y="185.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="#0b0f1c" text-anchor="middle" font-weight="400">exp 5</text><text x="575.0" y="185.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">mantissa 10</text><rect x="30.0" y="214.0" width="110.0" height="40.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.5"/><text x="85.0" y="239.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="700">fp8 E4M3</text><text x="152.0" y="231.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">very narrow range</text><text x="152.0" y="246.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">1 byte</text><rect x="300.0" y="222.0" width="400.0" height="24.0" rx="4" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="300.0" y="222.0" width="50.0" height="24.0" rx="4" fill="var(--fig-amber,#f5b544)" stroke="none" stroke-width="1.5" opacity="0.9"/><rect x="350.0" y="222.0" width="200.0" height="24.0" rx="0" fill="var(--fig-amber,#f5b544)" stroke="none" stroke-width="1.5" opacity="0.55"/><rect x="550.0" y="222.0" width="150.0" height="24.0" rx="0" fill="var(--fig-amber,#f5b544)" stroke="none" stroke-width="1.5" opacity="0.28"/><text x="308.0" y="239.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="#0b0f1c" text-anchor="middle" font-weight="400">s</text><text x="450.0" y="239.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="#0b0f1c" text-anchor="middle" font-weight="400">exp 4</text><text x="625.0" y="239.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">mantissa 3</text><rect x="30.0" y="268.0" width="110.0" height="40.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.5"/><text x="85.0" y="293.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="700">int8</text><text x="152.0" y="285.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">uniform steps</text><text x="152.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">1 byte</text><rect x="300.0" y="276.0" width="400.0" height="24.0" rx="4" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="302.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="310.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="318.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="326.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="335.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="343.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="351.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="359.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="368.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="376.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="384.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="392.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="401.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="409.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="417.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="425.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="434.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="442.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="450.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="458.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="467.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="475.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="483.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="491.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="500.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="508.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="516.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="524.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="533.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="541.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="549.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="557.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="566.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="574.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="582.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="590.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="599.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="607.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="615.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="623.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="632.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="640.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="648.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="656.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="665.0" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="673.2" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="681.5" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="689.8" y="278.0" width="6.8" height="20.0" rx="1" fill="var(--fig-green,#34d399)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="30.0" y="322.0" width="110.0" height="40.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.5"/><text x="85.0" y="347.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="700">int4</text><text x="152.0" y="339.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">16 levels total</text><text x="152.0" y="354.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">0.5 byte</text><rect x="300.0" y="330.0" width="400.0" height="24.0" rx="4" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="302.0" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="326.8" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="351.5" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="376.2" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="401.0" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="425.8" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="450.5" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="475.2" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="500.0" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="524.8" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="549.5" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="574.2" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="599.0" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="623.8" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="648.5" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><rect x="673.2" y="332.0" width="23.2" height="20.0" rx="1" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5" opacity="0.75"/><text x="430.0" y="384.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">fewer bits means coarser steps; narrower exponent range means more overflow. Quantization picks which to lose.</text></svg><figcaption>Look at where the representable points cluster. Each format's points are dense near zero in absolute terms and evenly spaced in *relative* terms, and the fp8 rows are visibly sparse — that sparseness, not the exponent, is what scaling factors have to compensate for.</figcaption></figure></p>
+<p><div class="viz" data-viz="v-quant"></div><div class="vizcap">Drag the value slider and watch which of the tick marks it snaps to at each precision. Set the value to 1.001 and compare the bf16 and fp16 snapping, then drag to 70000 and watch fp16 saturate to infinity while bf16 is unaffected.</div></p>
+<h3 id="tensor-cores-and-mma-shapes">Tensor Cores and mma shapes</h3>
+<p><strong>Intuition.</strong> A tensor core is a small hard-wired matmul: instead of 128 lanes each doing one FMA, the unit consumes two small operand tiles and deposits a small accumulator tile. It is the arithmetic equivalent of buying in bulk, and the bulk has a fixed box size.</p>
+<p><strong>Formal definition.</strong> A tensor core executes $D = A B + C$ for a fixed instruction shape. On Ampere and later, <code>mma.sync.aligned.m16n8k16.f32.bf16.bf16.f32</code> computes a $16\times 8$ output tile from a $16\times16$ and a $16\times8$ operand with fp32 accumulation: $16 \times 8 \times 16 = 2048$ multiply–adds in one instruction. On Hopper the warpgroup instruction <code>wgmma.mma_async</code> extends this to $m=64$ with $n$ up to 256 and $k=16$, i.e. $64 \times 256 \times 16 = 262144$ multiply–adds per instruction.</p>
+<p><strong>Why it is built this way.</strong> Peak throughput is now set by how fast a fixed-shape array can be fed, so the hardware exposes <em>only</em> that shape. $989.4 \times 10^{12} / (132 \times 1.83 \times 10^9) \approx 4096$ FLOP per clock per SM, i.e. 2048 multiply–adds per clock per SM — one $m16n8k16$ instruction per clock, or one $m64n256k16$ every 128 clocks. Your kernel's tiles must be decomposable into these shapes with the right swizzled layouts, which is why the good tile sizes are 64, 128 and 256 and why an awkward tile wastes the unit entirely.</p>
+<p><strong>Worked micro-example.</strong> A kernel that processes tiles of $48 \times 48$ must issue the $16\times8\times16$ instruction over a $3 \times 6$ grid with 16 rows of the 48 wasted: $16/48 = 33\%$ of the tensor-core throughput is discarded before any memory problem is considered. Rounding the tile to $64 \times 64$ wastes 0% and is also friendlier to the shared-memory swizzle.</p>
+<p>One further consequence of the hierarchy: an fp32 FMA on a tensor core is <em>not</em> available at bf16 speed. tf32 mode runs at half the bf16 rate, and plain fp32 (non-tensor) at $1/15$ — 67 TFLOP/s against 989. Choosing a dtype is choosing a different machine.</p>
+<h3 id="reading-a-profiler-well-enough-to-know-what-to-fix">Reading a profiler well enough to know what to fix</h3>
+<p><strong>Intuition.</strong> A doctor does not ask "is the patient healthy?" but takes two numbers and compares them to reference ranges. Nsight Compute's Speed-of-Light panel is exactly that: two numbers, each expressed as a percentage of the hardware's peak.</p>
+<p><strong>Formal definition.</strong> For a single kernel invocation, Nsight Compute reports <em>Compute (SM) Throughput</em> — the fraction of peak issue/ALU/tensor utilisation — and <em>Memory Throughput</em> — the fraction of peak DRAM (or L2, or shared) bandwidth, together with a list of <em>warp stall reasons</em> with the average clocks each warp spent in that state.</p>
+<p><strong>Why it is built this way.</strong> Those two percentages are the two axes of the roofline, measured rather than modelled. Reading them off the hardware means you never have to trust your hand-computed FLOP count: the profiler tells you which roof you are under, and the stall reasons tell you whether you are under it because of latency (too few warps) or because of bandwidth (too many bytes).</p>
+<p><strong>Worked micro-example.</strong> The decision procedure, in order:</p>
+<table>
+<thead>
+<tr>
+<th>Observation</th>
+<th>Diagnosis</th>
+<th>Next action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Memory throughput $\ge$ 80% of peak DRAM</td>
+<td>genuinely bandwidth bound</td>
+<td>reduce bytes: fuse, lower precision, better tile</td>
+</tr>
+<tr>
+<td>Compute throughput $\ge$ 60%, memory low</td>
+<td>compute bound</td>
+<td>better instruction shape, higher precision of parallelism, or accept it</td>
+</tr>
+<tr>
+<td>Both below 50%, stall = "Long Scoreboard"</td>
+<td>memory <em>latency</em> bound</td>
+<td>raise occupancy or increase ILP (more independent loads per thread)</td>
+</tr>
+<tr>
+<td>Both below 50%, stall = "MIO Throttle" / "Barrier"</td>
+<td>shared-memory or sync bound</td>
+<td>cut shared-memory traffic, remove barriers, rebalance the block</td>
+</tr>
+<tr>
+<td>Both below 50%, stall = "Not Selected"</td>
+<td>too many warps for the work</td>
+<td>you are oversubscribed; nothing to fix</td>
+</tr>
+<tr>
+<td>Achieved occupancy far below theoretical</td>
+<td>register or shared-memory limit</td>
+<td>reduce registers (<code>__launch_bounds__</code>), or accept the trade</td>
+</tr>
+</tbody>
+</table>
+<p>"Doing well" is contextual: a memcpy-shaped kernel at 90% of DRAM peak is optimal and cannot be improved; a matmul at 90% of DRAM peak is a <em>failure</em> because it should have been under the compute roof.</p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<p>"Roofline triage" is the procedure to run on any kernel that is slower than you want. It is deliberately arithmetic-first: five of the seven steps involve no computer.</p>
+<ol>
+<li><strong>Fix the unit of work.</strong> One kernel invocation, one layer, or one training step — but exactly one, and state the shapes.</li>
+<li><strong>Count FLOPs analytically.</strong> Matmul of $(m \times k)(k \times n)$: $2mkn$. Elementwise: $cN$ with $c$ the FLOPs per element. Row-wise norm over $d$: $\approx 7N$. Forward-plus-backward is $\approx 3\times$ forward, which is where $6N$ per token comes from in <strong>M16</strong>.</li>
+<li><strong>Count compulsory bytes.</strong> Every input read once, every output written once, in the dtype actually used. Then add every <em>materialised temporary</em> the implementation introduces — the $n \times n$ score matrix is the famous one.</li>
+<li><strong>Compute $I = F/B$ and compare it with $I_{\mathrm{ridge}} = 295$</strong> on this chip. This decides which roof you are under.</li>
+<li><strong>Compute the floor</strong>, $T_{\min} = \max(F/\pi,\, B/\beta)$. No implementation can beat it; anything close to it is finished.</li>
+<li><strong>Measure, then profile only if the gap is large.</strong> If the measured time is within ~30% of $T_{\min}$, stop — you are done. If not, run Nsight Compute and read the two Speed-of-Light percentages.</li>
+<li><strong>Change exactly one thing</strong> and re-measure. A change that does not move the two percentages did not address the bottleneck.</li>
+</ol>
+<p>```text
+procedure TRIAGE(kernel, shapes, dtype):
+    F  <- analytic_flop_count(shapes)          # step 2
+    B  <- compulsory_bytes(shapes, dtype)      # step 3
+    I  <- F / B
+    ceiling <- min(pi, beta * I)               # step 5
+    t_floor <- max(F/pi, B/beta)
+    t_meas  <- median_of_many_cold_runs(kernel)
+    if t_meas < 1.3 * t_floor: return "optimal; stop"
+    (p_compute, p_memory, stalls) <- nsight_speed_of_light(kernel)
+    if p_memory >= 0.8:      return REDUCE_BYTES     # fuse, re-tile, lower precision
+    if p_compute >= 0.6:     return IMPROVE_INSTRUCTION_MIX  # tensor-core shapes, wider tiles
+    if stalls.dominant == LONG_SCOREBOARD: return RAISE_OCCUPANCY or ADD_ILP
+    if stalls.dominant in {MIO_THROTTLE, BARRIER}: return RESHAPE_SHARED_MEMORY
+    return "re-examine the FLOP and byte counts; the model is wrong"
+```</p>
+<p><strong>Cost.</strong> Steps 2–5 are $O(\text{number of distinct ops})$ in analysis time and zero runtime. Step 6 costs one profiler run per kernel, which is seconds; the loop of step 7 is bounded in practice by three or four iterations because there are only four diagnoses.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="d1-how-many-bytes-must-be-in-flight-to-saturate-hbm">D1. How many bytes must be in flight to saturate HBM</h3>
+<p>Let $\ell$ be the memory latency and $B_f$ the bytes requested but not yet returned. In steady state the memory system retires $B_f$ bytes every $\ell$ seconds, so the achieved bandwidth is</p>
+<p>$$\beta_{\text{ach}} = \frac{B_f}{\ell}.$$</p>
+<p>Saturating the interface means $\beta_{\text{ach}} = \beta$, hence</p>
+<p>$$B_f = \beta \ell.$$</p>
+<p><strong>Step 1 — total bytes.</strong> With $\beta = 3.35 \times 10^{12}$ B/s and $\ell \approx 500$ clocks at 1.98 GHz $\approx 2.5 \times 10^{-7}$ s:</p>
+<p>$$B_f = 3.35\times10^{12} \times 2.5\times10^{-7} = 8.4 \times 10^{5}\ \text{bytes} \approx 838\ \text{KB}.$$</p>
+<p><strong>Step 2 — per SM.</strong> $8.4\times10^5 / 132 = 6.35 \times 10^3$ bytes per SM.</p>
+<p><strong>Step 3 — per warp.</strong> A perfectly coalesced warp load of fp32 requests $32 \times 4 = 128$ bytes. So the SM needs $6.35\times10^3 / 128 \approx 50$ such requests outstanding.</p>
+<p><strong>Step 4 — warps needed.</strong> If each resident warp holds $q$ loads in flight, you need $W \ge 50/q$ warps. The SM can hold 64 warps, so $q = 1$ requires 78% occupancy and $q = 4$ requires only 20%. This is the whole trade: <strong>occupancy and instruction-level parallelism are substitutes.</strong></p>
+<p><strong>Step 5 — what limits $W$.</strong> The SM has 65536 registers. With $R$ registers per thread, resident threads $= 65536/R$ and resident warps $= 65536/(32R) = 2048/R$. Full occupancy (64 warps) therefore requires $R \le 32$.</p>
+<p><strong>Step 6 — the counterexample.</strong> A kernel that needs $R = 128$ registers gets $2048/128 = 16$ warps. With one load in flight per warp it holds $16 \times 128 = 2048$ bytes, so</p>
+<p>$$\beta_{\text{ach}} = \frac{2048}{2.5\times10^{-7}} \approx 8.2\ \text{GB/s per SM} \times 132 \approx 1.08\ \text{TB/s},$$</p>
+<p>about 32% of peak, <em>regardless of how good the access pattern is</em>. The fix is not to free registers; it is to unroll the loop so each warp has four loads in flight — 16 warps $\times 4 \times 128$ B $= 8.2$ KB $> 6.35$ KB, and the interface saturates. Register-heavy kernels are not doomed, they just need ILP.</p>
+<h3 id="d2-flashattentions-arithmetic-intensity">D2. FlashAttention's arithmetic intensity</h3>
+<p>Per head, let $n$ be the sequence length and $d_h$ the head dimension, with bf16 (2 bytes) throughout. Attention performs $2n^2d_h$ FLOPs for $\mathbf{Q}\mathbf{K}^\top$ and $2n^2d_h$ for $\mathbf{P}\mathbf{V}$, so $F = 4n^2d_h$ either way. Only the bytes differ.</p>
+<p><strong>Unfused.</strong> The score matrix $\mathbf{S}$, its softmax $\mathbf{P}$, and the intermediates are each materialised in HBM: write $\mathbf{S}$, read $\mathbf{S}$, write $\mathbf{P}$, read $\mathbf{P}$, each $n^2$ elements at 2 bytes:</p>
+<p>$$B = 8n^2 \quad\text{so}\quad I = \frac{4n^2d_h}{8n^2} = \frac{d_h}{2}.$$</p>
+<p>With $d_h = 128$: $I = 64$, which is $64/295 = 22\%$ of peak, so the ceiling is $0.22 \times 989 \approx 217$ TFLOP/s.</p>
+<p><strong>Fused (FlashAttention).</strong> The $n \times n$ matrix is never written down; the softmax is computed block-by-block and accumulated into the output tile. Traffic is one read of $\mathbf{Q}$, $\mathbf{K}$, $\mathbf{V}$ and one write of $\mathbf{O}$, each $2nd_h$ bytes:</p>
+<p>$$B = 8nd_h \quad\text{so}\quad I = \frac{4n^2d_h}{8nd_h} = \frac{n}{2}.$$</p>
+<p><strong>Step 3 — compare.</strong> At $n = 4096$: $I = 2048$, above the ridge, so attention becomes <em>compute</em> bound. The intensity ratio is</p>
+<p>$$\frac{n/2}{d_h/2} = \frac{n}{d_h} = \frac{4096}{128} = 32\times.$$</p>
+<p><strong>Step 4 — the wall-clock payoff.</strong> Unfused, per head: $F = 4 \times 4096^2 \times 128 = 8.59$ GFLOP and $B = 8 \times 4096^2 = 134$ MB, giving $t_{\text{compute}} = 8.7\,\mu$s and $t_{\text{mem}} = 134\,\text{MB}/3.35\,\text{TB/s} = 40\,\mu$s. Fused: $B = 8 \times 4096 \times 128 = 4.2$ MB, $t_{\text{mem}} = 1.25\,\mu$s. The floor drops from 40 $\mu$s to 8.7 $\mu$s, a predicted $4.6\times$ speedup from an algorithm that performs <em>bitwise-identical</em> FLOPs and computes the same exact softmax. Nothing was approximated; a temporary was deleted.</p>
+<h3 id="d3-why-bf16-is-accurate-enough-the-rounding-error-of-a-dot-product">D3. Why bf16 is accurate enough: the rounding-error of a dot product</h3>
+<p>Let the exact dot product be $s = \sum_{i=1}^{k} a_i b_i$ over bf16 inputs, computed with fp32 accumulation, so the only error is in the <em>inputs</em>, which round with relative error $|\delta_i| \le \epsilon = 2^{-8} \approx 3.9\times10^{-3}$.</p>
+<p><strong>Step 1.</strong> The computed value is $\hat{s} = \sum_i a_i b_i (1 + \delta_i)$, so the error is $e = \sum_i a_i b_i \delta_i$.</p>
+<p><strong>Step 2.</strong> Treat the $\delta_i$ as independent, zero-mean with variance $\epsilon^2/3$ (uniform on $[-\epsilon, \epsilon]$). Then</p>
+<p>$$\mathrm{Var}[e] = \sum_i (a_ib_i)^2 \frac{\epsilon^2}{3} \approx k\, m^2 \frac{\epsilon^2}{3},$$</p>
+<p>where $m$ is a typical $|a_ib_i|$. So $\mathrm{SD}[e] \approx m\,\epsilon \sqrt{k/3}$.</p>
+<p><strong>Step 3.</strong> For independent random signs, $|s| \approx m\sqrt{k}$. Hence the <em>relative</em> error is</p>
+<p>$$\frac{\mathrm{SD}[e]}{|s|} \approx \frac{m\,\epsilon\sqrt{k/3}}{m\sqrt{k}} = \frac{\epsilon}{\sqrt{3}} \approx 2.3\times10^{-3}.$$</p>
+<p>The $\sqrt{k}$ cancels. A bf16 matmul has about 0.2% relative error per output <strong>independently of the inner dimension</strong> — 0.2% whether $k = 16$ or $k = 16384$. This is why models train in bf16 at all.</p>
+<p><strong>Step 4 — where it breaks.</strong> The cancellation assumption in Step 3 is the load-bearing one. If $|s|$ far below $m\sqrt{k}$ — a sum of large terms with heavy cancellation, which is what a loss over a long tail of tiny probabilities looks like — the relative error scales as $m\sqrt{k}/|s|$ and can reach order 1. That is the real justification for the fp32 rules: softmax denominators, layernorm statistics, the loss, and any long reduction stay in fp32 not by tradition but because they compute differences of similar magnitudes.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>The algorithm is the fused layernorm: read each row once, compute the mean and variance from registers, and write once. The roofline says the naive PyTorch expression is a memory-traffic disaster, so the implementation is <em>defined</em> by its byte count.</p>
+<p>```python
+# fused_layernorm.py — two traversals of HBM instead of nine.
+import torch
+import triton
+import triton.language as tl
+
+
+@triton.jit
+def _ln_fwd(X, Y, G, B, stride, N, eps: tl.constexpr, BLOCK: tl.constexpr):
+    row = tl.program_id(0)                 # one programme instance per row of X
+    cols = tl.arange(0, BLOCK)             # BLOCK = next power of two >= N
+    mask = cols < N                        # guard the padded tail of the last block
+    x = tl.load(X + row * stride + cols, mask=mask, other=0.0).to(tl.float32)
+    mean = tl.sum(x, axis=0) / N           # reduction entirely inside the SM
+    xc = tl.where(mask, x - mean, 0.0)     # zero the pad, or it biases the variance
+    var = tl.sum(xc * xc, axis=0) / N
+    rstd = 1.0 / tl.sqrt(var + eps)
+    g = tl.load(G + cols, mask=mask, other=0.0)
+    b = tl.load(B + cols, mask=mask, other=0.0)
+    tl.store(Y + row * stride + cols, xc * rstd * g + b, mask=mask)
+
+
+def layernorm_triton(x, gamma, beta, eps=1e-5):
+    y = torch.empty_like(x)
+    BLOCK = triton.next_power_of_2(x.shape[1])      # one block covers a whole row
+    _ln_fwd[(x.shape[0],)](x, y, gamma, beta, x.stride(0), x.shape[1], eps, BLOCK)
+    return y
+
+
+def layernorm_naive(x, gamma, beta, eps=1e-5):
+    """The literal transcription of the definition. Count the traversals."""
+    mean = x.mean(dim=-1, keepdim=True)                       # pass 1: read x
+    var = ((x - mean) ** 2).mean(dim=-1, keepdim=True)        # passes 2-4: read x, square, reduce
+    xhat = (x - mean) / torch.sqrt(var + eps)                 # passes 5-6: read x, write xhat
+    return xhat * gamma + beta                                # passes 7-9: read, scale, write
+```</p>
+<p><strong>What to expect.</strong> For <code>x</code> of shape <code>[4096, 4096]</code> in fp32, the naive version touches each element about nine times — roughly 600 MB — while the Triton version touches it twice, 134 MB. The roofline predicts a $4.5\times$ speedup on a bandwidth-bound kernel; measured speedups are typically $3$–$4\times$ because the naive version's later passes hit L2 rather than HBM, which is itself the roofline's point: the effective $\beta$ of a repeat read is not HBM's. <code>torch.compile</code> on <code>layernorm_naive</code> fuses it into essentially the Triton kernel above, which is a good way to check your own work.</p>
+<h2 id="worked-example">Worked example</h2>
+<p>One forward pass of a 7B-class layer (32 layers in total, $d = 4096$, $d_{ff} = 11008$, 32 heads of dimension 128, sequence length 2048, bf16 weights and activations, fp32 accumulate, causal attention). Every number below is $F$, $B$, $I$ and $T_{\min} = \max(F/\pi, B/\beta)$ computed from the shapes alone, before touching a GPU.</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>FLOPs</th>
+<th>Bytes</th>
+<th>$I$</th>
+<th>Bound</th>
+<th>$T_{\min}$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>QKV projection</td>
+<td>206.2 GF</td>
+<td>167.8 MB</td>
+<td>1229</td>
+<td>compute</td>
+<td>0.208 ms</td>
+</tr>
+<tr>
+<td>Flash attention (causal)</td>
+<td>34.4 GF</td>
+<td>67.1 MB</td>
+<td>512</td>
+<td>compute</td>
+<td>0.035 ms</td>
+</tr>
+<tr>
+<td>Attention output projection</td>
+<td>68.7 GF</td>
+<td>67.1 MB</td>
+<td>1024</td>
+<td>compute</td>
+<td>0.069 ms</td>
+</tr>
+<tr>
+<td>MLP gate + up</td>
+<td>369.4 GF</td>
+<td>287.3 MB</td>
+<td>1286</td>
+<td>compute</td>
+<td>0.373 ms</td>
+</tr>
+<tr>
+<td>MLP down</td>
+<td>184.7 GF</td>
+<td>152.0 MB</td>
+<td>1215</td>
+<td>compute</td>
+<td>0.187 ms</td>
+</tr>
+<tr>
+<td>2$\times$ LayerNorm + 2$\times$ residual + SiLU</td>
+<td>0.2 GF</td>
+<td>448.8 MB</td>
+<td>0.5</td>
+<td><strong>memory</strong></td>
+<td>0.134 ms</td>
+</tr>
+<tr>
+<td><strong>Layer total</strong></td>
+<td><strong>863 GF</strong></td>
+<td><strong>1190 MB</strong></td>
+<td><strong>726</strong></td>
+<td></td>
+<td><strong>1.006 ms</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Three things to read off it.</p>
+<ol>
+<li><strong>The layer is compute bound in aggregate</strong> ($I = 726 > 295$), so the useful question is not "how do I move fewer bytes" but "am I getting the tensor cores fed".</li>
+<li><strong>The 0.02%-of-FLOPs row costs 13% of the time.</strong> LayerNorm, residuals and SiLU together perform 0.2 GFLOP out of 863 and consume 0.134 ms out of 1.006. This is the roofline's most useful single prediction, and it is why <strong>M26</strong> spends its effort on fusion rather than on matmul tuning.</li>
+<li><strong>Sanity check against the $2N$ rule.</strong> 32 layers $\times$ 863 GF $= 27.6$ TFLOP, and $2N$ per token $\times$ 2048 tokens $= 2 \times 7\times10^9 \times 2048 = 28.7$ TFLOP. The 4% difference is the embedding and the LM head, which the per-layer table omits. Agreeing to 4% is how you know the FLOP count is not nonsense.</li>
+</ol>
+<p>At the 55% of peak a well-tuned distributed run actually sustains, the layer takes $1.006/0.55 \approx 1.83$ ms and the forward pass of the whole model $\approx 58$ ms. If a measured forward pass is 300 ms, no amount of rewriting the attention kernel will fix it, and the profiler will say so in two numbers.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 340" width="100%" role="img" aria-label="The GPU memory hierarchy, with orders of magnitude" class="fig-svg"><defs><marker id="mem-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="30.0" y="50.0" width="700.0" height="44.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.6"/><text x="44.0" y="76.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="650">registers</text><text x="716.0" y="68.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">~256 KB / SM</text><text x="716.0" y="82.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="end" font-weight="400">~20 TB/s</text><rect x="75.0" y="102.0" width="610.0" height="42.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6"/><text x="89.0" y="128.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="650">shared memory / L1</text><text x="671.0" y="120.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">~228 KB / SM</text><text x="671.0" y="134.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="end" font-weight="400">~33 TB/s</text><rect x="120.0" y="154.0" width="520.0" height="40.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.6"/><text x="134.0" y="180.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-violet,#a78bfa)" text-anchor="start" font-weight="650">L2 cache</text><text x="626.0" y="172.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">50-126 MB</text><text x="626.0" y="186.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="end" font-weight="400">~10 TB/s</text><rect x="165.0" y="206.0" width="430.0" height="38.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.6"/><text x="179.0" y="232.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="650">HBM (global)</text><text x="581.0" y="224.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">40-192 GB</text><text x="581.0" y="238.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="end" font-weight="400">3.35 TB/s</text><rect x="210.0" y="258.0" width="340.0" height="36.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6"/><text x="224.0" y="284.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="650">host DRAM</text><text x="536.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">hundreds of GB</text><text x="536.0" y="290.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="end" font-weight="400">~64 GB/s over PCIe</text><text x="430.0" y="322.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.2" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">each level is roughly 10x larger and 3-10x slower. Tiling exists to keep work in the top two rows.</text></svg><figcaption>Place each row of the table at the level it actually runs at: the matmuls are fed from shared memory and the tensor cores, while the norm/residual row never rises above HBM. The two kinds of kernel are distinguished by which level of this stack is the bottleneck, not by how much arithmetic they do.</figcaption></figure></p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="a-gpu-core-is-a-faster-cpu-core">"A GPU core is a faster CPU core"</h3>
+<p>It is a <em>slower</em> one. An H100 lane at 2 GHz retires about one fp32 FMA per clock, roughly 4 GFLOP/s; one desktop CPU core with AVX-512 and a 5 GHz clock retires 32 fp32 FMAs per clock, about 160 GFLOP/s. The GPU wins by having 16,896 of them and by hiding latency in parallel, which means it loses badly — 40$\times$ — on a long serial dependency chain.</p>
+<h3 id="higher-occupancy-is-always-better">"Higher occupancy is always better"</h3>
+<p>Occupancy is a means to $B_f$, not a goal. D1 shows that about 50 warps per SM with one load in flight saturates HBM; beyond that, extra warps buy nothing, while registers spent on occupancy are registers unavailable for reuse. Many fast kernels deliberately run at 25% occupancy with 8 loads in flight per thread.</p>
+<h3 id="flops-is-the-metric-that-predicts-speed">"FLOPS is the metric that predicts speed"</h3>
+<p>FLOPS predicts speed only above the ridge point. Below it, doubling the FLOP count while halving the bytes makes a kernel <em>twice as fast</em> — which is exactly what FlashAttention and every fused kernel in <strong>M26</strong> do.</p>
+<h3 id="bf16-is-just-low-precision-fp32">"bf16 is just low-precision fp32"</h3>
+<p>bf16 keeps fp32's 8-bit exponent and throws away mantissa bits: it has fp32's <em>range</em> with roughly fp16's <em>precision</em>. That asymmetry is the point. bf16 can never overflow where fp32 would not, which is why it needs no loss scaling, and it is 8$\times$ coarser than fp32 near 1.0, which is why D3's cancellation argument matters.</p>
+<h3 id="flashattention-is-an-approximation-or-a-new-attention-mechanism">"FlashAttention is an approximation, or a new attention mechanism"</h3>
+<p>It computes exactly $\operatorname{softmax}(\mathbf{Q}\mathbf{K}^\top/\sqrt{d_h})\mathbf{V}$, bit-comparable to the naive version up to fp32 accumulation order. Its entire content is a change of loop order that deletes an $n \times n$ temporary. Corollary: on short sequences ($n \le d_h$) it saves nothing, because there is no temporary worth deleting.</p>
+<h3 id="arithmetic-intensity-is-a-property-of-the-operation">"Arithmetic intensity is a property of the operation"</h3>
+<p>It is a property of the <em>implementation</em>. Attention is $I = 64$ unfused and $I = 2048$ fused; a 128-tile matmul is $I = 64$ and the same matmul with an L2-resident super-tile is $I \approx 760$. The FLOP count never changed in either case.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>1.</strong> Compute $I$ for <code>y = x + r</code> on two bf16 tensors of shape $[4096, 4096]$, and the resulting ceiling on this chip.</p>
+<p><strong>2.</strong> A matmul has $n = 200$ (square, bf16). Is it memory or compute bound here, and what is the ceiling?</p>
+<details><summary>Solution</summary>
+
+**1.** $F = 4096^2 = 1.68\times10^{7}$ adds. $B = 3 \times 4096^2 \times 2 = 1.007\times10^{8}$ bytes (read two, write one). $I = 0.167$. Ceiling $= 3.35\times10^{12} \times 0.167 = 0.56$ TFLOP/s, i.e. 0.06% of the chip.
+
+**2.** $I = n/3 = 66.7 < 295$, so memory bound. Ceiling $= 3.35 \times 10^{12} \times 66.7 = 223$ TFLOP/s. Only 22% of the peak is reachable no matter how good the kernel is.
+
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>3.</strong> A chip has 108 SMs, $\beta = 2.0$ TB/s and $\ell = 400$ ns. How many warps per SM must each hold one coalesced 128-byte load to saturate HBM?</p>
+<p><strong>4.</strong> A $4096 \times 4096$ fp32 matrix is read column by column, one warp per column entry, with lanes advancing down the column. How many bytes does HBM deliver per 128 useful bytes, and how long does reading the whole matrix take versus the coalesced case?</p>
+<p><strong>5.</strong> A <code>float tile[32][32]</code> is read down a column by one warp. How many shared-memory cycles does the access take, and what one-character change fixes it?</p>
+<details><summary>Solution</summary>
+
+**3.** $B_f = \beta\ell = 2.0\times10^{12} \times 4.0\times10^{-7} = 8.0\times10^5$ bytes total, $/108 = 7.4$ KB per SM, $/128 = 58$ warps. If the SM holds 64 warps, that is 91% occupancy — this chip needs very high occupancy, which is why architectures with fewer SMs per byte of bandwidth are easier to feed.
+
+**4.** Consecutive lanes differ by $4096 \times 4 = 16{,}384$ bytes, so each 4-byte request lands in its own 32-byte sector: 32 sectors $= 1024$ bytes fetched per 128 useful, $8\times$ waste. Coalesced the matrix is 67 MB, 20 $\mu$s at 3.35 TB/s; strided it is 537 MB, 160 $\mu$s. The fix is to read coalesced into shared memory and transpose there, which is why every fast transpose kernel does exactly that.
+
+**5.** Lane $r$ accesses word $r \cdot 32 + c$, whose bank is $(32r + c) \operatorname{mod} 32 = c \operatorname{mod} 32$ — the *same* bank for all 32 lanes. A 32-way conflict serialises into 32 cycles instead of 1. Declaring `float tile[32][33]` makes the stride 33, coprime with 32, so the 32 lanes hit 32 distinct banks: 1 cycle.
+
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>6.</strong> Derive the range of loss scales $S$ that works if fp16 gradients span $[10^{-9}, 10^{3}]$, and interpret the answer.</p>
+<p><strong>7.</strong> In the worked example, fusing each residual add into its following LayerNorm halves the traffic of that row. What fraction of layer time does that recover, and what does the answer say about where to spend engineering effort?</p>
+<p><strong>8.</strong> A kernel reports 40% of DRAM peak, 15% of compute peak, 88% of theoretical occupancy achieved, and "Long Scoreboard" as the dominant stall. Diagnose it and name two fixes.</p>
+<details><summary>Solution</summary>
+
+**6.** Overflow demands $S \cdot 10^{3} < 65504$, so $S < 65.5$. Underflow demands $S\cdot10^{-9} > 6.1\times10^{-5}$, so $S > 6.1\times10^{4}$. The intervals are disjoint: **no single loss scale works**, because the gradient dynamic range $10^{12}$ exceeds fp16's representable range of about $10^{9}$ ($6\times10^{-8}$ to $6.5\times10^4$). In practice the tails are rare and dynamic scaling absorbs them; when they are not rare, you are forced to bf16/fp32 for that tensor.
+
+**7.** The row is 448.8 MB and 0.134 ms of the 1.006 ms layer. Halving its traffic to 224 MB saves 0.067 ms, 6.7% of the layer. Fusing normals saves single-digit percent; the 369 GF MLP matmul at 0.373 ms is 37% of the layer. Spend the effort where the time is, not where the ugliness is.
+
+**8.** Memory throughput is high-ish but compute is low and occupancy is already achieved, so this is **not** an occupancy problem: the warps are there and they are all stalled on memory latency, meaning the kernel issues too few independent loads per warp to cover $\ell$. Fixes: increase ILP by unrolling and issuing 2–4 independent loads before the first use, and reduce the dependency chain (reorder so the kernel prefetches the next tile while computing on the current one, i.e. software pipelining). Raising occupancy further would do nothing — it is already at 88% of theoretical.
+
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>What is the ridge point of an A100 (312 TFLOP/s bf16, 1.94 TB/s)?</li>
+<li>Why does an <code>if</code> on a per-element value cost up to 32$\times$ while <code>max(x, 0)</code> costs nothing?</li>
+<li>State one property bf16 has that fp16 does not, and one it lacks.</li>
+<li>Give the two numbers that decide whether attention is memory bound.</li>
+<li>Which two Nsight Compute percentages correspond to the two axes of the roofline?</li>
+<li>A kernel needs 128 registers per thread. Give two ways to still saturate HBM.</li>
+<li>Why is a 128$\times$128 matmul's arithmetic intensity 43 rather than the 64 that $T/2$ predicts?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $312\times10^{12}/1.94\times10^{12} \approx 161$ FLOP/byte.
+2. A per-element branch makes the warp execute both sides serially, so instruction count becomes $|A|+|B|$ and each side runs at 1/32 utilisation. `max(x,0)` has no control flow — it compiles to a predicated select executed by all lanes.
+3. Has: fp32's 8-bit exponent, hence fp32's range and no overflow. Lacks: mantissa bits (7 versus 10), so its gap at 1.0 is $3.9\times10^{-3}$ versus $4.9\times10^{-4}$.
+4. $n$ and $d_h$: $I = d_h/2$ unfused versus $I = n/2$ fused, against $\pi/\beta$.
+5. Compute (SM) Throughput and Memory Throughput.
+6. (a) More independent loads in flight per thread (unrolling/ILP), so fewer warps are needed; (b) reduce the register count with `__launch_bounds__` or by recomputing instead of caching, trading registers for occupancy.
+7. Because $T/2$ is the *implementation* bound from blocking, while $n/3 = 42.7$ is the *compulsory* bound — every element must be read at least once, and at $n = 128$ the matrices are too small for reuse to beat that floor.
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li>Williams, Waterman and Patterson, <em>Roofline: An Insightful Visual Performance Model for Multiclass Computing</em> (CACM, 2009). The original paper; take the derivation of the two-segment model and the "attainable performance" definition.</li>
+<li>Dao, Fu, Ermon, Rudra and Ré, <em>FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness</em> (NeurIPS 2022). Read Section 3 for the tiling argument and the proof that no $n \times n$ temporary is needed.</li>
+<li>Micikevicius et al., <em>Mixed Precision Training</em> (ICLR 2018). The origin of loss scaling and fp32 master weights; take the failure-mode analysis, not the API.</li>
+<li>Tillet, Kung and Cox, <em>Triton: An Intermediate Language and Compiler for Tiled Neural Network Computations</em> (MAPL 2019). Explains why a tile-level language beats hand-written CUDA for most research code.</li>
+<li>NVIDIA, <em>CUDA C++ Programming Guide</em>, especially the sections on coalescing, shared-memory bank conflicts and warp-level primitives. Free and authoritative; read the tables, skip the API listings.</li>
+<li>Drepper, <em>What Every Programmer Should Know About Memory</em> (Red Hat, 2007). Pre-GPU, but the clearest account anywhere of why the hierarchy exists and what each level costs.</li>
+<li>Horowitz, <em>Computing's Energy Problem (and What We Can Do About It)</em> (ISSCC 2014). The picojoule table that explains why data movement, not arithmetic, sets the energy budget.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when you can, without notes:</p>
+<ul>
+<li>Derive $\beta\ell$ for bytes in flight and say how many warps per SM that implies on any stated chip.</li>
+<li>Compute $I$ for a matmul, a layernorm and an elementwise chain from their shapes, and place all three on a roofline.</li>
+<li>Derive a tiled matmul's HBM traffic as $4n^3/T + 2n^2$ and pick $T$ from the ridge point.</li>
+<li>Name the access pattern behind an 8$\times$ bandwidth waste and behind a 32-way bank conflict.</li>
+<li>State what each of fp32, tf32, bf16, fp16 and fp8-e4m3 can and cannot represent, and whether a given gradient needs loss scaling.</li>
+<li>Explain in one sentence why FlashAttention performs identical FLOPs and is several times faster.</li>
+</ul><div class="pager"><a id="prevlink" href="../m/23-multimodality.html"><small>← previous</small><b>M23 · Multimodality</b></a><a id="nextlink" class="next" href="../m/25-distributed-training.html"><small>next →</small><b>M25 · Distributed Training</b></a></div></article>
+</main>
+</div>
+</body></html>

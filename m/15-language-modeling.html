@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M15 · Language Modeling and Decoding — From Zero to Frontier</title>
+<meta name="description" content="From the chain rule to a single sequence, and why those are different problems.">
+<meta property="og:title" content="M15 · Language Modeling and Decoding — From Zero to Frontier">
+<meta property="og:description" content="From the chain rule to a single sequence, and why those are different problems.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Large language models / M15</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M15">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M15</span><span class="pill d3">difficulty 3/5</span><span class="pill">2 weeks</span><span class="pill">prereqs: M12</span><span class="pill">7,351 words</span></div><h1>Language Modeling and Decoding</h1><p class="tagline">From the chain rule to a single sequence, and why those are different problems.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>A language model is trained on one objective — predict the next token — and deployed on a different one: emit one particular sequence that a human will read. Almost every confusing property of LLM behaviour lives in that gap. Temperature has no meaning in training but decides whether the output is a poem or a loop; perplexity measures calibration over all continuations while your evaluation measures one realized string; greedy decoding is optimal for exactly the objective that produces bland, repetitive text. If you skip this module you will treat sampling parameters as folklore, believe that "the model's distribution" is what you get from an API, and have no way to reason about why beam search — which provably maximizes the thing the model was trained to maximize — produces worse text than a noisy sampler.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<p>If two or more are shaky, revisit <strong>M12</strong> and <strong>M03</strong>.</p>
+<ol>
+<li>Write $P(A,B)$ in terms of $P(A)$ and $P(B\mid A)$.</li>
+<li>What is the entropy of a distribution in the limit as it becomes uniform over $K$ outcomes?</li>
+<li>If $z_1 = 2$ and $z_2 = 0$, what is $\operatorname{softmax}(\mathbf{z})_1$?</li>
+<li>What does it mean for a function to be monotonically increasing, and why does it matter that $\exp$ is?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $P(A,B) = P(A)P(B\mid A)$.
+2. $\log K$ — the maximum entropy for $K$ outcomes.
+3. $e^2/(e^2+e^0) = 7.389/8.389 = 0.8808$.
+4. $x \le y \Rightarrow f(x)\le f(y)$. Because $\exp$ is monotone, dividing logits by $T$ and exponentiating cannot reorder which token is most likely — only how sharply.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<ul>
+<li>Derive the autoregressive factorization from the chain rule and state exactly what independence assumption it does not make.</li>
+<li>Show, with every step, that minimizing mean negative log-likelihood is minimizing cross-entropy, and write the decomposition into data entropy plus KL divergence.</li>
+<li>Compute perplexity both as $\exp(L)$ and as the geometric mean of inverse token probabilities, and state three reasons two perplexity numbers may be incomparable.</li>
+<li>Derive the effect of temperature on the distribution and on its entropy, including the sign and magnitude of $dH/dT$.</li>
+<li>Implement top-$k$, top-$p$, min-$p$, and typical sampling, and explain what each preserves and destroys.</li>
+<li>Derive the speculative-decoding acceptance rule and prove it is distribution-preserving, then compute the expected speedup as a function of acceptance rate and draft length.</li>
+<li>Construct a logit mask for a grammar constraint and name the failure mode that arises when masks meet a tokenizer.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$x_1, \ldots, x_T$</td>
+<td>a token sequence; $x_t \in \{1,\ldots,V\}$</td>
+</tr>
+<tr>
+<td>$x_{<t}$</td>
+<td>the prefix $x_1,\ldots,x_{t-1}$</td>
+</tr>
+<tr>
+<td>$\mathbf{z}_t \in \mathbb{R}^{V}$</td>
+<td>logits at position $t$</td>
+</tr>
+<tr>
+<td>$p_\theta(x_t \mid x_{<t})$</td>
+<td>model's conditional distribution</td>
+</tr>
+<tr>
+<td>$T$</td>
+<td>temperature (context length is written $L$ to avoid collision)</td>
+</tr>
+<tr>
+<td>$H(p)$</td>
+<td>Shannon entropy in nats</td>
+</tr>
+<tr>
+<td>$\mathrm{PP}$</td>
+<td>perplexity</td>
+</tr>
+<tr>
+<td>$S$</td>
+<td>the retained support of a truncated distribution</td>
+</tr>
+<tr>
+<td>$\mathbf{m} \in \{0,-\infty\}^{V}$</td>
+<td>a logit mask</td>
+</tr>
+<tr>
+<td>$\alpha$</td>
+<td>speculative-decoding acceptance rate</td>
+</tr>
+<tr>
+<td>$\gamma$</td>
+<td>number of draft tokens per speculative round</td>
+</tr>
+<tr>
+<td>$c$</td>
+<td>cost of one draft step relative to one target step</td>
+</tr>
+</tbody>
+</table>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="the-autoregressive-factorization">The autoregressive factorization</h3>
+<p><strong>(1) Intuition.</strong> You do not need to model the probability of a whole sentence at once. You need to model the probability of the next word given everything before it, and then multiply. A sentence is built left to right, one conditional at a time.</p>
+<p><strong>(2) Formal definition.</strong> For any distribution over sequences,</p>
+<p>$$p(x_1,\ldots,x_T) = \prod_{t=1}^{T} p(x_t \mid x_{<t})$$</p>
+<p>This is exact for every distribution on $\{1,\ldots,V\}^{T}$; it assumes nothing. It is a rewriting of the chain rule of probability, not an approximation.</p>
+<p><strong>(3) Why it is built this way.</strong> The alternative — a single $V^{T}$-way classifier — has a parameter count exponential in $T$. The factorization turns that into $T$ calls to one shared classifier over $V$ outcomes, which is what a transformer with a causal mask computes in parallel: $T$ conditionals in one forward pass, because position $t$ cannot attend to anything after $t$.</p>
+<p><strong>(4) Worked micro-example.</strong> Vocabulary $\{a,b\}$, $T=3$. There are 8 sequences. The autoregressive model needs 1 + 2 + 4 = 7 numbers (the conditionals for $a$, $aa$, $ab$, plus their complements). The tabular model needs 7 numbers too — at $T=3$. At $T=20$ the tabular model needs $2^{20}-1 = 1{,}048{,}575$ and the autoregressive model still needs $2^{20}-1$ <em>if it memorizes</em>, but with a shared parametric function it needs a fixed number of parameters and generalizes across prefixes. That difference is the entire reason neural LMs exist.</p>
+<h3 id="training-loss-is-mean-negative-log-likelihood-is-cross-entropy">Training loss is mean negative log-likelihood is cross-entropy</h3>
+<p><strong>(1) Intuition.</strong> The model outputs a probability for the token that actually came next. Training makes that probability bigger. Nothing else happens.</p>
+<p><strong>(2) Formal definition.</strong> Over a corpus of $N$ tokens,</p>
+<p>$$\mathcal{L}(\theta) = -\frac{1}{N}\sum_{t=1}^{N}\log p_\theta(x_t \mid x_{<t})$$</p>
+<p>This is the mean negative log-likelihood, and it is the cross-entropy between the empirical one-hot label at each position and the model's distribution.</p>
+<p><strong>(3) Why it is built this way.</strong> Maximum likelihood is the statistically efficient estimator for a correctly specified model, and its log makes the product of conditionals a sum, which is what gradient descent needs. The mean (rather than the sum) makes the loss independent of corpus size, so learning rates transfer.</p>
+<p><strong>(4) Worked micro-example.</strong> Model outputs $\mathbf{p} = (0.6, 0.3, 0.1)$ and the true next token is the second. Loss $= -\log 0.3 = 1.204$ nats. Had the model said $(0.1,0.1,0.8)$, the loss at that position would be $-\log 0.1 = 2.303$. Every token contributes one such number, uniformly weighted, regardless of position.</p>
+<h3 id="perplexity-exactly">Perplexity, exactly</h3>
+<p><strong>(1) Intuition.</strong> Perplexity is "how many equally likely options is the model effectively choosing between at each step".</p>
+<p><strong>(2) Formal definition.</strong></p>
+<p>$$\mathrm{PP} = \exp(\mathcal{L}) = \exp\left(-\frac{1}{N}\sum_t \log p_t\right) = \left(\prod_{t=1}^{N}\frac{1}{p_t}\right)^{1/N}$$</p>
+<p><strong>(3) Why it is built this way.</strong> The geometric mean is the right average for a product of probabilities: it converts "multiply $N$ numbers" into "the equivalent per-step factor". A model that assigns uniform probability to $K$ options has $\mathrm{PP} = K$ exactly.</p>
+<p><strong>(4) Worked micro-example.</strong> Three tokens with probabilities $0.5, 0.25, 0.125$. $\mathcal{L} = (0.693+1.386+2.079)/3 = 1.386$ nats, $\mathrm{PP} = e^{1.386} = 4.0$. The geometric mean of $(2,4,8)$ is $4$. Exactly the branching factor you would have guessed. <strong>Limits, stated precisely:</strong> (i) it is per token, so it depends on the tokenizer (see <strong>M14</strong>); (ii) it depends on the corpus, so two corpora with different entropy give different floors; (iii) it measures calibration over the whole distribution at every position and says nothing about whether the top-ranked continuation is any good; (iv) it is dominated by the easy, high-frequency positions, so formatting and whitespace can move it more than reasoning.</p>
+<p><div class="viz" data-viz="v-entropy"></div><div class="vizcap">The training floor is the entropy of the data and the excess is the KL divergence. Drag probability mass and watch all three numbers separate: only the cross-entropy term depends on the model.</div></p>
+<h3 id="the-softmax-bottleneck">The softmax bottleneck</h3>
+<p><strong>(1) Intuition.</strong> The model's output is a matrix product between a $d$-dimensional hidden state and a $d$-dimensional embedding table. A product of two skinny matrices has low rank, and a low-rank matrix cannot express an arbitrary table of log-probabilities.</p>
+<p><strong>(2) Formal definition.</strong> With hidden states $\mathbf{H}\in\mathbb{R}^{N\times d}$ and output embeddings $\mathbf{W}\in\mathbb{R}^{d\times V}$, the log-probability matrix (before normalization) is $\mathbf{Z} = \mathbf{H}\mathbf{W}^{\top}$, so</p>
+<p>$$\operatorname{rank}(\mathbf{Z}) \le \min(N, d, V) = d$$</p>
+<p><strong>(3) Why it is built this way.</strong> There is no choice: the output layer is a linear map from a $d$-dimensional residual stream. The consequence is a genuine capacity limit — the true conditional distribution of natural language is not rank-$d$ for any realistic $d$ — which is why mixture-of-softmaxes and larger $d$ help.</p>
+<p><strong>(4) Worked micro-example.</strong> $d = 4096$, $V = 50{,}257$. The model parameterizes a rank-4096 matrix of size $N\times V$. With $N = 10{,}000$ positions and 50,257 columns, the full matrix has $5\times10^{8}$ entries but only 4096 degrees of freedom per row. Any pattern of log-probabilities requiring more than 4096 independent directions across the vocabulary is unrepresentable — the residual stream would have to encode it, and it cannot.</p>
+<h3 id="temperature">Temperature</h3>
+<p><strong>(1) Intuition.</strong> Divide the logits by a number before the softmax. Below 1 sharpens the distribution toward its mode; above 1 flattens it toward uniform. It cannot change <em>which</em> token is most likely, only how confidently.</p>
+<p><strong>(2) Formal definition.</strong></p>
+<p>$$p_i(T) = \frac{\exp(z_i/T)}{\sum_j \exp(z_j/T)}$$</p>
+<p><strong>(3) Why it is built this way.</strong> It is the temperature of the Boltzmann distribution: a single scalar that trades exploitation for exploration without touching the ordering. That is exactly what you want when the model is right about the ranking but wrong about the confidence.</p>
+<p><strong>(4) Worked micro-example.</strong> Logits $\mathbf{z} = (3.0, 1.5, 0.8, 0.2, -0.5, -1.2, -2.0)$:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">$T$</th>
+<th style="text-align: right;">$p_1$</th>
+<th style="text-align: right;">$p_2$</th>
+<th style="text-align: right;">$p_3$</th>
+<th style="text-align: right;">$H$</th>
+<th style="text-align: right;">$H/\log 7$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.9373</td>
+<td style="text-align: right;">0.0467</td>
+<td style="text-align: right;">0.0115</td>
+<td style="text-align: right;">0.283</td>
+<td style="text-align: right;">0.145</td>
+</tr>
+<tr>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: right;">0.6912</td>
+<td style="text-align: right;">0.1542</td>
+<td style="text-align: right;">0.0766</td>
+<td style="text-align: right;">1.027</td>
+<td style="text-align: right;">0.528</td>
+</tr>
+<tr>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: right;">0.4115</td>
+<td style="text-align: right;">0.1944</td>
+<td style="text-align: right;">0.1370</td>
+<td style="text-align: right;">1.642</td>
+<td style="text-align: right;">0.844</td>
+</tr>
+<tr>
+<td style="text-align: right;">10.0</td>
+<td style="text-align: right;">0.1856</td>
+<td style="text-align: right;">0.1598</td>
+<td style="text-align: right;">0.1490</td>
+<td style="text-align: right;">1.933</td>
+<td style="text-align: right;">0.994</td>
+</tr>
+</tbody>
+</table>
+<p>At $T=10$ the distribution is nearly uniform and $H \to \log 7 = 1.946$; at $T=0.1$ it is a point mass. The effective number of choices moves from 1 to 6.9.</p>
+<p><div class="viz" data-viz="v-softmax-temp"></div><div class="vizcap">Drag the logits and the temperature. Watch three things at once: the bar heights, the entropy readout, and the cumulative-mass curve. Confirm that raising $T$ never reorders the bars — only their relative heights.</div></p>
+<h3 id="truncation-top-i122-top-i123-min-i124-typical">Truncation: top-$k$, top-$p$, min-$p$, typical</h3>
+<p><strong>(1) Intuition.</strong> Temperature reshapes the whole distribution, including the 40,000 tokens you would never want. Truncation deletes them outright and renormalizes. The question each method answers is "which tokens are plausible <em>here</em>", and they answer it differently.</p>
+<p><strong>(2) Formal definition.</strong> All four produce $\tilde{p}_i \propto p_i \mathbf{1}[i \in S]$ for a support $S$:</p>
+<ul>
+<li><strong>Top-$k$.</strong> $S$ = the $k$ highest-probability tokens. Fixed size.</li>
+<li><strong>Top-$p$ (nucleus).</strong> Sort descending, let $c_i = \sum_{j\le i} p_{(j)}$, and take the smallest prefix with $c_i \ge p$; $S$ = that prefix. Adaptive size.</li>
+<li><strong>Min-$p$.</strong> $S = \{i : p_i \ge p_{\min}\cdot \max_j p_j\}$. Threshold relative to the peak.</li>
+<li><strong>Typical.</strong> Let $H = -\sum_i p_i\log p_i$. $S = \{i : |{-\log p_i} - H| \le \tau\}$, i.e. tokens whose surprisal is close to the entropy.</li>
+</ul>
+<p><strong>(3) Why it is built this way.</strong> Each fixes a failure of the previous one. Top-$k$ is size-fixed, so when the model is confident it keeps 40 implausible tokens as noise, and when it is uncertain it may cut off reasonable options. Top-$p$ adapts to confidence but can retain a long tail when the distribution is flat, and its support can shrink to 1 on a peaked distribution. Min-$p$ scales with the peak, so it keeps a rich set when the model is unsure and almost nothing when it is sure. Typical sampling addresses a subtler point: the <em>typical set</em> of a distribution is where the probability mass actually lives, and the highest-probability single token is often outside it.</p>
+<p><strong>(4) Worked micro-example.</strong> Sorted probabilities $(0.6912, 0.1542, 0.0766, 0.0420, 0.0209, 0.0104, 0.0047)$, cumulative $0.6912, 0.8455, 0.9221, 0.9641, 0.9850, 0.9953, 1.0$. Top-$p = 0.9$ keeps 3 tokens carrying 92.2% of the mass. Min-$p = 0.1$ keeps tokens with $p_i \ge 0.0691$, which is also 3 tokens here — but with $\mathbf{p} = (0.35, 0.30, 0.20, 0.15)$ min-$p=0.1$ keeps all 4 while top-$p=0.9$ keeps 4 as well, and with $(0.95, 0.02, 0.02, 0.01)$ min-$p=0.1$ keeps 1 while top-$p=0.9$ also keeps 1. The methods agree at extremes and diverge in the middle, which is where generation quality is decided.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 360" width="100%" role="img" aria-label="Temperature reshapes the distribution; top-k and top-p cut it" class="fig-svg"><defs><marker id="samp-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="150.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">T = 0.5 (sharper)</text><rect x="38.0" y="159.0" width="24.0" height="101.0" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="50.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">the</text><text x="50.0" y="153.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.56</text><rect x="66.0" y="214.6" width="24.0" height="45.4" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="78.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">a</text><text x="78.0" y="208.6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.25</text><rect x="94.0" y="239.6" width="24.0" height="20.4" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="106.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">thi</text><text x="106.0" y="233.6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.11</text><rect x="122.0" y="252.5" width="24.0" height="7.5" rx="3" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="134.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">one</text><rect x="150.0" y="256.6" width="24.0" height="3.4" rx="3" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="162.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">som</text><rect x="178.0" y="258.5" width="24.0" height="1.5" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="190.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">eac</text><rect x="206.0" y="259.4" width="24.0" height="0.6" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="218.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">any</text><rect x="234.0" y="259.7" width="24.0" height="0.3" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="246.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">no</text><line x1="34.0" y1="260.0" x2="270.0" y2="260.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><text x="150.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">entropy 1.19 nats</text><text x="430.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">T = 1.0</text><rect x="318.0" y="196.2" width="24.0" height="63.8" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="330.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">the</text><text x="330.0" y="190.2" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.35</text><rect x="346.0" y="217.2" width="24.0" height="42.8" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="358.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">a</text><text x="358.0" y="211.2" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.24</text><rect x="374.0" y="231.3" width="24.0" height="28.7" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="386.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">thi</text><text x="386.0" y="225.3" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.16</text><rect x="402.0" y="242.6" width="24.0" height="17.4" rx="3" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="414.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">one</text><text x="414.0" y="236.6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.10</text><rect x="430.0" y="248.3" width="24.0" height="11.7" rx="3" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="442.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">som</text><text x="442.0" y="242.3" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.06</text><rect x="458.0" y="252.2" width="24.0" height="7.8" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="470.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">eac</text><rect x="486.0" y="255.3" width="24.0" height="4.7" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="498.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">any</text><rect x="514.0" y="256.8" width="24.0" height="3.2" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="526.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">no</text><line x1="314.0" y1="260.0" x2="550.0" y2="260.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><text x="430.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">entropy 1.71 nats</text><text x="710.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">T = 2.0 (flatter)</text><rect x="598.0" y="218.0" width="24.0" height="42.0" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="610.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">the</text><text x="610.0" y="212.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.23</text><rect x="626.0" y="225.6" width="24.0" height="34.4" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="638.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">a</text><text x="638.0" y="219.6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.19</text><rect x="654.0" y="231.8" width="24.0" height="28.2" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="666.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">thi</text><text x="666.0" y="225.8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.16</text><rect x="682.0" y="238.1" width="24.0" height="21.9" rx="3" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="694.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">one</text><text x="694.0" y="232.1" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.12</text><rect x="710.0" y="242.0" width="24.0" height="18.0" rx="3" fill="var(--fig-violet,#a78bfa)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="722.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">som</text><text x="722.0" y="236.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.10</text><rect x="738.0" y="245.3" width="24.0" height="14.7" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="750.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">eac</text><text x="750.0" y="239.3" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.08</text><rect x="766.0" y="248.5" width="24.0" height="11.5" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="778.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">any</text><text x="778.0" y="242.5" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">0.06</text><rect x="794.0" y="250.6" width="24.0" height="9.4" rx="3" fill="var(--fig-faint,#3a4467)" stroke="none" stroke-width="1.5" opacity="0.9"/><text x="806.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">no</text><line x1="594.0" y1="260.0" x2="830.0" y2="260.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><text x="710.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">entropy 1.97 nats</text><rect x="30.0" y="30.0" width="0.0" height="0.0" rx="0" fill="none" stroke="none" stroke-width="1.5"/><line x1="840.0" y1="40.0" x2="840.0" y2="300.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="0" stroke-linecap="round"/><text x="440.0" y="336.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">temperature divides the logits before the softmax; it changes the shape, never the ranking</text></svg><figcaption>One distribution with three different regions shaded: the temperature rescales the whole curve, top-$k$ cuts by rank, top-$p$ cuts by accumulated mass. Compare where the boundaries land, not just how many bars survive.</figcaption></figure></p>
+<p><div class="viz" data-viz="v-sampling"></div><div class="vizcap">Apply top-$k$, top-$p$, and min-$p$ to the same distribution. Watch which bars survive, how the mass is renormalized, and note that the same numeric threshold selects very different support sizes as the distribution's shape changes.</div></p>
+<h3 id="repetition-and-frequency-penalties">Repetition and frequency penalties</h3>
+<p><strong>(1) Intuition.</strong> Sampling has no memory of what it already said, so it will happily loop. A penalty applied to the logits of already-emitted tokens makes a loop progressively more expensive.</p>
+<p><strong>(2) Formal definition.</strong> Given the set of tokens already generated with counts $c_i$, the CTRL-style repetition penalty with $\theta>1$ is</p>
+<p>$$z_i' = \begin{cases} z_i/\theta & z_i > 0 \\ z_i\cdot\theta & z_i \le 0 \end{cases}$$</p>
+<p>with frequency and presence penalties added linearly instead: $z_i' = z_i - \lambda_f c_i - \lambda_p \mathbf{1}[c_i > 0]$.</p>
+<p><strong>(3) Why it is built this way.</strong> Dividing positive logits and multiplying negative ones both move every seen token <em>down</em> in the ranking, regardless of sign — a plain subtraction would not, because logits are unbounded. The linear variants are additive in log-space, which makes them easy to reason about and to combine.</p>
+<p><strong>(4) Worked micro-example.</strong> $\theta = 1.2$, and the previously seen token has $z = 6.0$: $z' = 5.0$. A seen token with $z = -2.0$ becomes $-2.4$. With $\lambda_f = 0.5$ and a count of 4, the frequency penalty gives $z' = 6.0 - 2.0 = 4.0$ instead. Note the arithmetic consequence: at $\theta = 1.2$ a large positive logit is reduced by 17%, while at $\theta = 1.2$ a logit of 20 is reduced by 3.3 — the penalty is not scale-invariant, which is why heavy repetition penalties distort confident predictions.</p>
+<h3 id="greedy-decoding-beam-search-and-why-beam-search-is-unloved">Greedy decoding, beam search, and why beam search is unloved</h3>
+<p><strong>(1) Intuition.</strong> Greedy takes the best token now. Beam search keeps the $b$ best partial sequences, hoping to find the whole sequence with the highest total probability. Both optimize the model's own score, and the model's own score is not what you want.</p>
+<p><strong>(2) Formal definition.</strong> Beam search maintains a set of $b$ hypotheses and at each step extends all of them and keeps the $b$ highest-scoring, where the score of a completed or partial sequence is</p>
+<p>$$\text{score}(y) = \sum_{t=1}^{|y|}\log p_\theta(y_t\mid y_{<t})$$</p>
+<p>Length normalization divides by $|y|^{\ell}$ (typically $\ell = 1$ or a tuned $\alpha$) to prevent the systematic preference for short sequences that the unnormalized sum creates.</p>
+<p><strong>(3) Why it is built this way.</strong> For tasks with a nearly deterministic correct output — translation, transcription, code completion with one right answer — maximizing sequence probability is a reasonable proxy and beam search finds a better optimum than greedy. For open-ended generation there is no single correct sequence, and the highest-probability sequence under a model trained on a diverse corpus tends to be degenerate: bland, repetitive, and unrepresentative. This is the "beam search curse", documented experimentally: increasing beam width improves likelihood and degrades human-judged quality.</p>
+<p><strong>(4) Worked micro-example.</strong> Vocabulary $\{a,b\}$, $b=2$. Step 1: $p(a)=0.6$, $p(b)=0.4$. Extend both: $aa$: 0.36, $ab$: 0.24, $ba$: 0.24, $bb$: 0.16. Keep $aa$ and $\{ab, ba\}$ (tie). Greedy would commit to $a$ and never see that $bb$ might have a strong continuation — the beam recovers that at a cost of $b$ times the compute, and no guarantee about quality.</p>
+<h3 id="constrained-and-structured-decoding">Constrained and structured decoding</h3>
+<p><strong>(1) Intuition.</strong> If the output must be valid JSON, or must parse as a SQL query, or must match one of three labels, then any token that would make the output invalid should get probability zero. That is a mask on the logits.</p>
+<p><strong>(2) Formal definition.</strong> With a state machine (finite automaton, context-free grammar, or JSON schema parser) tracking which continuations are legal after the prefix generated so far, define $\mathbf{m}_t\in\{0,-\infty\}^{V}$ and sample from</p>
+<p>$$\tilde{p} = \operatorname{softmax}(\mathbf{z}_t + \mathbf{m}_t)$$</p>
+<p><strong>(3) Why it is built this way.</strong> It removes the invalid mass <em>before</em> sampling, so the distribution you sample from is a valid distribution over valid continuations — no retry loop, no post-hoc repair. The cost is that the constrained distribution is generally not the model's distribution restricted to valid strings; it is a renormalization, and the two differ whenever the model's preferred continuation was invalid.</p>
+<p><strong>(4) Worked micro-example.</strong> Grammar requires <code>{"label": "</code> followed by one of <code>pos</code>/<code>neg</code>. At that position the logits over the vocabulary are masked to the tokens that begin <code>pos</code> or <code>neg</code>. In practice <code>pos</code> may be a single token and <code>neg</code> two, so the mask has 2 non-<code>-inf</code> entries. Two implementation notes that bite: use a large negative number such as $-10^{9}$ rather than literal <code>-inf</code>, because <code>-inf</code> times a zero gradient produces <code>NaN</code>; and if a token straddles the grammar boundary (the token <code>"pos</code> includes a quote the grammar wants to place separately), you must either allow partial-token matches or apply token healing.</p>
+<h3 id="speculative-decoding">Speculative decoding</h3>
+<p><strong>(1) Intuition.</strong> Small models are cheap and mostly agree with large models. Let a small draft model propose $\gamma$ tokens, then check all of them in a single forward pass of the large model — which costs about the same as generating one token, because decoding is memory-bandwidth-bound, not compute-bound. Accept the ones the large model agrees with; the result is <em>exactly</em> the large model's distribution.</p>
+<p><strong>(2) Formal definition.</strong> Target distribution $p$, draft distribution $q$. For each draft token $x$: draw $x\sim q$, accept with probability $\min(1, p(x)/q(x))$. If rejected, draw from $r(x)\propto\max(0, p(x)-q(x))$ and end the round. Repeat for up to $\gamma$ tokens per round.</p>
+<p><strong>(3) Why it is built this way.</strong> The accept/reject rule is the <em>only</em> rule that makes the output distribution exactly $p$ while using $q$ to save work. Any simpler scheme (accept if the ranks agree, accept with fixed probability) changes the distribution, and then you are no longer serving the model you trained.</p>
+<p><strong>(4) Worked micro-example.</strong> $p = (0.5, 0.3, 0.2)$, $q = (0.2, 0.5, 0.3)$. Acceptance probabilities: $\min(1, 0.5/0.2) = 1$, $\min(1, 0.3/0.5) = 0.6$, $\min(1, 0.2/0.3) = 0.667$. The rejection distribution: $\max(0, p-q) = (0.3, 0, 0)$, normalized to $(1,0,0)$. Check: $P(X=1) = \min(0.5,0.2) + 0.7\cdot1 = 0.2+0.7 = 0.9$? That is wrong, so the correction matters — the full rejection probability is $1-\sum\min(p,q)$, computed below in Derivation 4, and the arithmetic works out to exactly $p$. Do it there before trusting the intuition.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" width="100%" role="img" aria-label="The KV cache: what is stored per layer, and how it grows" class="fig-svg"><defs><marker id="kv-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="120.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">without cache</text><rect x="30.0" y="56.0" width="180.0" height="120.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.4"/><rect x="44.0" y="70.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="83.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 1</text><rect x="44.0" y="94.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="107.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 2</text><rect x="44.0" y="118.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="131.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 3</text><rect x="44.0" y="142.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="155.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 4</text><text x="120.0" y="198.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">O(T²) work per token</text><line x1="226.0" y1="116.0" x2="268.0" y2="116.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#kv-ah)"/><text x="360.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">with KV cache</text><text x="286.0" y="72.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L0</text><rect x="292.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="56.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="106.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L1</text><rect x="292.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="90.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="140.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L2</text><rect x="292.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="124.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L3</text><rect x="292.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="158.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="457.0" y="206.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">one column per cached token, per layer, for both K and V</text><rect x="660.0" y="56.0" width="172.0" height="150.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="746.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">memory</text><text x="746.0" y="104.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">2 · L · H · T · dₕ</text><text x="746.0" y="124.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">· bytes per element</text><text x="746.0" y="152.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">7B, T=8192, bf16</text><text x="746.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">≈ 2 GB / sequence</text><text x="746.0" y="194.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">grows linearly, forever</text><text x="430.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">decode costs a matrix-vector product per step; the cache turns O(T) recompute into O(T) memory</text></svg><figcaption>Speculation needs room for $\gamma$ unverified positions at once, so the cache is allocated ahead of the verified prefix. Read the per-layer size formula and note how the extra headroom scales with layers, heads, and head dimension.</figcaption></figure></p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<ol>
+<li><strong>Forward.</strong> Compute logits $\mathbf{z}_L\in\mathbb{R}^{V}$ for the final position from the KV cache; this pass is dominated by reading the weights, so its cost is nearly independent of how many positions you score.</li>
+<li><strong>Mask.</strong> Add any constraint mask $\mathbf{m}$ and any repetition or frequency penalty.</li>
+<li><strong>Temperature.</strong> Divide by $T$. If $T=0$, skip to the argmax.</li>
+<li><strong>Truncate.</strong> Compute $S$ by the chosen rule (top-$k$, top-$p$, min-$p$, typical) and set the logits outside $S$ to a large negative number.</li>
+<li><strong>Renormalize and sample.</strong> Compute $\operatorname{softmax}$ over $S$ and draw one index.</li>
+<li><strong>Append.</strong> Append the sampled token, update the KV cache and the penalty bookkeeping, and repeat.</li>
+</ol>
+<p>```text
+function DECODE(prompt, model, T, filter, max_new):
+    cache <- model.prefill(prompt)
+    logits <- model.last_logits()          # (V,)
+    out <- prompt
+    repeat max_new times:
+        z <- logits
+        z <- apply_penalties(z, counts(out))         # repetition, frequency
+        z <- apply_constraint_mask(z, parser_state)  # -1e9 outside the grammar
+        if T == 0:
+            tok <- argmax(z)
+        else:
+            z <- z / T
+            S <- support(filter, softmax(z))         # top-k / top-p / min-p / typical
+            z <- where(S, z, -1e9)
+            p <- softmax(z)
+            tok <- sample(p)
+        out.append(tok)
+        logits <- model.step(tok, cache)             # one position, cache reused
+    return out
+```</p>
+<p><strong>Complexity.</strong> Per generated token: $O(P)$ to read the weights plus $O(V)$ for the output head, plus $O(V\log V)$ if the filter sorts (top-$p$ does; top-$k$ needs only a partial selection, $O(V)$; min-$p$ is $O(V)$). Space: the KV cache is $2\cdot l\cdot n_{\mathrm{kv}}\cdot d_h\cdot L\cdot b$ bytes for $L$ positions and $b$ bytes per element. For $l=32$, $n_{\mathrm{kv}}=8$, $d_h=128$, $L=8192$, $b=2$: exactly 1.00 GiB.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="derivation-1-mean-nll-is-cross-entropy-and-its-floor-is-the-data-entropy">Derivation 1: mean NLL is cross-entropy, and its floor is the data entropy</h3>
+<p><strong>Step 1 — maximum likelihood.</strong> The likelihood of a corpus under the factorized model is $\prod_t p_\theta(x_t\mid x_{<t})$. Maximizing it is the same as maximizing its log, and the same as minimizing the negative:</p>
+<p>$$\arg\max_\theta \prod_t p_\theta(x_t\mid x_{<t}) = \arg\max_\theta \sum_t \log p_\theta(x_t\mid x_{<t}) = \arg\min_\theta \left(-\sum_t \log p_\theta(x_t\mid x_{<t})\right)$$</p>
+<p>Dividing by $N$ does not move the argmin, so the trained $\theta$ is the same whether you optimize the sum or the mean. The mean is used so the loss scale does not depend on batch size.</p>
+<p><strong>Step 2 — it is a cross-entropy.</strong> Let $\delta_t$ be the one-hot distribution over $V$ tokens placing all mass on the observed token $x_t$. Then the cross-entropy between $\delta_t$ and the model is</p>
+<p>$$H(\delta_t, p_\theta(\cdot\mid x_{<t})) = -\sum_{i=1}^{V}\delta_{t,i}\log p_\theta(i\mid x_{<t}) = -\log p_\theta(x_t\mid x_{<t})$$</p>
+<p>Averaging over positions, $\mathcal{L} = (1/N)\sum_t H(\delta_t, p_\theta)$. Mean NLL <em>is</em> mean cross-entropy; the two names refer to the same scalar.</p>
+<p><strong>Step 3 — decomposition.</strong> Since $H(\delta_t) = 0$ for a one-hot label,</p>
+<p>$$H(\delta_t, p_\theta) = H(\delta_t) + D_{\mathrm{KL}}(\delta_t \,\|\, p_\theta) = D_{\mathrm{KL}}(\delta_t\,\|\,p_\theta) = -\log p_\theta(x_t\mid x_{<t})$$</p>
+<p><strong>Step 4 — the population version.</strong> Let $p_{\text{data}}$ be the true distribution over token sequences. The expected loss is</p>
+<p>$$\mathbb{E}_{x\sim p_{\text{data}}}\left[-\log p_\theta(x)\right] = H(p_{\text{data}}) + D_{\mathrm{KL}}(p_{\text{data}}\,\|\,p_\theta)$$</p>
+<p>The first term does not depend on $\theta$, so training can only ever minimize the KL term, and the loss floor is $H(p_{\text{data}})$ — the entropy of the text itself. This is the precise sense in which lower loss means "closer to the data distribution", and the precise sense in which a loss of 2.0 nats cannot be interpreted without knowing the corpus.</p>
+<h3 id="derivation-2-temperature-changes-entropy-by-i244">Derivation 2: temperature changes entropy by $\mathrm{Var}_p(\mathbf{z})/T^{3}$</h3>
+<p>Write $\beta = 1/T$ so that $p_i = e^{\beta z_i}/Z$ with $Z = \sum_j e^{\beta z_j}$. First, the derivative of a single probability:</p>
+<p>$$\frac{\partial p_i}{\partial \beta} = \frac{z_i e^{\beta z_i}Z - e^{\beta z_i}\sum_j z_j e^{\beta z_j}}{Z^{2}} = p_i\left(z_i - \sum_j p_j z_j\right) = p_i\left(z_i - \bar{z}\right)$$</p>
+<p>where $\bar{z} = \mathbb{E}_p[z]$. Since $\partial\beta/\partial T = -1/T^{2}$,</p>
+<p>$$\frac{\partial p_i}{\partial T} = -\frac{1}{T^{2}}p_i\left(z_i-\bar{z}\right)$$</p>
+<p>Now differentiate the entropy $H = -\sum_i p_i\log p_i$:</p>
+<p>$$\frac{dH}{dT} = -\sum_i \frac{\partial p_i}{\partial T}\left(\log p_i + 1\right) = \frac{1}{T^{2}}\sum_i p_i\left(z_i-\bar{z}\right)\left(\log p_i + 1\right)$$</p>
+<p>Split the sum. The "$+1$" part is $\sum_i p_i(z_i-\bar{z}) = \bar{z}-\bar{z} = 0$. For the log part, substitute $\log p_i = \beta z_i - \log Z$:</p>
+<p>$$\frac{dH}{dT} = \frac{1}{T^{2}}\sum_i p_i\left(z_i-\bar{z}\right)\left(\beta z_i - \log Z\right) = \frac{\beta}{T^{2}}\sum_i p_i\left(z_i-\bar{z}\right)z_i - \frac{\log Z}{T^{2}}\cdot 0$$</p>
+<p>and the remaining sum is a variance:</p>
+<p>$$\sum_i p_i\left(z_i-\bar{z}\right)z_i = \sum_i p_i z_i^{2} - \bar{z}\sum_i p_i z_i = \mathbb{E}[z^{2}] - \bar{z}^{2} = \mathrm{Var}_p(\mathbf{z})$$</p>
+<p>Therefore</p>
+<p>$$\frac{dH}{dT} = \frac{\beta}{T^{2}}\mathrm{Var}_p(\mathbf{z}) = \frac{\mathrm{Var}_p(\mathbf{z})}{T^{3}} \ge 0$$</p>
+<p>So entropy increases with temperature, at a rate proportional to the variance of the logits under the current distribution and inversely to $T^{3}$. Two consequences: the effect is largest at small $T$ (where $1/T^{3}$ explodes, which is why small temperature changes matter a lot when sampling cold), and a distribution with all logits equal has zero variance so temperature does nothing at all — as it must.</p>
+<p><strong>The limits.</strong> As $T\to\infty$, $\beta\to0$, every $p_i\to1/V$, and $H\to\log V$. As $T\to0$, let $z_{\max}$ be the largest logit. Then</p>
+<p>$$p_{\max} = \frac{1}{1+\sum_{j\ne\max}e^{(z_j-z_{\max})/T}} \to \frac{1}{1+0} = 1$$</p>
+<p>because every exponent in the sum is negative and divided by a vanishing $T$. So the distribution collapses to the argmax and $H\to0$.</p>
+<h3 id="derivation-3-what-truncation-does-to-the-distribution">Derivation 3: what truncation does to the distribution</h3>
+<p>Let $S$ be the retained support and $Z_S = \sum_{i\in S}p_i$. The sampled distribution is $\tilde{p}_i = p_i/Z_S$ for $i\in S$ and zero elsewhere. Two facts follow immediately.</p>
+<p>First, the expected value of any statistic $f$ changes: $\mathbb{E}_{\tilde p}[f] \ne \mathbb{E}_p[f]$ in general, and specifically the truncation <em>raises</em> the probability of everything retained by the factor $1/Z_S$. This is why "sampling with top-$p$" is not "sampling from the model" — it is sampling from a different distribution that shares the model's ranking on $S$.</p>
+<p>Second, the KL cost of truncation is exactly the negative log of the retained mass:</p>
+<p>$$D_{\mathrm{KL}}(\tilde p\,\|\,p) = \sum_{i\in S}\frac{p_i}{Z_S}\log\frac{p_i/Z_S}{p_i} = \log\frac{1}{Z_S} = -\log Z_S$$</p>
+<p>So a top-$p$ of 0.9 that retains 0.9221 of the mass perturbs the distribution by $\log(1/0.9221) = 0.081$ nats. A high temperature (which flattens $p$ and lowers $p_{\max}$) tends to <em>increase</em> the retained mass for a fixed $p$ threshold, and therefore to reduce this distortion — which is the real reason "high temperature with top-$p$" behaves better than either alone.</p>
+<h3 id="derivation-4-speculative-decoding-is-exactly-distribution-preserving">Derivation 4: speculative decoding is exactly distribution-preserving</h3>
+<p><strong>Step 1 — the rejection probability.</strong> Define the acceptance probability $a(x) = \min(1, p(x)/q(x))$ and the rejection probability mass</p>
+<p>$$P(\text{reject}) = 1 - \sum_x q(x)a(x) = 1 - \sum_x \min(q(x), p(x))$$</p>
+<p><strong>Step 2 — an identity.</strong> Since $\sum_x p(x) = \sum_x q(x) = 1$, the total variation distance gives</p>
+<p>$$\sum_x \min(p(x),q(x)) = 1 - \frac{1}{2}\sum_x|p(x)-q(x)|$$</p>
+<p>and, because $(p-q)^{+} - (p-q)^{-} = p-q$ and these terms sum to zero overall,</p>
+<p>$$\sum_x \max(0, p(x)-q(x)) = \sum_x \max(0, q(x)-p(x)) = \frac{1}{2}\sum_x|p(x)-q(x)|$$</p>
+<p>Therefore</p>
+<p>$$P(\text{reject}) = 1-\sum_x\min(p,q) = \sum_x\max(0,p(x)-q(x))$$</p>
+<p><strong>Step 3 — the corrected distribution.</strong> Define $r(x) = \max(0,p(x)-q(x))/P(\text{reject})$, a valid distribution by Step 2.</p>
+<p><strong>Step 4 — the output law.</strong> For any token $x$,</p>
+<p>$$P(X=x) = q(x)\min\left(1,\frac{p(x)}{q(x)}\right) + P(\text{reject})\cdot r(x)$$</p>
+<p>The first term is $\min(q(x), p(x))$. The second is $P(\text{reject})\cdot\max(0,p(x)-q(x))/P(\text{reject}) = \max(0,p(x)-q(x))$. Summing:</p>
+<p>$$P(X=x) = \min(p(x),q(x)) + \max(0,p(x)-q(x)) = p(x)$$</p>
+<p>using $\min(a,b) + \max(0,a-b) = a$. So the sampler emits exactly $p$ — not approximately, and regardless of how bad $q$ is. A bad draft model costs speed, never quality. This is the whole appeal.</p>
+<p><strong>Step 5 — how many tokens per round.</strong> If each draft token is accepted independently with probability $\alpha$ (a reasonable approximation when the draft model's per-token agreement is roughly constant), then the number accepted before the first rejection is geometric, and the round produces $1$ extra token from the correction step when it rejects. With $\gamma$ drafts offered, the expected number of tokens produced per target forward pass is</p>
+<p>$$\mathbb{E}[\text{tokens}] = 1 + \alpha + \alpha^{2} + \cdots + \alpha^{\gamma} = \frac{1-\alpha^{\gamma+1}}{1-\alpha}$$</p>
+<p><strong>Step 6 — the speedup.</strong> One round costs one target step (1 unit) plus $\gamma$ draft steps at $c$ units each, so</p>
+<p>$$\text{speedup}(\gamma) = \frac{1-\alpha^{\gamma+1}}{(1-\alpha)(1+\gamma c)}$$</p>
+<p>This is maximized at a finite $\gamma$: the numerator saturates at $1/(1-\alpha)$ while the denominator grows linearly. Solving numerically:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">$\alpha$</th>
+<th style="text-align: right;">$c$</th>
+<th style="text-align: right;">optimal $\gamma$</th>
+<th style="text-align: right;">speedup</th>
+<th style="text-align: right;">$\lim_{\gamma\to\infty}$ bound</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.92</td>
+<td style="text-align: right;">50.0</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.8</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">3.09</td>
+<td style="text-align: right;">100.0</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.8</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">2.47</td>
+<td style="text-align: right;">50.0</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">4.67</td>
+<td style="text-align: right;">200.0</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">3.43</td>
+<td style="text-align: right;">100.0</td>
+</tr>
+</tbody>
+</table>
+<p>The bound column is $1/((1-\alpha)c)$, the asymptote if drafting were free — a useful reminder that the accept rate, not the draft model's speed, is the binding constraint once $c$ is small.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>```python
+import numpy as np
+
+
+def softmax(z, T=1.0):
+    z = np.asarray(z, dtype=np.float64) / T
+    z = z - z.max()                       # numerical stability
+    e = np.exp(z)
+    return e / e.sum()
+
+
+def filter_support(p, top_k=None, top_p=None, min_p=None, typical=None):
+    """Return a boolean mask over the vocabulary of tokens to keep."""
+    keep = np.ones_like(p, dtype=bool)
+    order = np.argsort(-p)
+
+    if top_k is not None:                 # fixed-size support
+        keep = np.zeros_like(keep)
+        keep[order[:top_k]] = True
+    if top_p is not None:                 # smallest prefix with mass >= top_p
+        csum = np.cumsum(p[order])
+        n = int(np.searchsorted(csum, top_p) + 1)
+        m = np.zeros_like(keep)
+        m[order[:n]] = True
+        keep &= m
+    if min_p is not None:                 # threshold relative to the peak
+        keep &= p >= min_p * p.max()
+    if typical is not None:               # |surprisal - entropy| <= typical
+        H = -(p * np.log(p + 1e-300)).sum()
+        keep &= np.abs(-np.log(p + 1e-300) - H) <= typical
+    if not keep.any():
+        keep[np.argmax(p)] = True         # never return an empty support
+    return keep
+
+
+def sample(logits, T=1.0, rng=None, **filters):
+    rng = rng or np.random.default_rng(0)
+    if T == 0.0:                          # greedy
+        return int(np.argmax(logits))
+    p = softmax(logits, T)
+    keep = filter_support(p, **filters)
+    p = np.where(keep, p, 0.0)
+    p = p / p.sum()                       # renormalise over the retained support
+    return int(rng.choice(len(p), p=p))
+
+
+def kv_cache_bytes(n_layer, n_kv_head, d_head, n_pos, bytes_per_elem=2):
+    """Two tensors (K and V) per layer, each n_kv_head x d_head x n_pos."""
+    return 2 * n_layer * n_kv_head * d_head * n_pos * bytes_per_elem
+
+
+if __name__ == "__main__":
+    z = np.array([3.0, 1.5, 0.8, 0.2, -0.5, -1.2, -2.0])
+    for T in (0.5, 1.0, 2.0):
+        p = softmax(z, T)
+        print(f"T={T}: p={np.round(p, 4)} H={-(p*np.log(p)).sum():.4f}")
+    print("top-k=3 ->", filter_support(softmax(z), top_k=3).astype(int))
+    print("top-p=.9 ->", filter_support(softmax(z), top_p=0.9).astype(int))
+    print("min-p=.1 ->", filter_support(softmax(z), min_p=0.1).astype(int))
+    print("KV GiB:", kv_cache_bytes(32, 8, 128, 8192) / 2**30)
+```</p>
+<p><strong>What to expect.</strong> Three temperature rows matching the table in the temperature section, the three masks each showing three <code>1</code>s for these logits (they agree here), and the KV-cache figure of exactly <code>1.0</code> GiB. Try logits <code>np.log([0.95, 0.02, 0.02, 0.01])</code> to see the filters disagree: top-$k=3$ keeps 3, top-$p=0.9$ keeps 1, min-$p=0.1$ keeps 1.</p>
+<h2 id="worked-example">Worked example</h2>
+<p>Decode one token from logits $\mathbf{z} = (3.0, 1.5, 0.8, 0.2, -0.5, -1.2, -2.0)$ with $T = 0.7$, top-$p = 0.9$, and a repetition penalty of $\theta = 1.2$ already applied to token 0 and token 1 (both with positive logits).</p>
+<p><strong>Step 1 — penalty.</strong> $z_0 = 3.0/1.2 = 2.5$, $z_1 = 1.5/1.2 = 1.25$. Others unchanged.</p>
+<p><strong>Step 2 — temperature.</strong> Divide by $0.7$: $(3.571, 1.786, 1.143, 0.286, -0.714, -1.714, -2.857)$.</p>
+<p><strong>Step 3 — softmax.</strong> Subtract the max $3.5714$ and exponentiate: $(1.0000, 0.1677, 0.0882, 0.0374, 0.0138, 0.0050, 0.0016)$, sum $= 1.3138$. So</p>
+<p>$$\mathbf{p} = (0.7612,\ 0.1276,\ 0.0671,\ 0.0285,\ 0.0105,\ 0.0039,\ 0.0012), \qquad H = 0.8305$$</p>
+<p><strong>Step 4 — top-$p = 0.9$.</strong> Cumulative: $0.7612$, $0.8888$, $0.9560$ — crosses $0.9$ at the third token. So $S = \{0,1,2\}$ and the retained mass is $Z_S = 0.9560$.</p>
+<p><strong>Step 5 — renormalize.</strong> $\tilde{p} = (0.7963,\ 0.1335,\ 0.0702)$. Sample from that.</p>
+<p><strong>Step 6 — measure the distortion.</strong> $D_{\mathrm{KL}}(\tilde p\,\|\,p) = -\log Z_S = -\log 0.9560 = 0.0450$ nats. Small, because the model was confident: three tokens held 96% of the mass, so truncating changed almost nothing. Take the same penalized logits at $T = 1.5$ instead: the distribution flattens, four tokens are needed to reach $0.9$, and $Z_S$ rises to about $0.98$, moving the KL down further — higher temperature makes a fixed $p$ threshold <em>less</em> distorting, which is the quantitative version of "high temperature with top-$p$ behaves better".</p>
+<p><strong>Step 7 — temperature's effect on entropy.</strong> At $T=0.7$, $H = 0.8305$; at $T=1.0$, $H = 1.2229$; at $T=1.5$, $H = 1.5600$. The formula says the instantaneous rate is $\mathrm{Var}_p(\mathbf{z})/T^{3}$, which evaluates to $1.6432$ at $T=0.7$, $1.0040$ at $T=1.0$, and $0.4337$ at $T=1.5$ — the rate itself falls because $T^{3}$ grows faster than the variance. Check the formula against the finite difference: over $[1.0, 1.5]$ the observed slope is $(1.5600-1.2229)/0.5 = 0.6742$, and the trapezoid average of the two endpoint rates is $(1.0040+0.4337)/2 = 0.7189$. They agree to 6%, the residual being trapezoid error over an interval where the rate changes by a factor of 2.3. The formula is a derivative, not a linear law: reading entropy differences off it across a wide temperature range will mislead you.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="temperature-i349-is-greedy-and-temperature-i350-is-the-models-true-distribution">"Temperature $0$ is greedy and temperature $1$ is the model's true distribution"</h3>
+<p>$T=1$ is the model's distribution <em>before</em> any truncation; once you apply top-$p$ or min-$p$ you are sampling from a renormalized distribution that differs by exactly $-\log Z_S$ in KL. And a scripted API's default "temperature 1" is typically combined with a default top-$p$ near 1, which still truncates the tail. Only an unmasked softmax with no penalty is the model's distribution.</p>
+<h3 id="beam-search-gives-better-text-because-it-optimizes-the-objective">"Beam search gives better text because it optimizes the objective"</h3>
+<p>It optimizes the objective better, and the objective is the wrong one for open-ended generation. Maximizing sequence likelihood selects the mode of a distribution over strings, and the mode of a language model trained on diverse text is a bland, self-repeating sequence. Human-judged quality typically peaks at small beam widths and declines after.</p>
+<h3 id="perplexity-tells-you-how-good-the-model-is">"Perplexity tells you how good the model is"</h3>
+<p>It tells you how well it predicts one corpus at one tokenization. A model can have excellent perplexity and be useless at following instructions, and a model fine-tuned on a narrow distribution can <em>reduce</em> perplexity on that distribution while getting worse at everything else. Perplexity is a compression measure, not a capability measure.</p>
+<h3 id="sampling-parameters-are-cosmetic">"Sampling parameters are cosmetic"</h3>
+<p>They change which distribution you draw from, and therefore the expected quality, diversity, and pass@1 of the system. Truncation changes the sampling distribution by a measurable KL divergence; temperature changes entropy at rate $\mathrm{Var}(\mathbf{z})/T^{3}$; repetition penalties distort confident predictions more than weak ones. These are the levers that decide whether a demo works.</p>
+<h3 id="constrained-decoding-gives-you-the-models-distribution-over-valid-outputs">"Constrained decoding gives you the model's distribution over valid outputs"</h3>
+<p>It gives you the model's distribution <em>conditioned on the constraint by renormalization at each step</em>, which is the same thing only when the model's preferred continuation was already valid. When the preferred token is masked, the mass moves to the next-best token, and the resulting text can be markedly less fluent than an unconstrained sample that happens to be valid. The correct comparison is to rejection sampling conditioned on validity, which is generally a different distribution.</p>
+<h3 id="speculative-decoding-trades-a-little-quality-for-speed">"Speculative decoding trades a little quality for speed"</h3>
+<p>It trades nothing. Derivation 4 shows the output law is exactly $p$ for any draft distribution $q$. A draft model that agrees 10% of the time gives you almost no speedup; it never gives you worse text.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>1.</strong> Six tokens with probabilities $0.5, 0.2, 0.1, 0.1, 0.05, 0.05$. Compute the loss and the perplexity.</p>
+<p><strong>2.</strong> Given $\mathbf{z} = (1,1,1,1)$, what is $dH/dT$ at any $T$, and why?</p>
+<p><strong>3.</strong> A distribution has $p_{\max} = 0.4$ and 200 other tokens with $p_i \approx 0.003$. Which of top-$k=10$, top-$p=0.9$, min-$p=0.1$ keeps the most tokens?</p>
+<details><summary>Solution</summary>
+
+1. $\mathcal{L} = -(0.5\log 0.5 + 0.2\log 0.2 + 2(0.1\log 0.1) + 2(0.05\log 0.05)) = 0.3466 + 0.3219 + 0.4605 + 0.2996 = 1.4286$ nats, so $\mathrm{PP} = e^{1.4286} = 4.17$. Read it as the $p$-weighted geometric mean of the surprisals, $\exp(\sum_i p_i\log(1/p_i))$. Do not take the unweighted geometric mean: for these six tokens that would be $(2\cdot 5\cdot 10\cdot 10\cdot 20\cdot 20)^{1/6} = 8.58$, which is wrong because perplexity weights each surprisal by how often it occurs.
+2. Zero, because all logits are equal so $\mathrm{Var}_p(\mathbf{z}) = 0$; the distribution is already uniform and temperature cannot change it.
+3. Top-$p=0.9$: the mass above $p_{\max}$ accumulates slowly, so it retains roughly $0.4 + 0.5/0.003 \approx 167$ tokens. Top-$k=10$ keeps 10 by construction. Min-$p = 0.1$ requires $p_i \ge 0.04$, which no token except the first satisfies, so it keeps 1. Top-$p$ keeps by far the most.
+
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>4.</strong> Derive $dH/dT$ from scratch for two logits $z_1 = 0$, $z_2 = -\Delta$ and verify it against the formula $\mathrm{Var}_p(\mathbf{z})/T^{3}$.</p>
+<details><summary>Solution</summary>
+
+$p_1 = 1/(1+e^{-\Delta/T})$, $p_2 = e^{-\Delta/T}/(1+e^{-\Delta/T})$. Let $\sigma = p_1$. Then $H = -\sigma\log\sigma - (1-\sigma)\log(1-\sigma)$, and $d\sigma/dT = \sigma(1-\sigma)\Delta/T^{2}$. So
+
+$$dH/dT = (dH/d\sigma)(d\sigma/dT) = \log\frac{1-\sigma}{\sigma}\cdot\sigma(1-\sigma)\frac{\Delta}{T^{2}}$$
+
+Now $\log((1-\sigma)/\sigma) = -\Delta/T$ (from the definition of $\sigma$), so
+
+$$dH/dT = -\frac{\Delta}{T}\sigma(1-\sigma)\frac{\Delta}{T^{2}}$$
+
+Wait for the sign: $dH/d\sigma = \log((1-\sigma)/\sigma)$, and $\sigma > 1/2$ makes this negative, which would give negative $dH/dT$ — so check $d\sigma/dT$: as $T$ rises the distribution flattens and $\sigma \to 1/2$, so $d\sigma/dT < 0$ for $\sigma>1/2$. With $d\sigma/dT = -\sigma(1-\sigma)\Delta/T^{2}$,
+
+$$dH/dT = \log\frac{1-\sigma}{\sigma}\cdot\left(-\sigma(1-\sigma)\frac{\Delta}{T^{2}}\right) = \left(-\frac{\Delta}{T}\right)\left(-\sigma(1-\sigma)\frac{\Delta}{T^{2}}\right) = \frac{\Delta^{2}\sigma(1-\sigma)}{T^{3}}$$
+
+And for two points, $\mathrm{Var}_p(z) = \sigma(1-\sigma)(z_1-z_2)^{2} = \sigma(1-\sigma)\Delta^{2}$, so this equals $\mathrm{Var}_p(\mathbf{z})/T^{3}$. Confirmed.
+
+</details>
+
+<p><strong>5.</strong> A draft model agrees with the target with per-token acceptance $\alpha = 0.75$ and costs $c = 0.08$. Compute the speedup for $\gamma \in \{1,2,4,8,16\}$ and identify the optimum.</p>
+<details><summary>Solution</summary>
+
+$\mathbb{E}[\text{tokens}] = (1-\alpha^{\gamma+1})/(1-\alpha) = 4(1-0.75^{\gamma+1})$.
+$\gamma=1$: $4(1-0.5625)=1.75$; denominator $1.08$; speedup $1.62$.
+$\gamma=2$: $4(1-0.4219)=2.312$; $1.16$; $1.99$.
+$\gamma=4$: $4(1-0.2373)=3.051$; $1.32$; $2.31$.
+$\gamma=8$: $4(1-0.0751)=3.700$; $1.64$; $2.26$.
+$\gamma=16$: $4(1-0.0075)=3.970$; $2.28$; $1.74$.
+The optimum is around $\gamma=5$–$6$ at roughly 2.33x. Note the asymptote: $\mathbb{E}[\text{tokens}] \to 4$, so the ceiling with $c=0.08$ is $4/(1+0.08\gamma)$, which is maximized at $\gamma=0$ — meaning the tradeoff is entirely about how much drafting you buy per round.
+
+</details>
+
+<p><strong>6.</strong> Prove that a repetition penalty of the form $z_i \mapsto z_i/\theta$ for $z_i>0$ is not scale-invariant, and show what that implies for two tokens with logits 4 and 20.</p>
+<details><summary>Solution</summary>
+
+The multiplicative change is $z/\theta$, so the *absolute* drop is $z(1-1/\theta)$, which grows with $z$; the *relative* drop is the constant $1-1/\theta$. In log-odds terms the penalty depends on the logit's magnitude, so a confidently-correct repetition (logit 20) loses $20(0.1667) = 3.33$ nats while a marginal one (logit 4) loses $0.667$. Since the softmax depends on logit differences, the penalty's effect on the *ranking* is therefore inconsistent: it can demote a highly confident token below a weak one when both are penalized. The additive frequency penalty $\lambda_f c_i$ has the opposite property — constant absolute shift, so it preserves differential structure and is easier to tune.
+
+</details>
+
+<p><strong>7.</strong> Show that the softmax bottleneck bounds the rank of the log-probability matrix by $d$, and compute the bound for a model with $d = 4096$ on a corpus of 10,000 positions.</p>
+<details><summary>Solution</summary>
+
+$\mathbf{Z} = \mathbf{H}\mathbf{W}^{\top}$ with $\mathbf{H}\in\mathbb{R}^{N\times d}$ and $\mathbf{W}\in\mathbb{R}^{V\times d}$. For any product $\mathbf{A}\mathbf{B}$ with $\mathbf{A}$ of rank $\le r_1$ and $\mathbf{B}$ of rank $\le r_2$, $\operatorname{rank}(\mathbf{A}\mathbf{B})\le\min(r_1,r_2)$; here both factors have rank at most $d$ since their inner dimension is $d$. So $\operatorname{rank}(\mathbf{Z})\le d = 4096$. For $N=10{,}000$ and $V=50{,}257$, the matrix has $5.03\times10^{8}$ entries but rank at most 4096, i.e. at most 4096 independent directions across the vocabulary dimension. Note the softmax normalization is a row-wise constant, which does not change the rank of the log-probabilities.
+
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>8.</strong> Implement speculative decoding for a 3-token vocabulary and empirically verify that the output distribution matches $p$ to within sampling error, using a deliberately bad $q$.</p>
+<details><summary>Solution</summary>
+
+```python
+import numpy as np
+rng = np.random.default_rng(0)
+p = np.array([0.7, 0.2, 0.1])
+q = np.array([0.1, 0.1, 0.8])          # deliberately disagreeing draft
+
+def one_draw():
+    x = rng.choice(3, p=q)
+    if rng.random() < min(1.0, p[x] / q[x]):
+        return x
+    r = np.maximum(0.0, p - q)
+    return int(rng.choice(3, p=r / r.sum()))
+
+emp = np.bincount([one_draw() for _ in range(200_000)], minlength=3) / 200_000
+print(np.round(emp, 4), "vs", p)
+```
+With 200k draws the empirical frequencies land within about 0.002 of $p$. The check that makes the proof concrete: $\sum\max(0,p-q) = 0.1 + 0.1 + 0 = 0.2$, and the rejection probability computed as $1 - \sum\min(p,q) = 1 - 0.8 = 0.2$ — they agree, which is the identity the proof rests on.
+
+</details>
+
+<p><strong>9.</strong> Build the logit mask for the constraint "the output must be one of the integers 1 to 5". What goes wrong if the tokenizer splits a number across tokens, and how do you fix it?</p>
+<details><summary>Solution</summary>
+
+At the first position, mask to tokens whose string is a prefix of some allowed string (`1`,`2`,`3`,`4`,`5`). Once a token is chosen, the constraint is satisfied, so subsequent positions are either all-masked-out (stop) or masked to an end-of-sequence token. Implementation: keep a set of allowed strings, track the string emitted so far, and at each step mask to tokens $u$ such that emitted+$u$ is a prefix of some allowed string, plus EOS if emitted is itself allowed.
+The problem: a tokenizer may encode `12` as a single token, or `1` and `5` as parts of multi-character tokens like `15` or `1.`; then the set of *tokens* that can start `1` includes strings that do not start with `1` as a character sequence, or vice versa. If the vocabulary contains no token equal to `5` (because `5` is always part of a longer token), the constraint is unsatisfiable. The fixes are (i) build the mask by matching on the token's decoded string, not its identity; (ii) use a tokenizer-aware trie so each grammar state maps to the set of legal token IDs; (iii) allow "token healing" — retract the last token and re-decode from a shorter prefix so a clean boundary is possible.
+
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>State the autoregressive factorization and whether it is exact.</li>
+<li>Show that minimizing mean NLL is minimizing cross-entropy, in three lines.</li>
+<li>Write perplexity two ways and explain what it means as a branching factor.</li>
+<li>Give three reasons two perplexity values may be incomparable.</li>
+<li>State the sign and magnitude of $dH/dT$ and what happens when the logits are equal.</li>
+<li>What does each of top-$k$, top-$p$, min-$p$ adapt to, and which fails when the model is confident?</li>
+<li>Why is beam search a poor choice for open-ended generation?</li>
+<li>State the speculative-decoding acceptance rule and the one identity the correctness proof depends on.</li>
+<li>What is the KL cost of truncating to a support carrying mass $Z_S$?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $p(x_{1:T}) = \prod_{t=1}^{T}p(x_t\mid x_{<t})$. Exact for any distribution over sequences — it is the chain rule, not an independence assumption.
+2. MLE maximizes $\sum_t\log p_\theta(x_t\mid x_{<t})$, which is minimizing $-\sum_t\log p_\theta$; with one-hot labels $\delta_t$, $-\log p_\theta(x_t\mid x_{<t}) = H(\delta_t,p_\theta)$, so the mean NLL is the mean cross-entropy.
+3. $\mathrm{PP} = \exp(\mathcal{L})$ and $\mathrm{PP} = (\prod_t 1/p_t)^{1/N}$ — the $p$-weighted geometric mean of inverse probabilities. A uniform $K$-way distribution gives $\mathrm{PP}=K$, the effective number of choices per step.
+4. Different tokenizers (loss is per token); different corpora (different entropy floor); different normalization or domain mix, which changes what fraction of positions are trivially predictable.
+5. $dH/dT = \mathrm{Var}_p(\mathbf{z})/T^{3} > 0$ unless all logits are equal, in which case it is zero and temperature has no effect at all.
+6. Top-$k$ adapts to nothing (fixed size) and keeps $k-1$ implausible tokens when the model is confident. Top-$p$ adapts to cumulative mass and can retain a long fat tail when flat. Min-$p$ adapts to the peak and is the most conservative when the model is confident. Typical adapts to the surprisal's distance from the entropy.
+7. It maximizes sequence likelihood, and the mode of a diverse-corpus LM is degenerate: bland, repetitive, unrepresentative. Likelihood and human-judged quality are negatively correlated past a small beam width.
+8. Draw $x\sim q$; accept with probability $\min(1,p(x)/q(x))$; otherwise sample from $r\propto\max(0,p-q)$. The proof needs $\sum_x\max(0,p(x)-q(x)) = 1-\sum_x\min(p(x),q(x))$.
+9. $D_{\mathrm{KL}}(\tilde p\|p) = -\log Z_S$.
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><strong>Bengio et al., "A Neural Probabilistic Language Model" (2003).</strong> The paper that replaced $n$-gram tables with a neural conditional; extract the argument for why the factorization needs a shared parametric function.</li>
+<li><strong>Holtzman et al., "The Curious Case of Neural Text Degeneration" (2020).</strong> Introduces nucleus sampling and documents the beam-search curse with human evaluations. Extract the experiments showing likelihood and quality diverge.</li>
+<li><strong>Fan, Lewis, Dauphin, "Hierarchical Neural Story Generation" (2018).</strong> Where top-$k$ sampling was introduced, with the truncation-versus-quality curves.</li>
+<li><strong>Yang et al., "Breaking the Softmax Bottleneck" (2018).</strong> The rank argument in Derivation 3's spirit, plus mixture-of-softmaxes as the remedy.</li>
+<li><strong>Leviathan, Kalman, Matias, "Fast Inference from Transformers via Speculative Decoding" (2023)</strong> and <strong>Chen et al., "Accelerating Large Language Model Decoding with Speculative Sampling" (2023).</strong> The two independent introductions; read one for the proof and the other for the empirical speedup curves.</li>
+<li><strong>Willard and Louf, "Efficient Guided Generation for Large Language Models" (2023).</strong> Grammar-constrained decoding as an index over token sequences; extract the construction of the token-level mask from a finite automaton.</li>
+<li><strong>Jurafsky and Martin, <em>Speech and Language Processing</em>, chapter on $n$-gram language models (free draft online).</strong> The clearest treatment of perplexity, smoothing, and why per-token metrics mislead.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when you can, without notes:</p>
+<ul>
+<li>Write the chain-rule factorization, prove it by induction, and say why it costs no modelling assumptions.</li>
+<li>Reproduce the NLL-equals-cross-entropy derivation through the data-entropy plus KL decomposition.</li>
+<li>Derive $dH/dT = \mathrm{Var}_p(\mathbf{z})/T^{3}$ and interpret both limiting cases.</li>
+<li>Implement top-$k$, top-$p$, and min-$p$, and say what each keeps that the others discard.</li>
+<li>Prove speculative decoding preserves the target distribution, and compute the optimal draft length for a given $\alpha$ and $c$.</li>
+<li>Explain the training/decoding mismatch in one paragraph, naming the objective each side optimizes.</li>
+</ul><div class="pager"><a id="prevlink" href="../m/14-tokenization.html"><small>← previous</small><b>M14 · Tokenization</b></a><a id="nextlink" class="next" href="../m/16-pretraining-scaling.html"><small>next →</small><b>M16 · Pretraining and Scaling Laws</b></a></div></article>
+</main>
+</div>
+</body></html>

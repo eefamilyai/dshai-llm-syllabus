@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A · Formula Sheet — From Zero to Frontier</title>
+<meta name="description" content="Every equation in the course, grouped by module, one line of meaning each.">
+<meta property="og:title" content="A · Formula Sheet — From Zero to Frontier">
+<meta property="og:description" content="Every equation in the course, grouped by module, one line of meaning each.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="on" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Appendices / A</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="A">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">A</span><span class="pill d2">difficulty 2/5</span><span class="pill">0 weeks</span><span class="pill">prereqs: none</span><span class="pill">3,140 words</span></div><h1>Formula Sheet</h1><p class="tagline">Every equation in the course, grouped by module, one line of meaning each.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="how-to-use-this-sheet">How to use this sheet</h2>
+<p>This is a reference, not a lesson. Each entry is the formula as the module derives it, followed by one sentence stating what the symbol structure <em>means</em> — the sentence is the part that makes the formula retrievable under pressure. If a line does not make sense on its own, the module id in the heading is where the derivation lives.</p>
+<p>Conventions follow the global notation: $\mathbf{x}$ is a column vector, $\mathbf{X}$ a matrix with $n$ rows, $\odot$ elementwise product, $\mathbf{1}$ a vector of ones, $\sigma$ the logistic sigmoid, and $\|\cdot\|_F$ the Frobenius norm. All logarithms are natural unless the formula says $\log_2$.</p>
+<h2 id="m01-linear-algebra">M01 — Linear algebra</h2>
+<p>$$\mathbf{A} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^\top$$</p>
+<p>The SVD: every matrix is a rotation, a non-negative scaling along orthogonal axes, and another rotation — the singular values are how much each axis is stretched.</p>
+<p>$$\mathbf{A}\mathbf{v} = \lambda\mathbf{v}$$</p>
+<p>An eigenvector is a direction the matrix does not rotate; the eigenvalue is the factor by which it stretches that direction.</p>
+<p>$$\mathbf{A}^\top\mathbf{A}\mathbf{v} = \lambda^2\mathbf{v}, \qquad \|\mathbf{A}\|_2 = \sigma_{\max}$$</p>
+<p>Right singular vectors are eigenvectors of $\mathbf{A}^\top\mathbf{A}$ and the singular values are the square roots of its eigenvalues; the spectral norm is the largest stretch.</p>
+<p>$$\operatorname{rank}(\mathbf{A}) = \#\{\sigma_i > 0\}, \qquad \mathbf{A}^{+} = \mathbf{V}\boldsymbol{\Sigma}^{+}\mathbf{U}^\top$$</p>
+<p>Rank counts the non-zero singular values; the pseudoinverse inverts only those directions and is the minimum-norm least-squares solution.</p>
+<p>$$\mathbf{x}^\top\mathbf{y} = \|\mathbf{x}\|\|\mathbf{y}\|\cos\theta$$</p>
+<p>The inner product measures alignment, which is why cosine similarity is the inner product of normalised vectors.</p>
+<p>$$\operatorname{tr}(\mathbf{A}\mathbf{B}) = \operatorname{tr}(\mathbf{B}\mathbf{A}), \qquad \det(\mathbf{A}\mathbf{B}) = \det(\mathbf{A})\det(\mathbf{B})$$</p>
+<p>Trace is invariant to cyclic permutation and determinant is multiplicative — both used constantly when differentiating matrix expressions.</p>
+<h2 id="m02-matrix-calculus">M02 — Matrix calculus</h2>
+<p>$$\frac{\partial (\mathbf{a}^\top\mathbf{x})}{\partial\mathbf{x}} = \mathbf{a}, \qquad \frac{\partial (\mathbf{x}^\top\mathbf{A}\mathbf{x})}{\partial\mathbf{x}} = (\mathbf{A} + \mathbf{A}^\top)\mathbf{x}$$</p>
+<p>The two workhorses: a linear form differentiates to its coefficient vector, and a quadratic form to the symmetrised matrix times the vector.</p>
+<p>$$\frac{\partial (\mathbf{A}\mathbf{x})}{\partial\mathbf{x}} = \mathbf{A}, \qquad \frac{\partial\,\mathbf{x}^\top\mathbf{A}}{\partial\mathbf{x}} = \mathbf{A}^\top$$</p>
+<p>Shape discipline: the Jacobian of a linear map is the matrix itself, and transposition is what makes the shapes close.</p>
+<p>$$\frac{\partial \operatorname{tr}(\mathbf{A}\mathbf{X})}{\partial\mathbf{X}} = \mathbf{A}^\top, \qquad \frac{\partial \log\det\mathbf{X}}{\partial\mathbf{X}} = \mathbf{X}^{-\top}$$</p>
+<p>Trace-linear and log-det are the two matrix functions whose derivatives you should know by heart; both appear in Gaussian likelihoods and in normalising flows.</p>
+<p>$$\frac{\partial \|\mathbf{X}\|_F^2}{\partial\mathbf{X}} = 2\mathbf{X}, \qquad \frac{\partial \sigma(\mathbf{x})}{\partial\mathbf{x}} = \operatorname{diag}\big(\sigma(\mathbf{x})\odot(1-\sigma(\mathbf{x}))\big)$$</p>
+<p>Frobenius norm differentiates to twice the matrix; the elementwise sigmoid has a diagonal Jacobian because its outputs do not interact.</p>
+<p>$$\frac{\partial \mathcal{L}}{\partial \boldsymbol{\theta}} = \sum_{i}\frac{\partial \mathcal{L}}{\partial \mathbf{z}_i}\frac{\partial \mathbf{z}_i}{\partial \boldsymbol{\theta}}$$</p>
+<p>The chain rule in the form you actually use: sum over the paths, multiply local Jacobians along each path.</p>
+<h2 id="m03-probability-and-information">M03 — Probability and information</h2>
+<p>$$H(p) = -\sum_i p_i\log p_i, \qquad H(p,q) = -\sum_i p_i\log q_i$$</p>
+<p>Entropy is the expected surprise under $p$; cross-entropy is the expected surprise when coding $p$'s events with $q$'s code.</p>
+<p>$$D_{\mathrm{KL}}(p\,\|\,q) = \sum_i p_i\log\frac{p_i}{q_i} = H(p,q) - H(p)$$</p>
+<p>KL is the extra cost of the wrong code — non-negative, asymmetric, and zero only when $p=q$.</p>
+<p>$$\operatorname{Perplexity} = \exp(H(p,q)) = \exp\Big(-\frac{1}{T}\sum_{t=1}^{T}\log q(x_t)\Big)$$</p>
+<p>Perplexity is the effective branching factor: a perplexity of 20 means the model is as uncertain as a uniform choice among 20 tokens.</p>
+<p>$$\mathcal{L}_{\mathrm{CE}} = -\sum_i y_i \log \hat y_i, \qquad \frac{\partial \mathcal{L}_{\mathrm{CE}}}{\partial \mathbf{z}} = \hat{\mathbf{y}} - \mathbf{y}$$</p>
+<p>With logits $\mathbf{z}$ and $\hat{\mathbf{y}} = \operatorname{softmax}(\mathbf{z})$, the gradient of cross-entropy is the prediction minus the target — the single most reused result in the course.</p>
+<p>$$\operatorname{softmax}(\mathbf{z})_i = \frac{e^{z_i}}{\sum_j e^{z_j}}, \qquad \frac{\partial \operatorname{softmax}(\mathbf{z})}{\partial \mathbf{z}} = \operatorname{diag}(\hat{\mathbf{y}}) - \hat{\mathbf{y}}\hat{\mathbf{y}}^\top$$</p>
+<p>The softmax Jacobian is the covariance-like matrix $\operatorname{diag}(\hat y) - \hat y\hat y^\top$; it is singular along $\mathbf{1}$ because softmax is shift-invariant.</p>
+<p>$$\operatorname{softmax}(\mathbf{z}/\tau)_i, \qquad \tau \to 0 \text{ gives argmax}, \quad \tau \to \infty \text{ gives uniform}$$</p>
+<p>Temperature divides the logits: it rescales the distribution's sharpness without changing its ordering.</p>
+<p>$$\mathrm{Var}[\hat p] = \frac{p(1-p)}{n}$$</p>
+<p>The standard error of a proportion — the arithmetic behind every evaluation confidence interval.</p>
+<p>$$\mathrm{Var}[\hat p_A - \hat p_B] = \frac{2p(1-p)(1-\rho)}{n}$$</p>
+<p>Paired comparisons are tighter by $\sqrt{1-\rho}$, which is why the same items must be used for both systems.</p>
+<p>$$I(X;Y) = \sum_{x,y} p(x,y)\log\frac{p(x,y)}{p(x)p(y)}$$</p>
+<p>Mutual information is the KL between the joint and the product of marginals — how much knowing $X$ tells you about $Y$.</p>
+<p>$$p(y\mid x) = \frac{p(x\mid y)p(y)}{p(x)}$$</p>
+<p>Bayes' rule, in the form used for posterior updates and for the reward-model derivation.</p>
+<h2 id="m04-optimisation">M04 — Optimisation</h2>
+<p>$$\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \eta\nabla_{\boldsymbol{\theta}}\mathcal{L}(\boldsymbol{\theta}_t)$$</p>
+<p>Gradient descent: step downhill by the learning rate times the gradient.</p>
+<p>$$\mathbf{v}_{t} = \mu\mathbf{v}_{t-1} + \nabla_{\boldsymbol{\theta}}\mathcal{L}, \qquad \boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \eta\mathbf{v}_t$$</p>
+<p>Momentum accumulates an exponential moving average of gradients, damping oscillation across steep directions.</p>
+<p>$$\mathbf{m}_t = \beta_1\mathbf{m}_{t-1} + (1-\beta_1)\mathbf{g}_t, \qquad \mathbf{v}_t = \beta_2\mathbf{v}_{t-1} + (1-\beta_2)\mathbf{g}_t^{\,2}$$</p>
+<p>Adam's first and second moments: a smoothed gradient and a smoothed squared gradient, both elementwise.</p>
+<p>$$\hat{\mathbf{m}}_t = \frac{\mathbf{m}_t}{1-\beta_1^t}, \qquad \hat{\mathbf{v}}_t = \frac{\mathbf{v}_t}{1-\beta_2^t}, \qquad \boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \eta\frac{\hat{\mathbf{m}}_t}{\sqrt{\hat{\mathbf{v}}_t} + \epsilon}$$</p>
+<p>Bias correction removes the zero-initialisation lag; the update is a step of size roughly $\eta$ in each coordinate, normalised by that coordinate's gradient scale.</p>
+<p>$$\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \eta\Big(\frac{\hat{\mathbf{m}}_t}{\sqrt{\hat{\mathbf{v}}_t}+\epsilon} + \lambda\boldsymbol{\theta}_t\Big)$$</p>
+<p>AdamW: weight decay is decoupled from the adaptive denominator, so it is a genuine shrinkage toward zero rather than a rescaled one.</p>
+<p>$$\mathbf{s}_t = \mathbf{s}_{t-1} + \mathbf{g}_t^{\,2}, \qquad \boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \frac{\eta}{\sqrt{\mathbf{s}_t}+\epsilon}\mathbf{g}_t$$</p>
+<p>AdaGrad: the learning rate per coordinate decays as the inverse square root of accumulated squared gradients — monotone, so it stalls on long runs.</p>
+<p>$$\mathbf{s}_t = \gamma\mathbf{s}_{t-1} + (1-\gamma)\mathbf{g}_t^{\,2}, \qquad \boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \frac{\eta}{\sqrt{\mathbf{s}_t}+\epsilon}\mathbf{g}_t$$</p>
+<p>RMSProp: the same normalisation with a decaying average, which is what makes it usable for non-stationary objectives.</p>
+<p>$$\operatorname{clip}(\mathbf{g}, c) = \mathbf{g}\cdot\min\Big(1, \frac{c}{\|\mathbf{g}\|}\Big)$$</p>
+<p>Global-norm clipping rescales the whole gradient when its norm exceeds $c$, preserving direction — the standard defence against loss spikes.</p>
+<p>$$\eta_t = \eta_{\min} + \tfrac{1}{2}(\eta_{\max}-\eta_{\min})\big(1+\cos(\pi t/T)\big)$$</p>
+<p>Cosine decay: smooth, monotone, and the default for language-model training.</p>
+<p>$$\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \eta_t\nabla\mathcal{L}, \qquad \eta_t = \eta_{\max}\cdot\frac{t}{T_w} \text{ for } t<T_w$$</p>
+<p>Linear warmup over $T_w$ steps exists because adaptive optimisers have unreliable second-moment estimates early, when the variance of the update is largest.</p>
+<p>$$\boldsymbol{\theta}_{t+1} = \operatorname*{arg\,min}_{\boldsymbol{\theta}}\Big(\mathcal{L}(\boldsymbol{\theta}) + \frac{1}{2\eta}\|\boldsymbol{\theta}-\boldsymbol{\theta}_t\|^2\Big)$$</p>
+<p>The proximal view: a gradient step is a penalty on movement, which is why the learning rate <em>is</em> a trust region.</p>
+<h2 id="m05-classical-machine-learning">M05 — Classical machine learning</h2>
+<p>$$\hat{R}(h) = \frac{1}{n}\sum_{i=1}^{n}\mathbb{1}[h(\mathbf{x}_i)\ne y_i], \qquad R(h) = \mathbb{E}_{(\mathbf{x},y)\sim\mathcal{D}}\big[\mathbb{1}[h(\mathbf{x})\ne y]\big]$$</p>
+<p>Empirical risk is what you measure; true risk is what you want — the gap is generalisation.</p>
+<p>$$\mathbb{E}\big[(y-\hat f(\mathbf{x}))^2\big] = \operatorname{Bias}^2 + \operatorname{Var} + \sigma_{\text{noise}}^2$$</p>
+<p>The bias–variance decomposition: expected squared error splits into systematic error, sensitivity to the training set, and irreducible noise.</p>
+<p>$$\text{Gini}(S) = 1 - \sum_{k} p_k^2, \qquad \text{IG} = \text{Gini}(S) - \sum_{v}\frac{|S_v|}{|S|}\text{Gini}(S_v)$$</p>
+<p>A decision-tree split maximises the impurity drop, which is a greedy approximation to a global objective.</p>
+<p>$$\mathcal{L}_{\text{ridge}} = \|\mathbf{y}-\mathbf{X}\boldsymbol{\beta}\|^2 + \lambda\|\boldsymbol{\beta}\|^2, \qquad \hat{\boldsymbol{\beta}} = (\mathbf{X}^\top\mathbf{X}+\lambda\mathbf{I})^{-1}\mathbf{X}^\top\mathbf{y}$$</p>
+<p>L2 regularisation shrinks coefficients toward zero and makes the normal equations invertible when $\mathbf{X}^\top\mathbf{X}$ is singular.</p>
+<h2 id="m06m07-networks-and-backpropagation">M06–M07 — Networks and backpropagation</h2>
+<p>$$\mathbf{z}^{(l)} = \mathbf{W}^{(l)}\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}, \qquad \mathbf{a}^{(l)} = \phi(\mathbf{z}^{(l)})$$</p>
+<p>A layer is an affine map followed by a pointwise nonlinearity; without $\phi$ the stack collapses to one matrix.</p>
+<p>$$\mathbf{a}^{(l)} = \mathbf{a}^{(l-1)} + F(\mathbf{a}^{(l-1)})$$</p>
+<p>A residual connection makes the identity a default and lets the network learn a correction — the reason very deep stacks train at all.</p>
+<p>$$\boldsymbol{\delta}^{(L)} = \nabla_{\mathbf{a}^{(L)}}\mathcal{L}\odot\phi'(\mathbf{z}^{(L)})$$</p>
+<p>The delta at the output layer: the loss gradient through the activation's local derivative.</p>
+<p>$$\boldsymbol{\delta}^{(l)} = \big(\mathbf{W}^{(l+1)\top}\boldsymbol{\delta}^{(l+1)}\big)\odot\phi'(\mathbf{z}^{(l)})$$</p>
+<p>The backward recursion — each layer's delta is the next layer's delta pushed back through its weights and gated by its own activation derivative.</p>
+<p>$$\frac{\partial\mathcal{L}}{\partial\mathbf{W}^{(l)}} = \boldsymbol{\delta}^{(l)}\mathbf{a}^{(l-1)\top}, \qquad \frac{\partial\mathcal{L}}{\partial\mathbf{b}^{(l)}} = \boldsymbol{\delta}^{(l)}$$</p>
+<p>The weight gradient is an outer product of the incoming delta and the layer's input — which is why activations must be kept for the backward pass.</p>
+<p>$$a^{(l)}_i = \sum_j W_{ij}z_j \;\Rightarrow\; \bar z_j = \sum_i W_{ij}\bar a_i, \qquad \bar W_{ij} = \bar a_i z_j$$</p>
+<p>A matrix multiply's backward pass is two matmuls with the operands swapped and transposed — the reason autodiff for linear layers is nearly free.</p>
+<p>$$\phi_{\text{ReLU}}(z) = \max(0,z), \quad \phi'_{\text{ReLU}}(z) = \mathbb{1}[z>0]; \qquad \phi_{\text{GELU}}(z) = z\,\Phi(z)$$</p>
+<p>ReLU's derivative is a gate; GELU's is a smooth, probabilistically motivated version of the same gate.</p>
+<h2 id="m08-initialisation-normalisation-generalisation">M08 — Initialisation, normalisation, generalisation</h2>
+<p>$$\mathrm{Var}\big[a^{(l)}\big] = n_{\text{in}}\,\mathrm{Var}[W]\,\mathrm{Var}\big[a^{(l-1)}\big]$$</p>
+<p>Signal variance is multiplied by $n_{\text{in}}\mathrm{Var}[W]$ at every layer; keeping that product at 1 is what stops activations from vanishing or exploding with depth.</p>
+<p>$$\mathrm{Var}[W] = \frac{2}{n_{\text{in}}+n_{\text{out}}} \quad\text{(Xavier)}, \qquad \mathrm{Var}[W] = \frac{2}{n_{\text{in}}} \quad\text{(He)}$$</p>
+<p>Xavier preserves variance for symmetric activations by averaging fan-in and fan-out; He's extra factor of 2 compensates for ReLU zeroing half the units.</p>
+<p>$$\mathbf{W}\sim\mathcal{U}\Big[-\sqrt{\tfrac{6}{n_{\text{in}}+n_{\text{out}}}},\ \sqrt{\tfrac{6}{n_{\text{in}}+n_{\text{out}}}}\Big]$$</p>
+<p>The uniform form of Xavier: a uniform on $[-a,a]$ has variance $a^2/3$, so $a=\sqrt{6/(n_{\text{in}}+n_{\text{out}})}$ gives the required $2/(n_{\text{in}}+n_{\text{out}})$.</p>
+<p>$$\mathrm{BN}(\mathbf{x}) = \boldsymbol{\gamma}\odot\frac{\mathbf{x}-\boldsymbol{\mu}_{\text{batch}}}{\sqrt{\boldsymbol{\sigma}^2_{\text{batch}}+\epsilon}} + \boldsymbol{\beta}$$</p>
+<p>Batch normalisation standardises each feature across the batch, then rescales — the statistics depend on other examples, which is why it behaves differently in training and inference.</p>
+<p>$$\mathrm{LN}(\mathbf{x}) = \boldsymbol{\gamma}\odot\frac{\mathbf{x}-\mu(\mathbf{x})}{\sqrt{\sigma^2(\mathbf{x})+\epsilon}} + \boldsymbol{\beta}, \qquad \mu,\sigma^2 \text{ over features}$$</p>
+<p>Layer normalisation standardises each example across its own features, so it is batch-independent — the reason it is the default in sequence models.</p>
+<p>$$\mathrm{RMSNorm}(\mathbf{x}) = \boldsymbol{\gamma}\odot\frac{\mathbf{x}}{\sqrt{\frac{1}{d}\sum_i x_i^2+\epsilon}}$$</p>
+<p>RMS norm drops the mean subtraction and the bias; it is cheaper and empirically indistinguishable in transformers.</p>
+<p>$$\mathbf{x} = \mathbf{x} + F(\mathrm{LN}(\mathbf{x})) \quad\text{(pre-LN)}, \qquad \mathbf{x} = \mathrm{LN}(\mathbf{x} + F(\mathbf{x})) \quad\text{(post-LN)}$$</p>
+<p>Pre-LN keeps an unnormalised residual path from input to output, which is why deep transformers train without warmup tricks; post-LN normalises the highway and needs careful warmup.</p>
+<h2 id="m10-convolution">M10 — Convolution</h2>
+<p>$$H_{\text{out}} = \Big\lfloor\frac{H_{\text{in}} + 2p - d(k-1) - 1}{s}\Big\rfloor + 1$$</p>
+<p>Output size for kernel $k$, padding $p$, stride $s$, dilation $d$ — set $d=1$ for the ordinary case.</p>
+<p>$$y_{i,j} = \sum_{c}\sum_{u}\sum_{v} W_{c,u,v}\,x_{c,\,is+u-p,\,js+v-p}$$</p>
+<p>A convolution is a learned weighted sum over a local window, with the same weights reused at every position — that reuse is the parameter efficiency and the translation equivariance.</p>
+<p>$$\text{params} = k^2 C_{\text{in}}C_{\text{out}} + C_{\text{out}}, \qquad \text{FLOPs} = 2H_{\text{out}}W_{\text{out}}k^2C_{\text{in}}C_{\text{out}}$$</p>
+<p>Parameter count and cost scale linearly in channels and quadratically in kernel size — the arithmetic behind depthwise-separable designs.</p>
+<p>$$r_{\text{out}} = r_{\text{in}} + (k-1)\,s$$</p>
+<p>Receptive field grows additively with kernel size and multiplicatively with stride; stack enough layers and it exceeds the input.</p>
+<h2 id="m11-recurrent-networks">M11 — Recurrent networks</h2>
+<p>$$\mathbf{h}_t = \tanh(\mathbf{W}_h\mathbf{h}_{t-1} + \mathbf{W}_x\mathbf{x}_t + \mathbf{b})$$</p>
+<p>A vanilla RNN applies the same weights at every step; the shared matrix is what makes it a sequence model and what makes its gradients vanish.</p>
+<p>$$\frac{\partial\mathbf{h}_t}{\partial\mathbf{h}_{t-k}} = \prod_{j=0}^{k-1}\mathbf{W}_h^\top\operatorname{diag}\big(1-\mathbf{h}_{t-j}^2\big)$$</p>
+<p>Backpropagation through time is a product of Jacobians; its spectral radius decides whether gradients decay or explode exponentially with distance.</p>
+<p>$$\mathbf{i}_t = \sigma(\mathbf{W}_i[\mathbf{h}_{t-1},\mathbf{x}_t]+\mathbf{b}_i), \quad \mathbf{f}_t = \sigma(\mathbf{W}_f[\mathbf{h}_{t-1},\mathbf{x}_t]+\mathbf{b}_f)$$</p>
+<p>$$\mathbf{o}_t = \sigma(\mathbf{W}_o[\mathbf{h}_{t-1},\mathbf{x}_t]+\mathbf{b}_o), \quad \mathbf{g}_t = \tanh(\mathbf{W}_g[\mathbf{h}_{t-1},\mathbf{x}_t]+\mathbf{b}_g)$$</p>
+<p>The four LSTM gates: input, forget, output, and candidate — three sigmoids that decide what to write, keep, and reveal.</p>
+<p>$$\mathbf{c}_t = \mathbf{f}_t\odot\mathbf{c}_{t-1} + \mathbf{i}_t\odot\mathbf{g}_t, \qquad \mathbf{h}_t = \mathbf{o}_t\odot\tanh(\mathbf{c}_t)$$</p>
+<p>The cell state is updated additively, so its gradient path is a product of forget gates rather than of full Jacobians — the constant-error-carousel that solves vanishing gradients.</p>
+<h2 id="m12m13-attention-and-modern-architectures">M12–M13 — Attention and modern architectures</h2>
+<p>$$\operatorname{Attn}(\mathbf{Q},\mathbf{K},\mathbf{V}) = \operatorname{softmax}\Big(\frac{\mathbf{Q}\mathbf{K}^\top}{\sqrt{d_k}} + \mathbf{M}\Big)\mathbf{V}$$</p>
+<p>Scaled dot-product attention: the $1/\sqrt{d_k}$ keeps logits at unit scale as dimension grows, and $\mathbf{M}$ is $-\infty$ on masked positions.</p>
+<p>$$\mathbf{M}_{ij} = \begin{cases} 0 & j \le i \\ -\infty & j > i\end{cases}$$</p>
+<p>The causal mask makes the attention matrix lower-triangular, so position $i$ cannot see the future.</p>
+<p>$$\operatorname{head}_h = \operatorname{Attn}(\mathbf{Q}\mathbf{W}_h^Q, \mathbf{K}\mathbf{W}_h^K, \mathbf{V}\mathbf{W}_h^V), \qquad \text{MHA} = \operatorname{Concat}(\operatorname{head}_1,\ldots,\operatorname{head}_H)\mathbf{W}^O$$</p>
+<p>Multi-head attention runs $H$ independent attention problems in parallel subspaces, then mixes them with one output projection.</p>
+<p>$$\text{FLOPs} \approx 4T^2 d + 8Td^2$$</p>
+<p>Attention cost is quadratic in sequence length and linear in width — the $T^2$ term is what every efficient-attention variant attacks.</p>
+<p>$$\mathbf{R}_m = \begin{pmatrix}\cos m\theta_1 & -\sin m\theta_1 & & \\ \sin m\theta_1 & \cos m\theta_1 & & \\ & & \ddots & \\ & & & \cos m\theta_{d/2} & -\sin m\theta_{d/2}\\ & & & \sin m\theta_{d/2} & \cos m\theta_{d/2}\end{pmatrix}$$</p>
+<p>RoPE applies a position-dependent rotation to each 2-D subspace of the query and key, with $\theta_i = 10000^{-2i/d}$.</p>
+<p>$$\langle \mathbf{R}_m\mathbf{q},\ \mathbf{R}_n\mathbf{k}\rangle = \langle \mathbf{q},\ \mathbf{R}_{n-m}\mathbf{k}\rangle$$</p>
+<p>Because rotations compose, the dot product depends only on the relative offset $n-m$ — the property that makes RoPE a relative position encoding inside an absolute one.</p>
+<p>$$\mathbf{x} \leftarrow \mathbf{x} + \operatorname{MHA}(\mathrm{LN}(\mathbf{x})), \qquad \mathbf{x} \leftarrow \mathbf{x} + \mathrm{MLP}(\mathrm{LN}(\mathbf{x}))$$</p>
+<p>The transformer block: two residual sublayers, each normalised on the input side.</p>
+<p>$$\mathrm{MLP}(\mathbf{x}) = \mathbf{W}_2\big(\operatorname{SiLU}(\mathbf{W}_1\mathbf{x})\odot\mathbf{W}_3\mathbf{x}\big)$$</p>
+<p>The SwiGLU feed-forward: a gated linear unit with a SiLU gate, which is why modern models use three matrices and a $2/3$-scaled hidden width.</p>
+<p>$$\operatorname{GQA}: n_{kv} < n_q, \qquad \text{cache} \propto n_{kv}$$</p>
+<p>Grouped-query attention shares key/value heads across groups of query heads, reducing the cache by $n_q/n_{kv}$ at a small quality cost.</p>
+<p>$$\text{experts per token} = k, \qquad \text{capacity} = \frac{\text{tokens}}{\text{experts}}\times\text{factor}$$</p>
+<p>A mixture-of-experts layer routes each token to $k$ of $N$ experts; the capacity factor bounds how many tokens an expert will accept before overflow is dropped.</p>
+<h2 id="m14m15-tokenization-and-decoding">M14–M15 — Tokenization and decoding</h2>
+<p>$$\text{BPE merge: } (a,b)\to ab \text{ for } (a,b) = \operatorname*{arg\,max}_{(u,v)} \operatorname{count}(u,v)$$</p>
+<p>Byte-pair encoding repeatedly merges the most frequent adjacent pair, growing the vocabulary by one token per merge.</p>
+<p>$$\text{BPB} = \frac{\mathcal{L}}{\ln 2}\cdot\frac{T_{\text{tokens}}}{B_{\text{bytes}}}$$</p>
+<p>Bits per byte is the only tokenizer-independent loss normalisation, because it divides by the bytes the text actually contains.</p>
+<p>$$p_i = \frac{\exp(z_i/\tau)}{\sum_j \exp(z_j/\tau)}, \qquad \text{top-}k: \text{keep } k \text{ largest}, \qquad \text{top-}p: \text{keep } \textstyle\sum p_i \le p$$</p>
+<p>Temperature reshapes the distribution; top-$k$ truncates by rank and nucleus sampling by cumulative mass.</p>
+<h2 id="m16-scaling-laws">M16 — Scaling laws</h2>
+<p>$$L(N,D) = E + \frac{A}{N^{\alpha}} + \frac{B}{D^{\beta}}$$</p>
+<p>Chinchilla's functional form: an irreducible floor plus two power-law terms, one for parameters and one for data.</p>
+<p>$$L(N,D) = 1.69 + \frac{406.4}{N^{0.34}} + \frac{410.7}{D^{0.28}}$$</p>
+<p>The fitted constants from Hoffmann et al. (2022) — use them only as a sanity check, never as a forecast for a different family or data mixture.</p>
+<p>$$N_{\text{opt}} \propto C^{a}, \quad D_{\text{opt}} \propto C^{b}, \quad a \approx b \approx 0.5, \quad \frac{D_{\text{opt}}}{N_{\text{opt}}} \approx 20$$</p>
+<p>Compute-optimal allocation: parameters and tokens should grow together, at roughly 20 tokens per parameter.</p>
+<p>$$C \approx 6ND$$</p>
+<p>Training compute in FLOPs for $N$ parameters over $D$ tokens — two matmuls forward, four backward.</p>
+<h2 id="m17-fine-tuning-and-lora">M17 — Fine-tuning and LoRA</h2>
+<p>$$\mathbf{W} = \mathbf{W}_0 + \frac{\alpha}{r}\mathbf{B}\mathbf{A}, \qquad \mathbf{B}\in\mathbb{R}^{d\times r},\ \mathbf{A}\in\mathbb{R}^{r\times k},\ r \ll \min(d,k)$$</p>
+<p>LoRA adds a low-rank update to a frozen weight; the adapter's parameter count is $r(d+k)$, a fraction $r(1/d+1/k)$ of the original.</p>
+<p>$$\mathbf{h} = \mathbf{W}_0\mathbf{x} + \frac{\alpha}{r}\mathbf{B}\mathbf{A}\mathbf{x}, \qquad \text{lr}_{\text{adapter}} \sim \frac{\alpha}{r}\cdot\text{lr}_{\text{base}}$$</p>
+<p>The $\alpha/r$ scaling keeps the adapter's effective step size comparable across ranks, which is why $\alpha$ is usually set to $2r$.</p>
+<p>$$\text{4-bit NF4}: \quad w_q = \operatorname*{arg\,min}_{q\in\mathcal{Q}}\big|w - \mu_q\big|, \qquad \mathcal{Q} = \{q_1,\ldots,q_{16}\}$$</p>
+<p>QLoRA stores frozen weights in a 4-bit codebook normalised per block, and trains the adapter in higher precision.</p>
+<h2 id="m18-preference-learning-and-rl">M18 — Preference learning and RL</h2>
+<p>$$P(y_w \succ y_l \mid x) = \sigma\big(r(x,y_w) - r(x,y_l)\big)$$</p>
+<p>The Bradley–Terry model: preference probability is a sigmoid of the reward difference — the assumption every reward model inherits.</p>
+<p>$$\mathcal{L}_{\text{RM}} = -\mathbb{E}\big[\log\sigma\big(r_\phi(x,y_w) - r_\phi(x,y_l)\big)\big]$$</p>
+<p>The reward-model loss is the negative log-likelihood of that Bradley–Terry model over pairs.</p>
+<p>$$r_{\text{total}}(x,y) = r_\phi(x,y) - \beta\log\frac{\pi_\theta(y\mid x)}{\pi_{\text{ref}}(y\mid x)}$$</p>
+<p>The KL-penalised RLHF objective: reward minus a per-token price on drifting from the reference policy.</p>
+<p>$$\hat{A}_t = \sum_{l=0}^{T-t}(\gamma\lambda)^{l}\,\delta_{t+l}, \qquad \delta_t = r_t + \gamma V(s_{t+1}) - V(s_t)$$</p>
+<p>Generalised advantage estimation: an exponentially weighted sum of temporal-difference errors, interpolating bias and variance with $\lambda$.</p>
+<p>$$\mathcal{L}_{\text{PPO}} = \mathbb{E}_t\Big[\min\big(\rho_t\hat{A}_t,\ \operatorname{clip}(\rho_t, 1-\epsilon, 1+\epsilon)\hat{A}_t\big)\Big], \qquad \rho_t = \frac{\pi_\theta(a_t\mid s_t)}{\pi_{\theta_{\text{old}}}(a_t\mid s_t)}$$</p>
+<p>The clipped surrogate: reward improvements but not beyond a trust region of $\pm\epsilon$ in probability ratio.</p>
+<p>$$\mathcal{L}_{\text{DPO}} = -\mathbb{E}_{(x,y_w,y_l)}\Big[\log\sigma\Big(\beta\Big[\log\frac{\pi_\theta(y_w\mid x)}{\pi_{\text{ref}}(y_w\mid x)} - \log\frac{\pi_\theta(y_l\mid x)}{\pi_{\text{ref}}(y_l\mid x)}\Big]\Big)\Big]$$</p>
+<p>The DPO loss: a Bradley–Terry likelihood written entirely in log-ratios of the policy to its reference, so no reward model is needed.</p>
+<p>$$\nabla_\theta\mathcal{L}_{\text{DPO}} = -\beta\,\mathbb{E}\Big[\underbrace{\sigma\big(-z\big)}_{\text{down-weight when } z\gg0}\big(\nabla_\theta\log\pi_\theta(y_w\mid x) - \nabla_\theta\log\pi_\theta(y_l\mid x)\big)\Big]$$</p>
+<p>DPO's gradient increases the log-likelihood of winners and decreases it for losers, scaled by how wrong the model currently is; the implicit reward is $z = \beta[\log\tfrac{\pi_\theta(y_w)}{\pi_{\text{ref}}(y_w)} - \log\tfrac{\pi_\theta(y_l)}{\pi_{\text{ref}}(y_l)}]$.</p>
+<p>$$\hat{A}_i = \frac{r_i - \operatorname{mean}(r_1,\ldots,r_G)}{\operatorname{std}(r_1,\ldots,r_G)}$$</p>
+<p>The GRPO advantage: each sampled response is scored relative to its own group, so no critic model is required.</p>
+<p>$$\mathcal{L}_{\text{GRPO}} = \mathbb{E}\Big[\frac{1}{G}\sum_i\min\big(\rho_i\hat{A}_i,\ \operatorname{clip}(\rho_i,1-\epsilon,1+\epsilon)\hat{A}_i\big) - \beta D_{\mathrm{KL}}(\pi_\theta\,\|\,\pi_{\text{ref}})\Big]$$</p>
+<p>GRPO's objective: PPO's clipped surrogate over a group, with an explicit KL-to-reference penalty instead of a learned value baseline.</p>
+<h2 id="m19-inference-and-serving">M19 — Inference and serving</h2>
+<p>$$\text{KV bytes per token} = 2\cdot L\cdot n_{kv}\cdot d_h\cdot \text{bytes per element}$$</p>
+<p>Two tensors (key and value) per layer, per KV head, per token — the formula that sets the concurrency ceiling.</p>
+<p>$$\text{TTFT} = t_{\text{queue}} + t_{\text{prefill}}, \qquad \text{TPOT} = \frac{t_{\text{last}} - t_{\text{first}}}{n_{\text{out}}-1}$$</p>
+<p>The two latency numbers users feel: how long until anything appears, and how fast it then appears.</p>
+<p>$$\text{tokens per speculative step} = \frac{1-\alpha^{\gamma+1}}{1-\alpha}, \qquad \text{speedup} = \frac{\text{tokens per step}}{1+\gamma c}$$</p>
+<p>Speculative decoding with acceptance rate $\alpha$, $\gamma$ draft tokens, and draft cost $c$ relative to one target step.</p>
+<p>$$x \approx s\,(q - z), \qquad s = \frac{x_{\max}-x_{\min}}{2^{b}-1}, \quad q = \operatorname{round}\Big(\frac{x}{s}+z\Big)$$</p>
+<p>Affine quantization: a scale and zero-point map the float range onto $b$ bits; asymmetric ranges waste nothing on unused codes.</p>
+<p>$$s = \frac{\max_i |x_i|}{2^{b-1}-1} \quad\text{(absmax, symmetric)}$$</p>
+<p>Symmetric per-tensor or per-group scale, used for weights where the distribution is roughly centred.</p>
+<p>$$\hat{x} = s\cdot q, \qquad \text{error} \le \frac{s}{2} = \frac{\max|x|}{2^{b}}$$</p>
+<p>Quantization error is bounded by half a step — the reason group size, not bit width alone, controls quality.</p>
+<h2 id="m24m26-systems">M24–M26 — Systems</h2>
+<p>$$\text{AI} = \frac{\text{FLOPs}}{\text{bytes}}, \qquad r = \frac{F}{W}, \qquad t = \max\Big(\frac{\text{FLOPs}}{F},\ \frac{\text{bytes}}{W}\Big)$$</p>
+<p>Arithmetic intensity against the machine's FLOP/byte ratio: below $r$ a kernel is bandwidth-bound, above it compute-bound.</p>
+<p>$$\text{memory per device (fp16 Adam)} = 16\Psi \text{ bytes}$$</p>
+<p>The baseline accounting: 2 bytes of weights, 2 of gradients, 4 of fp32 master weights, 8 of Adam moments, per parameter $\Psi$.</p>
+<p>$$\text{ZeRO-1}: 4\Psi + \frac{12\Psi}{N_d}, \quad \text{ZeRO-2}: 2\Psi + \frac{14\Psi}{N_d}, \quad \text{ZeRO-3}: \frac{16\Psi}{N_d}$$</p>
+<p>Each ZeRO stage shards one more state across $N_d$ devices; stage 3 makes memory scale with data-parallel size at the cost of more communication.</p>
+<p>$$\text{tensor parallel: } \mathbf{Y} = \mathbf{X}\mathbf{W} \;\Rightarrow\; \mathbf{X}\mathbf{W}_1 \| \mathbf{X}\mathbf{W}_2$$</p>
+<p>Column-parallel splits the output dimension and needs an all-reduce only at the end of the block; row-parallel splits the input and needs one at the start.</p>
+<p>$$T_{\text{step}} = T_{\text{compute}} + \frac{(N-1)}{N}\big(T_{\text{comm}}\big)$$</p>
+<p>Pipeline parallelism's bubble: the fraction of idle time is $(N-1)/(N)$ per stage without micro-batching, which is why micro-batches exist.</p>
+<h2 id="m23-multimodal-and-generative-objectives">M23 — Multimodal and generative objectives</h2>
+<p>$$\mathcal{L}_{\text{infoNCE}} = -\log\frac{\exp(\langle \mathbf{q},\mathbf{k}^{+}\rangle/\tau)}{\sum_{j=1}^{K}\exp(\langle \mathbf{q},\mathbf{k}_j\rangle/\tau)}$$</p>
+<p>Contrastive loss: pull the paired embedding together and push $K-1$ negatives apart, with temperature setting the sharpness.</p>
+<p>$$\log p(\mathbf{x}) \ge \mathbb{E}_{q(\mathbf{z}\mid\mathbf{x})}\big[\log p(\mathbf{x}\mid\mathbf{z})\big] - D_{\mathrm{KL}}\big(q(\mathbf{z}\mid\mathbf{x})\,\|\,p(\mathbf{z})\big)$$</p>
+<p>The ELBO: a reconstruction term minus a prior-matching term, maximised over both the model and the approximate posterior.</p>
+<p>$$\mathbf{x}_t = \sqrt{\bar\alpha_t}\,\mathbf{x}_0 + \sqrt{1-\bar\alpha_t}\,\boldsymbol{\epsilon}, \qquad \boldsymbol{\epsilon}\sim\mathcal{N}(\mathbf{0},\mathbf{I})$$</p>
+<p>The forward diffusion process in closed form: any step is a single Gaussian noising of the clean sample, with $\bar\alpha_t = \prod_{s\le t}(1-\beta_s)$.</p>
+<p>$$\mathcal{L}_{\text{DDPM}} = \mathbb{E}_{t,\mathbf{x}_0,\boldsymbol{\epsilon}}\Big[\big\|\boldsymbol{\epsilon} - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)\big\|^2\Big]$$</p>
+<p>The training objective: predict the noise that was added, which is a reweighted variational bound on the data likelihood.</p>
+<p>$$\mathbf{x}_{t-1} = \frac{1}{\sqrt{\alpha_t}}\Big(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar\alpha_t}}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)\Big) + \sigma_t\mathbf{z}$$</p>
+<p>The reverse step: subtract the predicted noise and rescale, then add variance back — the ancestral sampler.</p><div class="pager"><a id="prevlink" href="../m/29-frontiers.html"><small>← previous</small><b>M29 · Frontiers and Open Problems</b></a><a id="nextlink" class="next" href="../m/apx-b-glossary.html"><small>next →</small><b>B · Glossary</b></a></div></article>
+</main>
+</div>
+</body></html>

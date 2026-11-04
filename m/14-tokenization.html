@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M14 · Tokenization — From Zero to Frontier</title>
+<meta name="description" content="The fixed, lossy map between text and tensors, and what it silently breaks.">
+<meta property="og:title" content="M14 · Tokenization — From Zero to Frontier">
+<meta property="og:description" content="The fixed, lossy map between text and tensors, and what it silently breaks.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="on" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Large language models / M14</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M14">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M14</span><span class="pill d2">difficulty 2/5</span><span class="pill">1 weeks</span><span class="pill">prereqs: M03</span><span class="pill">6,872 words</span></div><h1>Tokenization</h1><p class="tagline">The fixed, lossy map between text and tensors, and what it silently breaks.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>A language model never sees text. It sees integer indices into an embedding table, and the map from bytes to those indices — the tokenizer — is fitted before a single gradient step, never updated, and frozen for the life of the model. Skip this module and you will misread everything downstream: you will compare perplexities across models where the numbers are not commensurable, treat "the model cannot count letters" as an emergent mystery instead of a bottleneck you can locate to the exact tensor, ship likelihood evaluations that are systematically wrong because of one leading space, and treat vocabulary size as a free hyperparameter when it trades embedding parameters against sequence length against attention cost in arithmetic you can do. Tokenization is the smallest component of an LLM and the one that leaks most often into results.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<p>If two or more of these are shaky, revisit <strong>M03</strong>.</p>
+<ol>
+<li>How many bits distinguish 8 equally likely outcomes? 50,000?</li>
+<li>Why is $H(p,q) \ge H(p)$, with equality only at $q = p$?</li>
+<li>Convert a per-token probability of $0.002$ to nats and to bits.</li>
+<li>If you double an alphabet, does the number of symbols needed to encode a fixed message rise or fall?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $\log_2 8 = 3$ bits; $\log_2 50000 = 15.61$ bits.
+2. $H(p,q) = H(p) + D_{\mathrm{KL}}(p\|q)$ and KL is non-negative, zero only at $q=p$. Cross-entropy is entropy plus the price of the wrong distribution.
+3. $-\log 0.002 = 6.215$ nats $= 8.966$ bits.
+4. Falls, because each symbol now carries more information — but the alphabet, and therefore the embedding table, grows. That tension is this whole module.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<ul>
+<li>Implement byte-pair encoding from scratch, with the merge table, weighted pair counts, and deterministic tie-breaking.</li>
+<li>Trace BPE by hand for three merges on a five-word corpus and predict the winning pair at each step.</li>
+<li>Contrast the merge criteria of BPE (frequency), WordPiece (likelihood ratio), and Unigram (EM marginal likelihood), and state what each optimizes.</li>
+<li>Convert a per-token cross-entropy into a per-byte cross-entropy and explain why only the latter is comparable across tokenizers.</li>
+<li>Compute the parameter, length, and FLOP consequences of a vocabulary change for a named model shape.</li>
+<li>Explain mechanically why a model that never sees a letter cannot count letters, naming the exact point where the information is destroyed.</li>
+<li>Diagnose a tokenizer with a six-point checklist, and name four tokenization-based attack classes with their mitigations.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\mathcal{C}$</td>
+<td>training corpus, a multiset of strings</td>
+</tr>
+<tr>
+<td>$V$</td>
+<td>vocabulary; $\|V\|$ its size</td>
+</tr>
+<tr>
+<td>$w$, $f(w)$</td>
+<td>a word type and its corpus frequency</td>
+</tr>
+<tr>
+<td>$B$, $N$</td>
+<td>bytes in a document, tokens after encoding</td>
+</tr>
+<tr>
+<td>$t$</td>
+<td>bytes per token, $t = B/N$</td>
+</tr>
+<tr>
+<td>$\alpha$</td>
+<td>elasticity, $\alpha = d\log t / d\log V$</td>
+</tr>
+<tr>
+<td>$p_u$</td>
+<td>probability of token $u$ under a unigram model</td>
+</tr>
+<tr>
+<td>$H$, $\mathrm{PP}$</td>
+<td>entropy (nats) and perplexity, $\mathrm{PP} = \exp H$</td>
+</tr>
+<tr>
+<td>$r$</td>
+<td>merge rank; lower rank merges first</td>
+</tr>
+<tr>
+<td>$d$, $l$, $P$</td>
+<td>model width, layer count, parameter count</td>
+</tr>
+<tr>
+<td>$\mathbf{e}_i \in \mathbb{R}^{d}$</td>
+<td>embedding of token $i$</td>
+</tr>
+<tr>
+<td>$L$</td>
+<td>context length in tokens</td>
+</tr>
+</tbody>
+</table>
+<p>"Byte" always means a UTF-8 byte: a Chinese character is usually 3, an emoji 4. And $t$ is a property of a tokenizer <strong>and</strong> a corpus, never of a tokenizer alone — quoting bytes per token without naming the corpus is meaningless.</p>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="character-word-subword">Character, word, subword</h3>
+<p><strong>(1) Intuition.</strong> You must post a letter using a fixed set of rubber stamps. With 26 letter stamps you can spell anything but you stamp constantly. With one stamp per English word you stamp rarely, need a warehouse of stamps, and cannot stamp a name you did not anticipate. Subword tokenization is the compromise a postal clerk would invent: stamps for frequent chunks (<code>the</code>, <code>ing</code>, <code>tion</code>), letter stamps for everything else.</p>
+<p><strong>(2) Formal definition.</strong> A tokenizer is a pair $E:\Sigma^{*}\to V^{N}$ and $D:V^{N}\to\Sigma^{*}$ over bytes $\Sigma$. Character-level: $V=\Sigma$, so $N=B$. Word-level: $V$ is a set of word forms, the encoder splits on whitespace. Subword: $V$ contains strings of intermediate length chosen by a data-driven procedure, and the encoder is an algorithm, not a lookup.</p>
+<p><strong>(3) Why it is built this way.</strong> Character sequences for English are 4–5x longer than subword sequences and attention is quadratic in length, so a character model pays 16–25x more for the attention term and spreads meaning over positions that individually carry almost nothing. Word-level models have an unbounded vocabulary and produce unknown tokens that destroy information outright. Subword bounds the vocabulary while guaranteeing every byte string is representable, because the base layer contains all 256 bytes.</p>
+<p><strong>(4) Worked micro-example.</strong> The corpus <code>low</code> x5, <code>lower</code> x2, <code>newest</code> x6, <code>widest</code> x3 is 16 words and $3\cdot5+5\cdot2+6\cdot6+6\cdot3 = 79$ bytes. A character model sees 79 positions, a word model 16 positions with a 4-entry vocabulary, and the subword model you build below sees 53 — 1.49 bytes per token. Production English tokenizers reach 4.</p>
+<h3 id="byte-pair-encoding">Byte-pair encoding</h3>
+<p><strong>(1) Intuition.</strong> Start with every byte as its own token. Find the most frequent adjacent pair across the corpus, fuse it into a new token, repeat. Frequent chunks fuse early, rare chunks stay split.</p>
+<p><strong>(2) Formal definition.</strong> Represent each word as a symbol tuple. The pair count is</p>
+<p>$$c(a,b) = \sum_{w} f(w)\,\#\{i : w_i = a,\ w_{i+1} = b\}$$</p>
+<p>Merge $(a^*,b^*) = \arg\max_{a,b} c(a,b)$, append $a^*b^*$ to $V$, and rewrite every word left to right replacing non-overlapping occurrences. Encoding applies merges in rank order: repeatedly fuse the lowest-ranked adjacent pair present.</p>
+<p><strong>(3) Why it is built this way.</strong> Greedy merging is a cheap proxy for the true objective, "find the vocabulary minimizing the corpus description length". Greedy is not optimal — a different first merge can lead to a better vocabulary — but it is $O(kB)$ instead of combinatorial. The end-of-word marker is not cosmetic: without it the <code>the</code> inside <code>then</code> and the standalone <code>the</code> share a token, word boundaries become unrecoverable at decode time, and the model has no representation for where a word ends.</p>
+<p><strong>(4) Worked micro-example.</strong> Words <code>ab</code> x3, <code>ax</code> x2 over symbols $a,b,x$. Counts: $c(a,b)=3$, $c(a,x)=2$. Merge <code>a</code>+<code>b</code>; corpus becomes <code>ab</code> x3, <code>ax</code> x2; counts now only $c(a,x)=2$. Merge <code>a</code>+<code>x</code>; no pairs remain, so training stops with $V=\{a,b,x,ab,ax\}$.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 372" width="100%" role="img" aria-label="Byte-pair encoding: count pairs, merge the most frequent, repeat" class="fig-svg"><defs><marker id="bpe-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="146.0" y="38.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">corpus (word: count)</text><rect x="30.0" y="52.0" width="232.0" height="25.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><text x="40.0" y="69.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-blue,#5b8cff)" text-anchor="start" font-weight="400">l o w</text><text x="250.0" y="69.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">5</text><rect x="30.0" y="82.0" width="232.0" height="25.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><text x="40.0" y="99.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-blue,#5b8cff)" text-anchor="start" font-weight="400">l o w e r</text><text x="250.0" y="99.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">2</text><rect x="30.0" y="112.0" width="232.0" height="25.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><text x="40.0" y="129.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-blue,#5b8cff)" text-anchor="start" font-weight="400">n e w e s t</text><text x="250.0" y="129.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">6</text><rect x="30.0" y="142.0" width="232.0" height="25.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><text x="40.0" y="159.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-blue,#5b8cff)" text-anchor="start" font-weight="400">w i d e s t</text><text x="250.0" y="159.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">3</text><rect x="300.0" y="52.0" width="124.0" height="118.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.6"/><text x="362.0" y="76.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">merge 1</text><text x="362.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="650">(e, s) → es</text><text x="362.0" y="126.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">count 11</text><rect x="318.0" y="140.0" width="88.0" height="18.0" rx="4" fill="rgba(255,255,255,0.04)" stroke="none" stroke-width="1.5"/><text x="362.0" y="153.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">vocab 257</text><line x1="424.0" y1="111.0" x2="438.0" y2="111.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#bpe-ah)"/><rect x="440.0" y="52.0" width="124.0" height="118.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.6"/><text x="502.0" y="76.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">merge 2</text><text x="502.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="650">(es, t) → est</text><text x="502.0" y="126.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">count 11</text><rect x="458.0" y="140.0" width="88.0" height="18.0" rx="4" fill="rgba(255,255,255,0.04)" stroke="none" stroke-width="1.5"/><text x="502.0" y="153.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">vocab 258</text><line x1="564.0" y1="111.0" x2="578.0" y2="111.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#bpe-ah)"/><rect x="580.0" y="52.0" width="124.0" height="118.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6"/><text x="642.0" y="76.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">merge 3</text><text x="642.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">(l, o) → lo</text><text x="642.0" y="126.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">count 7</text><rect x="598.0" y="140.0" width="88.0" height="18.0" rx="4" fill="rgba(255,255,255,0.04)" stroke="none" stroke-width="1.5"/><text x="642.0" y="153.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">vocab 259</text><line x1="704.0" y1="111.0" x2="718.0" y2="111.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#bpe-ah)"/><rect x="720.0" y="52.0" width="124.0" height="118.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.6"/><text x="782.0" y="76.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">merge 4</text><text x="782.0" y="102.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">(lo, w) → low</text><text x="782.0" y="126.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">count 7</text><rect x="738.0" y="140.0" width="88.0" height="18.0" rx="4" fill="rgba(255,255,255,0.04)" stroke="none" stroke-width="1.5"/><text x="782.0" y="153.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">vocab 260</text><rect x="300.0" y="196.0" width="536.0" height="84.0" rx="10" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="316.0" y="218.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">after four merges:</text><text x="316.0" y="244.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-green,#34d399)" text-anchor="start" font-weight="400">low</text><text x="450.0" y="244.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-green,#34d399)" text-anchor="start" font-weight="400">low er</text><text x="584.0" y="244.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-green,#34d399)" text-anchor="start" font-weight="400">n ew est</text><text x="718.0" y="244.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-green,#34d399)" text-anchor="start" font-weight="400">w id est</text><text x="316.0" y="266.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">note &#x27;est&#x27; is now one token: the model never sees the letters separately</text><text x="30.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">greedy merging is local and irreversible — the vocabulary shape depends on the corpus you trained it on</text><text x="30.0" y="352.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">this is why tokenizer choices are not neutral: they decide what the model can even represent cheaply</text></svg><figcaption>The corpus is rewritten after every merge. Watch the pair frequencies shift, and note that an early merge decides which pairs still exist later.</figcaption></figure></p>
+<h3 id="a-verified-bpe-trace">A verified BPE trace</h3>
+<p>Take $\mathcal{C}=\{$<code>the</code>:12, <code>then</code>:5, <code>them</code>:4, <code>her</code>:6, <code>and</code>:9, <code>ant</code>:2, <code>an</code>:7$\}$, each word ending in the marker <code>_</code>. The base vocabulary is the 9 distinct characters, and the initial token count is</p>
+<p>$$N_0 = 12\cdot4+5\cdot5+4\cdot5+6\cdot4+9\cdot4+2\cdot4+7\cdot3 = 182$$</p>
+<p>First counts: $c(h,e)=12+5+4+6=27$, $c(t,h)=21$, $c(a,n)=9+2+7=18$, $c(e,\_)=12$. Twelve merges give:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Step</th>
+<th>Pair</th>
+<th style="text-align: right;">Count</th>
+<th style="text-align: right;">$\|V\|$</th>
+<th style="text-align: right;">Tokens</th>
+<th style="text-align: right;">Bytes/token</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td>—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">182</td>
+<td style="text-align: right;">0.75</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td><code>h</code>+<code>e</code></td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">155</td>
+<td style="text-align: right;">0.88</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td><code>t</code>+<code>he</code></td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">134</td>
+<td style="text-align: right;">1.02</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td><code>a</code>+<code>n</code></td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">116</td>
+<td style="text-align: right;">1.18</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td><code>the</code>+<code>_</code></td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">104</td>
+<td style="text-align: right;">1.32</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td><code>an</code>+<code>d</code></td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">1.44</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td><code>and</code>+<code>_</code></td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">1.59</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td><code>an</code>+<code>_</code></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">1.73</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td><code>he</code>+<code>r</code></td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">1.88</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td><code>her</code>+<code>_</code></td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">2.04</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td><code>n</code>+<code>_</code></td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">2.21</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td><code>the</code>+<code>n_</code></td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">2.40</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td><code>m</code>+<code>_</code></td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">53</td>
+<td style="text-align: right;">2.58</td>
+</tr>
+</tbody>
+</table>
+<p>Three things generalize. The merge <code>the</code>+<code>n</code> crosses a morpheme boundary — BPE knows counts, not linguistics. Steps 5 and 6 involve <strong>ties</strong> (<code>an</code>+<code>d</code>, <code>d</code>+<code>_</code>, then <code>and</code>+<code>_</code> all reach 9), and the tie-break rule silently changes the resulting vocabulary. And 2.58 bytes per token at $|V|=21$ is far below the 4.0 of a production tokenizer, because the corpus cannot support a larger vocabulary — see the derivation below.</p>
+<p><div class="viz" data-viz="v-bpe"></div><div class="vizcap">Step forward and back through the merges. After each step, check the merge table against your own hand count for the winning pair, and watch the token count fall while the vocabulary grows.</div></p>
+<h3 id="wordpiece-and-the-likelihood-criterion">WordPiece and the likelihood criterion</h3>
+<p><strong>(1) Intuition.</strong> Frequency is crude: a pair can be frequent only because both halves are frequent, so merging it teaches nothing. WordPiece asks how much more often the two symbols appear together than independence predicts, and merges the biggest surprise.</p>
+<p><strong>(2) Formal definition.</strong> $\mathrm{score}(a,b) = c_{ab}/(c_a c_b)$, and the pair with the highest score wins. Equivalently, the highest pointwise mutual information up to constants. WordPiece marks continuations with <code>##</code> so that <code>in</code> at a word start and <code>##in</code> inside a word are distinct tokens.</p>
+<p><strong>(3) Why it is built this way.</strong> In a corpus where <code>e</code> and <code>s</code> are both frequent, <code>es</code> wins on raw count while <code>qu</code> — rarer but nearly always adjacent — wins on WordPiece. The criterion prefers <em>cohesive</em> pairs over merely <em>common</em> ones.</p>
+<p><strong>(4) Worked micro-example.</strong> With $c_a=100$, $c_b=80$, $c_{ab}=40$ and $c_x=c_y=5$, $c_{xy}=5$: scores are $40/(100\cdot80)=0.005$ and $5/(5\cdot5)=0.2$. WordPiece merges <code>xy</code>, eight times rarer, because <code>x</code> and <code>y</code> never appear apart. BPE would merge <code>ab</code>.</p>
+<h3 id="unigram-lm-tokenization-and-em-pruning">Unigram LM tokenization and EM pruning</h3>
+<p><strong>(1) Intuition.</strong> Run BPE backwards: start with a large candidate vocabulary, give each token a probability, treat the tokenization of each word as a hidden variable, prune the least useful tokens, re-estimate, repeat.</p>
+<p><strong>(2) Formal definition.</strong> With $\sum_u p_u = 1$ and $\mathcal{S}(x)$ the set of segmentations of $x$ into vocabulary items,</p>
+<p>$$P(x) = \sum_{(u_1,\ldots,u_m)\in \mathcal{S}(x)}\prod_{i=1}^{m} p_{u_i}, \qquad \ell = \sum_{x\in\mathcal{C}}\log P(x)$$</p>
+<p>computed by dynamic programming in $O(|x|^2)$ per string. Encoding at inference uses the Viterbi segmentation $\arg\max_S \prod_{u\in S}p_u$ — the single most probable one, not the summed one.</p>
+<p><strong>(3) Why it is built this way.</strong> The summed likelihood gives a principled pruning criterion: delete the token whose removal costs least, $\Delta_u = \ell(V)-\ell(V\setminus\{u\})$. It also yields <em>multiple valid</em> segmentations, enabling subword regularization — sample a random segmentation during training so the model does not overfit one canonical split. BPE has exactly one segmentation and cannot do this.</p>
+<p><strong>(4) Worked micro-example.</strong> $V=\{a,b,ab\}$ on the string <code>ab</code> with all probabilities $1/3$: $P(\texttt{ab}) = p_{ab} + p_a p_b = 1/3+1/9 = 4/9$, and Viterbi picks <code>ab</code> since $1/3 > 1/9$. Train on a corpus containing only <code>ab</code> and EM drives $p_{ab}\to 1$, after which pruning deletes <code>a</code> and <code>b</code> — catastrophic for unseen words. That failure is why single-character tokens are protected from pruning.</p>
+<p><div class="viz" data-viz="v-entropy"></div><div class="vizcap">The unigram objective is a cross-entropy over tokens. Drag probability mass and watch entropy, cross-entropy, and KL move; the corpus log-likelihood is the negative of the cross-entropy term.</div></p>
+<h3 id="sentencepiece-byte-level-bpe-and-the-space-trick">SentencePiece, byte-level BPE, and the space trick</h3>
+<p><strong>(1) Intuition.</strong> Most tokenizers assume text is already split on whitespace, which is false for Chinese, Japanese, Thai, and for anything where words are not space-delimited — and it loses information, since <code>"a  b"</code> and <code>"a b"</code> collapse to the same word sequence.</p>
+<p><strong>(2) Formal definition.</strong> SentencePiece normalizes input (usually NFKC), replaces every space with the meta-symbol <code>▁</code> (U+2581), and runs BPE or unigram over the raw character stream; decoding maps <code>▁</code> back to a space. Byte-level BPE instead applies a fixed reversible bijection from the 256 byte values to 256 printable code points (byte <code>0x20</code> becomes <code>Ġ</code>, U+0120), runs BPE on those, and never needs an unknown token. It also does no normalization, so no byte is unreachable.</p>
+<p><strong>(3) Why it is built this way.</strong> The <code>▁</code> trick makes the tokenizer lossless and language-agnostic. Because the space is a token, <code>"hello"</code> and <code>"hello "</code> are different sequences — correct behaviour, and the source of a notorious evaluation bug. Because the input is a raw stream, no pre-tokenization regex decides what a word is, so the same code path handles English, Thai, and DNA.</p>
+<p><strong>(4) Worked micro-example.</strong> <code>"an ant"</code> under SentencePiece becomes <code>▁an▁ant</code>, tokenizing as <code>['▁an','▁ant']</code>. Under byte-level BPE the space is byte <code>0x20</code>, which the byte-to-unicode map sends to <code>Ġ</code>, so the tokens read <code>Ġan</code>, <code>Ġant</code>. This is why token dumps are full of <code>Ġ</code> and <code>▁</code>.</p>
+<h3 id="vocabulary-size-length-and-compression">Vocabulary size, length, and compression</h3>
+<p><strong>(1) Intuition.</strong> A larger vocabulary means fewer tokens per sentence: shorter sequences, cheaper attention, more text per context window — but a larger embedding table, a larger softmax, and a long tail of rare tokens that barely trains.</p>
+<p><strong>(2) Formal definition.</strong> With untied input and output matrices the parameter cost is $2Vd$. For a fixed byte budget $B$ the token count is $N = B/t(V)$, and the training cost is</p>
+<p>$$C(V) = 6P_{\mathrm{body}}N + 2Vd\,N + 12lLd\,N, \qquad N = \frac{B}{t(V)}$$</p>
+<p>with $P_{\mathrm{body}} \approx 12ld^{2}$. The middle term is the output projection, which every token must multiply against.</p>
+<p><strong>(3) Why it is built this way.</strong> Every doubling of $V$ doubles the embedding table and shrinks the sequence only slightly, so the choice is a genuine optimum rather than a preference. The next section derives it.</p>
+<p><strong>(4) Worked micro-example.</strong> For $d=4096$, $l=32$: $P_{\mathrm{body}} = 12\cdot32\cdot4096^2 = 6.44$B. At $V=50{,}257$, embeddings cost $2\cdot50257\cdot4096 = 412$M, or 6.4% of the body; at $V=128{,}256$ they cost 1.05B, but if $t$ rises from 4.0 to 4.3 the token count for the same corpus falls 7%. Which wins depends entirely on the elasticity $\alpha$.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 400" width="100%" role="img" aria-label="Tensor shapes through one forward pass" class="fig-svg"><defs><marker id="shapes-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="24.0" y="42.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="58.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">token ids</text><text x="300.0" y="58.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T)</text><text x="520.0" y="58.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024</text><text x="38.0" y="87.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">embedding</text><text x="300.0" y="87.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, D)</text><text x="520.0" y="87.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 4096</text><rect x="24.0" y="100.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">W_Q / W_K / W_V</text><text x="300.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(D, D)</text><text x="520.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">4096 × 4096 each</text><text x="38.0" y="145.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Q, K, V</text><text x="300.0" y="145.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, H, T, D/H)</text><text x="520.0" y="145.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 32 × 1024 × 128</text><rect x="24.0" y="158.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">scores QKᵀ</text><text x="300.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, H, T, T)</text><text x="520.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 32 × 1024 × 1024</text><text x="38.0" y="203.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">softmax weights</text><text x="300.0" y="203.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, H, T, T)</text><text x="520.0" y="203.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">head_dim no longer present</text><rect x="24.0" y="216.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="232.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">attention output</text><text x="300.0" y="232.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, H, T, D/H)</text><text x="520.0" y="232.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 32 × 1024 × 128</text><text x="38.0" y="261.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">after W_O</text><text x="300.0" y="261.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, D)</text><text x="520.0" y="261.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 4096</text><rect x="24.0" y="274.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="290.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">FFN up</text><text x="300.0" y="290.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, 4D)</text><text x="520.0" y="290.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 16384</text><text x="38.0" y="319.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">FFN down</text><text x="300.0" y="319.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, D)</text><text x="520.0" y="319.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 4096</text><rect x="24.0" y="332.0" width="772.0" height="27.0" rx="5" fill="var(--fig-panel,#141a2e)" stroke="none" stroke-width="1.5"/><text x="38.0" y="348.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">logits</text><text x="300.0" y="348.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">(B, T, V)</text><text x="520.0" y="348.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">2 × 1024 × 128256</text><text x="38.0" y="42.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">stage</text><text x="300.0" y="42.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">symbolic</text><text x="520.0" y="42.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">with B=2, T=1024</text><rect x="24.0" y="382.0" width="772.0" height="1.0" rx="8" fill="var(--fig-edge,#2e3a5e)" stroke="none" stroke-width="1.5"/><text x="420.0" y="396.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">the score matrix is the only place T² appears — that is the quadratic wall</text></svg><figcaption>Follow the shapes: the embedding lookup indexes a $V \times d$ table with $N$ integers. Vocabulary size and sequence length are the two numbers that set the cost of the entire forward pass.</figcaption></figure></p>
+<h3 id="tokens-per-byte-effective-context-cost">Tokens per byte, effective context, cost</h3>
+<p><strong>(1) Intuition.</strong> Everything you thought was measured in text is really measured in tokens, and the conversion factor is not 1.</p>
+<p><strong>(2) Formal definition.</strong> Define fertility as tokens per byte $1/t$ and compression as $t$ bytes per token. A context of $L$ tokens holds $L\cdot t$ bytes — about $0.75L$ English words at $t=4$. Per-token cross-entropy $H_{\text{tok}}$ becomes $H_{\text{byte}} = H_{\text{tok}}/t$, and</p>
+<p>$$\mathrm{PP}_{\text{byte}} = \exp(H_{\text{tok}}/t) = \mathrm{PP}_{\text{tok}}^{1/t}$$</p>
+<p><strong>(3) Why it is built this way.</strong> Billing and context are per token; quality is per byte. The exponent $1/t$ is why a small change in compression changes the per-byte number by a power, and why per-token perplexity leaderboards across tokenizers compare nothing.</p>
+<p><strong>(4) Worked micro-example.</strong> Model A: $\mathrm{PP}_{\text{tok}}=10$, $t=3.0$. Model B: $\mathrm{PP}_{\text{tok}}=10$, $t=5.0$. Then $\mathrm{PP}_{\text{byte}}^{(A)} = 10^{1/3} = 2.154$ and $\mathrm{PP}_{\text{byte}}^{(B)} = 10^{1/5} = 1.585$. B is 36% better per byte with an identical per-token number, and processes the same document for 60% of the bill.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="Where the money goes" class="fig-svg"><defs><marker id="cost-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="80.0" y1="276.0" x2="480.0" y2="276.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="280.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1×</text><line x1="80.0" y1="207.2" x2="480.0" y2="207.2" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="211.2" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10×</text><line x1="80.0" y1="138.5" x2="480.0" y2="138.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="142.5" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">100×</text><line x1="80.0" y1="69.8" x2="480.0" y2="69.8" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="72.0" y="73.8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1000×</text><line x1="80.0" y1="276.0" x2="480.0" y2="276.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M80.0,276.0 L82.5,276.0 L85.0,275.9 L87.5,275.6 L90.0,275.3 L92.5,274.9 L95.0,274.4 L97.5,273.8 L100.0,273.1 L102.5,272.2 L105.0,271.3 L107.5,270.3 L110.0,269.3 L112.5,268.1 L115.0,266.9 L117.5,265.7 L120.0,264.4 L122.5,263.0 L125.0,261.6 L127.5,260.2 L130.0,258.8 L132.5,257.3 L135.0,255.9 L137.5,254.4 L140.0,253.0 L142.5,251.5 L145.0,250.0 L147.5,248.5 L150.0,247.1 L152.5,245.6 L155.0,244.2 L157.5,242.8 L160.0,241.3 L162.5,239.9 L165.0,238.6 L167.5,237.2 L170.0,235.8 L172.5,234.5 L175.0,233.2 L177.5,231.9 L180.0,230.6 L182.5,229.3 L185.0,228.0 L187.5,226.8 L190.0,225.6 L192.5,224.3 L195.0,223.2 L197.5,222.0 L200.0,220.8 L202.5,219.7 L205.0,218.5 L207.5,217.4 L210.0,216.3 L212.5,215.2 L215.0,214.2 L217.5,213.1 L220.0,212.1 L222.5,211.0 L225.0,210.0 L227.5,209.0 L230.0,208.0 L232.5,207.1 L235.0,206.1 L237.5,205.2 L240.0,204.2 L242.5,203.3 L245.0,202.4 L247.5,201.5 L250.0,200.6 L252.5,199.7 L255.0,198.8 L257.5,198.0 L260.0,197.1 L262.5,196.3 L265.0,195.4 L267.5,194.6 L270.0,193.8 L272.5,193.0 L275.0,192.2 L277.5,191.4 L280.0,190.6 L282.5,189.9 L285.0,189.1 L287.5,188.3 L290.0,187.6 L292.5,186.9 L295.0,186.1 L297.5,185.4 L300.0,184.7 L302.5,184.0 L305.0,183.3 L307.5,182.6 L310.0,181.9 L312.5,181.2 L315.0,180.5 L317.5,179.9 L320.0,179.2 L322.5,178.6 L325.0,177.9 L327.5,177.3 L330.0,176.6 L332.5,176.0 L335.0,175.4 L337.5,174.8 L340.0,174.1 L342.5,173.5 L345.0,172.9 L347.5,172.3 L350.0,171.7 L352.5,171.2 L355.0,170.6 L357.5,170.0 L360.0,169.4 L362.5,168.9 L365.0,168.3 L367.5,167.7 L370.0,167.2 L372.5,166.6 L375.0,166.1 L377.5,165.6 L380.0,165.0 L382.5,164.5 L385.0,164.0 L387.5,163.4 L390.0,162.9 L392.5,162.4 L395.0,161.9 L397.5,161.4 L400.0,160.9 L402.5,160.4 L405.0,159.9 L407.5,159.4 L410.0,158.9 L412.5,158.4 L415.0,157.9 L417.5,157.4 L420.0,157.0 L422.5,156.5 L425.0,156.0 L427.5,155.6 L430.0,155.1 L432.5,154.6 L435.0,154.2 L437.5,153.7 L440.0,153.3 L442.5,152.8 L445.0,152.4 L447.5,151.9 L450.0,151.5 L452.5,151.1 L455.0,150.6 L457.5,150.2 L460.0,149.8 L462.5,149.4 L465.0,148.9 L467.5,148.5 L470.0,148.1 L472.5,147.7 L475.0,147.3 L477.5,146.9 L480.0,146.5" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M80.0,276.0 L82.5,275.5 L85.0,275.1 L87.5,274.6 L90.0,274.2 L92.5,273.8 L95.0,273.3 L97.5,272.9 L100.0,272.5 L102.5,272.1 L105.0,271.7 L107.5,271.3 L110.0,270.9 L112.5,270.5 L115.0,270.1 L117.5,269.7 L120.0,269.3 L122.5,269.0 L125.0,268.6 L127.5,268.2 L130.0,267.9 L132.5,267.5 L135.0,267.2 L137.5,266.8 L140.0,266.5 L142.5,266.2 L145.0,265.8 L147.5,265.5 L150.0,265.2 L152.5,264.8 L155.0,264.5 L157.5,264.2 L160.0,263.9 L162.5,263.6 L165.0,263.3 L167.5,263.0 L170.0,262.7 L172.5,262.4 L175.0,262.1 L177.5,261.8 L180.0,261.5 L182.5,261.2 L185.0,260.9 L187.5,260.7 L190.0,260.4 L192.5,260.1 L195.0,259.8 L197.5,259.6 L200.0,259.3 L202.5,259.0 L205.0,258.8 L207.5,258.5 L210.0,258.2 L212.5,258.0 L215.0,257.7 L217.5,257.5 L220.0,257.2 L222.5,257.0 L225.0,256.7 L227.5,256.5 L230.0,256.3 L232.5,256.0 L235.0,255.8 L237.5,255.5 L240.0,255.3 L242.5,255.1 L245.0,254.8 L247.5,254.6 L250.0,254.4 L252.5,254.2 L255.0,253.9 L257.5,253.7 L260.0,253.5 L262.5,253.3 L265.0,253.1 L267.5,252.8 L270.0,252.6 L272.5,252.4 L275.0,252.2 L277.5,252.0 L280.0,251.8 L282.5,251.6 L285.0,251.4 L287.5,251.2 L290.0,251.0 L292.5,250.8 L295.0,250.6 L297.5,250.4 L300.0,250.2 L302.5,250.0 L305.0,249.8 L307.5,249.6 L310.0,249.4 L312.5,249.2 L315.0,249.0 L317.5,248.8 L320.0,248.6 L322.5,248.5 L325.0,248.3 L327.5,248.1 L330.0,247.9 L332.5,247.7 L335.0,247.5 L337.5,247.4 L340.0,247.2 L342.5,247.0 L345.0,246.8 L347.5,246.7 L350.0,246.5 L352.5,246.3 L355.0,246.1 L357.5,246.0 L360.0,245.8 L362.5,245.6 L365.0,245.5 L367.5,245.3 L370.0,245.1 L372.5,245.0 L375.0,244.8 L377.5,244.6 L380.0,244.5 L382.5,244.3 L385.0,244.1 L387.5,244.0 L390.0,243.8 L392.5,243.7 L395.0,243.5 L397.5,243.4 L400.0,243.2 L402.5,243.0 L405.0,242.9 L407.5,242.7 L410.0,242.6 L412.5,242.4 L415.0,242.3 L417.5,242.1 L420.0,242.0 L422.5,241.8 L425.0,241.7 L427.5,241.5 L430.0,241.4 L432.5,241.2 L435.0,241.1 L437.5,241.0 L440.0,240.8 L442.5,240.7 L445.0,240.5 L447.5,240.4 L450.0,240.2 L452.5,240.1 L455.0,240.0 L457.5,239.8 L460.0,239.7 L462.5,239.5 L465.0,239.4 L467.5,239.3 L470.0,239.1 L472.5,239.0 L475.0,238.9 L477.5,238.7 L480.0,238.6" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><text x="400.0" y="111.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="end" font-weight="400">training</text><text x="400.0" y="227.9" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="end" font-weight="400">inference</text><text x="280.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">relative spend →</text><rect x="520.0" y="76.0" width="280.0" height="180.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="538.0" y="100.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">cost per token</text><text x="538.0" y="124.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="400">≈ 2 · N · P FLOPs</text><text x="538.0" y="146.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="400">≈ 2 · P FLOPs / token</text><text x="538.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Training is a one-off; serving</text><text x="538.0" y="185.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">is per token, forever. A model</text><text x="538.0" y="198.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">that is 30% better but 3× more</text><text x="538.0" y="211.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.6" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">expensive may simply lose.</text><text x="538.0" y="240.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">this is why small models keep winning</text></svg><figcaption>Cost is linear in tokens consumed and emitted, and tokens are a function of bytes per token. Hold the model fixed and change only the tokenizer's compression: the per-document cost moves as much as a model-size change would.</figcaption></figure></p>
+<h3 id="pathologies-and-diagnosis">Pathologies and diagnosis</h3>
+<p><strong>(1) Intuition.</strong> The tokenizer is a fixed function with sharp edges, and every edge is a way for the model to misbehave in a way its weights cannot explain.</p>
+<p><strong>(2) Formal definition — five families, with mechanisms.</strong> <em>Glitch tokens</em>: a token whose embedding saw almost no gradient, usually because it came from junk (repeated markup, mojibake, spam) in the pretraining crawl. Its vector stays near its random initialization, so conditioning on it pushes activations off the training manifold; the model derails only when that exact token appears. <em>Non-canonical encodings</em>: <code>é</code> as U+00E9 versus <code>e</code>+U+0301, non-breaking spaces, zero-width joiners — visually identical, byte-different, tokenized differently, and therefore different inputs to the model, your filter, and your benchmark. <em>Attacks</em>: filter evasion via homoglyphs or zero-width characters; token smuggling, where a concatenation produces tokens never present in the filtered form; special-token injection, where a literal <code>&lt;|im_end|&gt;</code> in user text ends the turn; and fertility denial-of-service, where crafted input expands 5–10x in token count. <em>Character-level tasks</em>: there is no letter pathway (see the misconceptions). <em>Lock-in</em>: the tokenizer cannot be changed after pretraining without renumbering every index the model learned.</p>
+<p><strong>(3) Why it is built this way.</strong> None of these is an implementation bug; each follows from a fixed, frozen, string-to-index map trained on a non-uniform byte distribution.</p>
+<p><strong>(4) Worked micro-example.</strong> You evaluate Thai and see $\mathrm{PP}_{\text{tok}} = 8$ at $t = 1.2$, so $\mathrm{PP}_{\text{byte}} = 8^{1/1.2} = 5.66$. An English model with $\mathrm{PP}_{\text{tok}} = 20$ at $t=4$ has $\mathrm{PP}_{\text{byte}} = 2.11$. The Thai model is <em>worse</em> per byte despite the prettier per-token number. That inversion is the single most useful reason to compute per-byte metrics.</p>
+<p><strong>Diagnostic checklist.</strong> (1) Round-trip: assert <code>decode(encode(s)) == s</code> on real data. (2) Fertility per language and per content type; above 2.0 tokens/byte means the tokenizer is burning context on that slice. (3) Boundary probe: encode <code>"x"</code>, <code>" x"</code>, <code>"x "</code>, <code>"x\n"</code> and confirm the differences. (4) Glitch scan: tokens with near-zero corpus frequency whose embedding norm is anomalous. (5) Canonicalization: diff the tokenization of NFC and NFD forms. (6) Coverage: count single-byte fallback tokens on 1,000 domain documents.</p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<ol>
+<li>Pre-tokenize into word types with counts $\{(w,f(w))\}$, appending a boundary marker. For byte-level BPE, first map each byte through the reversible byte-to-unicode table.</li>
+<li>Initialize $V$ with every distinct symbol appearing anywhere.</li>
+<li>Compute $c(a,b)$ for all adjacent pairs, weighting each occurrence by the frequency of the word containing it.</li>
+<li>Select the maximum-count pair. Break ties with a fixed rule — smallest concatenation is reproducible.</li>
+<li>Record the pair with rank $k$ in the merge list, append the fused symbol to $V$, increment $k$.</li>
+<li>Rewrite every word left to right, replacing non-overlapping occurrences. Recompute pair counts from the rewritten corpus.</li>
+<li>Repeat from step 3 until $|V|$ hits the target or no pair clears a frequency floor.</li>
+</ol>
+<p>Encoding a new string: split into words, append the marker, then repeatedly fuse the lowest-ranked adjacent pair present until no pair in the sequence appears in the merge table.</p>
+<p>```text
+function TRAIN_BPE(corpus_counts, vocab_size, marker):
+    words <- {(w + marker): f for (w, f) in corpus_counts}
+    V <- sorted set of all symbols
+    merges <- empty list
+    while |V| < vocab_size:
+        counts <- empty map
+        for (word, f) in words:
+            for i in 0 .. len(word)-2:
+                counts[(word[i], word[i+1])] += f
+        if counts is empty: break
+        best <- max-count pair, ties broken by smallest concatenation
+        merges.append(best)
+        V.add(best[0] + best[1])
+        words <- rewrite each word, replacing best left to right
+
+function ENCODE(word, merges):
+    sym <- characters of (word + marker)
+    while len(sym) > 1:
+        cand <- [(rank(sym[i], sym[i+1]), i) for i in 0 .. len(sym)-2
+                 if (sym[i], sym[i+1]) in merges]
+        if cand is empty: break
+        i <- argmin of rank in cand
+        sym <- sym[0:i] + [sym[i] + sym[i+1]] + sym[i+2:]
+    return sym
+```</p>
+<p><strong>Complexity.</strong> One merge step scans the corpus once, $O(B)$ time in bytes. Training for $k$ merges is $O(kB)$ time and $O(|V|)$ space for the merge table. Encoding a string of length $m$ is $O(m^2)$ with the naive rank-minimum loop and $O(m\log m)$ with a priority queue; production code pre-tokenizes on whitespace to cap $m$ and caches merges per word type.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="derivation-1-per-token-and-per-byte-cross-entropy-differ-by-a-power">Derivation 1: per-token and per-byte cross-entropy differ by a power</h3>
+<p>A document of $B$ bytes becomes $N$ tokens, $t=B/N$. The mean per-token negative log-likelihood is</p>
+<p>$$H_{\text{tok}} = -\frac{1}{N}\sum_{i=1}^{N}\log \pi(s_i \mid s_{<i})$$</p>
+<p>The document's total log-likelihood is the same number either way, so per byte it is that total divided by $B$:</p>
+<p>$$H_{\text{byte}} = -\frac{1}{B}\sum_{i=1}^{N}\log\pi(s_i\mid s_{<i}) = \frac{N}{B}\cdot H_{\text{tok}} = \frac{H_{\text{tok}}}{t}$$</p>
+<p>Exponentiating, using $\mathrm{PP}=\exp H$:</p>
+<p>$$\mathrm{PP}_{\text{byte}} = \exp\left(\frac{H_{\text{tok}}}{t}\right) = \left(\exp H_{\text{tok}}\right)^{1/t} = \mathrm{PP}_{\text{tok}}^{1/t}$$</p>
+<p>The exponent $1/t$ is the whole story: equal per-token perplexities become per-byte perplexities separated by a power, and a model with worse per-token perplexity can be better per byte. Cross-tokenizer comparison must be done per byte or per character, never per token.</p>
+<h3 id="derivation-2-the-vocabulary-optimum-and-why-it-is-not-a-clean-number">Derivation 2: the vocabulary optimum, and why it is not a clean number</h3>
+<p><strong>Step 1 — cost per byte.</strong> Divide the cost model by $B$ and substitute $N = B/t$:</p>
+<p>$$\frac{C}{B} = \frac{6P_{\mathrm{body}} + 2Vd + 12lLd}{t(V)}$$</p>
+<p><strong>Step 2 — differentiate.</strong> Keep the two leading terms, writing $u(V)=6P_{\mathrm{body}}+2Vd$. With $u'=2d$ and $t'=\alpha t/V$:</p>
+<p>$$\frac{d}{dV}\frac{u}{t} = \frac{u't - ut'}{t^{2}} = 0 \implies u't = ut' \implies 2dt = u\frac{\alpha t}{V}$$</p>
+<p>$$2dV = \alpha\left(6P_{\mathrm{body}}+2Vd\right) \implies 2dV(1-\alpha) = 6\alpha P_{\mathrm{body}} \implies V^{*} = \frac{3\alpha P_{\mathrm{body}}}{(1-\alpha)d}$$</p>
+<p>Substituting $P_{\mathrm{body}} = 12ld^{2}$:</p>
+<p>$$V^{*} = \frac{36\,\alpha\,l\,d}{1-\alpha}$$</p>
+<p><strong>Step 3 — the elasticity is not constant.</strong> If $\alpha$ were constant, $V^{*}$ would grow linearly in $ld$ and reach millions for a large model, which nobody does. The resolution is that $t(V)$ saturates. With Zipf-distributed word types, $p_r \propto 1/r$ for rank $r$, and word length growing logarithmically in rank, $\ell_r = a + b\log r$, and $H_V \approx \log V$:</p>
+<p>$$t(V) = \sum_{r=1}^{V}p_r\ell_r \approx \frac{1}{\log V}\sum_{r=1}^{V}\frac{a+b\log r}{r} \approx \frac{a\log V + \frac{b}{2}(\log V)^2}{\log V} = a + \frac{b}{2}\log V$$</p>
+<p>so $t$ grows only logarithmically and</p>
+<p>$$\alpha(V) = \frac{V}{t}\frac{dt}{dV} = \frac{b/2}{t(V)}$$</p>
+<p>decays like $1/\log V$. Substituting back gives a fixed point, $V^{*} = 36ld\,\alpha(V^{*})/(1-\alpha(V^{*}))$, which must be solved by iteration.</p>
+<p><strong>Step 4 — solve it.</strong> Calibrate $t(50{,}000)=4.0$ bytes per token for English and $b/2 = 0.18$ bytes per unit of $\log V$ (so doubling from 50k to 100k buys about 0.12 more bytes per token, a 3% length reduction). For $l = 32$, $d = 4096$, and body parameters $P_{\mathrm{body}} = 12ld^{2} = 6.44$B:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Iteration</th>
+<th style="text-align: right;">$V$</th>
+<th style="text-align: right;">$t(V)$</th>
+<th style="text-align: right;">$\alpha$</th>
+<th style="text-align: right;">$V^{*} = 36ld\alpha/(1-\alpha)$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">50,000</td>
+<td style="text-align: right;">4.000</td>
+<td style="text-align: right;">0.0900</td>
+<td style="text-align: right;">466,674</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">466,674</td>
+<td style="text-align: right;">4.402</td>
+<td style="text-align: right;">0.0818</td>
+<td style="text-align: right;">420,255</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">420,255</td>
+<td style="text-align: right;">4.383</td>
+<td style="text-align: right;">0.0821</td>
+<td style="text-align: right;">422,225</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">422,141</td>
+<td style="text-align: right;">4.384</td>
+<td style="text-align: right;">0.0821</td>
+<td style="text-align: right;">422,141</td>
+</tr>
+</tbody>
+</table>
+<p>The fixed point is $V^{*}\approx 422{,}000$ tokens for a 6.4B-parameter body. The same equation at $l=80$, $d=8192$ gives $V^{*}\approx 1.97$ million. Both are far beyond any deployed vocabulary, and that gap is the informative part: <strong>the cost-per-byte argument, taken alone, wants a much larger vocabulary than anyone uses.</strong> Three things push back, and only the third is decisive.</p>
+<p><em>Tail starvation.</em> The expected training occurrences of token $u$ is $Np_u$. A token appearing once in the corpus receives exactly one gradient step on its input embedding and one on its output row, so its embedding stays near initialization. Under a Zipf tail most of a large vocabulary sits in exactly this regime, which makes the marginal token not merely useless but a source of inference noise — the glitch-token mechanism.</p>
+<p><em>Memory bandwidth.</em> Decoding one token reads every weight once, and $2Vd$ of them are embeddings. Bytes read per byte generated is again $(2P_{\mathrm{body}}+2Vd)/t$, now bounded by HBM bandwidth rather than FLOPs, which pushes the optimum down for small models and leaves large ones unchanged.</p>
+<p><em>The elasticity decays faster than the model says.</em> Step 3 assumed word length grows like $a+b\log r$ with $p_r\propto1/r$ held for all ranks. Real corpora are not Zipf-1 in the tail: beyond the point where the vocabulary covers whole words, adding a token saves essentially nothing, so $\alpha$ collapses rather than decaying like $1/\log V$. The fixed point therefore moves sharply downward once $V$ exceeds the number of distinct word forms the corpus actually contains — which for English is on the order of $10^{5}$.</p>
+<p>The honest summary: <strong>there is no clean closed form for $V$.</strong> The FLOP argument gives $V^{*}\propto \alpha ld/(1-\alpha)$ and, with a smooth elasticity, a fixed point in the hundreds of thousands for a mid-sized model. Deployed practice is 32k to 256k, and the difference is explained by tail statistics and the collapse of $\alpha$ once whole words are representable, not by the cost model. This is an actively fitted area, not settled theory, and any specific number should be treated as a fit to a particular corpus.</p>
+<h3 id="derivation-3-the-wordpiece-score-is-a-first-order-likelihood-gain">Derivation 3: the WordPiece score is a first-order likelihood gain</h3>
+<p>With total token count $n$ and counts $c_x$, the maximum-likelihood unigram fit is $\hat{p}_x = c_x/n$, and the maximized log-likelihood is $\ell = \sum_x c_x\log(c_x/n)$. Merge $(a,b)$ at all $m$ adjacent occurrences, giving counts $c_a-m$, $c_b-m$, $c_{ab}+m$ and total $n-m$. The change is</p>
+<p>$$\Delta\ell = (c_a-m)\log\frac{c_a-m}{n-m} + (c_b-m)\log\frac{c_b-m}{n-m} + (c_{ab}+m)\log\frac{c_{ab}+m}{n-m} - \ell$$</p>
+<p>Assume $m \ll c_a,c_b$ and that the pair has not been merged before, so $c_{ab}=0$. Then to first order in $m$:</p>
+<p>$$\Delta\ell \approx -m\log\frac{c_a}{n} - m\log\frac{c_b}{n} + m\log\frac{m}{n} = m\log\frac{m/n}{(c_a/n)(c_b/n)} = m\log\frac{\hat{p}_{ab}}{\hat{p}_a\hat{p}_b}$$</p>
+<p>Since $m$ is monotone in $c_{ab}$ and $n$ cancels, maximizing $\Delta\ell$ maximizes $c_{ab}/(c_a c_b)$ — exactly the WordPiece score. So WordPiece is BPE with a likelihood-ratio criterion, derived as the first-order gain of a unigram model.</p>
+<h3 id="derivation-4-the-em-that-drives-unigram-pruning">Derivation 4: the EM that drives unigram pruning</h3>
+<p>Maximize $\ell(\{p_u\}) = \sum_x \log\sum_{S\in\mathcal{S}(x)}\prod_{u\in S}p_u$. Introduce the segmentation as a hidden variable and use Jensen's inequality: for any distribution $q$ over segmentations,</p>
+<p>$$\log P(x) = \log\sum_S q(S)\frac{P(x,S)}{q(S)} \ge \sum_S q(S)\log\frac{P(x,S)}{q(S)}$$</p>
+<p>with equality at $q(S)=P(S\mid x)$. <strong>E-step:</strong> set $q_x(S) = \prod_{u\in S}p_u/P(x)$, computable by a forward-backward pass over the segmentation lattice, and accumulate expected counts $\tilde{c}_u = \sum_x\sum_{S,\,u\in S}q_x(S)$. <strong>M-step:</strong> $p_u = \tilde{c}_u/\sum_{u'}\tilde{c}_{u'}$, the standard result that the categorical M-step is normalized expected counts. Iterate, then prune the tokens with the smallest exact loss $\ell(V)-\ell(V\setminus\{u\})$, never pruning single characters. Because each step is coordinate ascent on a lower bound, $\ell$ increases monotonically — pruning is the only operation that removes capacity.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>```python
+from collections import Counter
+
+
+class BPE:
+    """Greedy byte-pair encoding over whitespace-delimited words."""
+
+    def __init__(self):
+        self.merges = {}   # (a, b) -> (rank, a + b)
+        self.vocab = []    # token strings in creation order
+
+    @staticmethod
+    def _count_pairs(words):
+        """Weighted count of every adjacent symbol pair over all word types."""
+        c = Counter()
+        for w, f in words.items():
+            for i in range(len(w) - 1):
+                c[(w[i], w[i + 1])] += f
+        return c
+
+    @staticmethod
+    def _merge(word, pair, new):
+        """Replace every non-overlapping occurrence, left to right."""
+        out, i = [], 0
+        while i < len(word):
+            if i < len(word) - 1 and (word[i], word[i + 1]) == pair:
+                out.append(new)
+                i += 2
+            else:
+                out.append(word[i])
+                i += 1
+        return tuple(out)
+
+    def train(self, corpus, num_merges, marker="_"):
+        words = {tuple(w + marker): f for w, f in corpus.items()}
+        self.vocab = sorted({c for w in words for c in w})
+        for rank in range(num_merges):
+            counts = self._count_pairs(words)
+            if not counts:
+                break
+            top = max(counts.values())
+            pair = min(p for p, c in counts.items() if c == top)  # deterministic tie-break
+            new = pair[0] + pair[1]
+            self.merges[pair] = (rank, new)
+            self.vocab.append(new)
+            words = {self._merge(w, pair, new): f for w, f in words.items()}
+            yield rank + 1, pair, top, len(self.vocab), words
+
+    def encode(self, text, marker="_"):
+        """Apply learned merges, lowest rank first, to each whitespace-delimited word."""
+        out = []
+        for word in text.split():
+            sym = tuple(word + marker)
+            while len(sym) > 1:
+                cand = [(self.merges[(sym[i], sym[i + 1])][0], i)
+                        for i in range(len(sym) - 1)
+                        if (sym[i], sym[i + 1]) in self.merges]
+                if not cand:
+                    break
+                _, i = min(cand)
+                sym = sym[:i] + (sym[i] + sym[i + 1],) + sym[i + 2:]
+            out.extend(sym)
+        return out
+
+
+CORPUS = {"the": 12, "then": 5, "them": 4, "her": 6, "and": 9, "ant": 2, "an": 7}
+bpe = BPE()
+for step, pair, count, vsize, words in bpe.train(CORPUS, 12):
+    ntok = sum(len(w) * f for w, f in words.items())
+    print(f"step {step:2d} merge {pair[0]}+{pair[1]:4s} count {count:3d} "
+          f"|V| {vsize:3d} tokens {ntok:4d}")
+
+print(bpe.encode("the ant then her and"))
+```</p>
+<p><strong>What to expect.</strong> Twelve rows matching the table above, $|V|$ climbing 9 → 21 and the token count falling 182 → 53, then an encoding of a held-out phrase. Note that <code>ant</code> encodes as <code>['an', 't']</code>, not <code>['ant']</code>: the merge <code>an</code>+<code>t</code> was never learned because <code>ant</code> was too rare, so the encoder falls back. That is correct behaviour, and it is why production tokenizers see rare words as several tokens.</p>
+<h2 id="worked-example">Worked example</h2>
+<p><strong>Input.</strong> $\mathcal{C}=\{$<code>the</code>:12, <code>then</code>:5, <code>them</code>:4, <code>her</code>:6, <code>and</code>:9, <code>ant</code>:2, <code>an</code>:7$\}$: 45 word occurrences, 92 characters, and with one trailing space per word, $B = 92+45 = 137$ bytes.</p>
+<p><strong>Step 0.</strong> $|V_0| = 9$ (<code>_</code>, a, d, e, h, m, n, r, t), one token per byte, so $N_0 = 182$ and $t_0 = 137/182 = 0.75$.</p>
+<p><strong>Step 1.</strong> $c(h,e)=27$ is the maximum, so merge <code>h</code>+<code>e</code>. The corpus becomes $12\cdot3+5\cdot4+4\cdot4+6\cdot3+9\cdot4+2\cdot4+7\cdot3 = 155$ tokens. Carrying on gives the table above: 21 tokens in the vocabulary, 53 tokens in the corpus.</p>
+<p><strong>Final state.</strong> Vocabulary: <code>_</code>, a, d, e, h, m, n, r, t, <code>he</code>, <code>the</code>, <code>an</code>, <code>the_</code>, <code>and</code>, <code>and_</code>, <code>an_</code>, <code>her</code>, <code>her_</code>, <code>n_</code>, <code>then_</code>, <code>m_</code>.</p>
+<p><strong>Compression.</strong> $t = 137/53 = 2.58$ bytes/token, up from 0.75 — a 3.4x reduction in sequence length, checked by re-encoding the seven training words: $12+5+8+6+9+6+7 = 53$ tokens.</p>
+<p><strong>Metrics.</strong> Suppose a model on this tokenizer reports $H_{\text{tok}} = 1.6$ nats/token. Then $H_{\text{byte}} = 1.6/2.58 = 0.620$ nats/byte $= 0.895$ bits/byte, $\mathrm{PP}_{\text{tok}} = \exp(1.6) = 4.95$, and $\mathrm{PP}_{\text{byte}} = 4.95^{1/2.58} = 1.86$. The uniform-byte baseline is exactly 8 bits/byte, so this toy tokenizer removes 89% of the per-byte uncertainty before the model predicts anything.</p>
+<p><strong>Why 4.0 is unreachable here.</strong> With 21 tokens most words are still one or two tokens. Reaching 4.0 bytes/token needs tens of thousands of tokens so that whole-word and multi-word pieces exist — that is Derivation 2's $t \approx a + (b/2)\log V$, and 21 is far down the curve.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="a-token-is-a-word">"A token is a word"</h3>
+<p>A token is a byte string of any length from one byte up, chosen by frequency. Most production tokens are sub-word fragments; a word splits into 1–4 tokens and a rare word into many. So "the model knows $N$ words" cannot be made true, and vocabulary size and word coverage are different quantities.</p>
+<h3 id="tokenization-is-reversible-so-it-loses-nothing">"Tokenization is reversible, so it loses nothing"</h3>
+<p>Byte-level BPE is reversible; most production tokenizers are not exactly so, because they normalize Unicode (NFKC), collapse whitespace, and drop or replace control characters. Two inputs that normalize alike are indistinguishable to the model, and two visually identical strings can be different inputs. Run a round-trip check on your own data instead of assuming.</p>
+<h3 id="the-tokenizer-is-trained-jointly-with-the-model">"The tokenizer is trained jointly with the model"</h3>
+<p>It is fitted first, by BPE or unigram EM, then frozen; the loss never differentiates through it. That is why a bad tokenizer is unfixable afterwards, why a domain vocabulary cannot be added without retraining, and why glitch tokens persist. Tokenizer quality is a cheap, early <em>data</em> decision and one of the highest-leverage ones in a pretraining project.</p>
+<h3 id="bigger-vocabulary-is-always-better">"Bigger vocabulary is always better"</h3>
+<p>A larger vocabulary buys shorter sequences and cheaper attention, and costs embedding parameters, a bigger softmax, and a long tail of undertrained tokens. Derivation 2 shows the optimum is a function of width, depth, and the corpus's Zipf slope. Empirically quality is flat within a factor of two of the optimum, which is why vocabularies cluster rather than being carefully tuned.</p>
+<h3 id="perplexity-is-a-property-of-the-model">"Perplexity is a property of the model"</h3>
+<p>It is a property of model <strong>and</strong> tokenizer <strong>and</strong> corpus. Two models with identical per-byte cross-entropy report per-token perplexities differing by the ratio of their $t$, which can be 30% or more. Convert to bits per byte first, always.</p>
+<h3 id="the-model-can-see-letters-if-you-just-ask-it-to-look">"The model can see letters if you just ask it to look"</h3>
+<p>There is no letter pathway. Token indices index an embedding table; <code>strawberry</code> is a small number of tokens (commonly something like <code>straw</code>+<code>berry</code>, exactly which depends on the vocabulary) and the embedding is one vector per token. Nothing downstream has access to the bytes that produced it, so "how many r's in strawberry" asks the model to recall the spelling and then compute on an object that was never represented. It can often succeed from memorized association — the failure is probabilistic, not absolute — and chain-of-thought helps a little by giving more forward passes to recall with, not by restoring the information. This is a tokenization problem in the precise sense that the loss happens at the input boundary.</p>
+<h3 id="byte-level-tokenizers-need-no-vocabulary">"Byte-level tokenizers need no vocabulary"</h3>
+<p>They need a 256-symbol base vocabulary, one per byte, plus BPE merges on top. The no-unknown-token guarantee comes from the byte fallback, not from the absence of a vocabulary.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>1.</strong> A corpus of 1,000 bytes tokenizes to 250 tokens. What is $t$, and how does the sequence length compare to a byte-level model?</p>
+<p><strong>2.</strong> Model A: $\mathrm{PP}_{\text{tok}}=12$, $t=3.5$. Model B: $\mathrm{PP}_{\text{tok}}=9$, $t=2.8$. Which is better per byte?</p>
+<p><strong>3.</strong> Why is $c(h,e)=27$ in step 1 of the trace, rather than the number of distinct words containing <code>he</code>?</p>
+<details><summary>Solution</summary>
+
+1. $t = 1000/250 = 4$ bytes/token. The byte-level model emits 1,000 positions, so the subword sequence is 4x shorter — and the attention term, quadratic in length, is 16x smaller.
+2. $\mathrm{PP}_{\text{byte}}^{(A)} = 12^{1/3.5} = 2.037$; $\mathrm{PP}_{\text{byte}}^{(B)} = 9^{1/2.8} = 2.142$. A wins despite the worse per-token number, because it packs more bytes into each prediction.
+3. Counts are weighted by word frequency: `the` contributes 12, `then` 5, `them` 4, `her` 6, totalling 27 occurrences of the pair across the 45 word occurrences — not 4 distinct types.
+
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>4.</strong> Run three BPE merges by hand on $\{$<code>aa</code>:3, <code>ab</code>:2$\}$ with marker <code>_</code>. Give the merge list, $|V|$ after each merge, and the token count at each stage.</p>
+<details><summary>Solution</summary>
+
+Words: `(a,a,_)`:3, `(a,b,_)`:2. $V_0=\{a,b,\_\}$, $|V_0|=3$, tokens $=3\cdot3+2\cdot3=15$. Counts: $(a,a)=3$, $(a,\_)=3$, $(a,b)=2$, $(b,\_)=2$ — a tie at 3, broken toward `aa` (smallest concatenation). Merge 1 `a`+`a`: words `(aa,_)`:3, `(a,b,_)`:2; $|V|=4$; tokens $=3\cdot2+2\cdot3=12$. Counts: $(aa,\_)=3$, $(a,b)=2$, $(b,\_)=2$; merge 2 `aa`+`_`; $|V|=5$; tokens $=3+6=9$. Counts: $(a,b)=2$, $(b,\_)=2$, tie broken toward `ab`; merge 3 `a`+`b`; $|V|=6$; tokens $=3+4=7$. Merge list: $[(a,a),(aa,\_),(a,b)]$.
+
+</details>
+
+<p><strong>5.</strong> With $l=32$, $d=4096$, $\alpha=0.05$, compute $V^{*}$ and the untied embedding parameter count there, as a share of $P_{\mathrm{body}}$.</p>
+<details><summary>Solution</summary>
+
+$V^{*} = 36\cdot0.05\cdot32\cdot4096/0.95 = 235{,}929.6/0.95 = 248{,}347$. Untied embeddings: $2\cdot248347\cdot4096 = 2.034$B, against $P_{\mathrm{body}} = 12\cdot32\cdot4096^2 = 6.442$B, so 31.6% of the body. Large enough that tying the input and output matrices would move the optimum — the derivation assumed untied.
+
+</details>
+
+<p><strong>6.</strong> Show that if two tokenizers have equal per-byte cross-entropy on one document, their per-token cross-entropies are in the ratio of their bytes per token.</p>
+<details><summary>Solution</summary>
+
+From Derivation 1, $H_{\text{tok}} = t\cdot H_{\text{byte}}$. With $H_{\text{byte}}$ equal, $H_{\text{tok}}^{(1)}/H_{\text{tok}}^{(2)} = t_1/t_2$: the tokenizer with twice the compression reports twice the per-token cross-entropy on an identical document. That is the algebraic statement of "per-token loss rewards compression, not knowledge".
+
+</details>
+
+<p><strong>7.</strong> A 128k-token window at $t=4.0$ versus $t=2.5$, with 5.5 bytes per English word: how many words fit in each, and what does the difference cost at 0.30 USD per million input tokens?</p>
+<details><summary>Solution</summary>
+
+$131072\cdot4.0 = 524{,}288$ bytes $\to 95{,}325$ words; $131072\cdot2.5 = 327{,}680 \to 59{,}578$ words. The better tokenizer fits 60% more text in the "same" window, 35,747 more words. The price is identical — 131,072 tokens costs 0.0393 USD either way — so effective cost per thousand words is 0.412 USD versus 0.660 USD.
+
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>8.</strong> Replace the BPE selection rule with the WordPiece score and run both on the toy corpus. Where do they first differ, and why?</p>
+<details><summary>Solution</summary>
+
+Change the selection to maximize `counts[p] / (marginal[a] * marginal[b])`, where marginals sum all pair positions. On this corpus step 1 agrees: $(h,e)=27$ with $c_h=c_e=27$ scores $27/729=0.0370$, while $(t,h)=21$ with $c_t=21$, $c_h=27$ scores $21/567=0.0370$ — a near-tie frequency resolves one way and the ratio another. The criteria diverge exactly when a pair's halves are individually very frequent, which is what Derivation 3 predicts: frequency counts opportunities, the ratio normalizes them away.
+
+</details>
+
+<p><strong>9.</strong> Build a glitch-token detector from a vocabulary and a 1M-word corpus. What do you do with the flagged tokens?</p>
+<details><summary>Solution</summary>
+
+Tokenize the corpus, count occurrences per token ID, and flag IDs with zero frequency. The stronger version ranks by anomalous embedding norm together with zero corpus frequency. You cannot remove a token without renumbering every ID the model trained on, so the workable responses are: at inference, detect the token in user input and rewrite it to an equivalent canonical surface form; at tokenizer construction for a *new* model, drop such tokens before training; and if you control pretraining, add the source strings to a blocklist. There is no post-hoc fix for a deployed model beyond input rewriting.
+
+</details>
+
+<p><strong>10.</strong> A filter blocks the substring <code>"bomb"</code>. Give three ways an attacker gets semantically equivalent input past it, exploiting tokenization and Unicode, with a mitigation for each.</p>
+<details><summary>Solution</summary>
+
+(i) *Homoglyphs*: Cyrillic `Ь` or full-width `ｂｏｍｂ`, byte-different but read as `bomb`. Mitigation: NFKC-normalize before filtering. (ii) *Zero-width separators*: insert U+200B between letters so the substring match fails while the model still reconstructs the meaning; mitigation: strip Unicode category Cf before both filtering and tokenizing. (iii) *Concatenation smuggling*: assemble the string from pieces so no user-visible part contains the pattern, then let a later template fill or tool call produce it inside the prompt; mitigation: escape and delimit all interpolated content and re-check the fully assembled prompt. Add a fourth: literal `<|im_end|>` in user text, mitigated by escaping special tokens so user input can never produce them.
+
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>State the three tokenization levels and one concrete failure of each.</li>
+<li>Write the BPE pair-count formula and say what the frequency weight does.</li>
+<li>What does the WordPiece score measure, and in what sense is it a likelihood ratio?</li>
+<li>What is the hidden variable in unigram tokenization, and what does the E-step compute?</li>
+<li>What does <code>▁</code> do, and which problem does it solve that whitespace pre-tokenization cannot?</li>
+<li>Give the exact conversion from per-token to per-byte perplexity.</li>
+<li>Derive $V^{*}=36\alpha l d/(1-\alpha)$ from the cost-per-byte model.</li>
+<li>Explain in two sentences, with the mechanism, why a model cannot count the letters in a word.</li>
+<li>Name three tokenizer pathologies and the diagnostic that catches each.</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. Character: sequences 4–5x longer, attention cost up 16–25x, weak per-position signal. Word: unbounded vocabulary, unavoidable unknowns. Subword: the compromise, but it fragments rare or foreign text and destroys intra-token characters.
+2. $c(a,b)=\sum_w f(w)\,\#\{i: w_i=a, w_{i+1}=b\}$. The weight makes counts corpus-wide rather than type-wide, so a pair inside a frequent word beats the same pair inside a rare one.
+3. $c_{ab}/(c_a c_b)$, the pair's co-occurrence over independence. Derivation 3 shows it is the first-order gain in a unigram model's maximized log-likelihood from that merge.
+4. The segmentation. The E-step computes the posterior over segmentations of every string, $q(S)\propto\prod_{u\in S}p_u$, by forward-backward over the lattice, and accumulates expected token counts.
+5. `▁` replaces the space so the space becomes a token and word boundaries survive. Whitespace pre-tokenization destroys the with-space/without-space distinction and cannot handle languages that do not delimit words.
+6. $\mathrm{PP}_{\text{byte}} = \mathrm{PP}_{\text{tok}}^{1/t}$ with $t$ the bytes per token on that corpus.
+7. Cost per byte is $(6P_{\mathrm{body}}+2Vd)/t(V)$; set the derivative to zero, use $t'=\alpha t/V$, get $2dV=\alpha(6P_{\mathrm{body}}+2Vd)$, so $V(1-\alpha)=3\alpha P_{\mathrm{body}}/d$, and with $P_{\mathrm{body}}=12ld^2$, $V^{*}=36\alpha ld/(1-\alpha)$.
+8. A token's embedding is one vector and nothing downstream can read the bytes that produced it, so a letter question requires recalling the spelling from parameters and then operating on an object never represented. Hence the failure is probabilistic — memorized associations often work — rather than a reasoning defect more compute would remove.
+9. Glitch tokens → frequency-versus-embedding-norm scan. Non-canonical encodings → NFC/NFD diff and round-trip test. Fertility blowup → per-language bytes-per-token measurement. Boundary bugs → encode `"x"`, `" x"`, `"x "`. (Any three.)
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><strong>Sennrich, Haddow, Birch, "Neural Machine Translation of Rare Words with Subword Units" (2016).</strong> The paper that brought BPE into NLP; extract §3 for the merge algorithm and the end-of-word convention.</li>
+<li><strong>Gage, "A New Algorithm for Data Compression" (1994).</strong> BPE's origin as a compression scheme. Read it to see that it was never designed for language, which explains its indifference to morphology.</li>
+<li><strong>Wu et al., "Google's Neural Machine Translation System" (2016).</strong> Source of the WordPiece criterion and the <code>##</code> continuation convention.</li>
+<li><strong>Kudo, "Subword Regularization" (2018).</strong> The unigram LM tokenizer, EM pruning, and multi-segmentation sampling; extract §3 for the pruning criterion.</li>
+<li><strong>Kudo and Richardson, "SentencePiece" (2018).</strong> The <code>▁</code> encoding, lossless detokenization, and the case against pre-tokenization.</li>
+<li><strong>Radford et al., "Language Models are Unsupervised Multitask Learners" (2019).</strong> GPT-2's byte-level BPE and the byte-to-unicode bijection; extract §2.</li>
+<li><strong>Karpathy, "Let's build the GPT Tokenizer" (2024, free video).</strong> A from-scratch implementation that reproduces the pathologies here, including the spelling failures.</li>
+<li><strong>Rust et al., "How Good Is Your Tokenizer?" (2021).</strong> Measures tokenizer quality against monolingual performance; extract the fertility numbers for non-English languages.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when you can, without notes:</p>
+<ul>
+<li>Write the BPE training loop on a whiteboard, including the tie-break rule, and trace three merges correctly by hand.</li>
+<li>State the WordPiece and unigram criteria and say in one sentence what each maximizes.</li>
+<li>Convert any per-token cross-entropy to bits per byte, and explain why leaderboards that skip this compare nothing.</li>
+<li>Reproduce the $V^{*}$ derivation and identify the elasticity $\alpha$ as the assumption that decides the answer.</li>
+<li>Explain the strawberry problem mechanically, naming the exact tensor where the information is lost.</li>
+<li>List the six diagnostic checks and the pathology each catches.</li>
+</ul><div class="pager"><a id="prevlink" href="../m/13-modern-architectures.html"><small>← previous</small><b>M13 · The Modern Architecture Zoo</b></a><a id="nextlink" class="next" href="../m/15-language-modeling.html"><small>next →</small><b>M15 · Language Modeling and Decoding</b></a></div></article>
+</main>
+</div>
+</body></html>

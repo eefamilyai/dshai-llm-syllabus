@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M06 · Neurons, Perceptrons, and Multilayer Networks — From Zero to Frontier</title>
+<meta name="description" content="From a single threshold unit to a network that can approximate any continuous function.">
+<meta property="og:title" content="M06 · Neurons, Perceptrons, and Multilayer Networks — From Zero to Frontier">
+<meta property="og:description" content="From a single threshold unit to a network that can approximate any continuous function.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="on" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">The neural network core / M06</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M06">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M06</span><span class="pill d2">difficulty 2/5</span><span class="pill">2 weeks</span><span class="pill">prereqs: M01, M02, M04</span><span class="pill">6,026 words</span></div><h1>Neurons, Perceptrons, and Multilayer Networks</h1><p class="tagline">From a single threshold unit to a network that can approximate any continuous function.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>A layer is an affine map followed by a scalar nonlinearity, and everything later in this course — attention blocks, residual stacks, a 70-billion-parameter transformer — is that operation stacked, repeated, and wired differently. If you cannot state the layer with its tensor shapes and name the exact point where the nonlinearity enters, nothing downstream is checkable: you cannot size a matrix, and you cannot predict which failure modes (dead units, exploding activations, saturated probabilities) belong to which component. This module also removes two pieces of folklore that would otherwise contaminate your reasoning for the rest of the course — that an artificial unit "models a biological neuron", and that the universal approximation theorem licenses the claim that a network can learn anything. Both are half-truths, and the missing halves are where the work is.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<p>If you miss more than one, revisit the module named in the answer.</p>
+<ol>
+<li>For $\mathbf{X} \in \mathbb{R}^{7 \times 3}$ and $\mathbf{W} \in \mathbb{R}^{4 \times 3}$, what is the shape of $\mathbf{X}\mathbf{W}^\top$ and how many multiply-accumulates does it cost?</li>
+<li>What is $\partial(\mathbf{w}^\top\mathbf{x})/\partial\mathbf{w}$ for constant $\mathbf{x}$?</li>
+<li>If $X,Y$ are independent with variances $\sigma_X^2,\sigma_Y^2$, what is $\mathrm{Var}(aX+bY)$?</li>
+<li>Write the gradient-descent update and say which direction it moves the loss.</li>
+<li>Why does stacking two linear layers with no nonlinearity give you nothing new?</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $(7,4)$; cost $7 \cdot 4 \cdot 3 = 84$ MACs. Revisit **M01** if the transpose shape was not immediate.
+2. $\mathbf{x}$, same shape as $\mathbf{w}$ (**M02**).
+3. $a^2\sigma_X^2 + b^2\sigma_Y^2$; independence kills the cross term. This identity is the engine of every initialization derivation below.
+4. $\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} - \eta\nabla_{\boldsymbol{\theta}}\mathcal{L}$; the gradient points uphill, so you step against it (**M04**).
+6. The composition of affine maps is affine: $\mathbf{W}_2(\mathbf{W}_1\mathbf{x}+\mathbf{b}_1)+\mathbf{b}_2 = (\mathbf{W}_2\mathbf{W}_1)\mathbf{x} + (\mathbf{W}_2\mathbf{b}_1+\mathbf{b}_2)$. Two layers of parameters, zero extra expressive power.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<p>By the end of this module you can, without notes:</p>
+<ul>
+<li>Write the forward pass of an $L$-layer MLP with every matrix labelled by shape, and state its parameter count, FLOPs, and training memory in named quantities.</li>
+<li>State the perceptron convergence theorem precisely and reproduce the margin proof from the alignment bound and the norm bound.</li>
+<li>Prove XOR is not linearly separable from the four inequality constraints, and explain why that is a statement about one layer rather than about neural networks.</li>
+<li>Derive $\sigma'$, $\tanh'$, the ReLU and LeakyReLU derivatives, and the GELU and SiLU derivatives including the $\tanh$ approximation.</li>
+<li>Derive the softmax Jacobian $\operatorname{diag}(\mathbf{s}) - \mathbf{s}\mathbf{s}^\top$ and explain why softmax is not a per-element activation.</li>
+<li>State the universal approximation theorem with hypotheses, prove the squashing argument, and list four things it does not promise.</li>
+<li>Derive Xavier and He initialization from variance preservation and predict the activation scale at layer 12 for a given multiplier.</li>
+</ul>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning in this module</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$L$</td>
+<td>number of layers (the loss is always $\mathcal{L}$, in script)</td>
+</tr>
+<tr>
+<td>$d_{\text{in}}, d_{\text{out}}$</td>
+<td>fan-in and fan-out of a weight matrix</td>
+</tr>
+<tr>
+<td>$d_l$</td>
+<td>width of layer $l$, so $\mathbf{W}^{(l)} \in \mathbb{R}^{d_l \times d_{l-1}}$</td>
+</tr>
+<tr>
+<td>$n$, $N$</td>
+<td>examples in a batch; examples in the data set (also hidden units in the approximation statement, disambiguated in context)</td>
+</tr>
+<tr>
+<td>$\mathbf{x} \in \mathbb{R}^{d}$, $\mathbf{X} \in \mathbb{R}^{n\times d}$</td>
+<td>one example; a batch, one row per example</td>
+</tr>
+<tr>
+<td>$\mathbf{W}^{(l)}$, $\mathbf{b}^{(l)}$</td>
+<td>layer weights $(d_l, d_{l-1})$, rows are output units; bias $(d_l,)$</td>
+</tr>
+<tr>
+<td>$\mathbf{z}^{(l)}, \mathbf{a}^{(l)}$</td>
+<td>pre-activation (logits); post-activation, with $\mathbf{a}^{(0)}=\mathbf{x}$</td>
+</tr>
+<tr>
+<td>$\phi$, $\phi'$</td>
+<td>elementwise activation and its derivative</td>
+</tr>
+<tr>
+<td>$\Phi, \varphi$</td>
+<td>standard normal CDF and PDF (GELU only)</td>
+</tr>
+<tr>
+<td>$\gamma$</td>
+<td>margin of a separating hyperplane</td>
+</tr>
+<tr>
+<td>$\mathbf{1}[\cdot]$</td>
+<td>indicator, 1 when the predicate holds</td>
+</tr>
+</tbody>
+</table>
+<p>The mathematical form throughout is $\mathbf{z}^{(l)} = \mathbf{W}^{(l)}\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}$, so $\mathbf{W}^{(l)}$ has one row per output unit and the batch form is $\mathbf{Z}^{(l)} = \mathbf{A}^{(l-1)}\mathbf{W}^{(l)\top} + \mathbf{1}\mathbf{b}^{(l)\top}$. The NumPy code stores the array transposed, so $\mathbf{X}\mathbf{W}_{\text{code}}$ equals $\mathbf{W}_{\text{math}}\mathbf{x}$ for one example. When a shape confuses you, transpose the entire derivation rather than one term.</p>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="the-biological-neuron-and-why-the-mapping-is-oversold">The biological neuron, and why the mapping is oversold</h3>
+<p><strong>Intuition.</strong> A cortical neuron integrates thousands of synapses across a dendritic tree and fires when the somatic potential crosses threshold. The artificial unit keeps the weighted sum and the threshold and discards the rest; the name is etymology, not mechanism.</p>
+<p><strong>Formal definition.</strong> A unit computes $a=\phi(\langle\mathbf{w},\mathbf{x}\rangle+b)$ with $\mathbf{w}\in\mathbb{R}^d$, $b\in\mathbb{R}$. McCulloch and Pitts (1943) used the step $\phi(z)=\mathbf{1}[z\ge0]$; modern practice uses a nonlinearity that is differentiable almost everywhere, which is the only property the abstraction needs, because it is what makes $\partial\mathcal{L}/\partial w_j$ available (<strong>M07</strong>).</p>
+<p><strong>Why it is built this way — and what it drops.</strong> Lost: dendritic computation (a pyramidal cell's dendrites perform nonlinear operations before the soma), spike timing (rate coding is an assumption), synaptic kinetics and short-term plasticity, and a few bits of effective synaptic precision. Disqualifying for the strong claim: <strong>weight transport</strong>. Backprop requires the backward signal to be multiplied by the same $\mathbf{W}$ used forwards, and no known biological mechanism reads out a forward weight and applies its transpose in a feedback pathway. Whether cortex approximates gradient descent some other way is genuinely contested. State the mapping as a naming convention and move on.</p>
+<p><strong>Worked micro-example.</strong> With $\mathbf{w}=(1,1)$, $b=-1.5$, $\phi(z)=\mathbf{1}[z\ge0]$ the unit computes AND: $(0,0)\to-1.5\to0$, $(1,0)\to-0.5\to0$, $(0,1)\to-0.5\to0$, $(1,1)\to0.5\to1$. Set $b=-0.5$ and you get OR. A single unit is a linear threshold function, and that family is exactly the linearly separable Boolean functions.</p>
+<h3 id="linear-separability-and-the-single-units-ceiling">Linear separability and the single unit's ceiling</h3>
+<p><strong>(1) Intuition.</strong> One unit draws one hyperplane and answers "which side". Any data set it can classify perfectly is one where a straight cut does the job.</p>
+<p><strong>(2) Formal definition.</strong> A labelled set $\{(\mathbf{x}_i,y_i)\}_{i=1}^{N}$ with $y_i\in\{-1,+1\}$ is linearly separable iff there exist $\mathbf{w},b$ with $y_i(\langle\mathbf{w},\mathbf{x}_i\rangle + b) > 0$ for all $i$. The boundary is $\{\mathbf{x}: \langle\mathbf{w},\mathbf{x}\rangle+b=0\}$, with normal $\mathbf{w}$ and signed offset $b/\|\mathbf{w}\|$.</p>
+<p><strong>(3) Why it is built this way.</strong> The ceiling is geometric, not optimization-related. No learning rate or regularization makes a single unit separate a non-separable set; the failure is representational, and the representational-versus-optimization distinction is one you will use for the rest of the course.</p>
+<p><strong>(4) Worked micro-example: XOR.</strong> With a step at zero, a separating $(\mathbf{w},b)$ must satisfy all four of</p>
+<p>$$
+b<0, \qquad w_1+b>0, \qquad w_2+b>0, \qquad w_1+w_2+b<0 .
+$$</p>
+<p>Adding the middle two gives $w_1+w_2 > -2b$; since $b<0$ we have $-2b>-b$, so $w_1+w_2 > -b$, contradicting the fourth constraint. No such $(\mathbf{w},b)$ exists.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 372" width="100%" role="img" aria-label="A matrix as a transformation of the plane" class="fig-svg"><defs><marker id="linmap-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="-17.9" y1="40.0" x2="-17.9" y2="320.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="64.6" y1="40.0" x2="64.6" y2="320.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="147.1" y1="40.0" x2="147.1" y2="320.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="229.6" y1="40.0" x2="229.6" y2="320.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="312.1" y1="40.0" x2="312.1" y2="320.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="394.6" y1="40.0" x2="394.6" y2="320.5" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="44.0" y1="390.6" x2="374.0" y2="390.6" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="44.0" y1="308.1" x2="374.0" y2="308.1" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="44.0" y1="225.6" x2="374.0" y2="225.6" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="44.0" y1="143.1" x2="374.0" y2="143.1" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="44.0" y1="60.6" x2="374.0" y2="60.6" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="44.0" y1="-21.9" x2="374.0" y2="-21.9" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="44.0" y1="225.6" x2="374.0" y2="225.6" stroke="var(--fig-faint,#3a4467)" stroke-width="1" stroke-linecap="round"/><line x1="147.1" y1="40.0" x2="147.1" y2="320.5" stroke="var(--fig-faint,#3a4467)" stroke-width="1" stroke-linecap="round"/><path d="M147.1,225.6 L229.6,225.6 L229.6,143.1 L147.1,143.1 Z" fill="rgba(91,140,255,0.07)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="4 3"/><path d="M147.1,225.6 L270.9,192.6 L320.4,93.6 L196.6,126.6 Z" fill="rgba(34,211,238,0.13)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><line x1="147.1" y1="225.6" x2="270.9" y2="192.6" stroke="var(--fig-blue,#5b8cff)" stroke-width="2.4" stroke-linecap="round" marker-end="url(#linmap-ah)"/><line x1="147.1" y1="225.6" x2="196.6" y2="126.6" stroke="var(--fig-amber,#f5b544)" stroke-width="2.4" stroke-linecap="round" marker-end="url(#linmap-ah)"/><line x1="147.1" y1="225.6" x2="229.6" y2="225.6" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.3" stroke-linecap="round" marker-end="url(#linmap-ah)" stroke-dasharray="3 3" opacity="0.55"/><line x1="147.1" y1="225.6" x2="147.1" y2="143.1" stroke="var(--fig-amber,#f5b544)" stroke-width="1.3" stroke-linecap="round" marker-end="url(#linmap-ah)" stroke-dasharray="3 3" opacity="0.55"/><text x="270.9" y="192.6" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-blue,#5b8cff)" text-anchor="start" font-weight="600">Ae1</text><text x="196.6" y="126.6" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12" fill="var(--fig-amber,#f5b544)" text-anchor="end" font-weight="600">Ae2</text><text x="44.0" y="360.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">dashed outline: the unit square you started with</text><rect x="410.0" y="40.0" width="392.0" height="296.0" rx="12" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="432.0" y="74.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="14" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">A =</text><path d="M484.0,54.0 L478.0,54.0 L478.0,94.3 L484.0,94.3" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M596.0,54.0 L602.0,54.0 L602.0,94.3 L596.0,94.3" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/><text x="540.0" y="69.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="13" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">1.5 0.6</text><text x="540.0" y="89.2" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="13" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">0.4 1.2</text><line x1="432.0" y1="112.0" x2="780.0" y2="112.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1" stroke-linecap="round"/><text x="432.0" y="138.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">det A</text><text x="520.0" y="138.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="650">1.56</text><text x="432.0" y="154.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">the area of the blue square is multiplied by 1.56</text><text x="432.0" y="184.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">rank</text><text x="520.0" y="184.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="650">2</text><text x="432.0" y="200.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">the image still covers the plane; nothing is flattened</text><text x="432.0" y="230.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Ae1</text><text x="520.0" y="230.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="650">(1.5, 0.4)</text><text x="432.0" y="246.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">where the first basis vector lands</text><text x="432.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Ae2</text><text x="520.0" y="276.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="650">(0.6, 1.2)</text><text x="432.0" y="292.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">where the second one lands</text><text x="432.0" y="326.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-violet,#a78bfa)" text-anchor="start" font-weight="600">every column of A is just the image of a basis vector.</text></svg><figcaption>A weight matrix acting on the plane: basis vectors move and the grid deforms. Read this as the single-unit picture, where the level sets of $\langle\mathbf{w},\mathbf{x}\rangle$ are parallel lines, so one unit can only carve space with parallel cuts.</figcaption></figure></p>
+<h3 id="from-neuron-to-layer-to-mlp">From neuron to layer to MLP</h3>
+<p><strong>(1) Intuition.</strong> A layer is many units sharing an input, which is a matrix. Depth is composition: a product of matrices with nonlinearities wedged between them.</p>
+<p><strong>(2) Formal definition.</strong> With $\mathbf{a}^{(0)}=\mathbf{x}$,</p>
+<p>$$
+\mathbf{z}^{(l)} = \mathbf{W}^{(l)}\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}, \qquad \mathbf{a}^{(l)} = \phi(\mathbf{z}^{(l)}),
+$$</p>
+<p>and an $L$-layer MLP is $\mathbf{a}^{(L)} = \phi(\mathbf{W}^{(L)}\phi(\cdots\phi(\mathbf{W}^{(1)}\mathbf{x}+\mathbf{b}^{(1)})\cdots)+\mathbf{b}^{(L)})$. Shape chain: $\mathbf{W}^{(1)}\in\mathbb{R}^{d_1\times d}$, then $\mathbf{W}^{(2)}\in\mathbb{R}^{d_2\times d_1}$, up to $\mathbf{W}^{(L)}\in\mathbb{R}^{d_L\times d_{L-1}}$.</p>
+<p><strong>(3) Why it is built this way.</strong> Without $\phi$ the stack collapses into one matrix, as the prerequisites check showed. With it, the composition becomes piecewise: a ReLU network with $L$ layers is piecewise affine with potentially exponentially many regions, while a single affine map has exactly one.</p>
+<p><strong>(4) Worked micro-example.</strong> The 2-2-1 network that computes XOR —</p>
+<p>$$
+\mathbf{W}^{(1)} = \begin{pmatrix} 4 & 4 \\ 4 & 4 \end{pmatrix},\quad \mathbf{b}^{(1)} = \begin{pmatrix} -2 \\ -6 \end{pmatrix},\quad \mathbf{W}^{(2)} = \begin{pmatrix} 12 & -12 \end{pmatrix},\quad b^{(2)} = -6,
+$$</p>
+<p>with $\tanh$ hidden units and a sign read-out. For $\mathbf{x}=(1,1)$: $\mathbf{z}^{(1)}=(6,2)$, $\mathbf{a}^{(1)}=(0.99999, 0.96403)$, $z^{(2)} = 12(0.99999) - 12(0.96403) - 6 = -5.5685 < 0$, answer 0. For $\mathbf{x}=(1,0)$: $\mathbf{z}^{(1)}=(2,-2)$, $\mathbf{a}^{(1)}=(0.96403,-0.96403)$, $z^{(2)} = 12(1.92806)-6 = 17.137 > 0$, answer 1. The first hidden unit is OR, the second AND, and the output subtracts AND from OR.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 392" width="100%" role="img" aria-label="One hidden layer, every tensor labelled with its shape" class="fig-svg"><defs><marker id="mlp-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="24.0" y="176.0" width="86.0" height="92.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.6"/><text x="67.0" y="218.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">x</text><text x="67.0" y="237.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">784 × 1</text><rect x="158.0" y="132.0" width="118.0" height="180.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.6"/><text x="217.0" y="218.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">W₁</text><text x="217.0" y="237.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">256 × 784</text><rect x="324.0" y="168.0" width="104.0" height="106.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.6"/><text x="376.0" y="217.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">h</text><text x="376.0" y="236.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">256</text><rect x="478.0" y="132.0" width="118.0" height="180.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.6"/><text x="537.0" y="218.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">W₂</text><text x="537.0" y="237.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">10 × 256</text><rect x="646.0" y="176.0" width="96.0" height="92.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6"/><text x="694.0" y="218.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">logits</text><text x="694.0" y="237.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">10</text><rect x="776.0" y="176.0" width="62.0" height="92.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.6"/><text x="807.0" y="218.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">p</text><text x="807.0" y="237.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">softmax</text><line x1="110.0" y1="222.0" x2="154.0" y2="222.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#mlp-ah)"/><text x="134.0" y="210.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">W₁x</text><line x1="276.0" y1="222.0" x2="320.0" y2="222.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#mlp-ah)"/><line x1="428.0" y1="222.0" x2="474.0" y2="222.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#mlp-ah)"/><text x="453.0" y="210.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">W₂h</text><line x1="596.0" y1="222.0" x2="642.0" y2="222.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#mlp-ah)"/><line x1="742.0" y1="222.0" x2="772.0" y2="222.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#mlp-ah)"/><text x="380.0" y="300.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">h = σ(W₁ x + b₁)</text><text x="380.0" y="322.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">logits = W₂ h + b₂</text><text x="380.0" y="344.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">p = softmax(logits)</text><rect x="24.0" y="52.0" width="812.0" height="52.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="430.0" y="74.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">parameters: 784·256 + 256 + 256·10 + 10 =</text><text x="430.0" y="94.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="650">200,704 + 256 + 2,560 + 10 = 203,530 trainable scalars</text><text x="430.0" y="26.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="12.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">a 2-layer MLP on 784-dim inputs producing 10 classes</text><text x="380.0" y="372.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">forward only. The backward pass visits these same shapes in reverse (M07).</text></svg><figcaption>One layer with every matrix labelled by shape: $\mathbf{W}^{(l)}$ is $d_l \times d_{l-1}$, the bias broadcasts along the batch axis, and this layer's output is the next layer's input. Check these shapes against the notation table before reading any architecture diagram in Phase 4.</figcaption></figure></p>
+<h3 id="activation-functions-derivatives-and-the-saturation-story">Activation functions: derivatives and the saturation story</h3>
+<p><strong>(1) Intuition.</strong> The nonlinearity is what stops the stack collapsing. A saturating nonlinearity is a door that sticks shut: its derivative falls towards zero at extreme inputs, and gradient must pass through it.</p>
+<p><strong>(2) Formal definition and derivatives.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>$\phi(z)$</th>
+<th>$\phi'(z)$</th>
+<th>Range</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sigmoid</td>
+<td>$\dfrac{1}{1+e^{-z}}$</td>
+<td>$\phi(1-\phi)$</td>
+<td>$(0,1)$</td>
+<td>$\phi'\le\tfrac14$</td>
+</tr>
+<tr>
+<td>tanh</td>
+<td>$\dfrac{e^z-e^{-z}}{e^z+e^{-z}}$</td>
+<td>$1-\phi^2$</td>
+<td>$(-1,1)$</td>
+<td>$\phi'\le 1$, zero-centred</td>
+</tr>
+<tr>
+<td>ReLU</td>
+<td>$\max(0,z)$</td>
+<td>$\mathbf{1}[z>0]$</td>
+<td>$[0,\infty)$</td>
+<td>exact zero gradient for $z<0$</td>
+</tr>
+<tr>
+<td>LeakyReLU</td>
+<td>$\max(\alpha z,z)$</td>
+<td>$\mathbf{1}[z>0]+\alpha\mathbf{1}[z\le0]$</td>
+<td>$\mathbb{R}$</td>
+<td>$\alpha\approx0.01$</td>
+</tr>
+<tr>
+<td>GELU</td>
+<td>$z\Phi(z)$</td>
+<td>$\Phi(z)+z\varphi(z)$</td>
+<td>$\approx(-0.17,\infty)$</td>
+<td>smooth, non-monotone</td>
+</tr>
+<tr>
+<td>SiLU</td>
+<td>$z\sigma(z)$</td>
+<td>$\sigma(z)[1+z(1-\sigma(z))]$</td>
+<td>$\approx(-0.28,\infty)$</td>
+<td>also called Swish</td>
+</tr>
+</tbody>
+</table>
+<p><strong>(3) Why it is built this way — the failure each one fixes.</strong> Sigmoid saturates on both sides (for $|z|>4$ the derivative is below $0.018$, so ten such layers attenuate by roughly $4^{-10}\approx10^{-6}$) and is not zero-centred, which biases the next layer's gradient. $\tanh$ is the sigmoid shifted and stretched ($\tanh z = 2\sigma(2z)-1$), fixing the centring and raising the peak derivative from $1/4$ to $1$ while keeping the saturation. ReLU removes saturation for positive inputs at the cost of the <strong>dead unit</strong>: a unit whose pre-activation is negative for every example gets exactly zero gradient and never recovers. LeakyReLU restores a slope $\alpha$ on the negative side so it can crawl back. GELU and SiLU are smooth, non-monotone, bounded below, and attenuate small negative values instead of zeroing them; GELU is the expectation of a unit with a randomly masked input, $z\,\mathbb{E}[\text{mask}] = z\Phi(z)$ under a Gaussian mask, which is how Hendrycks and Gimpel introduced it. ReLU and relatives are the default for hidden layers, sigmoid survives where you need an explicit probability or a gate (<strong>M11</strong>), and GELU/SiLU dominate modern transformers — an empirical convention, not a theorem.</p>
+<p><strong>(4) Worked micro-example.</strong> At $z=3$: $\sigma=0.9526$, so $\sigma' = 0.9526\times0.0474 = 0.0452$. At $z=6$: $\sigma' = 0.9975\times0.0025 = 0.00247$ — a factor of 18 smaller for a shift of 3. A ten-layer sigmoid stack sitting at $\pm6$ multiplies the backward signal by about $0.0025^{10}\approx10^{-26}$, which is floating-point zero next to the forward activations.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 430" width="100%" role="img" aria-label="The activation zoo, each with its derivative" class="fig-svg"><defs><marker id="act-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="30.0" y1="128.0" x2="276.0" y2="128.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="0.9" stroke-linecap="round"/><line x1="153.0" y1="40.0" x2="153.0" y2="172.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="0.9" stroke-linecap="round"/><path d="M30.0,127.8 L31.5,127.8 L33.1,127.7 L34.6,127.7 L36.1,127.7 L37.7,127.7 L39.2,127.7 L40.8,127.7 L42.3,127.6 L43.8,127.6 L45.4,127.6 L46.9,127.6 L48.5,127.5 L50.0,127.5 L51.5,127.5 L53.1,127.4 L54.6,127.4 L56.1,127.4 L57.7,127.3 L59.2,127.3 L60.8,127.2 L62.3,127.2 L63.8,127.1 L65.4,127.1 L66.9,127.0 L68.4,126.9 L70.0,126.9 L71.5,126.8 L73.1,126.7 L74.6,126.7 L76.1,126.6 L77.7,126.5 L79.2,126.4 L80.7,126.3 L82.3,126.2 L83.8,126.1 L85.3,126.0 L86.9,125.8 L88.4,125.7 L90.0,125.6 L91.5,125.4 L93.0,125.3 L94.6,125.1 L96.1,125.0 L97.7,124.8 L99.2,124.6 L100.7,124.4 L102.3,124.2 L103.8,124.0 L105.3,123.7 L106.9,123.5 L108.4,123.3 L110.0,123.0 L111.5,122.7 L113.0,122.4 L114.6,122.1 L116.1,121.8 L117.6,121.5 L119.2,121.2 L120.7,120.8 L122.2,120.5 L123.8,120.1 L125.3,119.7 L126.9,119.3 L128.4,118.9 L129.9,118.5 L131.5,118.0 L133.0,117.6 L134.6,117.1 L136.1,116.7 L137.6,116.2 L139.2,115.7 L140.7,115.2 L142.2,114.7 L143.8,114.2 L145.3,113.7 L146.9,113.2 L148.4,112.7 L149.9,112.1 L151.5,111.6 L153.0,111.1 L154.5,110.5 L156.1,110.0 L157.6,109.5 L159.2,109.0 L160.7,108.5 L162.2,107.9 L163.8,107.4 L165.3,106.9 L166.8,106.4 L168.4,106.0 L169.9,105.5 L171.5,105.0 L173.0,104.6 L174.5,104.1 L176.1,103.7 L177.6,103.3 L179.1,102.8 L180.7,102.4 L182.2,102.1 L183.8,101.7 L185.3,101.3 L186.8,101.0 L188.4,100.7 L189.9,100.3 L191.4,100.0 L193.0,99.7 L194.5,99.4 L196.1,99.2 L197.6,98.9 L199.1,98.7 L200.7,98.4 L202.2,98.2 L203.7,98.0 L205.3,97.8 L206.8,97.6 L208.4,97.4 L209.9,97.2 L211.4,97.0 L213.0,96.9 L214.5,96.7 L216.0,96.6 L217.6,96.4 L219.1,96.3 L220.7,96.2 L222.2,96.1 L223.7,96.0 L225.3,95.9 L226.8,95.8 L228.3,95.7 L229.9,95.6 L231.4,95.5 L233.0,95.4 L234.5,95.3 L236.0,95.3 L237.6,95.2 L239.1,95.1 L240.6,95.1 L242.2,95.0 L243.7,95.0 L245.2,94.9 L246.8,94.9 L248.3,94.8 L249.9,94.8 L251.4,94.8 L252.9,94.7 L254.5,94.7 L256.0,94.7 L257.6,94.6 L259.1,94.6 L260.6,94.6 L262.2,94.5 L263.7,94.5 L265.2,94.5 L266.8,94.5 L268.3,94.5 L269.9,94.4 L271.4,94.4 L272.9,94.4 L274.5,94.4 L276.0,94.4" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M30.0,127.8 L31.5,127.8 L33.1,127.7 L34.6,127.7 L36.1,127.7 L37.7,127.7 L39.2,127.7 L40.8,127.7 L42.3,127.6 L43.8,127.6 L45.4,127.6 L46.9,127.6 L48.5,127.5 L50.0,127.5 L51.5,127.5 L53.1,127.4 L54.6,127.4 L56.1,127.4 L57.7,127.3 L59.2,127.3 L60.8,127.2 L62.3,127.2 L63.8,127.1 L65.4,127.1 L66.9,127.0 L68.4,127.0 L70.0,126.9 L71.5,126.9 L73.1,126.8 L74.6,126.7 L76.1,126.6 L77.7,126.6 L79.2,126.5 L80.7,126.4 L82.3,126.3 L83.8,126.2 L85.3,126.1 L86.9,126.0 L88.4,125.9 L90.0,125.8 L91.5,125.6 L93.0,125.5 L94.6,125.4 L96.1,125.2 L97.7,125.1 L99.2,124.9 L100.7,124.8 L102.3,124.6 L103.8,124.4 L105.3,124.3 L106.9,124.1 L108.4,123.9 L110.0,123.7 L111.5,123.5 L113.0,123.3 L114.6,123.2 L116.1,123.0 L117.6,122.8 L119.2,122.5 L120.7,122.3 L122.2,122.1 L123.8,121.9 L125.3,121.7 L126.9,121.5 L128.4,121.3 L129.9,121.2 L131.5,121.0 L133.0,120.8 L134.6,120.6 L136.1,120.5 L137.6,120.3 L139.2,120.2 L140.7,120.0 L142.2,119.9 L143.8,119.8 L145.3,119.7 L146.9,119.7 L148.4,119.6 L149.9,119.6 L151.5,119.5 L153.0,119.5 L154.5,119.5 L156.1,119.6 L157.6,119.6 L159.2,119.7 L160.7,119.7 L162.2,119.8 L163.8,119.9 L165.3,120.0 L166.8,120.2 L168.4,120.3 L169.9,120.5 L171.5,120.6 L173.0,120.8 L174.5,121.0 L176.1,121.2 L177.6,121.3 L179.1,121.5 L180.7,121.7 L182.2,121.9 L183.8,122.1 L185.3,122.3 L186.8,122.5 L188.4,122.8 L189.9,123.0 L191.4,123.2 L193.0,123.3 L194.5,123.5 L196.1,123.7 L197.6,123.9 L199.1,124.1 L200.7,124.3 L202.2,124.4 L203.7,124.6 L205.3,124.8 L206.8,124.9 L208.4,125.1 L209.9,125.2 L211.4,125.4 L213.0,125.5 L214.5,125.6 L216.0,125.8 L217.6,125.9 L219.1,126.0 L220.7,126.1 L222.2,126.2 L223.7,126.3 L225.3,126.4 L226.8,126.5 L228.3,126.6 L229.9,126.6 L231.4,126.7 L233.0,126.8 L234.5,126.9 L236.0,126.9 L237.6,127.0 L239.1,127.0 L240.6,127.1 L242.2,127.1 L243.7,127.2 L245.2,127.2 L246.8,127.3 L248.3,127.3 L249.9,127.4 L251.4,127.4 L252.9,127.4 L254.5,127.5 L256.0,127.5 L257.6,127.5 L259.1,127.6 L260.6,127.6 L262.2,127.6 L263.7,127.6 L265.2,127.7 L266.8,127.7 L268.3,127.7 L269.9,127.7 L271.4,127.7 L272.9,127.7 L274.5,127.8 L276.0,127.8" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="4 3"/><text x="154.0" y="32.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">sigmoid</text><line x1="302.0" y1="128.0" x2="548.0" y2="128.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="0.9" stroke-linecap="round"/><line x1="425.0" y1="40.0" x2="425.0" y2="172.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="0.9" stroke-linecap="round"/><path d="M302.0,161.8 L303.5,161.8 L305.1,161.8 L306.6,161.8 L308.1,161.8 L309.7,161.8 L311.2,161.8 L312.8,161.8 L314.3,161.8 L315.8,161.8 L317.4,161.8 L318.9,161.8 L320.4,161.8 L322.0,161.8 L323.5,161.8 L325.1,161.8 L326.6,161.8 L328.1,161.8 L329.7,161.8 L331.2,161.8 L332.8,161.8 L334.3,161.8 L335.8,161.8 L337.4,161.8 L338.9,161.8 L340.4,161.8 L342.0,161.8 L343.5,161.8 L345.1,161.7 L346.6,161.7 L348.1,161.7 L349.7,161.7 L351.2,161.7 L352.7,161.7 L354.3,161.6 L355.8,161.6 L357.4,161.6 L358.9,161.5 L360.4,161.5 L362.0,161.4 L363.5,161.4 L365.0,161.3 L366.6,161.3 L368.1,161.2 L369.6,161.1 L371.2,161.0 L372.7,160.9 L374.3,160.8 L375.8,160.6 L377.3,160.5 L378.9,160.3 L380.4,160.1 L381.9,159.9 L383.5,159.6 L385.0,159.3 L386.6,159.0 L388.1,158.6 L389.6,158.2 L391.2,157.8 L392.7,157.3 L394.2,156.7 L395.8,156.1 L397.3,155.4 L398.9,154.6 L400.4,153.8 L401.9,152.8 L403.5,151.8 L405.0,150.7 L406.6,149.5 L408.1,148.2 L409.6,146.8 L411.2,145.3 L412.7,143.6 L414.2,141.9 L415.8,140.1 L417.3,138.2 L418.9,136.3 L420.4,134.3 L421.9,132.2 L423.5,130.1 L425.0,128.0 L426.5,125.9 L428.1,123.8 L429.6,121.7 L431.1,119.7 L432.7,117.8 L434.2,115.9 L435.8,114.1 L437.3,112.4 L438.8,110.7 L440.4,109.2 L441.9,107.8 L443.5,106.5 L445.0,105.3 L446.5,104.2 L448.1,103.2 L449.6,102.2 L451.1,101.4 L452.7,100.6 L454.2,99.9 L455.8,99.3 L457.3,98.7 L458.8,98.2 L460.4,97.8 L461.9,97.4 L463.4,97.0 L465.0,96.7 L466.5,96.4 L468.1,96.1 L469.6,95.9 L471.1,95.7 L472.7,95.5 L474.2,95.4 L475.7,95.2 L477.3,95.1 L478.8,95.0 L480.4,94.9 L481.9,94.8 L483.4,94.7 L485.0,94.7 L486.5,94.6 L488.0,94.6 L489.6,94.5 L491.1,94.5 L492.6,94.4 L494.2,94.4 L495.7,94.4 L497.3,94.3 L498.8,94.3 L500.3,94.3 L501.9,94.3 L503.4,94.3 L505.0,94.3 L506.5,94.2 L508.0,94.2 L509.6,94.2 L511.1,94.2 L512.6,94.2 L514.2,94.2 L515.7,94.2 L517.2,94.2 L518.8,94.2 L520.3,94.2 L521.9,94.2 L523.4,94.2 L524.9,94.2 L526.5,94.2 L528.0,94.2 L529.5,94.2 L531.1,94.2 L532.6,94.2 L534.2,94.2 L535.7,94.2 L537.2,94.2 L538.8,94.2 L540.3,94.2 L541.9,94.2 L543.4,94.2 L544.9,94.2 L546.5,94.2 L548.0,94.2" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M302.0,128.0 L303.5,128.0 L305.1,128.0 L306.6,128.0 L308.1,128.0 L309.7,128.0 L311.2,128.0 L312.8,128.0 L314.3,128.0 L315.8,128.0 L317.4,128.0 L318.9,128.0 L320.4,128.0 L322.0,128.0 L323.5,128.0 L325.1,128.0 L326.6,128.0 L328.1,127.9 L329.7,127.9 L331.2,127.9 L332.8,127.9 L334.3,127.9 L335.8,127.9 L337.4,127.9 L338.9,127.9 L340.4,127.9 L342.0,127.8 L343.5,127.8 L345.1,127.8 L346.6,127.8 L348.1,127.7 L349.7,127.7 L351.2,127.7 L352.7,127.6 L354.3,127.6 L355.8,127.5 L357.4,127.5 L358.9,127.4 L360.4,127.3 L362.0,127.2 L363.5,127.1 L365.0,127.0 L366.6,126.8 L368.1,126.7 L369.6,126.5 L371.2,126.3 L372.7,126.1 L374.3,125.9 L375.8,125.6 L377.3,125.3 L378.9,125.0 L380.4,124.6 L381.9,124.1 L383.5,123.7 L385.0,123.1 L386.6,122.5 L388.1,121.9 L389.6,121.2 L391.2,120.4 L392.7,119.5 L394.2,118.5 L395.8,117.5 L397.3,116.3 L398.9,115.1 L400.4,113.8 L401.9,112.4 L403.5,110.9 L405.0,109.4 L406.6,107.8 L408.1,106.2 L409.6,104.6 L411.2,103.0 L412.7,101.4 L414.2,99.9 L415.8,98.5 L417.3,97.3 L418.9,96.2 L420.4,95.3 L421.9,94.7 L423.5,94.3 L425.0,94.2 L426.5,94.3 L428.1,94.7 L429.6,95.3 L431.1,96.2 L432.7,97.3 L434.2,98.5 L435.8,99.9 L437.3,101.4 L438.8,103.0 L440.4,104.6 L441.9,106.2 L443.5,107.8 L445.0,109.4 L446.5,110.9 L448.1,112.4 L449.6,113.8 L451.1,115.1 L452.7,116.3 L454.2,117.5 L455.8,118.5 L457.3,119.5 L458.8,120.4 L460.4,121.2 L461.9,121.9 L463.4,122.5 L465.0,123.1 L466.5,123.7 L468.1,124.1 L469.6,124.6 L471.1,125.0 L472.7,125.3 L474.2,125.6 L475.7,125.9 L477.3,126.1 L478.8,126.3 L480.4,126.5 L481.9,126.7 L483.4,126.8 L485.0,127.0 L486.5,127.1 L488.0,127.2 L489.6,127.3 L491.1,127.4 L492.6,127.5 L494.2,127.5 L495.7,127.6 L497.3,127.6 L498.8,127.7 L500.3,127.7 L501.9,127.7 L503.4,127.8 L505.0,127.8 L506.5,127.8 L508.0,127.8 L509.6,127.9 L511.1,127.9 L512.6,127.9 L514.2,127.9 L515.7,127.9 L517.2,127.9 L518.8,127.9 L520.3,127.9 L521.9,127.9 L523.4,128.0 L524.9,128.0 L526.5,128.0 L528.0,128.0 L529.5,128.0 L531.1,128.0 L532.6,128.0 L534.2,128.0 L535.7,128.0 L537.2,128.0 L538.8,128.0 L540.3,128.0 L541.9,128.0 L543.4,128.0 L544.9,128.0 L546.5,128.0 L548.0,128.0" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="4 3"/><text x="426.0" y="32.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">tanh</text><line x1="574.0" y1="128.0" x2="820.0" y2="128.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="0.9" stroke-linecap="round"/><line x1="697.0" y1="40.0" x2="697.0" y2="172.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="0.9" stroke-linecap="round"/><path d="M574.0,128.0 L575.5,128.0 L577.1,128.0 L578.6,128.0 L580.1,128.0 L581.7,128.0 L583.2,128.0 L584.8,128.0 L586.3,128.0 L587.8,128.0 L589.4,128.0 L590.9,128.0 L592.5,128.0 L594.0,128.0 L595.5,128.0 L597.1,128.0 L598.6,128.0 L600.1,128.0 L601.7,128.0 L603.2,128.0 L604.8,128.0 L606.3,128.0 L607.8,128.0 L609.4,128.0 L610.9,128.0 L612.4,128.0 L614.0,128.0 L615.5,128.0 L617.0,128.0 L618.6,128.0 L620.1,128.0 L621.7,128.0 L623.2,128.0 L624.7,128.0 L626.3,128.0 L627.8,128.0 L629.4,128.0 L630.9,128.0 L632.4,128.0 L634.0,128.0 L635.5,128.0 L637.0,128.0 L638.6,128.0 L640.1,128.0 L641.6,128.0 L643.2,128.0 L644.7,128.0 L646.3,128.0 L647.8,128.0 L649.3,128.0 L650.9,128.0 L652.4,128.0 L654.0,128.0 L655.5,128.0 L657.0,128.0 L658.6,128.0 L660.1,128.0 L661.6,128.0 L663.2,128.0 L664.7,128.0 L666.2,128.0 L667.8,128.0 L669.3,128.0 L670.9,128.0 L672.4,128.0 L673.9,128.0 L675.5,128.0 L677.0,128.0 L678.5,128.0 L680.1,128.0 L681.6,128.0 L683.2,128.0 L684.7,128.0 L686.2,128.0 L687.8,128.0 L689.3,128.0 L690.9,128.0 L692.4,128.0 L693.9,128.0 L695.5,128.0 L697.0,128.0 L698.5,125.9 L700.1,123.8 L701.6,121.7 L703.1,119.5 L704.7,117.4 L706.2,115.3 L707.8,113.2 L709.3,111.1 L710.8,109.0 L712.4,106.8 L713.9,104.7 L715.5,102.6 L717.0,100.5 L718.5,98.4 L720.1,96.3 L721.6,94.2 L723.1,92.0 L724.7,89.9 L726.2,87.8 L727.8,85.7 L729.3,83.6 L730.8,81.5 L732.4,79.3 L733.9,77.2 L735.4,75.1 L737.0,73.0 L738.5,70.9 L740.0,68.8 L741.6,66.7 L743.1,64.5 L744.7,62.4 L746.2,60.3 L747.7,58.2 L749.3,56.1 L750.8,54.0 L752.4,51.8 L753.9,49.7 L755.4,47.6 L757.0,45.5 L758.5,43.4 L760.0,41.3 L761.6,39.2 L763.1,37.0 L764.6,34.9 L766.2,32.8 L767.7,30.7 L769.3,28.6 L770.8,26.5 L772.3,24.3 L773.9,22.2 L775.4,20.1 L777.0,18.0 L778.5,15.9 L780.0,13.8 L781.6,11.7 L783.1,9.5 L784.6,7.4 L786.2,5.3 L787.7,3.2 L789.2,1.1 L790.8,-1.0 L792.3,-3.2 L793.9,-5.3 L795.4,-7.4 L796.9,-9.5 L798.5,-11.6 L800.0,-13.7 L801.5,-15.8 L803.1,-18.0 L804.6,-20.1 L806.2,-22.2 L807.7,-24.3 L809.2,-26.4 L810.8,-28.5 L812.3,-30.7 L813.9,-32.8 L815.4,-34.9 L816.9,-37.0 L818.5,-39.1 L820.0,-41.2" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M574.0,128.0 L575.5,128.0 L577.1,128.0 L578.6,128.0 L580.1,128.0 L581.7,128.0 L583.2,128.0 L584.8,128.0 L586.3,128.0 L587.8,128.0 L589.4,128.0 L590.9,128.0 L592.5,128.0 L594.0,128.0 L595.5,128.0 L597.1,128.0 L598.6,128.0 L600.1,128.0 L601.7,128.0 L603.2,128.0 L604.8,128.0 L606.3,128.0 L607.8,128.0 L609.4,128.0 L610.9,128.0 L612.4,128.0 L614.0,128.0 L615.5,128.0 L617.0,128.0 L618.6,128.0 L620.1,128.0 L621.7,128.0 L623.2,128.0 L624.7,128.0 L626.3,128.0 L627.8,128.0 L629.4,128.0 L630.9,128.0 L632.4,128.0 L634.0,128.0 L635.5,128.0 L637.0,128.0 L638.6,128.0 L640.1,128.0 L641.6,128.0 L643.2,128.0 L644.7,128.0 L646.3,128.0 L647.8,128.0 L649.3,128.0 L650.9,128.0 L652.4,128.0 L654.0,128.0 L655.5,128.0 L657.0,128.0 L658.6,128.0 L660.1,128.0 L661.6,128.0 L663.2,128.0 L664.7,128.0 L666.2,128.0 L667.8,128.0 L669.3,128.0 L670.9,128.0 L672.4,128.0 L673.9,128.0 L675.5,128.0 L677.0,128.0 L678.5,128.0 L680.1,128.0 L681.6,128.0 L683.2,128.0 L684.7,128.0 L686.2,128.0 L687.8,128.0 L689.3,128.0 L690.9,128.0 L692.4,128.0 L693.9,128.0 L695.5,128.0 L697.0,111.1 L698.5,94.2 L700.1,94.2 L701.6,94.2 L703.1,94.2 L704.7,94.2 L706.2,94.2 L707.8,94.2 L709.3,94.2 L710.8,94.2 L712.4,94.2 L713.9,94.2 L715.5,94.2 L717.0,94.2 L718.5,94.2 L720.1,94.2 L721.6,94.2 L723.1,94.2 L724.7,94.2 L726.2,94.2 L727.8,94.2 L729.3,94.2 L730.8,94.2 L732.4,94.2 L733.9,94.2 L735.4,94.2 L737.0,94.2 L738.5,94.2 L740.0,94.2 L741.6,94.2 L743.1,94.2 L744.7,94.2 L746.2,94.2 L747.7,94.2 L749.3,94.2 L750.8,94.2 L752.4,94.2 L753.9,94.2 L755.4,94.2 L757.0,94.2 L758.5,94.2 L760.0,94.2 L761.6,94.2 L763.1,94.2 L764.6,94.2 L766.2,94.2 L767.7,94.2 L769.3,94.2 L770.8,94.2 L772.3,94.2 L773.9,94.2 L775.4,94.2 L777.0,94.2 L778.5,94.2 L780.0,94.2 L781.6,94.2 L783.1,94.2 L784.6,94.2 L786.2,94.2 L787.7,94.2 L789.2,94.2 L790.8,94.2 L792.3,94.2 L793.9,94.2 L795.4,94.2 L796.9,94.2 L798.5,94.2 L800.0,94.2 L801.5,94.2 L803.1,94.2 L804.6,94.2 L806.2,94.2 L807.7,94.2 L809.2,94.2 L810.8,94.2 L812.3,94.2 L813.9,94.2 L815.4,94.2 L816.9,94.2 L818.5,94.2 L820.0,94.2" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="4 3"/><text x="698.0" y="32.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">ReLU</text><line x1="30.0" y1="324.0" x2="276.0" y2="324.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="0.9" stroke-linecap="round"/><line x1="153.0" y1="236.0" x2="153.0" y2="368.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="0.9" stroke-linecap="round"/><path d="M30.0,340.9 L31.5,340.7 L33.1,340.5 L34.6,340.3 L36.1,340.1 L37.7,339.9 L39.2,339.7 L40.8,339.4 L42.3,339.2 L43.8,339.0 L45.4,338.8 L46.9,338.6 L48.5,338.4 L50.0,338.2 L51.5,338.0 L53.1,337.8 L54.6,337.5 L56.1,337.3 L57.7,337.1 L59.2,336.9 L60.8,336.7 L62.3,336.5 L63.8,336.3 L65.4,336.1 L66.9,335.8 L68.4,335.6 L70.0,335.4 L71.5,335.2 L73.1,335.0 L74.6,334.8 L76.1,334.6 L77.7,334.4 L79.2,334.2 L80.7,333.9 L82.3,333.7 L83.8,333.5 L85.3,333.3 L86.9,333.1 L88.4,332.9 L90.0,332.7 L91.5,332.5 L93.0,332.2 L94.6,332.0 L96.1,331.8 L97.7,331.6 L99.2,331.4 L100.7,331.2 L102.3,331.0 L103.8,330.8 L105.3,330.6 L106.9,330.3 L108.4,330.1 L110.0,329.9 L111.5,329.7 L113.0,329.5 L114.6,329.3 L116.1,329.1 L117.6,328.9 L119.2,328.7 L120.7,328.4 L122.2,328.2 L123.8,328.0 L125.3,327.8 L126.9,327.6 L128.4,327.4 L129.9,327.2 L131.5,327.0 L133.0,326.8 L134.6,326.5 L136.1,326.3 L137.6,326.1 L139.2,325.9 L140.7,325.7 L142.2,325.5 L143.8,325.3 L145.3,325.1 L146.9,324.8 L148.4,324.6 L149.9,324.4 L151.5,324.2 L153.0,324.0 L154.5,321.9 L156.1,319.8 L157.6,317.7 L159.2,315.5 L160.7,313.4 L162.2,311.3 L163.8,309.2 L165.3,307.1 L166.8,305.0 L168.4,302.8 L169.9,300.7 L171.5,298.6 L173.0,296.5 L174.5,294.4 L176.1,292.3 L177.6,290.2 L179.1,288.0 L180.7,285.9 L182.2,283.8 L183.8,281.7 L185.3,279.6 L186.8,277.5 L188.4,275.3 L189.9,273.2 L191.4,271.1 L193.0,269.0 L194.5,266.9 L196.1,264.8 L197.6,262.7 L199.1,260.5 L200.7,258.4 L202.2,256.3 L203.7,254.2 L205.3,252.1 L206.8,250.0 L208.4,247.8 L209.9,245.7 L211.4,243.6 L213.0,241.5 L214.5,239.4 L216.0,237.3 L217.6,235.2 L219.1,233.0 L220.7,230.9 L222.2,228.8 L223.7,226.7 L225.3,224.6 L226.8,222.5 L228.3,220.3 L229.9,218.2 L231.4,216.1 L233.0,214.0 L234.5,211.9 L236.0,209.8 L237.6,207.7 L239.1,205.5 L240.6,203.4 L242.2,201.3 L243.7,199.2 L245.2,197.1 L246.8,195.0 L248.3,192.8 L249.9,190.7 L251.4,188.6 L252.9,186.5 L254.5,184.4 L256.0,182.3 L257.6,180.2 L259.1,178.0 L260.6,175.9 L262.2,173.8 L263.7,171.7 L265.2,169.6 L266.8,167.5 L268.3,165.3 L269.9,163.2 L271.4,161.1 L272.9,159.0 L274.5,156.9 L276.0,154.8" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M30.0,320.6 L31.5,320.6 L33.1,320.6 L34.6,320.6 L36.1,320.6 L37.7,320.6 L39.2,320.6 L40.8,320.6 L42.3,320.6 L43.8,320.6 L45.4,320.6 L46.9,320.6 L48.5,320.6 L50.0,320.6 L51.5,320.6 L53.1,320.6 L54.6,320.6 L56.1,320.6 L57.7,320.6 L59.2,320.6 L60.8,320.6 L62.3,320.6 L63.8,320.6 L65.4,320.6 L66.9,320.6 L68.4,320.6 L70.0,320.6 L71.5,320.6 L73.1,320.6 L74.6,320.6 L76.1,320.6 L77.7,320.6 L79.2,320.6 L80.7,320.6 L82.3,320.6 L83.8,320.6 L85.3,320.6 L86.9,320.6 L88.4,320.6 L90.0,320.6 L91.5,320.6 L93.0,320.6 L94.6,320.6 L96.1,320.6 L97.7,320.6 L99.2,320.6 L100.7,320.6 L102.3,320.6 L103.8,320.6 L105.3,320.6 L106.9,320.6 L108.4,320.6 L110.0,320.6 L111.5,320.6 L113.0,320.6 L114.6,320.6 L116.1,320.6 L117.6,320.6 L119.2,320.6 L120.7,320.6 L122.2,320.6 L123.8,320.6 L125.3,320.6 L126.9,320.6 L128.4,320.6 L129.9,320.6 L131.5,320.6 L133.0,320.6 L134.6,320.6 L136.1,320.6 L137.6,320.6 L139.2,320.6 L140.7,320.6 L142.2,320.6 L143.8,320.6 L145.3,320.6 L146.9,320.6 L148.4,320.6 L149.9,320.6 L151.5,320.6 L153.0,305.4 L154.5,290.2 L156.1,290.2 L157.6,290.2 L159.2,290.2 L160.7,290.2 L162.2,290.2 L163.8,290.2 L165.3,290.2 L166.8,290.2 L168.4,290.2 L169.9,290.2 L171.5,290.2 L173.0,290.2 L174.5,290.2 L176.1,290.2 L177.6,290.2 L179.1,290.2 L180.7,290.2 L182.2,290.2 L183.8,290.2 L185.3,290.2 L186.8,290.2 L188.4,290.2 L189.9,290.2 L191.4,290.2 L193.0,290.2 L194.5,290.2 L196.1,290.2 L197.6,290.2 L199.1,290.2 L200.7,290.2 L202.2,290.2 L203.7,290.2 L205.3,290.2 L206.8,290.2 L208.4,290.2 L209.9,290.2 L211.4,290.2 L213.0,290.2 L214.5,290.2 L216.0,290.2 L217.6,290.2 L219.1,290.2 L220.7,290.2 L222.2,290.2 L223.7,290.2 L225.3,290.2 L226.8,290.2 L228.3,290.2 L229.9,290.2 L231.4,290.2 L233.0,290.2 L234.5,290.2 L236.0,290.2 L237.6,290.2 L239.1,290.2 L240.6,290.2 L242.2,290.2 L243.7,290.2 L245.2,290.2 L246.8,290.2 L248.3,290.2 L249.9,290.2 L251.4,290.2 L252.9,290.2 L254.5,290.2 L256.0,290.2 L257.6,290.2 L259.1,290.2 L260.6,290.2 L262.2,290.2 L263.7,290.2 L265.2,290.2 L266.8,290.2 L268.3,290.2 L269.9,290.2 L271.4,290.2 L272.9,290.2 L274.5,290.2 L276.0,290.2" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="4 3"/><text x="154.0" y="228.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">LeakyReLU</text><line x1="302.0" y1="324.0" x2="548.0" y2="324.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="0.9" stroke-linecap="round"/><line x1="425.0" y1="236.0" x2="425.0" y2="368.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="0.9" stroke-linecap="round"/><path d="M302.0,324.0 L303.5,324.0 L305.1,324.0 L306.6,324.0 L308.1,324.0 L309.7,324.0 L311.2,324.0 L312.8,324.0 L314.3,324.0 L315.8,324.0 L317.4,324.0 L318.9,324.0 L320.4,324.0 L322.0,324.0 L323.5,324.0 L325.1,324.0 L326.6,324.0 L328.1,324.0 L329.7,324.0 L331.2,324.0 L332.8,324.0 L334.3,324.0 L335.8,324.0 L337.4,324.0 L338.9,324.0 L340.4,324.0 L342.0,324.0 L343.5,324.0 L345.1,324.1 L346.6,324.1 L348.1,324.1 L349.7,324.1 L351.2,324.1 L352.7,324.1 L354.3,324.2 L355.8,324.2 L357.4,324.3 L358.9,324.3 L360.4,324.4 L362.0,324.4 L363.5,324.5 L365.0,324.6 L366.6,324.7 L368.1,324.8 L369.6,324.9 L371.2,325.1 L372.7,325.2 L374.3,325.4 L375.8,325.5 L377.3,325.7 L378.9,325.9 L380.4,326.1 L381.9,326.4 L383.5,326.6 L385.0,326.9 L386.6,327.1 L388.1,327.4 L389.6,327.7 L391.2,327.9 L392.7,328.2 L394.2,328.5 L395.8,328.7 L397.3,329.0 L398.9,329.2 L400.4,329.4 L401.9,329.5 L403.5,329.7 L405.0,329.7 L406.6,329.8 L408.1,329.7 L409.6,329.6 L411.2,329.5 L412.7,329.2 L414.2,328.9 L415.8,328.5 L417.3,328.0 L418.9,327.4 L420.4,326.7 L421.9,325.9 L423.5,325.0 L425.0,324.0 L426.5,322.9 L428.1,321.7 L429.6,320.4 L431.1,318.9 L432.7,317.4 L434.2,315.8 L435.8,314.1 L437.3,312.3 L438.8,310.4 L440.4,308.5 L441.9,306.5 L443.5,304.4 L445.0,302.2 L446.5,300.0 L448.1,297.8 L449.6,295.5 L451.1,293.2 L452.7,290.9 L454.2,288.5 L455.8,286.2 L457.3,283.8 L458.8,281.4 L460.4,279.0 L461.9,276.6 L463.4,274.2 L465.0,271.9 L466.5,269.5 L468.1,267.1 L469.6,264.8 L471.1,262.5 L472.7,260.1 L474.2,257.8 L475.7,255.6 L477.3,253.3 L478.8,251.0 L480.4,248.8 L481.9,246.5 L483.4,244.3 L485.0,242.1 L486.5,239.9 L488.0,237.7 L489.6,235.5 L491.1,233.3 L492.6,231.2 L494.2,229.0 L495.7,226.9 L497.3,224.7 L498.8,222.6 L500.3,220.4 L501.9,218.3 L503.4,216.2 L505.0,214.1 L506.5,211.9 L508.0,209.8 L509.6,207.7 L511.1,205.6 L512.6,203.4 L514.2,201.3 L515.7,199.2 L517.2,197.1 L518.8,195.0 L520.3,192.9 L521.9,190.7 L523.4,188.6 L524.9,186.5 L526.5,184.4 L528.0,182.3 L529.5,180.2 L531.1,178.0 L532.6,175.9 L534.2,173.8 L535.7,171.7 L537.2,169.6 L538.8,167.5 L540.3,165.3 L541.9,163.2 L543.4,161.1 L544.9,159.0 L546.5,156.9 L548.0,154.8" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M302.0,324.0 L303.5,324.0 L305.1,324.0 L306.6,324.0 L308.1,324.0 L309.7,324.0 L311.2,324.0 L312.8,324.0 L314.3,324.0 L315.8,324.0 L317.4,324.0 L318.9,324.0 L320.4,324.0 L322.0,324.0 L323.5,324.0 L325.1,324.0 L326.6,324.0 L328.1,324.0 L329.7,324.0 L331.2,324.0 L332.8,324.0 L334.3,324.0 L335.8,324.1 L337.4,324.1 L338.9,324.1 L340.4,324.1 L342.0,324.1 L343.5,324.2 L345.1,324.2 L346.6,324.2 L348.1,324.3 L349.7,324.3 L351.2,324.4 L352.7,324.5 L354.3,324.5 L355.8,324.6 L357.4,324.7 L358.9,324.9 L360.4,325.0 L362.0,325.1 L363.5,325.3 L365.0,325.5 L366.6,325.6 L368.1,325.8 L369.6,326.0 L371.2,326.2 L372.7,326.5 L374.3,326.7 L375.8,326.9 L377.3,327.1 L378.9,327.4 L380.4,327.6 L381.9,327.8 L383.5,328.0 L385.0,328.1 L386.6,328.2 L388.1,328.3 L389.6,328.4 L391.2,328.4 L392.7,328.3 L394.2,328.1 L395.8,327.9 L397.3,327.6 L398.9,327.3 L400.4,326.8 L401.9,326.2 L403.5,325.6 L405.0,324.8 L406.6,324.0 L408.1,323.0 L409.6,321.9 L411.2,320.8 L412.7,319.5 L414.2,318.2 L415.8,316.7 L417.3,315.2 L418.9,313.7 L420.4,312.1 L421.9,310.4 L423.5,308.8 L425.0,307.1 L426.5,305.4 L428.1,303.7 L429.6,302.1 L431.1,300.5 L432.7,298.9 L434.2,297.4 L435.8,296.0 L437.3,294.6 L438.8,293.4 L440.4,292.2 L441.9,291.2 L443.5,290.2 L445.0,289.3 L446.5,288.6 L448.1,287.9 L449.6,287.3 L451.1,286.9 L452.7,286.5 L454.2,286.2 L455.8,286.0 L457.3,285.9 L458.8,285.8 L460.4,285.8 L461.9,285.8 L463.4,285.9 L465.0,286.0 L466.5,286.2 L468.1,286.4 L469.6,286.6 L471.1,286.8 L472.7,287.0 L474.2,287.2 L475.7,287.5 L477.3,287.7 L478.8,287.9 L480.4,288.1 L481.9,288.3 L483.4,288.5 L485.0,288.7 L486.5,288.9 L488.0,289.0 L489.6,289.2 L491.1,289.3 L492.6,289.4 L494.2,289.5 L495.7,289.6 L497.3,289.7 L498.8,289.8 L500.3,289.8 L501.9,289.9 L503.4,289.9 L505.0,290.0 L506.5,290.0 L508.0,290.0 L509.6,290.1 L511.1,290.1 L512.6,290.1 L514.2,290.1 L515.7,290.1 L517.2,290.1 L518.8,290.1 L520.3,290.1 L521.9,290.1 L523.4,290.1 L524.9,290.1 L526.5,290.1 L528.0,290.1 L529.5,290.2 L531.1,290.2 L532.6,290.2 L534.2,290.2 L535.7,290.2 L537.2,290.2 L538.8,290.2 L540.3,290.2 L541.9,290.2 L543.4,290.2 L544.9,290.2 L546.5,290.2 L548.0,290.2" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="4 3"/><text x="426.0" y="228.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">GELU</text><line x1="574.0" y1="324.0" x2="820.0" y2="324.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="0.9" stroke-linecap="round"/><line x1="697.0" y1="236.0" x2="697.0" y2="368.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="0.9" stroke-linecap="round"/><path d="M574.0,325.1 L575.5,325.2 L577.1,325.3 L578.6,325.3 L580.1,325.4 L581.7,325.4 L583.2,325.5 L584.8,325.6 L586.3,325.7 L587.8,325.8 L589.4,325.8 L590.9,325.9 L592.5,326.0 L594.0,326.1 L595.5,326.2 L597.1,326.3 L598.6,326.4 L600.1,326.5 L601.7,326.7 L603.2,326.8 L604.8,326.9 L606.3,327.0 L607.8,327.2 L609.4,327.3 L610.9,327.5 L612.4,327.6 L614.0,327.8 L615.5,327.9 L617.0,328.1 L618.6,328.3 L620.1,328.5 L621.7,328.6 L623.2,328.8 L624.7,329.0 L626.3,329.2 L627.8,329.4 L629.4,329.6 L630.9,329.8 L632.4,330.0 L634.0,330.2 L635.5,330.4 L637.0,330.6 L638.6,330.8 L640.1,331.1 L641.6,331.3 L643.2,331.5 L644.7,331.7 L646.3,331.9 L647.8,332.1 L649.3,332.3 L650.9,332.4 L652.4,332.6 L654.0,332.8 L655.5,332.9 L657.0,333.0 L658.6,333.2 L660.1,333.3 L661.6,333.3 L663.2,333.4 L664.7,333.4 L666.2,333.4 L667.8,333.4 L669.3,333.3 L670.9,333.2 L672.4,333.1 L673.9,332.9 L675.5,332.7 L677.0,332.5 L678.5,332.1 L680.1,331.8 L681.6,331.4 L683.2,330.9 L684.7,330.4 L686.2,329.8 L687.8,329.2 L689.3,328.5 L690.9,327.7 L692.4,326.9 L693.9,326.0 L695.5,325.0 L697.0,324.0 L698.5,322.9 L700.1,321.8 L701.6,320.5 L703.1,319.2 L704.7,317.9 L706.2,316.5 L707.8,315.0 L709.3,313.5 L710.8,311.9 L712.4,310.2 L713.9,308.5 L715.5,306.8 L717.0,305.0 L718.5,303.1 L720.1,301.2 L721.6,299.3 L723.1,297.3 L724.7,295.3 L726.2,293.2 L727.8,291.1 L729.3,289.0 L730.8,286.9 L732.4,284.7 L733.9,282.5 L735.4,280.3 L737.0,278.0 L738.5,275.8 L740.0,273.5 L741.6,271.3 L743.1,269.0 L744.7,266.7 L746.2,264.4 L747.7,262.1 L749.3,259.8 L750.8,257.4 L752.4,255.1 L753.9,252.8 L755.4,250.5 L757.0,248.1 L758.5,245.8 L760.0,243.5 L761.6,241.2 L763.1,238.8 L764.6,236.5 L766.2,234.2 L767.7,231.9 L769.3,229.6 L770.8,227.3 L772.3,225.0 L773.9,222.7 L775.4,220.4 L777.0,218.1 L778.5,215.8 L780.0,213.5 L781.6,211.3 L783.1,209.0 L784.6,206.7 L786.2,204.5 L787.7,202.2 L789.2,200.0 L790.8,197.8 L792.3,195.5 L793.9,193.3 L795.4,191.1 L796.9,188.8 L798.5,186.6 L800.0,184.4 L801.5,182.2 L803.1,180.0 L804.6,177.8 L806.2,175.6 L807.7,173.4 L809.2,171.2 L810.8,169.0 L812.3,166.8 L813.9,164.6 L815.4,162.4 L816.9,160.3 L818.5,158.1 L820.0,155.9" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M574.0,324.9 L575.5,324.9 L577.1,325.0 L578.6,325.0 L580.1,325.1 L581.7,325.1 L583.2,325.2 L584.8,325.2 L586.3,325.3 L587.8,325.3 L589.4,325.4 L590.9,325.5 L592.5,325.5 L594.0,325.6 L595.5,325.6 L597.1,325.7 L598.6,325.8 L600.1,325.9 L601.7,325.9 L603.2,326.0 L604.8,326.1 L606.3,326.1 L607.8,326.2 L609.4,326.3 L610.9,326.4 L612.4,326.5 L614.0,326.5 L615.5,326.6 L617.0,326.7 L618.6,326.8 L620.1,326.8 L621.7,326.9 L623.2,327.0 L624.7,327.0 L626.3,327.1 L627.8,327.2 L629.4,327.2 L630.9,327.3 L632.4,327.3 L634.0,327.3 L635.5,327.4 L637.0,327.4 L638.6,327.4 L640.1,327.4 L641.6,327.3 L643.2,327.3 L644.7,327.2 L646.3,327.2 L647.8,327.1 L649.3,327.0 L650.9,326.8 L652.4,326.7 L654.0,326.5 L655.5,326.2 L657.0,326.0 L658.6,325.7 L660.1,325.4 L661.6,325.0 L663.2,324.7 L664.7,324.2 L666.2,323.8 L667.8,323.3 L669.3,322.7 L670.9,322.2 L672.4,321.6 L673.9,320.9 L675.5,320.2 L677.0,319.5 L678.5,318.7 L680.1,317.9 L681.6,317.0 L683.2,316.1 L684.7,315.2 L686.2,314.3 L687.8,313.3 L689.3,312.3 L690.9,311.3 L692.4,310.2 L693.9,309.2 L695.5,308.1 L697.0,307.1 L698.5,306.0 L700.1,305.0 L701.6,303.9 L703.1,302.9 L704.7,301.9 L706.2,300.9 L707.8,299.9 L709.3,299.0 L710.8,298.0 L712.4,297.2 L713.9,296.3 L715.5,295.5 L717.0,294.7 L718.5,294.0 L720.1,293.3 L721.6,292.6 L723.1,292.0 L724.7,291.4 L726.2,290.9 L727.8,290.4 L729.3,289.9 L730.8,289.5 L732.4,289.1 L733.9,288.8 L735.4,288.4 L737.0,288.2 L738.5,287.9 L740.0,287.7 L741.6,287.5 L743.1,287.3 L744.7,287.2 L746.2,287.1 L747.7,287.0 L749.3,286.9 L750.8,286.9 L752.4,286.8 L753.9,286.8 L755.4,286.8 L757.0,286.8 L758.5,286.8 L760.0,286.8 L761.6,286.8 L763.1,286.9 L764.6,286.9 L766.2,287.0 L767.7,287.0 L769.3,287.1 L770.8,287.2 L772.3,287.2 L773.9,287.3 L775.4,287.4 L777.0,287.5 L778.5,287.5 L780.0,287.6 L781.6,287.7 L783.1,287.8 L784.6,287.9 L786.2,287.9 L787.7,288.0 L789.2,288.1 L790.8,288.2 L792.3,288.2 L793.9,288.3 L795.4,288.4 L796.9,288.4 L798.5,288.5 L800.0,288.6 L801.5,288.6 L803.1,288.7 L804.6,288.8 L806.2,288.8 L807.7,288.9 L809.2,288.9 L810.8,289.0 L812.3,289.0 L813.9,289.1 L815.4,289.1 L816.9,289.2 L818.5,289.2 L820.0,289.3" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="4 3"/><text x="698.0" y="228.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">SiLU / Swish</text><rect x="30.0" y="404.0" width="12.0" height="12.0" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5"/><text x="50.0" y="414.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">f(x)</text><rect x="110.0" y="404.0" width="12.0" height="12.0" rx="3" fill="var(--fig-amber,#f5b544)" stroke="none" stroke-width="1.5"/><text x="130.0" y="414.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">f&#x27;(x)</text><text x="430.0" y="414.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">note where each derivative saturates: that is where gradients die</text></svg><figcaption>The activation zoo with saturation regions shaded. Compare where each curve stops having usable slope, and note that only ReLU has an exactly flat, exactly zero-gradient region rather than an asymptote.</figcaption></figure></p>
+<p><div class="viz" data-viz="v-activation"></div><div class="vizcap">Switch between sigmoid, tanh, ReLU, GELU, and SiLU, then drag the input point and watch $f(x)$ and $f'(x)$ update together. Watch the derivative panel as you push $x$ past $\pm4$: that collapse is the saturation the derivations below turn into a depth scaling law.</div></p>
+<h3 id="softmax-is-a-different-kind-of-object">Softmax is a different kind of object</h3>
+<p><strong>(1) Intuition.</strong> Sigmoid and friends look at one number at a time; softmax looks at the whole vector and forces it onto the probability simplex, so raising one entry necessarily lowers the others.</p>
+<p><strong>(2) Formal definition.</strong> $\operatorname{softmax}(\mathbf{z})_i = e^{z_i}/\sum_k e^{z_k}$ for logits $\mathbf{z}\in\mathbb{R}^K$. <strong>Shift invariance:</strong> adding $c$ to all logits multiplies numerator and denominator by $e^c$, which is why implementations subtract the row max before exponentiating. <strong>Coupling:</strong> the Jacobian is $\operatorname{diag}(\mathbf{s})-\mathbf{s}\mathbf{s}^\top$, derived in the Derivations section; it is dense and rank-deficient by one.</p>
+<p><strong>(3) Why it is built this way.</strong> Exclusive classification needs $K$ nonnegative numbers summing to one, and softmax is the smooth analogue of argmax. Note what it is not: a representation-preserving activation. It destroys scale information, which is why it sits at the output, or as attention weights (<strong>M12</strong>), and essentially nowhere else.</p>
+<p><strong>(4) Worked micro-example.</strong> Logits $(2,1,0)$ give $e^{\mathbf{z}}=(7.3891,2.7183,1)$, sum $11.1074$, so $\mathbf{s}=(0.6652,0.2447,0.0900)$; add 100 to every logit and the output is identical. Scale to $(20,10,0)$ and you get $(0.99995,0.00005,0.00000)$ with a Jacobian near zero — the softmax saturation that label smoothing addresses in <strong>M08</strong>.</p>
+<h3 id="universal-approximation-what-it-says-and-what-it-does-not">Universal approximation: what it says and what it does not</h3>
+<p><strong>(1) Intuition.</strong> A smooth nonlinearity with controllable sharpness can be squeezed into a step; a weighted sum of steps is a staircase; a staircase follows any continuous curve as closely as you like.</p>
+<p><strong>(2) Formal statement.</strong> Let $\phi$ be continuous, bounded, with limits $0$ and $1$ at $-\infty$ and $+\infty$. Then finite sums</p>
+<p>$$
+g(\mathbf{x}) = \sum_{j=1}^{N} v_j\,\phi(\langle\mathbf{w}_j,\mathbf{x}\rangle + b_j)
+$$</p>
+<p>are dense in $C([0,1]^d)$ under the sup norm — Cybenko's 1989 theorem, with Hornik (1991) showing the real hypothesis is that $\phi$ be non-polynomial. The proof and the four non-promises are in the Derivations section.</p>
+<p><strong>(3) Why it is built this way.</strong> It is a negative result in a positive costume: the architecture family is not the bottleneck, which is exactly why you must look at optimization, data, and inductive bias when a model fails.</p>
+<p><strong>(4) Worked micro-example.</strong> Approximate $f(x)=x^2$ on $[0,1]$ by a staircase of $N$ equal cells. The error is at most the modulus of continuity $\omega_f(1/N)=2/N-1/N^2$: $0.1211$ at $N=16$, halving as $N$ doubles. Error scales like $O(1/N)$, which is why width is not free.</p>
+<h3 id="depth-versus-width">Depth versus width</h3>
+<p><strong>(1) Intuition.</strong> Composition multiplies. A function built by iterating a two-piece squiggle $L$ times has $2^L$ pieces; one wide layer must buy every piece with its own unit.</p>
+<p><strong>(2) Formal counting argument.</strong> In one dimension $\sum_{j=1}^{W} v_j\max(0,w_jx+b_j)$ has at most $W$ breakpoints, hence at most $W+1$ linear pieces. Take the tent map $g(x)=\max(0,2x)-2\max(0,2x-1)$ on $[0,1]$ and compose it with itself $L$ times: the piece count doubles each time, so $g^{\circ L}$ has $2^L$ pieces and is represented by $L$ layers of width 2, about $4L$ parameters, while one hidden layer needs at least $2^L-1$ units. That is the claim, and it is provable (Montúfar and coauthors, 2014).</p>
+<p><strong>(3) Why it is built this way.</strong> It is the defensible version of "depth is more expressive", and it says nothing about whether you want those functions, whether gradient descent finds them, or whether a task benefits: empirically depth helps until optimization difficulty dominates (<strong>M08</strong>).</p>
+<p><strong>(4) Worked micro-example.</strong> Ten layers of width 2 give $2^{10}=1024$ pieces with roughly 40 parameters; the shallow equivalent needs 1023 hidden units, about 2050 parameters — a factor of 50, doubling every two extra layers.</p>
+<h3 id="initialization-variance-preservation">Initialization: variance preservation</h3>
+<p><strong>(1) Intuition.</strong> Each layer multiplies the activation by a random matrix scale. A multiplier slightly above 1 explodes geometrically; slightly below 1 vanishes. Initialization is the choice of multiplier, and the derivations pin it to 1.</p>
+<p><strong>(2) Formal definition.</strong> Xavier/Glorot: $\mathrm{Var}(W_{ij}) = 2/(d_{\text{in}}+d_{\text{out}})$. He, for ReLU: $\mathrm{Var}(W_{ij}) = 2/d_{\text{in}}$. Biases are zero. Both follow from requiring that the activation variance be preserved across layers (Derivations, §4).</p>
+<p><strong>(3) Why it is built this way.</strong> Exponential scaling over 30-100 layers destroys trainability in a way no learning rate repairs. With $\mathrm{Var}(W)=1/d_{\text{in}}$ and ReLU the per-layer forward gain is exactly $1/2$ (ReLU zeroes half the second moment), so activations decay like $2^{-L/2}$ and the backward pass dies identically; He restores the factor of 2. The derivation assumes symmetric zero-mean pre-activations, which stops being exactly true after the first ReLU layer — hence the drift in the table below, and one reason normalization exists (<strong>M08</strong>).</p>
+<p><strong>(4) Worked micro-example.</strong> A 12-layer ReLU MLP of width 256, unit-variance Gaussian input, weights $\mathcal{N}(0,k/d)$, activation RMS by layer (simulated, 8000 inputs; $k=1$ is half of He, $k=2$ is He, $k=4$ is double):</p>
+<table>
+<thead>
+<tr>
+<th>layer</th>
+<th>$k=1$</th>
+<th>$k=2$</th>
+<th>$k=4$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0.999</td>
+<td>1.001</td>
+<td>1.000</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.242</td>
+<td>1.022</td>
+<td>4.340</td>
+</tr>
+<tr>
+<td>8</td>
+<td>0.072</td>
+<td>0.998</td>
+<td>18.648</td>
+</tr>
+<tr>
+<td>12</td>
+<td>0.017</td>
+<td>0.957</td>
+<td>81.688</td>
+</tr>
+</tbody>
+</table>
+<p>Theory predicts the RMS ratio $(k/2)^{L/2}$: $0.0156$, $1.000$, $64.0$ at layer 12, so the simulation agrees to within a factor of 1.3, the residual being the symmetry assumption failing. A factor-81 blow-up at layer 12 is what a 2× too-large init does, and in fp16 it overflows within a few dozen layers.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 360" width="100%" role="img" aria-label="Activation scale across depth under three initializations" class="fig-svg"><defs><marker id="init-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="84.0" y1="292.0" x2="604.0" y2="292.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><text x="74.0" y="296.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">0</text><line x1="84.0" y1="232.0" x2="604.0" y2="232.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><text x="74.0" y="236.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e-2</text><line x1="84.0" y1="172.0" x2="604.0" y2="172.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><text x="74.0" y="176.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e0</text><line x1="84.0" y1="112.0" x2="604.0" y2="112.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><text x="74.0" y="116.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e2</text><line x1="84.0" y1="52.0" x2="604.0" y2="52.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/><text x="74.0" y="56.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">1e4</text><line x1="84.0" y1="292.0" x2="604.0" y2="292.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.4" stroke-linecap="round"/><line x1="84.0" y1="52.0" x2="84.0" y2="292.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.4" stroke-linecap="round"/><path d="M84.0,292.0 L118.7,276.8 L153.3,261.7 L188.0,246.5 L222.7,231.4 L257.3,216.2 L292.0,201.1 L326.7,185.9 L361.3,170.8 L396.0,155.6 L430.7,140.5 L465.3,125.3 L500.0,110.1 L534.7,95.0 L569.3,79.8 L604.0,64.7" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="84.0" cy="292.0" r="2.6" fill="var(--fig-rose,#fb7185)"/><circle cx="222.7" cy="231.4" r="2.6" fill="var(--fig-rose,#fb7185)"/><circle cx="361.3" cy="170.8" r="2.6" fill="var(--fig-rose,#fb7185)"/><circle cx="500.0" cy="110.1" r="2.6" fill="var(--fig-rose,#fb7185)"/><path d="M84.0,292.0 L118.7,306.8 L153.3,321.7 L188.0,336.5 L222.7,351.4 L257.3,366.2 L292.0,381.1 L326.7,395.9 L361.3,410.8 L396.0,412.0 L430.7,412.0 L465.3,412.0 L500.0,412.0 L534.7,412.0 L569.3,412.0 L604.0,412.0" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="84.0" cy="292.0" r="2.6" fill="var(--fig-amber,#f5b544)"/><circle cx="222.7" cy="351.4" r="2.6" fill="var(--fig-amber,#f5b544)"/><circle cx="361.3" cy="410.8" r="2.6" fill="var(--fig-amber,#f5b544)"/><circle cx="500.0" cy="412.0" r="2.6" fill="var(--fig-amber,#f5b544)"/><path d="M84.0,292.0 L118.7,292.0 L153.3,292.0 L188.0,292.0 L222.7,292.0 L257.3,292.0 L292.0,292.0 L326.7,292.0 L361.3,292.0 L396.0,292.0 L430.7,292.0 L465.3,292.0 L500.0,292.0 L534.7,292.0 L569.3,292.0 L604.0,292.0" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="84.0" cy="292.0" r="2.6" fill="var(--fig-cyan,#22d3ee)"/><circle cx="222.7" cy="292.0" r="2.6" fill="var(--fig-cyan,#22d3ee)"/><circle cx="361.3" cy="292.0" r="2.6" fill="var(--fig-cyan,#22d3ee)"/><circle cx="500.0" cy="292.0" r="2.6" fill="var(--fig-cyan,#22d3ee)"/><text x="344.0" y="336.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">layer index →</text><text x="84.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">log₁₀ of activation variance, relative to layer 1</text><rect x="628.0" y="84.0" width="186.0" height="108.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><rect x="644.0" y="102.0" width="11.0" height="11.0" rx="3" fill="var(--fig-rose,#fb7185)" stroke="none" stroke-width="1.5"/><text x="664.0" y="112.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">explodes</text><rect x="644.0" y="130.0" width="11.0" height="11.0" rx="3" fill="var(--fig-amber,#f5b544)" stroke="none" stroke-width="1.5"/><text x="664.0" y="140.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">vanishes</text><rect x="644.0" y="158.0" width="11.0" height="11.0" rx="3" fill="var(--fig-cyan,#22d3ee)" stroke="none" stroke-width="1.5"/><text x="664.0" y="168.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">stable</text><text x="628.0" y="216.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">The product of per-layer</text><text x="628.0" y="231.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Jacobian scales is</text><text x="628.0" y="246.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">multiplicative. A 3× error</text><text x="628.0" y="261.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">per layer becomes 3¹⁵</text><text x="628.0" y="276.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">after fifteen layers.</text></svg><figcaption>Activation variance tracked across 12 layers for a bad scale, Xavier, and He initialization, on log axes. Look for the three curves fanning out linearly in log space: a straight line there is exponential decay or growth, and its slope is $2\log g$ for per-layer gain $g$.</figcaption></figure></p>
+<h3 id="parameter-memory-and-compute-accounting">Parameter, memory, and compute accounting</h3>
+<p><strong>(1) Intuition.</strong> A weight costs you twice: storage (weight, gradient, optimizer state) and arithmetic (one multiply per use). Both are linear in the parameter count, which is why that count is the universal unit of account.</p>
+<p><strong>(2) Formal accounting.</strong> A layer $d_{\text{in}}\to d_{\text{out}}$ has $d_{\text{in}}d_{\text{out}}+d_{\text{out}}$ parameters, $d_{\text{in}}d_{\text{out}}$ MACs and $2d_{\text{in}}d_{\text{out}}$ FLOPs per example. Training memory per parameter in fp32: $4$ weight $+4$ gradient $+8$ for Adam's moments $=16$ bytes. Activations cost $n\sum_l d_l$ floats when every layer is cached, which <strong>M07</strong> explains is mandatory.</p>
+<p><strong>(3) Why it is built this way.</strong> These three numbers decide what you can afford, and confusing them produces the classic errors: sizing a model by parameter count while ignoring that training needs 4× that in memory, or assuming compute scales with activations rather than weights.</p>
+<p><strong>(4) Worked micro-example.</strong> The MLP $784\to256\to128\to10$:</p>
+<table>
+<thead>
+<tr>
+<th>layer</th>
+<th>parameters</th>
+<th>FLOPs/example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$784\to256$</td>
+<td>$200{,}960$</td>
+<td>$401{,}408$</td>
+</tr>
+<tr>
+<td>$256\to128$</td>
+<td>$32{,}896$</td>
+<td>$65{,}536$</td>
+</tr>
+<tr>
+<td>$128\to10$</td>
+<td>$1{,}290$</td>
+<td>$2{,}560$</td>
+</tr>
+<tr>
+<td>total</td>
+<td>$235{,}146$</td>
+<td>$469{,}504$</td>
+</tr>
+</tbody>
+</table>
+<p>Adam training memory is $235{,}146\times16\approx3.76$ MB; activations for a batch of 128 add $128(784+256+128+10)\times4\approx0.62$ MB. One 768→3072→768 transformer MLP block (<strong>M12</strong>) has $4{,}722{,}432$ parameters — twenty times this whole network in one sublayer, and a 12-layer transformer has twelve of them.</p>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<p>The forward pass over a batch $\mathbf{X}\in\mathbb{R}^{n\times d_0}$:</p>
+<ol>
+<li><strong>Fix the shape chain</strong> $d_0,\ldots,d_L$. Allocate $\mathbf{W}^{(l)}\in\mathbb{R}^{d_l\times d_{l-1}}$ and $\mathbf{b}^{(l)}\in\mathbb{R}^{d_l}$. This list is the architecture; nothing else is needed to run it.</li>
+<li><strong>Initialize:</strong> $\mathbf{W}^{(l)}_{ij}\sim\mathcal{N}(0,2/d_{l-1})$ after a ReLU, or $\mathcal{N}(0,2/(d_{l-1}+d_l))$ for tanh/sigmoid stacks; $\mathbf{b}^{(l)}=\mathbf{0}$.</li>
+<li><strong>Set $\mathbf{A}^{(0)}=\mathbf{X}$</strong>, shape $(n,d_0)$.</li>
+<li><strong>For $l=1$ to $L-1$:</strong> $\mathbf{Z}^{(l)}=\mathbf{A}^{(l-1)}\mathbf{W}^{(l)\top}+\mathbf{1}\mathbf{b}^{(l)\top}$ of shape $(n,d_l)$, then $\mathbf{A}^{(l)}=\phi(\mathbf{Z}^{(l)})$.</li>
+<li><strong>Output layer:</strong> $\mathbf{Z}^{(L)}$ of shape $(n,d_L)$ — the logits.</li>
+<li><strong>Loss:</strong> $\mathbf{P}=\operatorname{softmax}_{\text{row}}(\mathbf{Z}^{(L)})$, $\mathcal{L}=-\frac{1}{n}\sum_i \log P_{i,y_i}$.</li>
+<li><strong>Cache $\{\mathbf{A}^{(l)}\}$</strong> (and, for anything more complex, the inputs of every primitive) for the backward pass of <strong>M07</strong>.</li>
+</ol>
+<p>```text
+forward(X, params):
+    A = X                                # (n, d_0)
+    for l in 1..L-1:
+        Z = A @ W[l].T + b[l]            # (n, d_l)
+        A = phi(Z)                       # (n, d_l)
+        cache.append((A, Z))
+    Z_L = A @ W[L].T + b[L]              # (n, d_L)
+    P = softmax_rows(Z_L)
+    return -mean(log(P[i, y[i]])), P, cache
+```</p>
+<p><strong>Complexity.</strong> Time $O(n\sum_l d_l d_{l-1})$ MACs plus $O(n\sum_l d_l)$ for activations; inference memory $O(\sum_l d_l d_{l-1})$ weights plus one layer of activations; training memory $O(n\sum_l d_l)$ when caches are retained. For 784-256-128-10 at $n=128$: $128\times235{,}136\approx3.0\times10^7$ MACs, about $6.0\times10^7$ FLOPs.</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="1-the-perceptron-convergence-theorem">1. The perceptron convergence theorem</h3>
+<p><strong>Algorithm.</strong> Start at $\mathbf{w}_0=\mathbf{0}$. On example $(\mathbf{x}_t,y_t)$ with $y_t\in\{-1,+1\}$, predict $\operatorname{sgn}\langle\mathbf{w},\mathbf{x}_t\rangle$; on a mistake, update $\mathbf{w}_k = \mathbf{w}_{k-1} + y_t\mathbf{x}_t$.</p>
+<p><strong>Theorem (Novikoff, 1962).</strong> Let $\|\mathbf{x}_t\|\le R$ for all $t$, and suppose a unit-norm $\mathbf{w}^\star$ exists with $y_t\langle\mathbf{w}^\star,\mathbf{x}_t\rangle\ge\gamma$ for all $t$. Then the number of mistakes $k$ satisfies $k\le (R/\gamma)^2$, independent of the number of examples and of the dimension.</p>
+<p><strong>Step 1 — the alignment grows linearly.</strong> Because $\mathbf{w}_0=\mathbf{0}$ and each update adds a term of size at least $\gamma$:</p>
+<p>$$
+\langle\mathbf{w}_k,\mathbf{w}^\star\rangle = \sum_{j=1}^{k} y_{t_j}\langle\mathbf{x}_{t_j},\mathbf{w}^\star\rangle \ \ge\ k\gamma .
+$$</p>
+<p><strong>Step 2 — the norm grows like $\sqrt{k}$.</strong> After one update,</p>
+<p>$$
+\begin{aligned}
+\|\mathbf{w}_k\|^2 &= \left\|\mathbf{w}_{k-1}+y_{t_k}\mathbf{x}_{t_k}\right\|^2 \\
+&= \|\mathbf{w}_{k-1}\|^2 + 2\,y_{t_k}\langle\mathbf{w}_{k-1},\mathbf{x}_{t_k}\rangle + y_{t_k}^2\|\mathbf{x}_{t_k}\|^2 .
+\end{aligned}
+$$</p>
+<p>The middle term is non-positive, because an update happens only when the prediction is wrong, i.e. $y_{t_k}\langle\mathbf{w}_{k-1},\mathbf{x}_{t_k}\rangle\le0$. With $y_{t_k}^2=1$ and $\|\mathbf{x}_{t_k}\|^2\le R^2$, unrolling from the zero start gives $\|\mathbf{w}_k\|^2\le kR^2$.</p>
+<p><strong>Step 3 — Cauchy–Schwarz.</strong> $\langle\mathbf{w}_k,\mathbf{w}^\star\rangle\le\|\mathbf{w}_k\|\|\mathbf{w}^\star\|=\|\mathbf{w}_k\|$, so</p>
+<p>$$
+k\gamma \le \|\mathbf{w}_k\| \le R\sqrt{k} \ \Longrightarrow\ \sqrt{k}\le\frac{R}{\gamma} \ \Longrightarrow\ k \le \left(\frac{R}{\gamma}\right)^2 . \qquad \blacksquare
+$$</p>
+<h3 id="2-every-activation-derivative">2. Every activation derivative</h3>
+<p><strong>Sigmoid.</strong> With $u = 1+e^{-z}$ and $\mathrm{d}u/\mathrm{d}z = -e^{-z}$,</p>
+<p>$$
+\frac{\mathrm{d}\sigma}{\mathrm{d}z} = -u^{-2}(-e^{-z}) = \frac{e^{-z}}{(1+e^{-z})^2} = \underbrace{\frac{1}{1+e^{-z}}}_{\sigma}\underbrace{\frac{e^{-z}}{1+e^{-z}}}_{1-\sigma} = \sigma(1-\sigma),
+$$</p>
+<p>a downward parabola in $\sigma$ peaking at $1/4$ when $z=0$.</p>
+<p><strong>Tanh.</strong> With $n=e^z-e^{-z}$, $d=e^z+e^{-z}$, so $n'=d$ and $d'=n$:</p>
+<p>$$
+\frac{\mathrm{d}}{\mathrm{d}z}\frac{n}{d} = \frac{n'd-nd'}{d^2} = \frac{d^2-n^2}{d^2} = 1-\tanh^2 z .
+$$</p>
+<p><strong>ReLU / LeakyReLU.</strong> $\mathbf{1}[z>0]$ everywhere except at $z=0$, where the subgradient $0$ is used (a single point, measure zero). LeakyReLU gives $\mathbf{1}[z>0]+\alpha\mathbf{1}[z\le 0]$, so the negative half-space keeps slope $\alpha$ and therefore gradient.</p>
+<p><strong>GELU.</strong> With $\varphi(z)=\Phi'(z)=\frac{1}{\sqrt{2\pi}}e^{-z^2/2}$ and $\mathrm{GELU}=z\Phi(z)$,</p>
+<p>$$
+\frac{\mathrm{d}}{\mathrm{d}z}\left[z\Phi(z)\right] = \Phi(z) + z\varphi(z).
+$$</p>
+<p>The tanh form replaces $\Phi$ by $\tfrac12(1+\tanh u)$ with $u(z)=\sqrt{2/\pi}\,(z+0.044715z^3)$, where $\sqrt{2/\pi}$ matches $\Phi'$ at the origin and $0.044715$ was fitted numerically:</p>
+<p>$$
+u'(z) = \sqrt{\tfrac{2}{\pi}}\left(1+3(0.044715)z^2\right), \qquad
+\frac{\mathrm{d}}{\mathrm{d}z}\mathrm{GELU}_{\tanh} = \tfrac12(1+\tanh u) + \tfrac{z}{2}(1-\tanh^2 u)\,u'(z).
+$$</p>
+<p><strong>SiLU.</strong> $\mathrm{SiLU}=z\sigma(z)$, so</p>
+<p>$$
+\frac{\mathrm{d}}{\mathrm{d}z}\left[z\sigma(z)\right] = \sigma + z\sigma(1-\sigma) = \sigma\left[1+z(1-\sigma)\right],
+$$</p>
+<p>which is $1/2$ at $z=0$ and has a minimum near $z\approx-1.28$.</p>
+<p><strong>Softmax Jacobian.</strong> With $S=\sum_k e^{z_k}$ and $s_i=e^{z_i}/S$, for $i=j$ the quotient rule gives $(e^{z_i}S-e^{z_i}e^{z_i})/S^2 = s_i-s_i^2$, and for $i\ne j$ the numerator is $-e^{z_i}e^{z_j}$, giving $-s_is_j$. Both cases are $\partial s_i/\partial z_j = s_i(\delta_{ij}-s_j)$, i.e. $\mathbf{J}=\operatorname{diag}(\mathbf{s})-\mathbf{s}\mathbf{s}^\top$. Note $\mathbf{J}\mathbf{1}=\mathbf{s}-\mathbf{s}(\mathbf{s}^\top\mathbf{1})=\mathbf{0}$: the Jacobian annihilates the all-ones direction, which is shift invariance written at the level of derivatives.</p>
+<h3 id="3-why-a-squashing-function-gives-you-a-step-and-why-steps-give-you-everything">3. Why a squashing function gives you a step, and why steps give you everything</h3>
+<p><strong>Step 1, the limit.</strong> For fixed $a$, $\sigma(c(z-a))\to\mathbf{1}[z>a]$ as $c\to\infty$, uniformly on any set bounded away from $z=a$: the argument diverges to $\pm\infty$ on the two sides.</p>
+<p><strong>Step 2, a box from two steps.</strong> $v(\mathbf{1}[z>a]-\mathbf{1}[z>a+\delta]) = v\,\mathbf{1}[a<z\le a+\delta]$. Two hidden units with weights $\pm c$, biases $-ca$ and $-c(a+\delta)$, and output weights $\pm v$.</p>
+<p><strong>Step 3, a staircase approximates any continuous function.</strong> Partition $[0,1]$ into $N$ cells of width $\delta=1/N$ with midpoints $x_j$, and set $g(x)=\sum_j f(x_j)\mathbf{1}[x\in I_j]$. For $x\in I_j$ both $x$ and $x_j$ lie in a cell of width $\delta$, so $|f(x)-g(x)|\le\omega_f(\delta)$, the modulus of continuity, which tends to zero because $f$ is continuous on a compact set.</p>
+<p><strong>Step 4, from one dimension to $d$.</strong> Choosing $\mathbf{w}$ along a coordinate axis reduces to the 1-D case, and a box in $\mathbb{R}^d$ is an inclusion–exclusion sum of $2^d$ half-space indicators, hence again a sum of hidden units with signed output weights. The cost is $2^dN$ units for an $N$-cell grid — the first sign that shallow constructions are expensive.</p>
+<p><strong>Step 5, replace hard steps by steep sigmoids.</strong> Each indicator is a sigmoid up to an exponentially small tail error inside the plateau, so choosing $c$ large enough and summing the finitely many unit errors through the triangle inequality completes the density statement.</p>
+<p><strong>The four non-promises.</strong> (i) <strong>No width bound worth having:</strong> the construction needs the cell count implied by the target's modulus of continuity, which can grow like $\epsilon^{-d}$. (ii) <strong>No learnability:</strong> nothing here says gradient descent from a random start reaches those parameters, or anything about sample complexity. (iii) <strong>No efficiency claim:</strong> "depth adds no power" is false where it matters — for some functions depth is exponentially more parameter-efficient. (iv) <strong>Nothing about the class you actually train:</strong> the theorem concerns continuous targets on a compact domain, not generalization, robustness, or the function you want at a size you can afford.</p>
+<h3 id="4-xavier-and-he-from-variance-preservation">4. Xavier and He from variance preservation</h3>
+<p>Assume $\mathbf{x}$ zero-mean with independent components of variance $\sigma_x^2$, $W_{ij}$ iid with variance $\sigma_w^2$ and independent of $\mathbf{x}$, and $\mathbf{b}=\mathbf{0}$. Then</p>
+<p>$$
+z_i=\sum_{j=1}^{d_{\text{in}}}W_{ij}x_j, \qquad
+\mathrm{Var}(z_i)=\sum_{j=1}^{d_{\text{in}}}\mathrm{Var}(W_{ij})\mathrm{Var}(x_j)=d_{\text{in}}\sigma_w^2\sigma_x^2,
+$$</p>
+<p>where independence removes every covariance term. Preserving the variance forward therefore requires $d_{\text{in}}\sigma_w^2=1$, i.e. $\sigma_w^2=1/d_{\text{in}}$. For the backward direction, with $\boldsymbol{\delta}=\partial\mathcal{L}/\partial\mathbf{z}$ of iid variance $\sigma_\delta^2$ independent of $\mathbf{W}$,</p>
+<p>$$
+\frac{\partial\mathcal{L}}{\partial x_j}=\sum_{i=1}^{d_{\text{out}}}W_{ij}\delta_i, \qquad
+\mathrm{Var}\!\left(\frac{\partial\mathcal{L}}{\partial x_j}\right)=d_{\text{out}}\sigma_w^2\sigma_\delta^2,
+$$</p>
+<p>so preserving the gradient requires $\sigma_w^2=1/d_{\text{out}}$. A rectangular layer cannot satisfy both, and Glorot and Bengio's compromise is</p>
+<p>$$
+\sigma_w^2=\frac{2}{d_{\text{in}}+d_{\text{out}}}, \qquad a_{\text{uniform}}=\sqrt{\frac{6}{d_{\text{in}}+d_{\text{out}}}}
+$$</p>
+<p>using $\mathrm{Var}[\mathcal{U}(-a,a)]=a^2/3$ — the <code>xavier_uniform_</code> of every framework.</p>
+<p><strong>He.</strong> ReLU zeroes roughly half the second moment, and for symmetric $z_i$, $\mathrm{Var}(\mathrm{ReLU}(z_i))=\mathbb{E}[z_i^2\mathbf{1}[z_i>0]]=\tfrac12\mathrm{Var}(z_i)$. The recursion becomes $\mathrm{Var}(a^{(l)})=\tfrac12 d_{\text{in}}\sigma_w^2\mathrm{Var}(a^{(l-1)})$, so preservation needs</p>
+<p>$$
+\tfrac12 d_{\text{in}}\sigma_w^2 = 1 \ \Longrightarrow\ \sigma_w^2=\frac{2}{d_{\text{in}}}, \qquad a_{\text{uniform}}=\sqrt{\frac{6}{d_{\text{in}}}} .
+$$</p>
+<p>The factor 2 is not cosmetic: Xavier on a 30-layer ReLU net loses a factor of $2^{30}\approx10^9$ in activation scale. <strong>Where it is fragile:</strong> both derivations assume symmetric zero-mean pre-activations, which fails after the first ReLU layer, so the measured layer-12 gain is $0.957$ rather than $1.000$. The qualitative lesson is that the critical scale is a fixed point of a variance recursion, and you want to sit on it.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>A forward-only MLP with shape assertions, He initialization, and a parameter accountant. No backward pass here — <strong>M07</strong> builds it, and building it before you can state the forward pass exactly is how transposed gradients happen.</p>
+<p>```python
+import numpy as np
+
+def he_uniform(fan_in, fan_out, rng):
+    # He init: U(-a, a) with a = sqrt(6/fan_in), the uniform form of Var = 2/fan_in
+    a = np.sqrt(6.0 / fan_in)
+    return rng.uniform(-a, a, size=(fan_in, fan_out))
+
+class MLP:
+    def __init__(self, widths, rng):
+        self.widths = widths
+        # weights stored (fan_in, fan_out) so the batch form is X @ W
+        self.W = [he_uniform(widths[i], widths[i+1], rng)
+                  for i in range(len(widths) - 1)]
+        self.b = [np.zeros(widths[i+1]) for i in range(len(widths) - 1)]
+
+    def forward(self, X, keep_cache=False):
+        assert X.shape[1] == self.widths[0], (X.shape, self.widths[0])
+        A, cache = X, []
+        for l, (W, b) in enumerate(zip(self.W, self.b)):
+            Z = A @ W + b                        # (n,d_in) @ (d_in,d_out) -> (n,d_out)
+            last = (l == len(self.W) - 1)
+            A = Z if last else np.maximum(Z, 0.0)  # ReLU on hidden layers only
+            if keep_cache:
+                cache.append((A.copy(), Z.copy()))
+        A = A - A.max(axis=1, keepdims=True)     # shift before exp
+        P = np.exp(A) / np.exp(A).sum(axis=1, keepdims=True)
+        return (P, cache) if keep_cache else P
+
+    def n_params(self):
+        return sum(W.size + b.size for W, b in zip(self.W, self.b))
+
+rng = np.random.default_rng(0)
+net = MLP([3, 4, 3], rng)
+X = np.array([[0.5, -1.0, 2.0], [1.5, 0.5, -0.5]])
+print(net.forward(X).round(4))   # (2,3) probability matrix, rows sum to 1
+print(net.n_params())            # 3*4+4 + 4*3+3 = 31
+```</p>
+<p>You should see a $2\times3$ matrix of probabilities whose rows sum to $1.0000$, and <code>31</code>. Remove the row-max subtraction and the output is unchanged for these inputs; feed logits of magnitude $800$ without it and the exponentials overflow to <code>inf</code>, giving <code>nan</code> on the division.</p>
+<h2 id="worked-example">Worked example</h2>
+<p>A batch of two examples through $3\to4\to3$ with ReLU hidden units, softmax, and cross-entropy.</p>
+<p>$$
+\mathbf{X} = \begin{pmatrix} 0.5 & -1.0 & 2.0 \\ 1.5 & 0.5 & -0.5 \end{pmatrix},\quad
+\mathbf{W}^{(1)} = \begin{pmatrix} 0.2 & -0.4 & 0.6 & 0.1 \\ -0.3 & 0.5 & 0.2 & -0.6 \\ 0.4 & 0.1 & -0.5 & 0.3 \end{pmatrix},\quad
+\mathbf{b}^{(1)} = \begin{pmatrix} 0.1 \\ -0.2 \\ 0.05 \\ 0 \end{pmatrix},
+$$</p>
+<p>with $\mathbf{b}^{(2)}=(0,\,0.1,\,-0.1)$, and $(2,3)\times(3,4)\to(2,4)$ for the first layer.</p>
+<p><strong>Step 1, $\mathbf{Z}^{(1)}$.</strong> Entry $(1,1)$ by hand: $0.5(0.2)+(-1.0)(-0.3)+2.0(0.4)+0.1 = 0.1+0.3+0.8+0.1 = 1.3$.</p>
+<table>
+<thead>
+<tr>
+<th>$\mathbf{Z}^{(1)}$</th>
+<th>u1</th>
+<th>u2</th>
+<th>u3</th>
+<th>u4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>example 1</td>
+<td>$1.300$</td>
+<td>$-0.700$</td>
+<td>$-0.850$</td>
+<td>$1.250$</td>
+</tr>
+<tr>
+<td>example 2</td>
+<td>$0.050$</td>
+<td>$-0.600$</td>
+<td>$1.300$</td>
+<td>$-0.300$</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 2, $\mathbf{A}^{(1)}=\mathrm{ReLU}(\mathbf{Z}^{(1)})$.</strong> Three of eight entries become exactly $0$; those units contribute nothing forward and will receive zero gradient.</p>
+<table>
+<thead>
+<tr>
+<th>$\mathbf{A}^{(1)}$</th>
+<th>u1</th>
+<th>u2</th>
+<th>u3</th>
+<th>u4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>example 1</td>
+<td>$1.300$</td>
+<td>$0$</td>
+<td>$0$</td>
+<td>$1.250$</td>
+</tr>
+<tr>
+<td>example 2</td>
+<td>$0.050$</td>
+<td>$0$</td>
+<td>$1.300$</td>
+<td>$0$</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3, $\mathbf{Z}^{(2)}=\mathbf{A}^{(1)}\mathbf{W}^{(2)}+\mathbf{b}^{(2)}$.</strong> Entry $(1,1)$: $1.3(0.7)+0(-0.5)+0(0.2)+1.25(-0.1)+0 = 0.9100-0.1250 = 0.7850$.</p>
+<p>$$
+\mathbf{Z}^{(2)} = \begin{pmatrix} 0.785 & 0.965 & 0.280 \\ 0.295 & 0.610 & -1.135 \end{pmatrix}.
+$$</p>
+<p><strong>Step 4, softmax.</strong> Row 1: subtract $0.965$, exponentiate to $(0.8203, 1, 0.5041)$, sum $2.3244$, giving $(0.357, 0.427, 0.215)$. Row 2: subtract $0.610$, giving $(0.7294, 1, 0.1754)$, sum $1.9048$, so $(0.383, 0.525, 0.092)$.</p>
+<p><strong>Step 5, loss</strong> with targets $y_1=1$, $y_2=0$: $\mathcal{L}_1=-\log 0.4275=0.8499$, $\mathcal{L}_2=-\log 0.3832=0.9592$, mean $0.9045$. A uniform predictor scores $\log 3=1.0986$, so this untrained network is at 82% of the no-information loss — the standard sanity check that your loss computes what you think (<strong>M08</strong>).</p>
+<p><strong>Cost check:</strong> $3(4)+4+4(3)+3=31$ parameters and $2(12+12)=48$ FLOPs per example, both matching the formulas above.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="an-artificial-neuron-models-a-biological-neuron">"An artificial neuron models a biological neuron."</h3>
+<p>It models a threshold logic unit, a 1943 idealization. Dendritic computation, spike timing, synaptic kinetics, and the weight-transport problem are all missing, and the last one is disqualifying for any claim that backprop is what cortex does. The useful content is that a unit is a dot product plus a scalar nonlinearity, and that composing such units is a universal family.</p>
+<h3 id="universal-approximation-means-a-network-can-learn-anything">"Universal approximation means a network can learn anything."</h3>
+<p>The theorem says a sufficiently wide network <em>exists</em> within $\epsilon$ of any continuous target on a compact domain. It says nothing about whether gradient descent finds it, nothing about sample complexity, and nothing about width being reasonable — the construction needs exponentially many units in the input dimension. Read it as "the architecture is not the bottleneck", which pushes your attention to optimization, data, and inductive bias, where the limits actually are.</p>
+<h3 id="xor-showed-neural-networks-were-a-dead-end">"XOR showed neural networks were a dead end."</h3>
+<p>XOR shows that a <em>single</em> linear threshold unit cannot represent it, a two-line algebraic fact. Minsky and Papert's 1969 book made a stronger claim about the <em>order</em> of predicates a perceptron can learn, and the funding decline that followed had several causes including the absence of a working training algorithm for multilayer nets. Representation was never the blocker: a 2-2-1 network computes XOR exactly.</p>
+<h3 id="relu-avoids-saturation">"ReLU avoids saturation."</h3>
+<p>ReLU avoids <em>asymptotic</em> saturation on the positive side; on the negative side it has a hard zero, a stronger form of the same disease. A unit whose pre-activation is negative for every input receives exactly zero gradient forever — it is not slow to recover, it cannot recover. Sigmoid at least leaks a small positive gradient. Hence leaky variants, careful initialization, normalization, and the "fraction of exact zeros" diagnostic.</p>
+<h3 id="initialization-is-a-minor-implementation-detail">"Initialization is a minor implementation detail."</h3>
+<p>Initialization sets the per-layer gain, and gains compound geometrically: over 12 layers the difference between a gain of 1 and 1.41 is a factor of 64 in activation scale, and at 40 layers it is a factor of $10^6$. You are then either at numerical zero or in overflow, and no learning rate fixes it.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<ol>
+<li>A layer maps $512\to128$. Give the parameter count, the MACs per example, and the Adam training memory for that layer in fp32.</li>
+<li>Compute $\sigma(0)$, $\sigma'(0)$, $\tanh'(0)$, $\mathrm{ReLU}'(-3)$, $\mathrm{SiLU}'(0)$.</li>
+<li>Show $\tanh(z)=2\sigma(2z)-1$.</li>
+</ol>
+<details><summary>Solutions</summary>
+
+1. $512(128)+128=65{,}664$ parameters; $65{,}536$ MACs per example (the bias adds 128 additions, not MACs); $65{,}664\times16\approx1.05$ MB.
+2. $\sigma(0)=0.5$; $\sigma'(0)=0.25$; $\tanh'(0)=1$; $\mathrm{ReLU}'(-3)=0$; $\mathrm{SiLU}'(0)=\sigma(0)[1+0]=0.5$.
+3. $\dfrac{2}{1+e^{-2z}}-1=\dfrac{1-e^{-2z}}{1+e^{-2z}}$; multiply top and bottom by $e^z$ to get $\dfrac{e^z-e^{-z}}{e^z+e^{-z}}$.
+
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<ol start="4">
+<li>Prove that a single unit cannot represent XOR even when $\phi$ is a smooth strictly increasing function rather than a step.</li>
+<li>Derive $\partial\mathcal{L}/\partial\mathbf{z}$ for $\mathcal{L}=-\log s_y$ with $\mathbf{s}=\operatorname{softmax}(\mathbf{z})$, and show it equals $\mathbf{s}-\mathbf{y}$.</li>
+<li>A 20-layer tanh network is initialized with $\mathrm{Var}(W_{ij})=3/d_{\text{in}}$, zero biases. What happens to the activations, and what happens to the gradient over 20 layers? Does it train?</li>
+</ol>
+<details><summary>Solutions</summary>
+
+4. If $\phi$ is strictly increasing, thresholding $\phi(u)$ anywhere is equivalent to thresholding $u$, so the prediction depends only on the sign of $w_1x_1+w_2x_2+b$: a monotone nonlinearity cannot change which side of a hyperplane a point lies on. XOR is not linearly separable, so no such unit represents it.
+5. $\log s_y = z_y-\log\sum_k e^{z_k}$, so $\partial\mathcal{L}/\partial z_j = -\mathbf{1}[j=y]+e^{z_j}/\sum_k e^{z_k} = s_j-y_j$. The components sum to zero, matching softmax shift invariance at derivative level.
+6. The linear-regime gain would be 3 per layer, but tanh saturates: the variance settles at a fixed point with pre-activation standard deviation near 1.5 where $\mathbb{E}[\tanh'^2]\approx1/3$. Activations stabilise; the gradient does not. Each layer multiplies the backward signal by an effective factor near $0.2$–$0.4$, so over 20 layers it is attenuated by roughly $0.3^{20}\approx3\times10^{-11}$ and training stalls in fp32. Xavier (gain 1), not $3/d_{\text{in}}$, is the right scale.
+
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<ol start="7">
+<li>Implement the staircase construction for $f(x)=\sin(2\pi x)$ on $[0,1]$ with $N$ sigmoids at sharpness $c$, and measure sup-norm error for $N\in\{4,8,16,32\}$, $c\in\{10,100\}$. How does the error scale, and what breaks at $c=10$?</li>
+<li>A colleague claims an 8-layer ReLU network of width 64 "cannot overfit 100 examples because it has only 4,000 parameters". Find both errors and compute the true count for $784\to64$ with six hidden layers plus a 10-way head.</li>
+</ol>
+<details><summary>Hint and solution</summary>
+
+7. Each cell $[a,a+\delta]$ needs $\sigma(c(x-a))-\sigma(c(x-a-\delta))$. Two error terms compete: the staircase error $O(\delta)=O(1/N)$ and the transition smearing, roughly $2e^{-c\delta/2}$. At $c=10$, $N=32$ the transition width $1/c=0.1$ exceeds the cell width $0.031$, so sigmoids smear across several cells and the error saturates near $0.1$ instead of falling like $1/N$. You need $c\gg N$; at $c=100$ the error falls roughly as $1/N$ until the sigmoid tail dominates.
+8. The count is wrong: $784(64)+64=50{,}240$; six hidden layers of $64(64)+64=4{,}160$ each, $24{,}960$; head $64(10)+10=650$; total $75{,}850$ — about 750 parameters per example, deep in the overparameterized regime. The principle is also wrong: overparameterized networks fit random labels perfectly, so "too few parameters to overfit" is not a sound argument (**M08**, double descent).
+
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>State the perceptron convergence theorem's hypotheses in one sentence and its conclusion as one inequality.</li>
+<li>Why does the margin appear squared in the mistake bound?</li>
+<li>Give $\mathrm{GELU}'(0)$ and $\mathrm{SiLU}'(0)$, and explain why they agree.</li>
+<li>A 4-layer ReLU MLP uses $\mathrm{Var}(W)=0.5/d_{\text{in}}$. What is the activation scale at layer 4 relative to the input?</li>
+<li>Why can a 2-layer network represent XOR when a 1-layer network cannot, in terms of linear regions?</li>
+<li>Name three things the universal approximation theorem does not claim.</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. Hypotheses: $\|\mathbf{x}_t\|\le R$ and linear separability with margin $\gamma$ (unit-norm $\mathbf{w}^\star$ with $y_t\langle\mathbf{w}^\star,\mathbf{x}_t\rangle\ge\gamma$). Conclusion: mistakes $k\le(R/\gamma)^2$.
+2. The proof pits a quantity growing like $k$ (the alignment, $\ge k\gamma$) against one growing like $\sqrt{k}$ (the norm, $\le R\sqrt{k}$) through Cauchy–Schwarz; solving $k\gamma\le R\sqrt{k}$ gives $k\le(R/\gamma)^2$.
+3. Both are $0.5$: each has the form $z\,g(z)$ with $g(0)=1/2$, so the derivative at zero is $g(0)$.
+4. Each layer multiplies the second moment by $\tfrac12d_{\text{in}}\sigma_w^2=0.25$, so after four layers the scale is $0.25^2=0.0625$ of the input — a 16× loss, mirrored in the backward pass.
+5. One layer gives one hyperplane and at most two regions; XOR needs two hyperplanes to separate the classes, which two hidden units provide and the output unit combines with opposite signs.
+6. No useful width bound (width can be exponential in $d$); no learnability guarantee; no efficiency claim comparing shallow and deep. (Also acceptable: no sample-complexity claim; compact domain and continuous targets only.)
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><strong>Rosenblatt, "The Perceptron" (1958).</strong> The original learning rule; extract the update and notice how much of the paper is biology rather than algorithm.</li>
+<li><strong>Minsky and Papert, <em>Perceptrons</em> (1969).</strong> Read the order-of-predicates chapter rather than the XOR discussion; the precise claim is stronger than the folklore.</li>
+<li><strong>Cybenko, "Approximation by Superpositions of a Sigmoidal Function" (1989).</strong> The density theorem and the role of the sigmoidal hypothesis; skip the functional analysis on a first pass.</li>
+<li><strong>Glorot and Bengio, "Understanding the Difficulty of Training Deep Feedforward Neural Networks" (2010).</strong> The variance-preservation derivation, with the forward/backward tension explicit.</li>
+<li><strong>He, Zhang, Ren, and Sun, "Delving Deep into Rectifiers" (2015).</strong> The factor-of-2 ReLU correction; extract the derivation, not the benchmarks.</li>
+<li><strong>Goodfellow, Bengio, and Courville, <em>Deep Learning</em> (2016), Chapter 6.</strong> Free online; the best textbook account of feedforward networks and of what universal approximation does not imply.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when, without notes, you can:</p>
+<ol>
+<li>Write the forward pass of an $L$-layer MLP with every shape labelled, plus its parameter count and FLOPs for a given architecture.</li>
+<li>State the perceptron convergence theorem and reproduce the three-step margin proof on a blank page.</li>
+<li>Prove XOR is not linearly separable and say in one sentence why that is a statement about one layer.</li>
+<li>Write the derivatives of sigmoid, tanh, ReLU, GELU (both forms), SiLU, and the softmax Jacobian.</li>
+<li>State the universal approximation theorem and list four things it does not promise.</li>
+</ol><div class="pager"><a id="prevlink" href="../m/05-classical-ml.html"><small>← previous</small><b>M05 · Classical Machine Learning</b></a><a id="nextlink" class="next" href="../m/07-backprop-autograd.html"><small>next →</small><b>M07 · Backpropagation and Automatic Differentiation</b></a></div></article>
+</main>
+</div>
+</body></html>

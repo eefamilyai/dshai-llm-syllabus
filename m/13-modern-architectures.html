@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M13 · The Modern Architecture Zoo — From Zero to Frontier</title>
+<meta name="description" content="What survived the transformer, what replaced it, and which claims are actually measured.">
+<meta property="og:title" content="M13 · The Modern Architecture Zoo — From Zero to Frontier">
+<meta property="og:description" content="What survived the transformer, what replaced it, and which claims are actually measured.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Architectures / M13</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="M13">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">M13</span><span class="pill d5">difficulty 5/5</span><span class="pill">2 weeks</span><span class="pill">prereqs: M12</span><span class="pill">11,803 words</span></div><h1>The Modern Architecture Zoo</h1><p class="tagline">What survived the transformer, what replaced it, and which claims are actually measured.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="why-this-module-exists">Why this module exists</h2>
+<p>The transformer of <strong>M12</strong> is not what frontier models run. Between the 2017 block and a 2024 open-weight model, four things changed: the key/value cache was compressed (MQA, GQA, MLA), the attention pattern was restricted or re-derived (sliding windows, sparse patterns, linear attention, state-space models), the feed-forward network was sparsified (mixture-of-experts), and the training block was rebuilt around gated linear units and pre-normalization. Every one of those changes traces back to a specific line in the cost model you derived in <strong>M12</strong> — usually the KV-cache term, sometimes the quadratic score matrix, occasionally just the parameter count. The reason to study this zoo carefully rather than as a list of acronyms is that it is where the field's <em>claims</em> live. "Linear attention is as good as softmax attention" is a strong empirical claim that has been true on some benchmarks and false at frontier scale. "MoE gives you 4× the parameters for free" is arithmetic, and the cost it hides is memory. "State-space models replace attention" is a hypothesis with real evidence behind it and no frontier-scale demonstration. The last section of this module explicitly separates what has been measured from what is speculation, and that habit is worth more than any single architecture in it.</p>
+<h2 id="prerequisites-check">Prerequisites check</h2>
+<ol>
+<li>Write the KV-cache size formula and the FLOPs of one attention layer. [<strong>M12</strong>]</li>
+<li>What is the crossover sequence length at which attention's quadratic term exceeds its projections? [<strong>M12</strong>]</li>
+<li>State the recurrence of a linear (non-gated) RNN and its gradient-path length. [<strong>M11</strong>]</li>
+<li>For $\mathbf{y} = \mathbf{W}_2\sigma(\mathbf{W}_1\mathbf{x})$, what is the parameter count at $d_{\text{ff}} = 4d$? [<strong>M12</strong>]</li>
+<li>What does "the softmax makes attention a convex combination" mean for the output's range? [<strong>M12</strong>]</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. Cache $= 2Ln_{kv}d_hTb$ bytes; attention core $= 2n^2d$ MACs per layer, projections $4nd^2$.
+2. $n = 2d$ for the attention block alone, $n = 6d$ against the whole block including the FFN.
+3. $\mathbf{h}_t = \tanh(\mathbf{W}\mathbf{h}_{t-1}+\mathbf{U}\mathbf{x}_t)$; gradient path length $O(n)$, with per-step factor bounded by $\gamma\sigma_{\max}$.
+4. $2dd_{\text{ff}} = 8d^2$ for the two-matrix form; $3dd_{\text{ff}}$ for SwiGLU, which is why the parameter-neutral choice is $d_{\text{ff}} = 8d/3$.
+5. Every output row is a weighted average of value vectors with nonnegative weights summing to 1, so the output lies in the convex hull of the values — it cannot extrapolate beyond them. This is exactly the property linear attention gives up.
+
+</details>
+
+<h2 id="learning-objectives">Learning objectives</h2>
+<ol>
+<li>Compute KV-cache bytes for MHA, MQA, GQA and a latent-attention scheme, and say what each costs in quality terms.</li>
+<li>Derive the memory and quality trade of GQA as a function of the number of KV groups, and explain why $n_{kv}$ is the single most important number in a modern model config.</li>
+<li>State the sliding-window attention complexity $O(nwd)$ and derive the effective receptive field over $L$ layers.</li>
+<li>Derive linear attention's associative reordering, write both the recurrent and the chunked-parallel forms, and state exactly which property of softmax is lost.</li>
+<li>Explain RWKV's time-mixing as exponential-decay linear attention and why it trains in parallel.</li>
+<li>Derive the zero-order-hold discretization of a continuous state-space model and show that $\bar{\mathbf{A}} = e^{\Delta\mathbf{A}}$ is a forget gate.</li>
+<li>Explain what S4 contributes (HiPPO initialization, convolutional training) and what Mamba adds (input-dependent $\Delta,\mathbf{B},\mathbf{C}$, i.e. selectivity), and implement the selective scan.</li>
+<li>Give the MoE forward pass, the top-$k$ routing math, the auxiliary load-balancing loss, and the capacity-factor drop rule.</li>
+<li>Compute why MoE buys parameters cheaply but is memory-hungry, with numbers.</li>
+<li>Separate measured convergence in frontier architectures from speculative claims.</li>
+</ol>
+<h2 id="notation-and-conventions">Notation and conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$n$, $T$</td>
+<td>sequence length / context length</td>
+</tr>
+<tr>
+<td>$d$</td>
+<td>model width; $h$ heads; $d_h = d/h$ head dim</td>
+</tr>
+<tr>
+<td>$n_{kv}$</td>
+<td>number of key/value heads (MQA: 1, GQA: $1<n_{kv}<h$, MHA: $n_{kv}=h$)</td>
+</tr>
+<tr>
+<td>$w$</td>
+<td>sliding-window width</td>
+</tr>
+<tr>
+<td>$\phi(\cdot)$</td>
+<td>feature map for linear attention (elementwise, nonnegative)</td>
+</tr>
+<tr>
+<td>$\mathbf{S}_t$</td>
+<td>running state matrix of linear attention, $d_\phi\times d_v$</td>
+</tr>
+<tr>
+<td>$\mathbf{A},\mathbf{B},\mathbf{C},\mathbf{D}$</td>
+<td>continuous SSM matrices</td>
+</tr>
+<tr>
+<td>$\bar{\mathbf{A}},\bar{\mathbf{B}}$</td>
+<td>discretized (zero-order-hold) counterparts</td>
+</tr>
+<tr>
+<td>$\Delta$</td>
+<td>discretization step size, possibly input-dependent</td>
+</tr>
+<tr>
+<td>$N$</td>
+<td>SSM state dimension per channel</td>
+</tr>
+<tr>
+<td>$E$</td>
+<td>number of experts; $k$ = top-$k$ routing</td>
+</tr>
+<tr>
+<td>$C$</td>
+<td>expert capacity (tokens per expert)</td>
+</tr>
+<tr>
+<td>$f_i$, $P_i$</td>
+<td>token fraction routed to expert $i$; mean router probability for $i$</td>
+</tr>
+<tr>
+<td>$\alpha$</td>
+<td>auxiliary load-balancing loss weight</td>
+</tr>
+</tbody>
+</table>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="the-kv-cache-is-the-constraint-everything-else-is-fighting">The KV cache is the constraint everything else is fighting</h3>
+<p><strong>Intuition.</strong> At inference the model recomputes nothing about the past — it stores every token's keys and values and appends to them. That store is the memory bill of a deployed model, and it grows with context, batch size, and layer count simultaneously.</p>
+<p><strong>Formal definition.</strong> From <strong>M12</strong>, with $L$ layers, $n_{kv}$ key/value heads, head dimension $d_h$, context $T$, and $b$ bytes per element:</p>
+<p>$$
+\text{cache} = 2\,L\,n_{kv}\,d_h\,T\,b .
+$$</p>
+<p>For a LLaMA-2-7B-shaped model ($L=32$, $h=32$, $d_h=128$, fp16) this is $512$ KiB per token, $2.0$ GiB at a 4096-token context, and $64$ GiB at batch 32 — against 14 GB of weights. The weights are a fixed cost; the cache is a cost you pay <em>per concurrent user</em>.</p>
+<p><strong>Why it is built this way.</strong> There is no approximation in the cache: it stores exactly $\mathbf{K}$ and $\mathbf{V}$ for every processed token so that each new token costs one query against $T$ cached keys, $O(Td)$ instead of $O(T^2d)$. The consequence is that serving throughput is bound by cache bytes per token, not by FLOPs. Every architectural change in the next three sections is either an attack on <code>n_kv</code>, an attack on <code>T</code>, or an attack on the existence of the cache at all.</p>
+<p><strong>Worked micro-example.</strong> The same model with three cache layouts, at a 4096-token context and fp16:</p>
+<table>
+<thead>
+<tr>
+<th>Layout</th>
+<th>$n_{kv}$</th>
+<th>Bytes/token</th>
+<th>Cache @ 4096</th>
+<th>Max batch in 60 GB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MHA</td>
+<td>$32$</td>
+<td>$512$ KiB</td>
+<td>$2.0$ GiB</td>
+<td>$30$</td>
+</tr>
+<tr>
+<td>GQA-8</td>
+<td>$8$</td>
+<td>$128$ KiB</td>
+<td>$0.50$ GiB</td>
+<td>$120$</td>
+</tr>
+<tr>
+<td>MQA</td>
+<td>$1$</td>
+<td>$16$ KiB</td>
+<td>$64$ MiB</td>
+<td>$960$</td>
+</tr>
+</tbody>
+</table>
+<p>The last column is the whole motivation. A model that can serve 30 sequences at 4096 tokens is a demo; one that can serve 120 is a product.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" width="100%" role="img" aria-label="The KV cache: what is stored per layer, and how it grows" class="fig-svg"><defs><marker id="kv-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="120.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">without cache</text><rect x="30.0" y="56.0" width="180.0" height="120.0" rx="9" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.4"/><rect x="44.0" y="70.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="83.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 1</text><rect x="44.0" y="94.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="107.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 2</text><rect x="44.0" y="118.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="131.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 3</text><rect x="44.0" y="142.0" width="152.0" height="18.0" rx="4" fill="rgba(251,113,133,0.18)" stroke="var(--fig-rose,#fb7185)" stroke-width="0.8"/><text x="120.0" y="155.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-rose,#fb7185)" text-anchor="middle" font-weight="400">recompute all 4</text><text x="120.0" y="198.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">O(T²) work per token</text><line x1="226.0" y1="116.0" x2="268.0" y2="116.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#kv-ah)"/><text x="360.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">with KV cache</text><text x="286.0" y="72.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L0</text><rect x="292.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="56.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="56.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="106.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L1</text><rect x="292.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="90.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="90.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="140.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L2</text><rect x="292.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="124.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="124.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="286.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">L3</text><rect x="292.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#5b8cff" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="325.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#5197fc" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="358.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#48a3f9" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="391.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#3eaff6" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="424.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#35bbf3" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="457.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#2bc7f0" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="490.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#22d3ee" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="523.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#45ced1" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="556.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#68c9b5" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="158.0" width="31.0" height="28.0" rx="4" fill="#8bc499" stroke="var(--fig-panel,#141a2e)" stroke-width="0.6"/><rect x="589.0" y="158.0" width="31.0" height="28.0" rx="4" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="457.0" y="206.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">one column per cached token, per layer, for both K and V</text><rect x="660.0" y="56.0" width="172.0" height="150.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="746.0" y="80.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">memory</text><text x="746.0" y="104.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">2 · L · H · T · dₕ</text><text x="746.0" y="124.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">· bytes per element</text><text x="746.0" y="152.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="400">7B, T=8192, bf16</text><text x="746.0" y="174.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">≈ 2 GB / sequence</text><text x="746.0" y="194.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">grows linearly, forever</text><text x="430.0" y="330.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">decode costs a matrix-vector product per step; the cache turns O(T) recompute into O(T) memory</text></svg><figcaption>What the cache stores, layer by layer, and how it grows. Follow a single layer's row: two tensors of shape $(n_{kv}, T, d_h)$, appended one column at a time as tokens are generated. Nothing is ever evicted, which is why the growth is exactly linear and why paging (M19) had to be invented.</figcaption></figure></p>
+<p><div class="viz" data-viz="v-kvcache"></div><div class="vizcap">Drag the sequence length, head count, and KV-group count and watch the cache bar overtake the weights bar. Watch the ratio readout: at 32 KV heads and 8K context the cache is larger than the model for any batch above one — and dropping to 8 KV groups divides it by exactly four, which is the GQA trade in one drag.</div></p>
+<h3 id="mqa-and-gqa-sharing-keys-and-values-across-heads">MQA and GQA: sharing keys and values across heads</h3>
+<p><strong>Intuition.</strong> Multi-head attention gives every head its own queries, keys, and values. But the queries are what make heads different — each head asks a different question. The keys and values are the <em>data being read</em>, and there is no strong reason each head needs a private copy of the data. Share one copy among all heads and the cache shrinks by the sharing factor.</p>
+<p><strong>Formal definition.</strong> Let $n_{kv}$ be the number of distinct key/value heads, with $1 \le n_{kv}\le h$ and $h$ a multiple of $n_{kv}$.</p>
+<ul>
+<li><strong>MHA</strong> ($n_{kv} = h$): each head has its own $\mathbf{W}_K^{(i)},\mathbf{W}_V^{(i)}$.</li>
+<li><strong>MQA</strong> ($n_{kv}=1$): all $h$ heads share a single $\mathbf{W}_K,\mathbf{W}_V$; each keeps its own $\mathbf{W}_Q^{(i)}$.</li>
+<li><strong>GQA</strong> ($1 < n_{kv} < h$): heads are partitioned into $n_{kv}$ groups of $h/n_{kv}$; heads within a group share their key/value projections.</li>
+</ul>
+<p>Query heads $h$ stay at $h$ in every case, so the score matrices are still $h$ separate $n\times n$ objects. Only $\mathbf{K}$ and $\mathbf{V}$ are shared, so the cache becomes $2Ln_{kv}d_hTb$ and the reduction factor is $h/n_{kv}$.</p>
+<p><strong>Why it is built this way.</strong> The trade is asymmetric in exactly the way you want. Parameters for $\mathbf{W}_K,\mathbf{W}_V$ drop from $2d^2$ to $2d^2 h/n_{kv}$ (small: those are 2 of the 12 $d^2$ blocks in a layer), the <em>compute</em> barely changes (the score matrices still dominate), and the <em>cache</em> drops by $h/n_{kv}$ — a factor that directly multiplies serving capacity. Reported quality effects are small: Shazeer's MQA paper found it matches MHA on quality with a large inference speedup, and the GQA paper showed that a small number of groups (typically 8) recovers essentially all of MHA's quality while keeping most of MQA's memory advantage. Converting an existing MHA checkpoint to GQA requires uptraining (mean-pooling the K/V projections within each group is the standard initialization), which is cheap.</p>
+<p>The failure mode of MQA is not accuracy but <em>expressiveness of the key space</em>: with one shared key head, all $h$ heads must agree on what makes a token findable. Empirically $n_{kv}=1$ loses a little quality; $n_{kv}=8$ loses almost none. That is why $n_{kv}$ is a number you will find in every modern config file, usually written <code>num_key_value_heads</code>.</p>
+<p><strong>Worked micro-example.</strong> $L=32$, $h=32$, $d_h=128$, $T=8192$, fp16.</p>
+<table>
+<thead>
+<tr>
+<th>Layout</th>
+<th>$n_{kv}$</th>
+<th>bytes/token</th>
+<th>cache @ 8192</th>
+<th>K/V parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MHA</td>
+<td>$32$</td>
+<td>$512$ KiB</td>
+<td>$4.0$ GiB</td>
+<td>$2\cdot4096\cdot4096 = 33.6$M</td>
+</tr>
+<tr>
+<td>GQA-8</td>
+<td>$8$</td>
+<td>$128$ KiB</td>
+<td>$1.0$ GiB</td>
+<td>$8.4$M</td>
+</tr>
+<tr>
+<td>MQA</td>
+<td>$1$</td>
+<td>$16$ KiB</td>
+<td>$128$ MiB</td>
+<td>$1.0$M</td>
+</tr>
+</tbody>
+</table>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="100%" role="img" aria-label="One sequence, four heads, four different attention patterns" class="fig-svg"><defs><marker id="mh-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="70.0" y="52.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="13" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="700">X</text><rect x="24.0" y="64.0" width="92.0" height="180.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.5"/><line x1="30.0" y1="74.0" x2="110.0" y2="74.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round"/><line x1="30.0" y1="102.0" x2="110.0" y2="102.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round"/><line x1="30.0" y1="130.0" x2="110.0" y2="130.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round"/><line x1="30.0" y1="158.0" x2="110.0" y2="158.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round"/><line x1="30.0" y1="186.0" x2="110.0" y2="186.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round"/><line x1="30.0" y1="214.0" x2="110.0" y2="214.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round"/><text x="70.0" y="262.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">n×d</text><rect x="180.0" y="44.0" width="78.0" height="46.0" rx="7" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.4"/><text x="219.0" y="64.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="650">W1</text><text x="219.0" y="80.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">d×dₖ</text><line x1="118.0" y1="154.0" x2="180.0" y2="67.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#mh-ah)"/><rect x="276.0" y="44.0" width="152.0" height="46.0" rx="7" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="280.0" y="47.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="304.0" y="47.0" width="23.0" height="6.0" rx="1" fill="#32d0e0" stroke="none" stroke-width="1.5"/><rect x="328.0" y="47.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="352.0" y="47.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="376.0" y="47.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="400.0" y="47.0" width="23.0" height="6.0" rx="1" fill="#588efe" stroke="none" stroke-width="1.5"/><rect x="280.0" y="54.0" width="23.0" height="6.0" rx="1" fill="#32d0e0" stroke="none" stroke-width="1.5"/><rect x="304.0" y="54.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="328.0" y="54.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="352.0" y="54.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="376.0" y="54.0" width="23.0" height="6.0" rx="1" fill="#588efe" stroke="none" stroke-width="1.5"/><rect x="400.0" y="54.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="280.0" y="61.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="304.0" y="61.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="328.0" y="61.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="352.0" y="61.0" width="23.0" height="6.0" rx="1" fill="#588efe" stroke="none" stroke-width="1.5"/><rect x="376.0" y="61.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="400.0" y="61.0" width="23.0" height="6.0" rx="1" fill="#32d0e0" stroke="none" stroke-width="1.5"/><rect x="280.0" y="68.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="304.0" y="68.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="328.0" y="68.0" width="23.0" height="6.0" rx="1" fill="#588efe" stroke="none" stroke-width="1.5"/><rect x="352.0" y="68.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="376.0" y="68.0" width="23.0" height="6.0" rx="1" fill="#32d0e0" stroke="none" stroke-width="1.5"/><rect x="400.0" y="68.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="280.0" y="75.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="304.0" y="75.0" width="23.0" height="6.0" rx="1" fill="#588efe" stroke="none" stroke-width="1.5"/><rect x="328.0" y="75.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="352.0" y="75.0" width="23.0" height="6.0" rx="1" fill="#32d0e0" stroke="none" stroke-width="1.5"/><rect x="376.0" y="75.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="400.0" y="75.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="280.0" y="82.0" width="23.0" height="6.0" rx="1" fill="#588efe" stroke="none" stroke-width="1.5"/><rect x="304.0" y="82.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="328.0" y="82.0" width="23.0" height="6.0" rx="1" fill="#32d0e0" stroke="none" stroke-width="1.5"/><rect x="352.0" y="82.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="376.0" y="82.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="400.0" y="82.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><text x="352.0" y="100.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">local</text><rect x="180.0" y="102.0" width="78.0" height="46.0" rx="7" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4"/><text x="219.0" y="122.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">W2</text><text x="219.0" y="138.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">d×dₖ</text><line x1="118.0" y1="154.0" x2="180.0" y2="125.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#mh-ah)"/><rect x="276.0" y="102.0" width="152.0" height="46.0" rx="7" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="280.0" y="105.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="304.0" y="105.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="328.0" y="105.0" width="23.0" height="6.0" rx="1" fill="#58cbc1" stroke="none" stroke-width="1.5"/><rect x="352.0" y="105.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="376.0" y="105.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="400.0" y="105.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="280.0" y="112.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="304.0" y="112.0" width="23.0" height="6.0" rx="1" fill="#58cbc1" stroke="none" stroke-width="1.5"/><rect x="328.0" y="112.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="352.0" y="112.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="376.0" y="112.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="400.0" y="112.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="280.0" y="119.0" width="23.0" height="6.0" rx="1" fill="#58cbc1" stroke="none" stroke-width="1.5"/><rect x="304.0" y="119.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="328.0" y="119.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="352.0" y="119.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="376.0" y="119.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="400.0" y="119.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="280.0" y="126.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="304.0" y="126.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="328.0" y="126.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="352.0" y="126.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="376.0" y="126.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="400.0" y="126.0" width="23.0" height="6.0" rx="1" fill="#58cbc1" stroke="none" stroke-width="1.5"/><rect x="280.0" y="133.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="304.0" y="133.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="328.0" y="133.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="352.0" y="133.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="376.0" y="133.0" width="23.0" height="6.0" rx="1" fill="#58cbc1" stroke="none" stroke-width="1.5"/><rect x="400.0" y="133.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="280.0" y="140.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="304.0" y="140.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="328.0" y="140.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="352.0" y="140.0" width="23.0" height="6.0" rx="1" fill="#58cbc1" stroke="none" stroke-width="1.5"/><rect x="376.0" y="140.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="400.0" y="140.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><text x="352.0" y="158.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">syntactic</text><rect x="180.0" y="160.0" width="78.0" height="46.0" rx="7" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.4"/><text x="219.0" y="180.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="650">W3</text><text x="219.0" y="196.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">d×dₖ</text><line x1="118.0" y1="154.0" x2="180.0" y2="183.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#mh-ah)"/><rect x="276.0" y="160.0" width="152.0" height="46.0" rx="7" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="280.0" y="163.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="304.0" y="163.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="328.0" y="163.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="352.0" y="163.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="376.0" y="163.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="400.0" y="163.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="280.0" y="170.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="304.0" y="170.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="328.0" y="170.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="352.0" y="170.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="376.0" y="170.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="400.0" y="170.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="280.0" y="177.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="304.0" y="177.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="328.0" y="177.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="352.0" y="177.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="376.0" y="177.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="400.0" y="177.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="280.0" y="184.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="304.0" y="184.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="328.0" y="184.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="352.0" y="184.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="376.0" y="184.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="400.0" y="184.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="280.0" y="191.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="304.0" y="191.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="328.0" y="191.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="352.0" y="191.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="376.0" y="191.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="400.0" y="191.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="280.0" y="198.0" width="23.0" height="6.0" rx="1" fill="#cabb66" stroke="none" stroke-width="1.5"/><rect x="304.0" y="198.0" width="23.0" height="6.0" rx="1" fill="#5098fb" stroke="none" stroke-width="1.5"/><rect x="328.0" y="198.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="352.0" y="198.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="376.0" y="198.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><rect x="400.0" y="198.0" width="23.0" height="6.0" rx="1" fill="#5592fd" stroke="none" stroke-width="1.5"/><text x="352.0" y="216.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">long-range</text><rect x="180.0" y="218.0" width="78.0" height="46.0" rx="7" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.4"/><text x="219.0" y="238.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">W4</text><text x="219.0" y="254.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">d×dₖ</text><line x1="118.0" y1="154.0" x2="180.0" y2="241.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#mh-ah)"/><rect x="276.0" y="218.0" width="152.0" height="46.0" rx="7" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1"/><rect x="280.0" y="221.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="304.0" y="221.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="328.0" y="221.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="352.0" y="221.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="376.0" y="221.0" width="23.0" height="6.0" rx="1" fill="#7ec5a3" stroke="none" stroke-width="1.5"/><rect x="400.0" y="221.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="280.0" y="228.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="304.0" y="228.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="328.0" y="228.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="352.0" y="228.0" width="23.0" height="6.0" rx="1" fill="#7ec5a3" stroke="none" stroke-width="1.5"/><rect x="376.0" y="228.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="400.0" y="228.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="280.0" y="235.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="304.0" y="235.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="328.0" y="235.0" width="23.0" height="6.0" rx="1" fill="#7ec5a3" stroke="none" stroke-width="1.5"/><rect x="352.0" y="235.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="376.0" y="235.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="400.0" y="235.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="280.0" y="242.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="304.0" y="242.0" width="23.0" height="6.0" rx="1" fill="#7ec5a3" stroke="none" stroke-width="1.5"/><rect x="328.0" y="242.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="352.0" y="242.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="376.0" y="242.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="400.0" y="242.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="280.0" y="249.0" width="23.0" height="6.0" rx="1" fill="#7ec5a3" stroke="none" stroke-width="1.5"/><rect x="304.0" y="249.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="328.0" y="249.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="352.0" y="249.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="376.0" y="249.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="400.0" y="249.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="280.0" y="256.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="304.0" y="256.0" width="23.0" height="6.0" rx="1" fill="#3cb2f5" stroke="none" stroke-width="1.5"/><rect x="328.0" y="256.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="352.0" y="256.0" width="23.0" height="6.0" rx="1" fill="#27cbef" stroke="none" stroke-width="1.5"/><rect x="376.0" y="256.0" width="23.0" height="6.0" rx="1" fill="#46a5f8" stroke="none" stroke-width="1.5"/><rect x="400.0" y="256.0" width="23.0" height="6.0" rx="1" fill="#7ec5a3" stroke="none" stroke-width="1.5"/><text x="352.0" y="274.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">rare</text><rect x="456.0" y="64.0" width="78.0" height="180.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.4"/><text x="495.0" y="160.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="400">concat</text><line x1="430.0" y1="66.0" x2="456.0" y2="140.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#mh-ah)"/><line x1="430.0" y1="124.0" x2="456.0" y2="162.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#mh-ah)"/><line x1="430.0" y1="182.0" x2="456.0" y2="184.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#mh-ah)"/><line x1="430.0" y1="240.0" x2="456.0" y2="206.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#mh-ah)"/><rect x="556.0" y="96.0" width="84.0" height="116.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.5"/><text x="598.0" y="152.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="650">W_O</text><text x="598.0" y="168.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">d×d</text><line x1="534.0" y1="154.0" x2="556.0" y2="154.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#mh-ah)"/><rect x="664.0" y="96.0" width="152.0" height="116.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.4"/><text x="740.0" y="148.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">same shape</text><text x="740.0" y="166.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="400">as the input</text><line x1="640.0" y1="154.0" x2="664.0" y2="154.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#mh-ah)"/><text x="420.0" y="294.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">each head gets its own d/h slice of the model dimension, so total cost is unchanged</text><text x="420.0" y="316.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-faint,#3a4467)" text-anchor="middle" font-weight="400">different heads really do learn different patterns — that is measured, not assumed</text></svg><figcaption>Heads drawn with their projections, showing which matrices are private and which are shared in the MQA/GQA layouts. Look at the key/value path: the number of *distinct* K/V projections is $n_{kv}$, while the number of distinct queries is always $h$ — that asymmetry is the entire family.</figcaption></figure></p>
+<h3 id="sliding-window-and-sparse-attention">Sliding-window and sparse attention</h3>
+<p><strong>Intuition.</strong> Most of what a token needs is nearby. Cap each query's attention to the last $w$ tokens and the cost becomes linear in $n$ — at the price of never being able to look further back than $w$ directly.</p>
+<p><strong>Formal definition.</strong> Sliding-window attention restricts the allowed set to $j \in [i-w+1, i]$ (unidirectional) or $|i-j|\le w/2$ (bidirectional):</p>
+<p>$$
+\mathbf{A}_{ij} = \operatorname{softmax}_j\Big(\mathbf{s}_{ij} + \mathbf{M}_{ij}\Big),\qquad \mathbf{M}_{ij} = 0 \text{ if } |i-j| < w,\; -\infty\text{ otherwise}.
+$$</p>
+<p>Cost per layer: $O(nwd)$ instead of $O(n^2d)$, and cache $O(wd)$ per layer with a rolling buffer. The composed receptive field over $L$ layers is</p>
+<p>$$
+r_L = 1 + L\,(w-1),
+$$</p>
+<p>linear in depth, so a 32-layer model with $w=4096$ has a theoretical receptive field of 131k tokens even though no single layer sees more than 4096.</p>
+<p><strong>Why it is built this way.</strong> It encodes a real prior (locality) at a real cost saving, and it composes: stacked windowed layers give a receptive field that grows linearly with depth, exactly like a stack of convolutions. The known weakness is <em>exact recall at distance</em>: if token 1 must be copied at token 50,000, no window reaches it, and the information must be carried through the residual stream — which loses precision. The standard remedy is hybridization: most layers windowed, a few fully global (Longformer's design), or periodic global tokens (BigBird).</p>
+<p><strong>Sparse patterns</strong> generalize the idea: each query attends to a fixed-size set $\mathcal{N}(i)$ of keys defined by a pattern — strided (attend every $k$-th token, as in Child et al.'s Sparse Transformer), windowed, random, or block-sparse. Any pattern with $|\mathcal{N}(i)| = O(w)$ costs $O(nwd)$ and has a receptive field that grows with depth. The tradeoff is pattern design: a deterministic stride pattern can miss the token that matters, and random patterns need enough layers for the union of reachable sets to cover the sequence with high probability.</p>
+<p><strong>Worked micro-example.</strong> $n=32768$, $d=4096$, $w=4096$: full attention core $2n^2d = 8.8\times10^{12}$ MACs per layer; windowed $2nwd = 1.1\times10^{12}$ — an $8\times$ saving, because $n/w = 8$. The saving is exactly $n/w$, so windows only pay off when the context greatly exceeds the window; at $n = 2w$ you save $2\times$ and lose exact long-range access, which is rarely worth it.</p>
+<h3 id="linear-attention-the-kernel-view-and-the-associative-reordering">Linear attention: the kernel view and the associative reordering</h3>
+<p><strong>Intuition.</strong> Softmax attention compares each query to each key and normalizes across all of them — the normalization is what makes it non-decomposable. Drop the softmax normalization, replace $\exp(\langle\mathbf{q},\mathbf{k}\rangle)$ by a <em>feature map</em> $\phi(\mathbf{q})^\top\phi(\mathbf{k})$, and the sum over keys becomes factorizable. Then you can swap the order of summation: sum over keys <em>first</em>, once, and reuse that summary for every query. That is the whole idea, and it turns $O(n^2)$ into $O(n)$.</p>
+<p><strong>Formal definition.</strong> Standard attention, for one query:</p>
+<p>$$
+\mathbf{y}_t = \frac{\sum_{s\le t}\exp\big(\langle\mathbf{q}_t,\mathbf{k}_s\rangle\big)\,\mathbf{v}_s}{\sum_{s\le t}\exp\big(\langle\mathbf{q}_t,\mathbf{k}_s\rangle\big)} .
+$$</p>
+<p>Replace the exponential kernel with a feature map: $\exp(\langle\mathbf{q},\mathbf{k}\rangle)\approx\phi(\mathbf{q})^\top\phi(\mathbf{k})$ with $\phi:\mathbb{R}^{d_k}\to\mathbb{R}^{d_\phi}$ applied elementwise and nonnegative (for $\phi(\mathbf{x}) = \operatorname{elu}(\mathbf{x})+1$ the approximation is exact for the "linear" kernel $\phi(\mathbf{q})^\top\phi(\mathbf{k}) = 1 + \langle\mathbf{q},\mathbf{k}\rangle_+$). Then</p>
+<p>$$
+\mathbf{y}_t = \frac{\sum_{s\le t}\big(\phi(\mathbf{q}_t)^\top\phi(\mathbf{k}_s)\big)\mathbf{v}_s}{\sum_{s\le t}\phi(\mathbf{q}_t)^\top\phi(\mathbf{k}_s)} = \frac{\phi(\mathbf{q}_t)^\top\Big(\sum_{s\le t}\phi(\mathbf{k}_s)\mathbf{v}_s^\top\Big)}{\phi(\mathbf{q}_t)^\top\Big(\sum_{s\le t}\phi(\mathbf{k}_s)\Big)} .
+$$</p>
+<p>The inner product no longer depends on $s$ once it is pulled outside the sum — that is the reordering, and it is the entire derivation (done in full in Derivation 1). Define the running state</p>
+<p>$$
+\mathbf{S}_t = \sum_{s\le t}\phi(\mathbf{k}_s)\mathbf{v}_s^\top \in\mathbb{R}^{d_\phi\times d_v},\qquad \mathbf{z}_t = \sum_{s\le t}\phi(\mathbf{k}_s)\in\mathbb{R}^{d_\phi},
+$$</p>
+<p>which update as $\mathbf{S}_t = \mathbf{S}_{t-1} + \phi(\mathbf{k}_t)\mathbf{v}_t^\top$ and $\mathbf{z}_t = \mathbf{z}_{t-1}+\phi(\mathbf{k}_t)$, and the output is</p>
+<p>$$
+\mathbf{y}_t = \frac{\phi(\mathbf{q}_t)^\top\mathbf{S}_t}{\phi(\mathbf{q}_t)^\top\mathbf{z}_t} .
+$$</p>
+<p>Cost per token: $O(d_\phi d_v)$ — linear in $d$, independent of $n$. Total $O(nd_\phi d_v)$ against $O(n^2d)$, and memory $O(d_\phi d_v)$ for the state instead of $O(nd)$ for a cache.</p>
+<p><strong>Why it is built this way.</strong> Three properties are gained and one is lost, and it is worth being precise about which. Gained: (i) <em>linear</em> time and constant memory per token; (ii) a recurrent inference form with a fixed-size state, so no cache growth; (iii) parallel <em>training</em> via a chunked or scan formulation, so it does not inherit the RNN's serialization (<strong>M11</strong>). Lost: the softmax's normalization means attention weights are no longer guaranteed nonnegative-and-summing-to-one over an unbounded set, so the output is a <em>ratio of two nonnegative quantities</em> rather than a convex combination — this is a real expressiveness restriction (the "low-rank" or "spikiness" problem), and it is the honest reason linear attention has not matched softmax attention at frontier scale. Approximating $\exp$ by a finite feature map also introduces approximation error that grows with the sharpness of the true attention distribution — precisely the regime that long-context retrieval needs.</p>
+<p><strong>Worked micro-example.</strong> $n=8192$, $d=1024$, $d_\phi = d_v = d$: quadratic core $4n^2d = 2.75\times10^{11}$ FLOPs; linear $4nd^2 = 3.4\times10^{10}$ — an $8\times$ saving, exactly $n/(2d)$. Since the crossover is at $n=2d=2048$, the benefit is a factor $n/2048$: at 128k context it is $64\times$.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 330" width="100%" role="img" aria-label="Attention cost: quadratic versus linear" class="fig-svg"><defs><marker id="lin-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><line x1="86.0" y1="276.0" x2="506.0" y2="276.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="280.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^-6</text><line x1="86.0" y1="232.0" x2="506.0" y2="232.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="236.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^-4</text><line x1="86.0" y1="188.0" x2="506.0" y2="188.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="192.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^-2</text><line x1="86.0" y1="144.0" x2="506.0" y2="144.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="148.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^0</text><line x1="86.0" y1="100.0" x2="506.0" y2="100.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="104.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^2</text><line x1="86.0" y1="56.0" x2="506.0" y2="56.0" stroke="var(--fig-faint,#3a4467)" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><text x="76.0" y="60.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="end" font-weight="400">10^4</text><line x1="86.0" y1="56.0" x2="86.0" y2="276.0" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.2" stroke-linecap="round"/><path d="M86.0,232.0 L88.6,232.0 L91.2,223.0 L93.9,215.3 L96.5,209.8 L99.1,205.5 L101.8,202.0 L104.4,199.1 L107.0,196.5 L109.6,194.3 L112.2,192.3 L114.9,190.4 L117.5,188.8 L120.1,187.3 L122.8,185.8 L125.4,184.5 L128.0,183.3 L130.6,182.1 L133.2,181.0 L135.9,180.0 L138.5,179.0 L141.1,178.1 L143.8,177.2 L146.4,176.3 L149.0,175.5 L151.6,174.8 L154.2,174.0 L156.9,173.3 L159.5,172.6 L162.1,171.9 L164.8,171.3 L167.4,170.6 L170.0,170.0 L172.6,169.4 L175.2,168.9 L177.9,168.3 L180.5,167.8 L183.1,167.3 L185.8,166.8 L188.4,166.3 L191.0,165.8 L193.6,165.3 L196.2,164.8 L198.9,164.4 L201.5,164.0 L204.1,163.5 L206.8,163.1 L209.4,162.7 L212.0,162.3 L214.6,161.9 L217.2,161.5 L219.9,161.1 L222.5,160.8 L225.1,160.4 L227.8,160.0 L230.4,159.7 L233.0,159.3 L235.6,159.0 L238.2,158.7 L240.9,158.3 L243.5,158.0 L246.1,157.7 L248.8,157.4 L251.4,157.1 L254.0,156.8 L256.6,156.5 L259.2,156.2 L261.9,155.9 L264.5,155.6 L267.1,155.4 L269.8,155.1 L272.4,154.8 L275.0,154.5 L277.6,154.3 L280.2,154.0 L282.9,153.8 L285.5,153.5 L288.1,153.3 L290.8,153.0 L293.4,152.8 L296.0,152.5 L298.6,152.3 L301.2,152.1 L303.9,151.8 L306.5,151.6 L309.1,151.4 L311.8,151.1 L314.4,150.9 L317.0,150.7 L319.6,150.5 L322.2,150.3 L324.9,150.1 L327.5,149.9 L330.1,149.7 L332.8,149.4 L335.4,149.2 L338.0,149.0 L340.6,148.8 L343.2,148.7 L345.9,148.5 L348.5,148.3 L351.1,148.1 L353.8,147.9 L356.4,147.7 L359.0,147.5 L361.6,147.3 L364.2,147.2 L366.9,147.0 L369.5,146.8 L372.1,146.6 L374.8,146.4 L377.4,146.3 L380.0,146.1 L382.6,145.9 L385.2,145.8 L387.9,145.6 L390.5,145.4 L393.1,145.3 L395.8,145.1 L398.4,144.9 L401.0,144.8 L403.6,144.6 L406.2,144.5 L408.9,144.3 L411.5,144.2 L414.1,144.0 L416.8,143.8 L419.4,143.7 L422.0,143.5 L424.6,143.4 L427.2,143.3 L429.9,143.1 L432.5,143.0 L435.1,142.8 L437.8,142.7 L440.4,142.5 L443.0,142.4 L445.6,142.2 L448.2,142.1 L450.9,142.0 L453.5,141.8 L456.1,141.7 L458.8,141.6 L461.4,141.4 L464.0,141.3 L466.6,141.2 L469.2,141.0 L471.9,140.9 L474.5,140.8 L477.1,140.6 L479.8,140.5 L482.4,140.4 L485.0,140.3 L487.6,140.1 L490.2,140.0 L492.9,139.9 L495.5,139.8 L498.1,139.6 L500.8,139.5 L503.4,139.4 L506.0,139.3" fill="none" stroke="var(--fig-rose,#fb7185)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M86.0,232.0 L88.6,232.0 L91.2,227.5 L93.9,223.6 L96.5,220.9 L99.1,218.8 L101.8,217.0 L104.4,215.5 L107.0,214.3 L109.6,213.1 L112.2,212.1 L114.9,211.2 L117.5,210.4 L120.1,209.6 L122.8,208.9 L125.4,208.3 L128.0,207.6 L130.6,207.1 L133.2,206.5 L135.9,206.0 L138.5,205.5 L141.1,205.0 L143.8,204.6 L146.4,204.2 L149.0,203.8 L151.6,203.4 L154.2,203.0 L156.9,202.6 L159.5,202.3 L162.1,202.0 L164.8,201.6 L167.4,201.3 L170.0,201.0 L172.6,200.7 L175.2,200.4 L177.9,200.2 L180.5,199.9 L183.1,199.6 L185.8,199.4 L188.4,199.1 L191.0,198.9 L193.6,198.7 L196.2,198.4 L198.9,198.2 L201.5,198.0 L204.1,197.8 L206.8,197.6 L209.4,197.3 L212.0,197.1 L214.6,196.9 L217.2,196.8 L219.9,196.6 L222.5,196.4 L225.1,196.2 L227.8,196.0 L230.4,195.8 L233.0,195.7 L235.6,195.5 L238.2,195.3 L240.9,195.2 L243.5,195.0 L246.1,194.9 L248.8,194.7 L251.4,194.5 L254.0,194.4 L256.6,194.2 L259.2,194.1 L261.9,194.0 L264.5,193.8 L267.1,193.7 L269.8,193.5 L272.4,193.4 L275.0,193.3 L277.6,193.1 L280.2,193.0 L282.9,192.9 L285.5,192.8 L288.1,192.6 L290.8,192.5 L293.4,192.4 L296.0,192.3 L298.6,192.1 L301.2,192.0 L303.9,191.9 L306.5,191.8 L309.1,191.7 L311.8,191.6 L314.4,191.5 L317.0,191.4 L319.6,191.2 L322.2,191.1 L324.9,191.0 L327.5,190.9 L330.1,190.8 L332.8,190.7 L335.4,190.6 L338.0,190.5 L340.6,190.4 L343.2,190.3 L345.9,190.2 L348.5,190.1 L351.1,190.0 L353.8,189.9 L356.4,189.8 L359.0,189.8 L361.6,189.7 L364.2,189.6 L366.9,189.5 L369.5,189.4 L372.1,189.3 L374.8,189.2 L377.4,189.1 L380.0,189.0 L382.6,189.0 L385.2,188.9 L387.9,188.8 L390.5,188.7 L393.1,188.6 L395.8,188.6 L398.4,188.5 L401.0,188.4 L403.6,188.3 L406.2,188.2 L408.9,188.2 L411.5,188.1 L414.1,188.0 L416.8,187.9 L419.4,187.8 L422.0,187.8 L424.6,187.7 L427.2,187.6 L429.9,187.6 L432.5,187.5 L435.1,187.4 L437.8,187.3 L440.4,187.3 L443.0,187.2 L445.6,187.1 L448.2,187.1 L450.9,187.0 L453.5,186.9 L456.1,186.8 L458.8,186.8 L461.4,186.7 L464.0,186.6 L466.6,186.6 L469.2,186.5 L471.9,186.5 L474.5,186.4 L477.1,186.3 L479.8,186.3 L482.4,186.2 L485.0,186.1 L487.6,186.1 L490.2,186.0 L492.9,185.9 L495.5,185.9 L498.1,185.8 L500.8,185.8 L503.4,185.7 L506.0,185.6" fill="none" stroke="var(--fig-cyan,#22d3ee)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><text x="401.0" y="78.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-rose,#fb7185)" text-anchor="end" font-weight="700">O(T²)</text><text x="446.9" y="185.8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="end" font-weight="700">O(T)</text><text x="296.0" y="300.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">context length, thousands of tokens →</text><text x="86.0" y="44.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">relative cost, log scale</text><rect x="546.0" y="82.0" width="228.0" height="156.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="564.0" y="108.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">the crossover</text><text x="564.0" y="130.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">Below roughly 10k tokens</text><text x="564.0" y="144.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">quadratic attention is</text><text x="564.0" y="158.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">still competitive: it is</text><text x="564.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">dense, exact, and heavily</text><text x="564.0" y="186.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">optimised. Past that, the</text><text x="564.0" y="200.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">wall is real.</text><text x="564.0" y="222.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="400">linear attention trades exactness for scaling</text></svg><figcaption>Quadratic and linear attention cost curves on log axes. Watch the crossover at $n \approx 2d$: below it the two are within a small constant factor and there is no reason to pay the quality cost of linear attention; above it the quadratic curve's *slope* is the problem, and no amount of kernel engineering changes a slope.</figcaption></figure></p>
+<h3 id="rwkv-linear-attention-with-a-decay-trained-in-parallel">RWKV: linear attention with a decay, trained in parallel</h3>
+<p><strong>Intuition.</strong> Take linear attention and make the decay from past to present explicit and per-channel, so that the state's contribution decays geometrically with distance. Then the state update is a scan — associative, so it parallelizes over the sequence during training, while inference remains a fixed-size recurrence.</p>
+<p><strong>Formal definition (RWKV-4 time mixing).</strong> With per-channel decay vector $\mathbf{w}$ (learned, and the same for all positions):</p>
+<p>$$
+\mathbf{y}_t = \frac{\sum_{s\le t}e^{\mathbf{k}_s + \mathbf{w}\odot(t-s)}\odot\mathbf{v}_s}{\sum_{s\le t}e^{\mathbf{k}_s + \mathbf{w}\odot(t-s)}} .
+$$</p>
+<p>The numerator is a running sum where each step multiplies the accumulator by $e^{\mathbf{w}}$ (a value $<1$ per channel when trained to decay) and adds $e^{\mathbf{k}_t}\mathbf{v}_t$:</p>
+<p>$$
+\mathbf{S}_t = e^{\mathbf{w}}\odot\mathbf{S}_{t-1} + e^{\mathbf{k}_t}\mathbf{v}_t .
+$$</p>
+<p><strong>Why it is built this way.</strong> The fixed geometric decay (a) makes the state's influence vanish for distant tokens, which bounds the effective context and therefore bounds gradient variance, and (b) makes the recurrence a <em>linear</em> recursion, so the whole sequence can be computed with a parallel scan or as a cumulative sum in the log domain — no sequential dependency during training. At inference the state is $O(d)$ per channel, so there is no cache at all. The result is the RNN's inference profile with the transformer's training profile. The honest caveat: the decay is not content-dependent in RWKV-4 (later versions add data-dependent gating), so it cannot represent "remember this particular token forever, forget that one" as sharply as attention can — the same expressiveness restriction as linear attention, in a different costume.</p>
+<p><strong>Worked micro-example.</strong> One channel, decay $w = -0.693$ per step (so $e^w = 0.5$): after 10 steps a contribution is attenuated by $0.5^{10} = 9.8\times10^{-4}$, after 20 by $9.5\times10^{-7}$. The <em>effective</em> context of that channel is about 20 steps — which is exactly the property that makes training stable, and exactly the property that makes long-range exact recall impossible. Per-channel decay vectors let different channels have different horizons, which is how RWKV-7B-scale models cover thousands of tokens: some channels decay at $0.9999$ per step.</p>
+<h3 id="state-space-models-from-a-continuous-ode-to-a-recurrence-you-can-implement">State-space models: from a continuous ODE to a recurrence you can implement</h3>
+<p><strong>Intuition.</strong> Start with a linear, time-invariant ODE describing a physical system — a damped oscillator, a leaky integrator, a filter. Sample it at intervals $\Delta$. You get a linear recurrence, which is a convolution, which can be computed in $O(n\log n)$ by FFT during training and in $O(1)$ per token at inference. This is the <em>classical</em> signal-processing route to sequence modelling, and it predates the transformer by decades.</p>
+<p><strong>Formal definition.</strong> The continuous system, for a scalar input $u(t)$ and output $y(t)$, with state $\mathbf{x}(t)\in\mathbb{R}^N$:</p>
+<p>$$
+\dot{\mathbf{x}}(t) = \mathbf{A}\mathbf{x}(t) + \mathbf{B}u(t),\qquad y(t) = \mathbf{C}\mathbf{x}(t) + \mathbf{D}u(t).
+$$</p>
+<p>Integrating over one step of length $\Delta$ with $u$ held constant (zero-order hold):</p>
+<p>$$
+\mathbf{x}_{k} = \bar{\mathbf{A}}\mathbf{x}_{k-1} + \bar{\mathbf{B}}u_k,\qquad \bar{\mathbf{A}} = e^{\Delta\mathbf{A}},\quad \bar{\mathbf{B}} = \Big(\int_0^{\Delta}e^{s\mathbf{A}}\,ds\Big)\mathbf{B}.
+$$</p>
+<p>For diagonal $\mathbf{A}$ (the case every efficient implementation uses) both are elementwise:</p>
+<p>$$
+\bar{A}_n = e^{\Delta A_n},\qquad \bar{B}_n = \frac{e^{\Delta A_n}-1}{A_n}B_n .
+$$</p>
+<p>Unrolling gives a convolution:</p>
+<p>$$
+y_k = \sum_{s\le k}\underbrace{\mathbf{C}\bar{\mathbf{A}}^{\,k-s}\bar{\mathbf{B}}}_{\bar{K}_{k-s}}u_s + Du_k .
+$$</p>
+<p><strong>Why it is built this way.</strong> Because a <em>linear</em> time-invariant recurrence is a convolution, it can be computed three ways: sequentially in $O(n)$ (inference), as an explicit convolution in $O(n^2)$ (naive), or by FFT in $O(n\log n)$ (training over the whole sequence at once). The FFT route is what makes SSMs competitive with attention on training throughput, and the sequential route is what makes inference $O(1)$ per token. The design problem that S4 solved is <em>what to choose for $\mathbf{A}$</em>: a random $\mathbf{A}$ forgets the past exponentially and cannot remember long-range structure, so Gu et al. used a specific structured matrix (HiPPO) whose state is provably an optimal polynomial projection of the input history — the eigenvalues are chosen so that the recurrence integrates Legendre polynomials over a sliding window, rather than decaying arbitrarily.</p>
+<p><strong>Worked micro-example.</strong> $N=1$, $A = -1$, $\Delta = 0.1$: $\bar{A} = e^{-0.1} = 0.9048$, $\bar{B} = (e^{-0.1}-1)/(-1)\cdot B = 0.0952B$. So each step keeps $90.5\%$ of the state and writes $9.5\%$ of the input — a leaky integrator with a time constant of 10 steps. With $A = -0.01$ and $\Delta = 1$: $\bar{A} = 0.990$, a 100-step time constant. <strong>That is the entire mechanism of state-space memory</strong>: the spectrum of $\mathbf{A}$ plus $\Delta$ sets the horizon, and the reason Mamba adds input-dependence to $\Delta$ is so the model can choose the horizon per token.</p>
+<h3 id="s4-structured-state-spaces-and-why-the-initialization-is-the-contribution">S4: structured state spaces, and why the initialization is the contribution</h3>
+<p><strong>Intuition.</strong> Any linear recurrence forgets at a rate set by the eigenvalues of $\mathbf{A}$. Choose them badly (at random) and the state remembers only the last few steps. S4's contribution is a <em>principled</em> choice of $\mathbf{A}$: a fixed structured matrix whose state is mathematically an optimal polynomial approximation of the input's history, so the recurrence behaves like a well-designed filter bank rather than a random one.</p>
+<p><strong>Formal definition.</strong> S4 (Gu, Goel and Ré, 2021) fixes $\mathbf{A}$ to a HiPPO matrix, the best-known instance being HiPPO-LegS:</p>
+<p>$$
+A_{nk} = \begin{cases}-\sqrt{(2n+1)(2k+1)} & n > k\\ -(n+1) & n = k\\ 0 & n < k\end{cases}
+$$</p>
+<p>and then parameterizes it, for trainability, as $\mathbf{A} = \mathbf{A}_{\text{HiPPO}} - \mathbf{P}\mathbf{P}^\top$ (a diagonal-plus-low-rank form, "DPLR") with $\mathbf{P}$ learned. Training computes the convolution kernel $\bar{K}_t = \mathbf{C}\bar{\mathbf{A}}^t\bar{\mathbf{B}}$ by a recurrence on the DPLR structure in $O(N\log n)$ time rather than $O(N^2)$ per step, then convolves with the input by FFT.</p>
+<p><strong>Why it is built this way.</strong> Two problems, two answers. (i) <em>A random $\mathbf{A}$ cannot remember.</em> The HiPPO derivation says: define an optimality criterion — the state should be the coefficients of the best $N$-term Legendre expansion of the history $u(0..t)$ — and solve for the $\mathbf{A}$ that makes the linear ODE do exactly that. The resulting spectrum has eigenvalues clustered so that different coordinates track different time scales, giving a memory that decays polynomially rather than exponentially. (ii) <em>A dense $\mathbf{A}$ is too expensive.</em> Naively computing $\bar{\mathbf{A}}^t$ is $O(N^2)$ per step; the DPLR structure plus the Cauchy-kernel trick reduces both training and the kernel computation to near-linear time.</p>
+<p><strong>Worked micro-example.</strong> The HiPPO-LegS matrix at $N=2$: $\mathbf{A} = \begin{pmatrix}-1 & 0\\ -\sqrt3 & -2\end{pmatrix}$ (from the formula: $A_{00}=-1$, $A_{10}=-\sqrt{(2\cdot1+1)(2\cdot0+1)}=-\sqrt3$, $A_{11}=-2$, $A_{01}=0$). Its eigenvalues are $-1$ and $-2$, i.e. two time constants in a 1:2 ratio; at $N=64$ the eigenvalues spread over a much wider range, so the state simultaneously holds fast and slow averages of the input. That spectrum — not the dimension $N$ alone — is what gives S4 its long-range memory.</p>
+<h3 id="mamba-making-the-system-selective">Mamba: making the system selective</h3>
+<p><strong>Intuition.</strong> An LTI system applies <em>the same</em> filter to every input. It cannot decide that this token is worth remembering for a thousand steps and that one for two. Attention can, because its weights depend on content. Mamba's move is to make the SSM's parameters functions of the input, so the recurrence becomes a <em>gated</em> linear recurrence with content-dependent timescales.</p>
+<p><strong>Formal definition (selective SSM).</strong> Keep $\mathbf{A}$ fixed and diagonal, and make the step size and input/output matrices functions of the current input:</p>
+<p>$$
+\Delta_t = \operatorname{softplus}\big(\mathbf{W}_\Delta\mathbf{u}_t\big),\qquad \mathbf{B}_t = \mathbf{W}_B\mathbf{u}_t,\qquad \mathbf{C}_t = \mathbf{W}_C\mathbf{u}_t,
+$$
+$$
+\mathbf{x}_t = \bar{\mathbf{A}}_t\mathbf{x}_{t-1} + \bar{\mathbf{B}}_t u_t,\qquad \bar{\mathbf{A}}_t = e^{\Delta_t\mathbf{A}},\quad \bar{\mathbf{B}}_t = \Delta_t\mathbf{B}_t,
+$$
+$$
+y_t = \mathbf{C}_t^\top\mathbf{x}_t + Du_t .
+$$</p>
+<p>The $\Delta_t\mathbf{B}_t$ simplification (rather than the exact ZOH expression) is the standard choice; for scalar $A$ they differ by an $O(\Delta)$ factor absorbed into a learned projection.</p>
+<p><strong>Why it is built this way — and what selectivity means mechanically.</strong> Look at $\bar{\mathbf{A}}_t = e^{\Delta_t A}$ with $A < 0$. Small $\Delta_t$ gives $\bar{\mathbf{A}}_t\approx1$: the state is <em>preserved</em>, and the model can hold information across many steps. Large $\Delta_t$ gives $\bar{\mathbf{A}}_t\approx0$: the state is <em>cleared</em>, and the model resets to the current input. So $\Delta_t$ is precisely a <strong>learned forget gate</strong> — structurally the LSTM's $\mathbf{f}_t = e^{-\Delta a}$ (<strong>M11</strong>), with the gate value produced by a linear map of the input instead of a sigmoid. Selectivity is therefore not a mysterious new capability; it is the LSTM's gating, made parallel-trainable by the fact that the <em>state transition is diagonal and scalar-times-identity</em> rather than a full matrix.</p>
+<p>The cost is that the recurrence is now time-varying, so it is no longer a single convolution and the FFT trick is unavailable. Mamba's answer is a hardware-aware scan: rather than materializing the $(T, d, N)$ intermediate states in HBM, the kernel fuses the recurrence and only writes the final output and final state; the backward pass recomputes the states rather than storing them. Complexity is $O(ndN)$ time and $O(dN)$ memory for the scan, against attention's $O(n^2d)$ and $O(nd)$ cache.</p>
+<p><strong>Worked micro-example.</strong> One channel, $A = -1$. If $\Delta_t = 0.01$ then $\bar{A}_t = e^{-0.01} = 0.990$: the state decays with a 100-step time constant, so this token is remembered. If $\Delta_t = 5$, then $\bar{A}_t = e^{-5} = 0.0067$: the state is wiped and replaced by $5B_tu_t$, so the model treats this token as a reset point. With $\mathbf{A}$ learned per channel, a single Mamba layer contains a bank of integrators whose time constants are re-selected at every step from the input — the closest thing in modern architectures to a <em>content-addressed</em> leaky integrator.</p>
+<h3 id="hybrid-stacks">Hybrid stacks</h3>
+<p><strong>Intuition.</strong> Attention is expensive per token but exact at recall; a selective SSM is cheap per token and excellent at aggregation but lossy at exact recall. Interleave them: a majority of cheap SSM layers doing the bulk processing, a minority of attention layers providing exact lookup.</p>
+<p><strong>Formal definition.</strong> A hybrid stack partitions the $L$ layers into $L_{\text{attn}}$ attention layers and $L_{\text{ssm}}$ recurrence layers, typically in a fixed periodic ratio (one attention layer every $k$ SSM layers) or with a single global-attention block placed periodically. Inference cost per token becomes $O\big((L_{\text{ssm}}dN + L_{\text{attn}}n d)\big)$ with a cache only for the attention layers, i.e. $2L_{\text{attn}}n_{kv}d_hTb$ bytes.</p>
+<p><strong>Why it is built this way.</strong> Because the two failure modes are complementary and the cost asymmetry is large. Published hybrids of this kind — Jamba's interleaving of Mamba and attention layers inside a mixture-of-experts model at roughly one attention layer per seven Mamba layers, and Griffin's gated-linear-recurrence-plus-local-attention design at a fixed recurrence-to-attention ratio — report that a small fraction of attention layers recovers most of the quality of a pure transformer at a fraction of the cache. The mechanism is consistent with the theory: exact copying is what the attention layers are for, and a few of them, positioned to be reachable from every token, suffice.</p>
+<p>The honest framing: hybrids are a <em>pragmatic compromise</em>, not a demonstration that attention is replaceable. No frontier-scale model has shipped with zero attention layers and matched a pure-transformer baseline at equal compute, data and tuning effort. See the last section for how to read claims to the contrary.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 470" width="100%" role="img" aria-label="The transformer block, with every residual and normalisation" class="fig-svg"><defs><marker id="tfb-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="385.0" y="28.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">x (n × d)</text><line x1="385.0" y1="36.0" x2="385.0" y2="56.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#tfb-ah)"/><rect x="150.0" y="56.0" width="470.0" height="44.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.6"/><text x="385.0" y="79.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">RMSNorm</text><line x1="385.0" y1="100.0" x2="385.0" y2="118.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#tfb-ah)"/><rect x="150.0" y="118.0" width="470.0" height="44.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.6"/><text x="385.0" y="141.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">multi-head attention</text><text x="385.0" y="157.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">4 heads, causal</text><line x1="385.0" y1="162.0" x2="385.0" y2="188.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#tfb-ah)"/><circle cx="385.0" cy="206.0" r="15.0" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="385.0" y="212.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="16" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">+</text><path d="M120,78 L120,206 L368,206" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="5 4"/><line x1="150.0" y1="206.0" x2="368.0" y2="206.0" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#tfb-ah)" stroke-dasharray="5 4"/><text x="112.0" y="142.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-amber,#f5b544)" text-anchor="end" font-weight="400">residual</text><line x1="385.0" y1="222.0" x2="385.0" y2="242.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#tfb-ah)"/><rect x="150.0" y="242.0" width="470.0" height="44.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.6"/><text x="385.0" y="265.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">RMSNorm</text><line x1="385.0" y1="286.0" x2="385.0" y2="304.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#tfb-ah)"/><rect x="150.0" y="304.0" width="470.0" height="44.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.6"/><text x="385.0" y="327.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">feed-forward</text><text x="385.0" y="343.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">d → 4d → d</text><line x1="385.0" y1="348.0" x2="385.0" y2="374.0" stroke="var(--fig-dim,#8b93b0)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#tfb-ah)"/><circle cx="385.0" cy="392.0" r="15.0" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="2"/><text x="385.0" y="398.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="16" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">+</text><line x1="150.0" y1="392.0" x2="368.0" y2="392.0" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#tfb-ah)" stroke-dasharray="5 4"/><path d="M120,206 L120,392 L150,392" fill="none" stroke="var(--fig-amber,#f5b544)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="5 4"/><text x="385.0" y="430.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="12" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">x&#x27; (n × d)</text><text x="650.0" y="120.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-violet,#a78bfa)" text-anchor="start" font-weight="400">pre-LN</text><text x="650.0" y="138.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">norm inside the</text><text x="650.0" y="152.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">residual path</text><text x="650.0" y="166.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">keeps the identity</text><text x="650.0" y="180.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">highway clean and</text><text x="650.0" y="194.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">stabilises deep</text><text x="650.0" y="208.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">stacks.</text><text x="40.0" y="430.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">stack L of these. Only attention mixes across positions; the FFN acts on each position independently.</text></svg><figcaption>The transformer block you are replacing, with every sublayer marked. Ask of each replacement scheme which sublayer it substitutes and what it does to the two costs: the residual stream stays (it is the communication channel), the norm placement stays, and the FFN stays — what changes is the token-mixing operator in the middle, and with it the $O(n^2)$ heat and the $O(n)$ cache.</figcaption></figure></p>
+<h3 id="mixture-of-experts-sparsity-in-the-parameter-dimension">Mixture of experts: sparsity in the parameter dimension</h3>
+<p><strong>Intuition.</strong> A dense FFN applies all of its parameters to every token. But a given token needs only a few kinds of computation. Split the FFN into $E$ parallel "experts" and route each token to the top $k$: every token is still cheap, but the model has $E$ times more parameters to store knowledge in.</p>
+<p><strong>Formal definition.</strong> With router weights $\mathbf{W}_r\in\mathbb{R}^{E\times d}$ and $E$ expert FFNs $E_i$ (each a SwiGLU MLP):</p>
+<p>$$
+\mathbf{s} = \operatorname{softmax}\big(\mathbf{W}_r\mathbf{x}\big)\in\mathbb{R}^{E},\qquad
+\mathcal{T} = \operatorname{TopK}(\mathbf{s},k),\qquad
+\mathbf{y} = \sum_{i\in\mathcal{T}} g_i\,E_i(\mathbf{x}),\quad g_i = \frac{s_i}{\sum_{j\in\mathcal{T}}s_j}\ \text{(Switch: } g_i = s_i\text{)} .
+$$</p>
+<p><strong>Capacity.</strong> To keep the computation a dense batched GEMM, each expert is allotted a fixed buffer of</p>
+<p>$$
+C = \operatorname{round}\Big(\text{capacity\_factor}\cdot\frac{T}{E}\Big)
+$$</p>
+<p>token slots (capacity factor typically $1.0$–$1.25$). Tokens whose expert is full are <em>dropped</em> from that expert — they pass through the residual connection only. The dropped fraction is the price of static shapes; it is reported and tracked because a high drop rate means most tokens are receiving a partial model.</p>
+<p><strong>The load-balancing loss.</strong> A pure top-$k$ router collapses: the winning expert gets more gradient, becomes better, and wins more. Switch Transformer's auxiliary loss counteracts this. With $f_i$ the fraction of tokens whose top-1 choice is expert $i$, and $P_i$ the mean router probability for expert $i$,</p>
+<p>$$
+L_{\text{aux}} = \alpha\,E\sum_{i=1}^{E}f_iP_i .
+$$</p>
+<p>At perfectly uniform routing, $f_i = P_i = 1/E$ for all $i$, so $L_{\text{aux}} = \alpha E\cdot E\cdot\frac{1}{E^2} = \alpha$: the minimum value is exactly $\alpha$, and it is scale-free in $E$. Note what this loss actually measures: if $P$ is uniform but $f$ is skewed, $\sum_if_iP_i = \frac1E\sum_if_i = \frac1E$ and the loss does <em>not</em> increase — because the soft probabilities are not the problem. The loss grows only when $f$ and $P$ are <em>aligned</em>, i.e. when the router is confidently and consistently sending everything to the same experts. Measured on a toy: uniform gives $0.0100$ at $\alpha=0.01$, a skewed $f=(0.5,0.2,0.1,\ldots)$ with uniform $P$ still gives $0.0100$, and a skewed $f$ with matching skewed $P$ gives $0.0247$. That is the precise sense in which this loss penalizes collapse rather than imbalance.</p>
+<p><strong>Why it is built this way — the arithmetic of the trade.</strong> Take a Mixtral-8×7B-shaped layer: $d=4096$, $d_{\text{ff}}=14336$, $E=8$, $k=2$. Per expert (SwiGLU, three matrices): $3\cdot4096\cdot14336 = 176.2$M parameters. Stored: $8\times176.2 = 1.41$B per layer. Active per token: $2\times176.2 = 352.3$M.</p>
+<p>A <em>dense</em> FFN with the same per-token compute would need $d_{\text{ff}} = 2\times14336 = 28672$, i.e. $352.3$M parameters — identical active count, by construction, since equal active parameters means equal FLOPs. So the comparison is:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Parameters stored</th>
+<th>Parameters per token</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dense, equal FLOPs</td>
+<td>$352$M</td>
+<td>$352$M</td>
+</tr>
+<tr>
+<td>MoE, $E=8$, $k=2$</td>
+<td>$1.41$B ($4\times$)</td>
+<td>$352$M</td>
+</tr>
+</tbody>
+</table>
+<p>The model gets <strong>4× the parameters for the same per-token compute</strong> — and pays for it in memory: all 1.41B must be resident, so at batch 1 you are using $1/4$ of the parameters you have paid to store. The whole model at 32 layers is 45.1B stored and 13.4B active, against 46.7B / 12.9B reported for Mixtral — the small discrepancy is biases, norms and the embedding. Serving requires ~94 GB in bf16 (two 80 GB GPUs) to run at the speed of a 13B dense model. <strong>That is the MoE bargain stated precisely: FLOPs decouple from memory, and you are trading memory for quality.</strong> It is a good trade only when you have memory to spare and compute is the binding constraint — which is the situation for training, and often not the situation for serving.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" width="100%" role="img" aria-label="Mixture of experts: sparse routing with a load-balance term" class="fig-svg"><defs><marker id="moe-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><rect x="24.0" y="60.0" width="76.0" height="32.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2"/><text x="62.0" y="81.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="400">tok 1</text><line x1="100.0" y1="76.0" x2="150.0" y2="130.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#moe-ah)"/><rect x="24.0" y="102.0" width="76.0" height="32.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2"/><text x="62.0" y="123.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="400">tok 2</text><line x1="100.0" y1="118.0" x2="150.0" y2="170.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#moe-ah)"/><rect x="24.0" y="144.0" width="76.0" height="32.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2"/><text x="62.0" y="165.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="400">tok 3</text><line x1="100.0" y1="160.0" x2="150.0" y2="210.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#moe-ah)"/><rect x="24.0" y="186.0" width="76.0" height="32.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2"/><text x="62.0" y="207.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="400">tok 4</text><line x1="100.0" y1="202.0" x2="150.0" y2="130.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#moe-ah)"/><rect x="24.0" y="228.0" width="76.0" height="32.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2"/><text x="62.0" y="249.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="400">tok 5</text><line x1="100.0" y1="244.0" x2="150.0" y2="170.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#moe-ah)"/><rect x="24.0" y="270.0" width="76.0" height="32.0" rx="6" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2"/><text x="62.0" y="291.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="400">tok 6</text><line x1="100.0" y1="286.0" x2="150.0" y2="210.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#moe-ah)"/><rect x="150.0" y="108.0" width="86.0" height="76.0" rx="9" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.6"/><text x="193.0" y="140.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="650">router</text><text x="193.0" y="158.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">softmax(Wx)</text><rect x="150.0" y="200.0" width="86.0" height="42.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.2"/><text x="193.0" y="218.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">load balance</text><text x="193.0" y="232.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="400">aux loss</text><rect x="300.0" y="56.0" width="210.0" height="50.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.3"/><text x="316.0" y="78.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="start" font-weight="400">expert 1</text><text x="316.0" y="94.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">FFN, 0.4B params</text><rect x="430.0" y="64.0" width="14.0" height="14.0" rx="3" fill="#5b8cff" stroke="none" stroke-width="1.5"/><rect x="448.0" y="64.0" width="14.0" height="14.0" rx="3" fill="#44a8f8" stroke="none" stroke-width="1.5"/><rect x="466.0" y="64.0" width="14.0" height="14.0" rx="3" fill="#2dc4f1" stroke="none" stroke-width="1.5"/><rect x="484.0" y="64.0" width="14.0" height="14.0" rx="3" fill="#4ccdcc" stroke="none" stroke-width="1.5"/><line x1="236.0" y1="146.0" x2="300.0" y2="81.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#moe-ah)"/><rect x="520.0" y="70.0" width="60.0" height="22.0" rx="11" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><text x="550.0" y="85.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">4 tok</text><rect x="300.0" y="122.0" width="210.0" height="50.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.3"/><text x="316.0" y="144.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="start" font-weight="400">expert 2</text><text x="316.0" y="160.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">FFN, 0.9B params</text><rect x="430.0" y="130.0" width="14.0" height="14.0" rx="3" fill="#5b8cff" stroke="none" stroke-width="1.5"/><rect x="448.0" y="130.0" width="14.0" height="14.0" rx="3" fill="#44a8f8" stroke="none" stroke-width="1.5"/><line x1="236.0" y1="146.0" x2="300.0" y2="147.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#moe-ah)"/><rect x="520.0" y="136.0" width="60.0" height="22.0" rx="11" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><text x="550.0" y="151.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">2 tok</text><rect x="300.0" y="188.0" width="210.0" height="50.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.3"/><text x="316.0" y="210.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="start" font-weight="400">expert 3</text><text x="316.0" y="226.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">FFN, 0.9B params</text><rect x="430.0" y="196.0" width="14.0" height="14.0" rx="3" fill="#5b8cff" stroke="none" stroke-width="1.5"/><rect x="448.0" y="196.0" width="14.0" height="14.0" rx="3" fill="#44a8f8" stroke="none" stroke-width="1.5"/><rect x="466.0" y="196.0" width="14.0" height="14.0" rx="3" fill="#2dc4f1" stroke="none" stroke-width="1.5"/><line x1="236.0" y1="146.0" x2="300.0" y2="213.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#moe-ah)"/><rect x="520.0" y="202.0" width="60.0" height="22.0" rx="11" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><text x="550.0" y="217.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">3 tok</text><rect x="300.0" y="254.0" width="210.0" height="50.0" rx="8" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-green,#34d399)" stroke-width="1.3"/><text x="316.0" y="276.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="start" font-weight="400">expert 4</text><text x="316.0" y="292.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="8.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">FFN, 0.9B params</text><rect x="430.0" y="262.0" width="14.0" height="14.0" rx="3" fill="#5b8cff" stroke="none" stroke-width="1.5"/><line x1="236.0" y1="146.0" x2="300.0" y2="279.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.1" stroke-linecap="round" marker-end="url(#moe-ah)"/><rect x="520.0" y="268.0" width="60.0" height="22.0" rx="11" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-faint,#3a4467)" stroke-width="1"/><text x="550.0" y="283.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">1 tok</text><rect x="620.0" y="60.0" width="216.0" height="150.0" rx="10" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="728.0" y="84.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">why MoE</text><text x="634.0" y="110.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">total params</text><text x="820.0" y="110.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.8" fill="var(--fig-cyan,#22d3ee)" text-anchor="end" font-weight="400">huge</text><text x="634.0" y="136.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">active per token</text><text x="820.0" y="136.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.8" fill="var(--fig-cyan,#22d3ee)" text-anchor="end" font-weight="400">small</text><text x="634.0" y="162.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">compute</text><text x="820.0" y="162.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.8" fill="var(--fig-cyan,#22d3ee)" text-anchor="end" font-weight="400">as if dense small</text><text x="634.0" y="188.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">memory</text><text x="820.0" y="188.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.8" fill="var(--fig-cyan,#22d3ee)" text-anchor="end" font-weight="400">all experts resident</text><text x="430.0" y="336.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">top-2 routing shown; the auxiliary loss punishes a router that collapses onto one expert</text></svg><figcaption>Tokens routed to experts with a load-balance panel. Watch the panel while the router is skewed: tokens pile onto one expert, that expert's buffer fills, and the overflow tokens are dropped — which is the failure the auxiliary loss and the capacity factor exist to manage, and which is invisible if you only look at the loss curve.</figcaption></figure></p>
+<h3 id="what-frontier-models-have-converged-on-measured-versus-speculative">What frontier models have converged on, measured versus speculative</h3>
+<p><strong>What is measured</strong> (published configs, reproducible ablations, multiple independent labs):</p>
+<ul>
+<li><strong>Decoder-only, causal, pre-LN.</strong> RMSNorm rather than LayerNorm, placed inside the branch, with a final norm before the unembedding. This is essentially universal.</li>
+<li><strong>SwiGLU with $d_{\text{ff}}\approx\frac83 d$.</strong> The parameter-neutral choice derived in <strong>M12</strong>; the "huge FFN" of GPT-3's 4× has been superseded by the gated 8/3 form.</li>
+<li><strong>RoPE</strong>, with a base frequency raised from $10^4$ to $10^5$–$10^6$ for long context, sometimes combined with position interpolation or YaRN-style rescaling.</li>
+<li><strong>GQA with $n_{kv}\approx8$.</strong> Every current open-weight model family uses it; the KV-cache arithmetic is not optional at scale.</li>
+<li><strong>No biases</strong> in the linear layers, and often tied embeddings.</li>
+<li><strong>FlashAttention-class attention kernels</strong> — universally, since they are exact and faster.</li>
+<li><strong>MoE at the top end.</strong> Mixtral, DeepSeek-V2/V3, DBRX, Qwen-MoE and Grok all use sparse FFNs; the largest dense open models are a generation behind.</li>
+<li><strong>bf16 (and, in at least one reported case, fp8) training</strong>, with fp16 rarely used for large runs.</li>
+</ul>
+<p><strong>What is contested:</strong></p>
+<ul>
+<li><strong>Whether attention can be removed.</strong> Hybrids are shipping; pure-SSM frontier models are not. The claim "SSMs replace attention" is a hypothesis with academic support and no frontier-scale demonstration at equal tuning.</li>
+<li><strong>Whether MoE is better.</strong> Comparisons at <em>equal active parameters</em> are expensive and rare, and MoE is harder to train (routing instability, load-balance tuning, expert collapse) and memory-hungry. The fair claim is "MoE is better per FLOP, if you have the memory".</li>
+<li><strong>Sparsity-induced emergence.</strong> Claims that sparse models acquire capabilities dense models do not are not well separated from the confound that sparse models are trained with more total parameters and often more data.</li>
+<li><strong>Long-context capability.</strong> "128k context" describes a window, not a capability; retrieval accuracy at 128k varies enormously by benchmark and by position within the window, and the positional scheme is only one of several determinants.</li>
+<li><strong>Latent attention (MLA).</strong> DeepSeek-V2 reports a 93.3% KV-cache reduction against MHA with quality maintained, and it is the most convincing published attack on the cache term — but it is one lab's result, and independent replication at scale is thin.</li>
+</ul>
+<h2 id="the-algorithm-step-by-step">The algorithm, step by step</h2>
+<p>A Mamba block, then a mixture-of-experts FFN. Both are written at variable level, because these are the two parts of the modern zoo you are most likely to have to implement.</p>
+<p><strong>Mamba block</strong>, input $\mathbf{X}\in\mathbb{R}^{B\times T\times d}$, expansion factor $e$ (typically 2), inner width $d_{\text{in}}=ed$, state size $N$ (typically 16).</p>
+<ol>
+<li><strong>Split into two branches.</strong> $\mathbf{X}_{\text{gate}} = \mathbf{X}\mathbf{W}_1^\top$ and $\mathbf{U} = \mathbf{X}\mathbf{W}_2^\top$, both $\in\mathbb{R}^{B\times T\times d_{\text{in}}}$. One branch becomes the gate, the other the SSM input — the same gating structure as SwiGLU.</li>
+<li><strong>Causal depthwise convolution.</strong> $\mathbf{U} \leftarrow \operatorname{conv1d}_{\text{depthwise}}(\mathbf{U}, \text{kernel}=4)$ then a nonlinearity. The short convolution gives each position a 4-token local context that the scan alone would not provide; it is causal, so it uses only past tokens.</li>
+<li><strong>Project the SSM parameters.</strong> $\Delta = \operatorname{softplus}(\mathbf{U}\mathbf{W}_\Delta^\top + \mathbf{b}_\Delta)\in\mathbb{R}^{B\times T\times d_{\text{in}}}$, $\mathbf{B}_t = \mathbf{U}\mathbf{W}_B^\top \in\mathbb{R}^{B\times T\times N}$, $\mathbf{C}_t = \mathbf{U}\mathbf{W}_C^\top\in\mathbb{R}^{B\times T\times N}$. Note these are <em>per token</em>: that is the selectivity.</li>
+<li><strong>Discretize.</strong> $\bar{\mathbf{A}}_t = \exp(\Delta_t\otimes\mathbf{A})$ with $\mathbf{A}\in\mathbb{R}^{d_{\text{in}}\times N}$ fixed and structured (typically $\mathbf{A} = -\exp(\mathbf{A}_{\log})$, negative, diagonal per channel); $\bar{\mathbf{B}}_t = \Delta_t\otimes\mathbf{B}_t$.</li>
+<li><strong>Scan.</strong> For $t = 1..T$: $\mathbf{h}_t = \bar{\mathbf{A}}_t\odot\mathbf{h}_{t-1} + \bar{\mathbf{B}}_t\odot\mathbf{u}_t$ (shape $B\times d_{\text{in}}\times N$), then $y_t = \langle\mathbf{C}_t,\mathbf{h}_t\rangle$ (contracting $N$).</li>
+<li><strong>Gate and project.</strong> $\mathbf{Y} = \big(\mathbf{Y}\odot\operatorname{SiLU}(\mathbf{X}_{\text{gate}})\big)\mathbf{W}_3^\top$, back to $\mathbb{R}^{B\times T\times d}$.</li>
+<li><strong>Residual.</strong> $\mathbf{X}\leftarrow\mathbf{X}+\mathbf{Y}$ (preceded by a norm, as in every modern block).</li>
+</ol>
+<p>```text
+function mamba_block(X, W1, W2, Wconv, Wdelta, WB, WC, Alog, W3):
+    G = X @ W1.T                       # (B, T, di)  gate branch
+    U = X @ W2.T                       # (B, T, di)  ssm branch
+    U = silu(causal_depthwise_conv1d(U, Wconv, k=4))
+    dt = softplus(U @ Wdelta.T + b_delta)      # (B, T, di)  per-token step size
+    Bt = U @ WB.T                             # (B, T, N)
+    Ct = U @ WC.T                             # (B, T, N)
+    A  = -exp(Alog)                           # (di, N) negative, so exp(dt*A) in (0,1)
+    h  = zeros(B, di, N)                      # the entire state: no (T, N) tensor
+    for t in range(T):
+        Abar = exp(dt[:, t, :, None] * A)     # (B, di, N)   <-- the forget gate
+        Bbar = dt[:, t, :, None] * Bt[:, t, None, :]
+        h = Abar * h + Bbar * U[:, t, :, None]
+        Y[:, t] = einsum('bdn,bn->bd', h, Ct[:, t])
+    return X + (Y * silu(G)) @ W3.T
+```</p>
+<p><strong>Complexity.</strong> The scan is $O(BTd_{\text{in}}N)$ multiply-accumulates — linear in sequence length, with $N=16$ so the constant is small. Memory is $O(Bd_{\text{in}}N)$ for the state plus $O(BTd_{\text{in}}3N)$ for the per-token $\bar{\mathbf{A}},\bar{\mathbf{B}},\mathbf{C}$ if materialized; the hardware-aware kernel avoids that by recomputing them in the backward pass, exactly as FlashAttention recomputes attention tiles. Compare attention: $O(BT^2d)$ time and $O(BTn_{kv}d_h)$ cache.</p>
+<p><strong>Mixture-of-experts FFN</strong>, input $\mathbf{X}\in\mathbb{R}^{T\times d}$, $E$ experts, top-$k$, capacity factor $\gamma$.</p>
+<ol>
+<li><strong>Route.</strong> $\mathbf{s} = \operatorname{softmax}(\mathbf{X}\mathbf{W}_r^\top)\in\mathbb{R}^{T\times E}$; take the top $k$ indices per token and renormalize their probabilities to get gates $g$.</li>
+<li><strong>Bound the buffers.</strong> $C = \lceil \gamma T k/E\rceil$ slots per expert. Compute, for each expert, the list of tokens routed to it (the "permutation"), truncating at $C$; the excess tokens are dropped.</li>
+<li><strong>Dispatch.</strong> Send each token's hidden state to its assigned experts (a gather, or an all-to-all across devices in expert parallelism).</li>
+<li><strong>Compute.</strong> Each expert runs its own SwiGLU on its assigned tokens — one dense GEMM per expert, which is what makes this efficient despite the sparsity.</li>
+<li><strong>Combine.</strong> Multiply each expert's output by its gate $g_i$ and scatter-add back to the token's position; dropped tokens contribute nothing (they pass through the residual).</li>
+<li><strong>Auxiliary loss.</strong> Add $\alpha E\sum_i f_iP_i$ to the training objective, with $f$ computed from the routing decisions and $P$ from the soft router probabilities.</li>
+</ol>
+<p><strong>Complexity.</strong> Compute per token is $O(k\cdot 3dd_{\text{ff}})$ — independent of $E$. Memory is $O(E\cdot 3dd_{\text{ff}})$ for the experts — linear in $E$. Communication in expert parallelism is $O(Td)$ per all-to-all, twice (dispatch and combine).</p>
+<h2 id="derivations">Derivations</h2>
+<h3 id="1-linear-attention-the-associative-reordering-done-completely">1. Linear attention: the associative reordering, done completely</h3>
+<p><strong>Step 1 — start from the definition.</strong> For one query at position $t$, with a similarity function $\operatorname{sim}(\cdot,\cdot)$:</p>
+<p>$$
+\mathbf{y}_t = \frac{\sum_{s\le t}\operatorname{sim}(\mathbf{q}_t,\mathbf{k}_s)\,\mathbf{v}_s}{\sum_{s\le t}\operatorname{sim}(\mathbf{q}_t,\mathbf{k}_s)} .
+$$</p>
+<p><strong>Step 2 — choose a factorizable similarity.</strong> Let $\operatorname{sim}(\mathbf{q},\mathbf{k}) = \phi(\mathbf{q})^\top\phi(\mathbf{k})$ for some feature map $\phi:\mathbb{R}^{d_k}\to\mathbb{R}^{d_\phi}$ with nonnegative outputs. (For $\phi(\mathbf{x}) = \operatorname{elu}(\mathbf{x})+1$ this gives $1+\langle\mathbf{q},\mathbf{k}\rangle$ when $\langle\mathbf{q},\mathbf{k}\rangle\ge0$, an exact "linear" kernel; for the softmax kernel one would need an infinite-dimensional $\phi$, which is why linear attention is an approximation.)</p>
+<p><strong>Step 3 — substitute and expand.</strong> The numerator becomes</p>
+<p>$$
+\sum_{s\le t}\big(\phi(\mathbf{q}_t)^\top\phi(\mathbf{k}_s)\big)\mathbf{v}_s = \sum_{s\le t}\sum_{r=1}^{d_\phi}\phi_r(\mathbf{q}_t)\,\phi_r(\mathbf{k}_s)\,\mathbf{v}_s .
+$$</p>
+<p>Each term is a scalar times a vector. Sum over $s$ first:</p>
+<p>$$
+= \sum_{r=1}^{d_\phi}\phi_r(\mathbf{q}_t)\underbrace{\Big(\sum_{s\le t}\phi_r(\mathbf{k}_s)\mathbf{v}_s\Big)}_{\text{independent of }t\text{'s content}} .
+$$</p>
+<p><strong>Step 4 — recognize the state.</strong> Define</p>
+<p>$$
+\mathbf{S}_t = \sum_{s\le t}\phi(\mathbf{k}_s)\,\mathbf{v}_s^\top\in\mathbb{R}^{d_\phi\times d_v},\qquad \mathbf{z}_t = \sum_{s\le t}\phi(\mathbf{k}_s)\in\mathbb{R}^{d_\phi}.
+$$</p>
+<p>Then the numerator is $\phi(\mathbf{q}_t)^\top\mathbf{S}_t$ and the denominator is $\phi(\mathbf{q}_t)^\top\mathbf{z}_t$, so</p>
+<p>$$
+\mathbf{y}_t = \frac{\phi(\mathbf{q}_t)^\top\mathbf{S}_t}{\phi(\mathbf{q}_t)^\top\mathbf{z}_t} .
+$$</p>
+<p><strong>Step 5 — the incremental update.</strong> $\mathbf{S}_t = \mathbf{S}_{t-1} + \phi(\mathbf{k}_t)\mathbf{v}_t^\top$ and $\mathbf{z}_t = \mathbf{z}_{t-1}+\phi(\mathbf{k}_t)$: a rank-1 additive update, $O(d_\phi d_v)$ work per token, no dependence on $n$. Total $O(nd_\phi d_v)$ against $O(n^2d)$ for softmax attention, with $O(d_\phi d_v)$ memory instead of $O(nd)$.</p>
+<p><strong>Step 6 — why the softmax cannot be reordered the same way.</strong> The softmax denominator is $\sum_s\exp(\langle\mathbf{q}_t,\mathbf{k}_s\rangle)$, which depends on $\mathbf{q}_t$ <em>inside</em> the sum over $s$ in a way that no finite-dimensional factorization reproduces. You can still pull a <em>feature map</em> out, but the exact softmax kernel requires an infinite feature space; any finite $\phi$ is an approximation, and the approximation is worst exactly when the attention distribution is sharp — i.e. when precise retrieval matters. That is the honest core of why linear attention has not displaced softmax attention.</p>
+<p><strong>Step 7 — chunked parallel form, and what it does and does not buy.</strong> Split the sequence into chunks of $c$ tokens. Within a chunk, use the quadratic form (a $c\times c$ score matrix). Across chunks, use the running state: each chunk's output gets one $\phi(\mathbf{Q})\mathbf{S}_{\text{prev}}$ term. Per-token FLOPs are unchanged (roughly $cd + d_\phi d_v$), but the work becomes mostly GEMMs of size $c\times d$ instead of a serial scan — a parallelism win, not an asymptotic one. This is the same lesson as FlashAttention: on a GPU, <em>how</em> the arithmetic is shaped often matters as much as how much of it there is.</p>
+<h3 id="2-zero-order-hold-discretization-derived">2. Zero-order-hold discretization, derived</h3>
+<p><strong>Step 1 — solve the ODE over one step.</strong> With $u$ constant on $[t, t+\Delta]$ and value $u_t$:</p>
+<p>$$
+\dot{\mathbf{x}}(\tau) = \mathbf{A}\mathbf{x}(\tau) + \mathbf{B}u_t .
+$$</p>
+<p>Multiply by the integrating factor $e^{-\mathbf{A}\tau}$:</p>
+<p>$$
+\frac{d}{d\tau}\Big(e^{-\mathbf{A}\tau}\mathbf{x}(\tau)\Big) = e^{-\mathbf{A}\tau}\mathbf{B}u_t .
+$$</p>
+<p>Integrate from $0$ to $\Delta$:</p>
+<p>$$
+e^{-\mathbf{A}\Delta}\mathbf{x}(\Delta) - \mathbf{x}(0) = \Big(\int_0^{\Delta}e^{-\mathbf{A}\tau}d\tau\Big)\mathbf{B}u_t .
+$$</p>
+<p><strong>Step 2 — solve for $\mathbf{x}(\Delta)$.</strong></p>
+<p>$$
+\mathbf{x}(\Delta) = e^{\mathbf{A}\Delta}\mathbf{x}(0) + e^{\mathbf{A}\Delta}\Big(\int_0^{\Delta}e^{-\mathbf{A}\tau}d\tau\Big)\mathbf{B}u_t = e^{\mathbf{A}\Delta}\mathbf{x}(0) + \Big(\int_0^{\Delta}e^{\mathbf{A}(\Delta-\tau)}d\tau\Big)\mathbf{B}u_t .
+$$</p>
+<p>Substituting $s = \Delta-\tau$ turns the integral into $\int_0^{\Delta}e^{\mathbf{A}s}ds$, so</p>
+<p>$$
+\boxed{\;\mathbf{x}_k = \bar{\mathbf{A}}\mathbf{x}_{k-1} + \bar{\mathbf{B}}u_k,\qquad \bar{\mathbf{A}} = e^{\Delta\mathbf{A}},\quad \bar{\mathbf{B}} = \Big(\int_0^{\Delta}e^{\mathbf{A}s}ds\Big)\mathbf{B}\;}
+$$</p>
+<p><strong>Step 3 — the diagonal case.</strong> For scalar $a$ (or a diagonal entry $a$): $\int_0^\Delta e^{as}ds = \frac{e^{a\Delta}-1}{a}$, hence</p>
+<p>$$
+\bar{a} = e^{\Delta a},\qquad \bar{b} = \frac{e^{\Delta a}-1}{a}\,b .
+$$</p>
+<p><strong>Step 4 — sanity checks.</strong> As $a\to0$, $\frac{e^{\Delta a}-1}{a}\to\Delta$, so $\bar{b}\to\Delta b$ and $\bar{a}\to1$: the system becomes a pure integrator accumulating $\Delta b u$, exactly right. As $a\to-\infty$ with $\Delta$ fixed, $\bar{a}\to0$ and $\bar{b}\to -b/a$: the state forgets instantly and passes the input through scaled — a memoryless system. Both limits are what the physics demands.</p>
+<p><strong>Step 5 — unroll to a convolution.</strong> Applying the recurrence $k$ times,</p>
+<p>$$
+y_k = \sum_{s\le k}\mathbf{C}\bar{\mathbf{A}}^{\,k-s}\bar{\mathbf{B}}\,u_s + Du_k = \sum_{s\le k}\bar{K}_{k-s}u_s + Du_k,\qquad \bar{K}_j = \mathbf{C}\bar{\mathbf{A}}^{\,j}\bar{\mathbf{B}} .
+$$</p>
+<p>Because $\bar{K}$ depends only on the offset $j$, the whole sequence is one convolution: $O(n\log n)$ by FFT with a precomputed kernel. This is available <em>only</em> because the system is time-invariant — which is exactly what the next derivation removes.</p>
+<h3 id="3-selectivity-why-i461-is-a-forget-gate-and-why-it-destroys-the-convolution">3. Selectivity: why $\Delta_t$ is a forget gate, and why it destroys the convolution</h3>
+<p><strong>Step 1 — the varying-parameter recurrence.</strong> If $\Delta_t,\mathbf{B}_t,\mathbf{C}_t$ depend on $u_t$, unrolling gives</p>
+<p>$$
+y_t = \sum_{s\le t}\mathbf{C}_t\Big(\prod_{j=s+1}^{t}\bar{\mathbf{A}}_j\Big)\bar{\mathbf{B}}_s u_s .
+$$</p>
+<p>The product $\prod_{j=s+1}^t\bar{\mathbf{A}}_j$ depends on both $t$ and $s$ separately, not on $t-s$. Therefore there is <strong>no</strong> kernel $\bar{K}_{t-s}$, no convolution, and no FFT — the only exact algorithms are the sequential scan (linear in $n$, serial) or an associative parallel scan (linear work, $\log n$ depth, using the fact that the composition $(\bar{\mathbf{A}}_b,\bar{\mathbf{B}}_b)\circ(\bar{\mathbf{A}}_a,\bar{\mathbf{B}}_a) = (\bar{\mathbf{A}}_b\bar{\mathbf{A}}_a,\ \bar{\mathbf{A}}_b\bar{\mathbf{B}}_a+\bar{\mathbf{B}}_b)$ is associative).</p>
+<p><strong>Step 2 — read $\bar{\mathbf{A}}_t$ as a gate.</strong> With $\mathbf{A} = -a$ for $a>0$ (Mamba's parameterization: $\mathbf{A} = -\exp(\mathbf{A}_{\log})$ guarantees negativity):</p>
+<p>$$
+\bar{A}_t = e^{-\Delta_t a}\in(0,1].
+$$</p>
+<p>$\Delta_t\to0$ gives $\bar{A}_t\to1$: the state is passed through unchanged — <em>remember</em>. $\Delta_t\to\infty$ gives $\bar{A}_t\to0$: the state is zeroed before the new input is added — <em>forget, then write</em>. The scalar $\Delta_ta$ therefore plays exactly the role of the LSTM's pre-activation-driven forget probability, and</p>
+<p>$$
+\text{LSTM: } c_t = \sigma(\mathbf{W}\mathbf{x}_t)\,c_{t-1} + \cdots \qquad\text{selective SSM: } \mathbf{h}_t = e^{-\Delta_t a}\,\mathbf{h}_{t-1} + \cdots
+$$</p>
+<p>are the same equation with different parameterizations of the gate. The difference — and the reason SSMs exist — is that the SSM's transition is <em>diagonal and (scalar $\times$ identity)</em> rather than a full matrix, which is what makes the scan parallelizable; the LSTM's full matrix $\mathbf{W}_{hh}$ forces the serialized matrix-vector products of <strong>M11</strong>.</p>
+<p><strong>Step 3 — what selection buys, in one sentence.</strong> A selective SSM can implement "ignore whitespace, accumulate identifiers, reset at a period", because the gate is a function of the token; an LTI SSM applies the same filter to every token regardless of content, and RWKV's fixed decay is content-independent in the same way. That is why Mamba-style selectivity is the single most important difference between S4 and Mamba.</p>
+<p><strong>Step 4 — the price.</strong> Input-dependence means the kernel cannot be precomputed, so the FFT path is gone; and the per-token parameter tensors ($\Delta,\mathbf{B},\mathbf{C}$) are $O(dN)$ each, which is larger than the state itself — so the implementation must fuse and recompute rather than materialize. Both costs are engineering costs, not expressiveness costs.</p>
+<h3 id="4-the-load-balancing-loss-where-it-comes-from-and-how-it-acts">4. The load-balancing loss: where it comes from and how it acts</h3>
+<p><strong>Step 1 — the loss.</strong> With $f_i$ the fraction of tokens dispatched to expert $i$ and $P_i$ the mean router probability for expert $i$:</p>
+<p>$$
+L_{\text{aux}} = \alpha\,E\sum_{i=1}^{E}f_iP_i .
+$$</p>
+<p>Both $f$ and $P$ are distributions over experts ($\sum_if_i = \sum_iP_i = 1$).</p>
+<p><strong>Step 2 — the uniform value.</strong> At $f_i = P_i = 1/E$:</p>
+<p>$$
+L_{\text{aux}} = \alpha E\sum_{i=1}^{E}\frac{1}{E}\cdot\frac{1}{E} = \alpha E\cdot E\cdot\frac{1}{E^2} = \alpha .
+$$</p>
+<p>So $\alpha$ is the floor the design aims for, and it is independent of $E$ — which is why the same $\alpha$ works for 8 experts and 256.</p>
+<p><strong>Step 3 — when the loss actually rises.</strong> If $P$ is uniform but $f$ is skewed, $\sum_if_iP_i = \frac1E\sum_if_i = \frac1E$ and the loss is <em>unchanged</em>. The loss grows only when $f$ and $P$ are co-skewed — when the router is both confident and consistent about the same experts. Measured: uniform $0.0100$, skewed $f$ with uniform $P$ $0.0100$, co-skewed $0.0247$ at $\alpha = 0.01$. This is the precise sense in which the auxiliary loss penalizes <em>collapse</em> (alignment) rather than imbalance in the abstract.</p>
+<p><strong>Step 4 — the gradient, and why it works.</strong> $f$ comes from an $\arg\max$ and is not differentiable, so it is treated as a constant (a stop-gradient). Then</p>
+<p>$$
+\frac{\partial L_{\text{aux}}}{\partial P_i} = \alpha E f_i .
+$$</p>
+<p>Pushing through the softmax, with $\partial P_i/\partial z_j = P_i(\delta_{ij}-P_j)$:</p>
+<p>$$
+\frac{\partial L_{\text{aux}}}{\partial z_j} = \alpha E\sum_i f_i\,P_i(\delta_{ij}-P_j) = \alpha E\,P_j\Big(f_j - \sum_i f_iP_i\Big).
+$$</p>
+<p>So the gradient has the sign of $f_j - \langle f\rangle_P$: it <strong>increases</strong> the router logit of any expert receiving more than its probability-weighted share, and decreases it for over-used ones. That is a clean negative-feedback controller on routing, and it is why a tiny $\alpha$ (0.01) is enough to prevent collapse.</p>
+<p><strong>Step 5 — why collapse happens without it.</strong> Suppose expert $i$ is slightly better at step $t$. It receives more tokens (higher $f_i$), so it receives more gradient and improves further, so its router probability $P_i$ rises — a rich-get-richer loop with a positive feedback coefficient. The auxiliary loss adds a term whose gradient opposes exactly that loop. Note also that this is a <em>bias</em> on the objective: with $\alpha>0$ the router is slightly discouraged from being confident even when confidence is correct, which is why $\alpha$ is kept small and sometimes annealed.</p>
+<h3 id="5-sliding-windows-receptive-field-cost-and-the-sparsity-family">5. Sliding windows: receptive field, cost, and the sparsity family</h3>
+<p><strong>Step 1 — receptive field over depth.</strong> Each windowed layer with window $w$ and stride 1 lets a unit see $w$ units of the previous layer, so</p>
+<p>$$
+r_l = r_{l-1} + (w-1) \quad\Longrightarrow\quad r_L = 1 + L(w-1) .
+$$</p>
+<p>This is the same recursion as the convolution (<strong>M10</strong>) with $K = w$, and it is why windowed transformers have a linear-in-depth receptive field: 32 layers at $w=4096$ reach $131{,}073$ tokens.</p>
+<p><strong>Step 2 — cost.</strong> Each query attends to exactly $w$ keys (fewer near the start), so per layer</p>
+<p>$$
+\text{attention MACs} = 2nwd ,
+$$</p>
+<p>and the cache per layer is $2n_{kv}d_hw$ — a rolling buffer, since keys older than $w$ can be evicted. The saving over full attention is exactly $n/w$.</p>
+<p><strong>Step 3 — the pattern family.</strong> A sparse pattern assigns each query a fixed-size index set $\mathcal{N}(i)$, $|\mathcal{N}(i)| = w'$. Any such pattern costs $O(nw'd)$ and its reachable set composes with depth: with a strided pattern of stride $s$, a unit at layer $l$ reaches $r_l = r_{l-1} + (w'-1)s^{\,l-1}$-style growth, i.e. exponentially in depth, at the price of <em>skipping</em> tokens. That is precisely the trade: a strided pattern reaches far but cannot see what it skipped, so exact retrieval fails unless the pattern is content-adaptive. BigBird's mix (window + a few random links + a few global tokens) is designed so that the union of reachable sets covers the sequence with high probability, and the authors prove the resulting model retains the transformer's universal-approximation property — a theoretical result about the <em>class</em> of computable functions, not about quality at any particular scale.</p>
+<h2 id="implementation-from-scratch">Implementation from scratch</h2>
+<p>Two mechanisms, both in NumPy: the selective scan, and a mixture-of-experts layer with capacity and the auxiliary loss. The scan is validated against the closed-form convolution in the linear time-invariant case, which is the only honest way to check an SSM implementation — if the recurrence is right, it must reproduce $\bar{K}_t = \mathbf{C}\bar{\mathbf{A}}^t\bar{\mathbf{B}}$.</p>
+<p>```python
+import numpy as np
+
+def ssm_scan(u, A, B, C, delta):
+    """Selective (input-dependent) SSM with diagonal A.
+    u: (T,)   A: (N,)   B: (T, N)   C: (T, N)   delta: (T,)   ->  y: (T,)"""
+    T, N = len(u), A.shape[0]
+    h = np.zeros(N)                      # the state: O(N), never O(T, N)
+    y = np.zeros(T)
+    for t in range(T):
+        Abar = np.exp(delta[t] * A)      # (N,) transition: delta small -> ~1 (remember)
+        Bbar = delta[t] * B[t]           # (N,) write strength
+        h = Abar * h + Bbar * u[t]       # the whole recurrence
+        y[t] = C[t] @ h                  # read out
+    return y
+
+def softmax(z, axis=-1):
+    z = z - z.max(axis=axis, keepdims=True)
+    e = np.exp(z)
+    return e / e.sum(axis=axis, keepdims=True)
+
+def moe_forward(x, Wr, experts, k=2, gamma=1.25):
+    """x:(T,d) Wr:(E,d) experts: list of (d,d). Returns y, f, P, aux, dropped."""
+    T, d = x.shape; E = Wr.shape[0]
+    p = softmax(x @ Wr.T)                       # router distribution, (T, E)
+    top = np.argsort(-p, axis=1)[:, :k]         # top-k experts per token
+    gates = np.take_along_axis(p, top, 1)
+    gates = gates / gates.sum(1, keepdims=True)  # renormalize over the chosen experts
+    cap = int(np.ceil(gamma * T * k / E))       # expert capacity
+    counts = np.bincount(top.ravel(), minlength=E)   # f is measured BEFORE capacity
+    y = np.zeros_like(x); dropped = 0
+    for i in range(E):
+        tok = np.where((top == i).any(axis=1))[0]
+        if len(tok) > cap:
+            dropped += len(tok) - cap
+            tok = tok[:cap]                     # overflow is dropped, not queued
+        if len(tok):
+            g = np.array([gates[b, list(top[b]).index(i)] for b in tok])
+            y[tok] += g[:, None] * (x[tok] @ experts[i])   # weighted combine
+    f = counts / counts.sum(); P = p.mean(0)
+    return y, f, P, E * (f * P).sum(), dropped
+
+# --- validation: in the LTI case the scan must equal the convolution with K_t = C Abar^t Bbar ---
+rng = np.random.default_rng(3)
+T, N = 10, 3
+A = -np.abs(rng.normal(size=N)); u = rng.normal(size=T)
+B0, C0, d0 = rng.normal(size=N)*0.4, rng.normal(size=N)*0.4, 0.2
+y_scan = ssm_scan(u, A, np.tile(B0, (T, 1)), np.tile(C0, (T, 1)), np.full(T, d0))
+Ab, Bb = np.exp(d0 * A), d0 * B0
+K = np.array([C0 @ (Ab**t * Bb) for t in range(T)])          # impulse response
+y_conv = np.array([np.dot(K[:t+1][::-1], u[:t+1]) for t in range(T)])
+print("max |scan - convolution| =", np.abs(y_scan - y_conv).max())   # ~1e-17
+
+# --- MoE: balanced versus collapsed router ---
+T2, d, E = 12, 8, 4
+x = rng.normal(size=(T2, d))
+experts = [rng.normal(size=(d, d)) / np.sqrt(d) for _ in range(E)]
+Wr_ok = rng.normal(size=(E, d)) * 0.5
+Wr_bad = np.zeros((E, d)); Wr_bad[0, 0] = 8.0; Wr_bad[1:, 0] = -8.0
+for name, Wr in [("random", Wr_ok), ("collapsed", Wr_bad)]:
+    _, f, P, aux, dropped = moe_forward(x, Wr, experts)
+    print(f"{name:9s} f={np.round(f, 3)}  aux={aux:.4f}  dropped={dropped}")
+```</p>
+<p>Expected output: <code>max |scan - convolution| = 1.4e-17</code> (the two forms agree to machine precision, which confirms the discretization), and for the router comparison something like <code>random f=[0.375 0.167 0.25 0.208] aux=1.084 dropped=1</code> against <code>collapsed f=[0.375 0.5 0.125 0.0] aux=1.322 dropped=5</code>. The collapsed router concentrates four times the tokens on one expert, exceeds its capacity, drops five token-expert assignments, and raises the auxiliary loss by 22%.</p>
+<h2 id="worked-example">Worked example</h2>
+<p><strong>Part A — what selectivity does to the state.</strong> One channel, $A = -1$, $B = 1$, $C = 1$, input $u = (1,1,1,0,0)$, and $\Delta = (0.1, 0.1, 2.0, 0.1, 0.1)$ — a normal step, a normal step, a <em>reset</em>, then two quiet steps.</p>
+<table>
+<thead>
+<tr>
+<th>$t$</th>
+<th>$u_t$</th>
+<th>$\Delta_t$</th>
+<th>$\bar{A}_t = e^{-\Delta_t}$</th>
+<th>$\bar{B}_t = \Delta_t$</th>
+<th>$h_t$</th>
+<th>$y_t$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>$1$</td>
+<td>$0.1$</td>
+<td>$0.9048$</td>
+<td>$0.10$</td>
+<td>$0.1000$</td>
+<td>$0.1000$</td>
+</tr>
+<tr>
+<td>1</td>
+<td>$1$</td>
+<td>$0.1$</td>
+<td>$0.9048$</td>
+<td>$0.10$</td>
+<td>$0.1905$</td>
+<td>$0.1905$</td>
+</tr>
+<tr>
+<td>2</td>
+<td>$1$</td>
+<td>$2.0$</td>
+<td>$0.1353$</td>
+<td>$2.00$</td>
+<td>$2.0258$</td>
+<td>$2.0258$</td>
+</tr>
+<tr>
+<td>3</td>
+<td>$0$</td>
+<td>$0.1$</td>
+<td>$0.9048$</td>
+<td>$0.10$</td>
+<td>$1.8330$</td>
+<td>$1.8330$</td>
+</tr>
+<tr>
+<td>4</td>
+<td>$0$</td>
+<td>$0.1$</td>
+<td>$0.9048$</td>
+<td>$0.10$</td>
+<td>$1.6586$</td>
+<td>$1.6586$</td>
+</tr>
+</tbody>
+</table>
+<p>Read the two regimes. Steps 0–1 are the <em>integrator</em>: with $\Delta=0.1$ the gate is $0.905$, so the state accumulates and the input gradually raises it to $0.19$. Step 2 is the <em>reset</em>: $\Delta = 2.0$ makes the gate $0.135$, so $86.5\%$ of the accumulated state is discarded and the new input is written with weight $2.0$ — the state jumps from $0.19$ to $2.03$, dominated by the current token. Steps 3–4 show the <em>decay</em>: with no input and $\Delta=0.1$, the state bleeds off at $9.5\%$ per step ($2.03\to1.83\to1.66$). This is a gate whose value is chosen by the input, per channel, per token — which is exactly what "selective" means and exactly what an LTI model cannot do.</p>
+<p><strong>Part B — the cache, four ways.</strong> Same 7B-class shape ($L=32$, $h=32$, $d_h=128$), fp16, 8192-token context.</p>
+<table>
+<thead>
+<tr>
+<th>Layout</th>
+<th>$n_{kv}$</th>
+<th>Bytes/token</th>
+<th>Cache @ 8192</th>
+<th>Relative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MHA</td>
+<td>$32$</td>
+<td>$512$ KiB</td>
+<td>$4.00$ GiB</td>
+<td>$1.0\times$</td>
+</tr>
+<tr>
+<td>GQA-8</td>
+<td>$8$</td>
+<td>$128$ KiB</td>
+<td>$1.00$ GiB</td>
+<td>$0.25\times$</td>
+</tr>
+<tr>
+<td>MQA</td>
+<td>$1$</td>
+<td>$16$ KiB</td>
+<td>$128$ MiB</td>
+<td>$0.031\times$</td>
+</tr>
+<tr>
+<td>Latent (MLA-style, $d_c\approx128$ per layer)</td>
+<td>—</td>
+<td>$\approx16$ KiB</td>
+<td>$\approx128$ MiB</td>
+<td>$\approx0.03\times$</td>
+</tr>
+</tbody>
+</table>
+<p>DeepSeek-V2 reports a 93.3% cache reduction for its latent attention against MHA, which is the same order as the MQA row — achieved without collapsing all heads onto one shared key, by compressing $\mathbf{K},\mathbf{V}$ into a low-rank latent and decompressing per head at compute time. Treat the exact figure as one lab's measurement (<strong>M19</strong> covers the serving consequences), but the arithmetic of the target is clear: the cache is the term to attack.</p>
+<p><strong>Part C — the MoE bargain, with real numbers.</strong> The Mixtral-8×7B-shaped layer from the core concepts: $d=4096$, $d_{\text{ff}}=14336$, $E=8$, $k=2$.</p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parameters per expert ($3dd_{\text{ff}}$)</td>
+<td>$176.2$M</td>
+</tr>
+<tr>
+<td>Parameters stored per layer ($8\times$)</td>
+<td>$1.410$B</td>
+</tr>
+<tr>
+<td>Parameters active per token ($2\times$)</td>
+<td>$352.3$M</td>
+</tr>
+<tr>
+<td>Dense FFN at the same per-token FLOPs</td>
+<td>$352.3$M (i.e. $d_{\text{ff}}=28672$)</td>
+</tr>
+<tr>
+<td>Parameter multiplier from sparsity</td>
+<td>$4.0\times$</td>
+</tr>
+<tr>
+<td>Whole model, 32 layers</td>
+<td>$45.1$B stored, $13.4$B active</td>
+</tr>
+</tbody>
+</table>
+<p>The published Mixtral figures are 46.7B total and 12.9B active; the residual is attention, norms and embeddings. In bf16 the stored parameters are about 93 GB, so serving it takes two 80 GB accelerators even though every token touches only ~26 GB of weights. <strong>That is the trade in one sentence: 4× the parameters for the same FLOPs, paid for in memory and in the batch size you can afford.</strong></p>
+<p><strong>Part D — the auxiliary loss on three routing patterns.</strong> With $\alpha=1$ for readability (multiply by 0.01 for the real weight), $L_{\text{aux}} = E\sum_if_iP_i$:</p>
+<table>
+<thead>
+<tr>
+<th>Routing</th>
+<th>$f$</th>
+<th>$P$</th>
+<th>$L_{\text{aux}}$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>perfectly uniform</td>
+<td>$(.25,.25,.25,.25)$</td>
+<td>$(.25,.25,.25,.25)$</td>
+<td>$1.000$</td>
+</tr>
+<tr>
+<td>$f$ skewed, $P$ uniform</td>
+<td>$(.7,.1,.1,.1)$</td>
+<td>$(.25,.25,.25,.25)$</td>
+<td>$1.000$</td>
+</tr>
+<tr>
+<td>co-skewed (collapse)</td>
+<td>$(.7,.1,.1,.1)$</td>
+<td>$(.7,.1,.1,.1)$</td>
+<td>$2.080$</td>
+</tr>
+</tbody>
+</table>
+<p>The middle row is the important one: a hard routing distribution that is skewed but whose <em>soft</em> probabilities are uniform incurs no penalty at all, because $\sum_if_iP_i = \frac1E\sum_if_i = \frac1E$. The loss bites only when the router's probabilities agree with the skew — which is exactly the collapse configuration, and exactly why the loss is a collapse detector rather than an imbalance detector.</p>
+<p><strong>Part E — where linear attention starts to win.</strong> $d=1024$, so the crossover is $n = 2d = 2048$:</p>
+<table>
+<thead>
+<tr>
+<th>$n$</th>
+<th>quadratic $4n^2d$</th>
+<th>linear $4nd^2$</th>
+<th>ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$4096$</td>
+<td>$6.87\times10^{10}$</td>
+<td>$1.72\times10^{10}$</td>
+<td>$2\times$</td>
+</tr>
+<tr>
+<td>$8192$</td>
+<td>$2.75\times10^{11}$</td>
+<td>$3.44\times10^{10}$</td>
+<td>$4\times$</td>
+</tr>
+<tr>
+<td>$32768$</td>
+<td>$4.40\times10^{12}$</td>
+<td>$1.37\times10^{11}$</td>
+<td>$16\times$</td>
+</tr>
+</tbody>
+</table>
+<p>The ratio is exactly $n/(2d)$. At 4096 tokens a $2\times$ FLOP saving is not worth an expressiveness loss; at 32k it is a $16\times$ saving and the argument changes. This is why the interest in linear attention tracks context length rather than following any architectural fashion.</p>
+<h2 id="common-misconceptions">Common misconceptions</h2>
+<h3 id="mixture-of-experts-gives-you-more-parameters-for-free">"Mixture-of-experts gives you more parameters for free."</h3>
+<p>Nothing is free; the cost moves from FLOPs to memory. A top-2-of-8 MoE layer stores 4× the parameters of a dense layer with the same per-token compute, and <em>all</em> of them must be resident to run a forward pass. At batch 1 you are touching a quarter of what you paid to store, which means the layer is memory-bandwidth-bound rather than compute-bound in exactly the regime where a small deployment lives. The honest statement is: MoE converts FLOPs into memory, and it is a good trade when compute is your constrained resource — training, and high-throughput serving with large batches.</p>
+<h3 id="linear-attention-is-just-attention-without-the-softmax-so-it-is-essentially-the-same-thing">"Linear attention is just attention without the softmax, so it is essentially the same thing."</h3>
+<p>Dropping the softmax changes the <em>range</em> of the operator, not just its cost. Softmax attention output is a convex combination of the values: weights are nonnegative and sum to one, so the output lies inside the convex hull of the value vectors. Linear attention's output is a ratio of two nonnegative quantities, and with a finite feature map it is an <em>approximation</em> of the softmax kernel that is worst exactly when the true attention distribution is sharp — the precise-retrieval regime. That is an expressiveness change, and it is the honest reason linear attention has not displaced softmax attention at frontier scale despite an asymptotically better cost curve.</p>
+<h3 id="state-space-models-have-replaced-attention">"State-space models have replaced attention."</h3>
+<p>Hybrids have shipped; replacements have not. Every published hybrid (Jamba, Griffin, Samba and similar) retains a minority of attention layers, and no frontier-scale model has matched a pure-transformer baseline at equal compute and data with zero attention layers. The academic results are real and the direction is plausible — attention's quadratic term and its cache are genuine liabilities — but "SSMs replace attention" is a prediction, not a measurement, and it should be labelled as such.</p>
+<h3 id="gqa-loses-quality-so-it-is-a-compromise-you-make-only-when-you-must">"GQA loses quality, so it is a compromise you make only when you must."</h3>
+<p>The measured quality loss is small at typical group counts, and the reason is structural rather than lucky: the queries still number $h$, so the heads still ask $h$ different questions; only the <em>data being read</em> is shared. With $n_{kv}=8$ out of $h=32$ the reported degradation is within noise on most benchmarks, while the cache drops by 4×. What MQA ($n_{kv}=1$) costs is expressiveness of the key space — all heads must agree on what makes a token findable — and that does show up as a small but real regression.</p>
+<h3 id="a-128k-context-window-means-the-model-can-use-128k-tokens">"A 128k context window means the model can use 128k tokens."</h3>
+<p>A window is a <em>permission</em>, not a capability. Retrieval accuracy at long context depends on the positional scheme (<strong>M12</strong>), the training mixture's length distribution, the cache's numerical precision, and the task; a model trained on 4k-token sequences with a rescaled RoPE base can accept 128k tokens and still lose most of the information in the middle of that window. The relevant measurement is accuracy as a function of position and distance, not the size of the advertised window — and "lost in the middle" behaviour is well documented.</p>
+<h3 id="mamba-is-an-rnn-so-it-inherits-the-rnns-training-problems">"Mamba is an RNN, so it inherits the RNN's training problems."</h3>
+<p>It inherits the RNN's <em>inference profile</em> — fixed-size state, $O(1)$ per token — and none of its training pathology. The RNN's serialization came from the transition being a full matrix $\mathbf{W}_{hh}$, which forces $T$ dependent matrix–vector products (<strong>M11</strong>). The selective SSM's transition is diagonal and scalar-times-identity, so the recurrence composes associatively and can be evaluated by a parallel scan with $\log T$ depth, or (in the LTI case) by an FFT convolution in $O(n\log n)$. What it does inherit is a different limitation: a fixed-size state cannot perform exact retrieval of an arbitrary earlier token, which is precisely what attention does well and why hybrids keep attention layers.</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="warm-up-check-understanding">Warm-up (check understanding)</h3>
+<p><strong>1.</strong> A model has $L=40$, $h=32$, $d_h=128$, fp16, and an 8192 context. Compute the KV cache for MHA, GQA-4, and MQA, per token and in total.</p>
+<details><summary>Solution</summary>
+
+Per token $=2Ln_{kv}d_h\cdot2$ bytes. MHA ($n_{kv}=32$): $2\cdot40\cdot32\cdot128\cdot2 = 655{,}360$ B $=640$ KiB; at 8192 tokens, 5.0 GiB. GQA-4: $n_{kv}=4$, 80 KiB/token, 640 MiB. MQA: 20 KiB/token, 160 MiB. Each step divides by the group count, exactly.
+
+</details>
+
+<p><strong>2.</strong> Sliding-window attention with $w=4096$ on $n=32768$, $d=4096$. Give the MAC saving and the receptive field after 32 layers.</p>
+<details><summary>Solution</summary>
+
+Full: $2n^2d = 8.8\times10^{12}$ MACs per layer; windowed: $2nwd = 1.1\times10^{12}$ — an $8\times$ saving, which is exactly $n/w = 8$. Receptive field: $r_{32} = 1 + 32(4096-1) = 131{,}073$ tokens, so although no layer sees more than 4096, the stack's theoretical reach covers the sequence four times over — but only through the residual stream, which is why exact copying at that distance remains unreliable.
+
+</details>
+
+<p><strong>3.</strong> Linear attention with $d_\phi = d_v = 256$, $n = 16384$. Give the FLOPs, and compare with softmax attention at $d = 768$.</p>
+<details><summary>Solution</summary>
+
+Linear: $4nd_\phi d_v = 4\cdot16384\cdot256^2 = 4.3\times10^{9}$ FLOPs. Quadratic at $d=768$: $4n^2d = 4\cdot16384^2\cdot768 = 8.2\times10^{11}$ — $192\times$ more. Note the comparison is not apples to apples unless $d_\phi$ and $d$ relate; the fair statement is that the linear model's cost is independent of $n$, so the gap grows linearly with context.
+
+</details>
+
+<p><strong>4.</strong> Why can a causal depthwise convolution (kernel 4) help a Mamba block, given that the SSM already sees the whole past?</p>
+<details><summary>Solution</summary>
+
+Because the SSM's *memory* is lossy and its *local* precision is limited by the state dimension. A 4-token convolution gives every position exact access to its immediate neighbours at negligible cost — the same argument as stacking local convolutions before a global operation. It also breaks the scan's invariance to permutations of nearby tokens, which is exactly the local-order information a diagonal recurrence handles poorly.
+
+</details>
+
+<h3 id="core-do-the-math">Core (do the math)</h3>
+<p><strong>5.</strong> Reproduce the linear-attention reordering derivation, and state precisely which property of $\operatorname{sim}$ is required.</p>
+<details><summary>Solution</summary>
+
+$\mathbf{y}_t = \frac{\sum_{s\le t}\operatorname{sim}(\mathbf{q}_t,\mathbf{k}_s)\mathbf{v}_s}{\sum_{s\le t}\operatorname{sim}(\mathbf{q}_t,\mathbf{k}_s)}$. Require $\operatorname{sim}(\mathbf{q},\mathbf{k}) = \phi(\mathbf{q})^\top\phi(\mathbf{k})$ — an inner product in a feature space, i.e. a positive-definite kernel with a finite-dimensional feature map. Then $\sum_s(\phi(\mathbf{q}_t)^\top\phi(\mathbf{k}_s))\mathbf{v}_s = \phi(\mathbf{q}_t)^\top\big(\sum_s\phi(\mathbf{k}_s)\mathbf{v}_s^\top\big) = \phi(\mathbf{q}_t)^\top\mathbf{S}_t$, and identically for the denominator with $\mathbf{z}_t$. The required property is *bilinearity plus the ability to pull $\phi(\mathbf{q}_t)$ outside the sum* — which is a consequence only of the kernel depending on $\mathbf{q}_t$ through a fixed finite-dimensional feature map. The softmax kernel has infinite feature dimension, so no finite map is exact.
+
+</details>
+
+<p><strong>6.</strong> Discretize $\dot{x} = -2x + 3u$ with $\Delta = 0.5$ and compute $x_1, x_2$ from $x_0 = 1$ with $u \equiv 1$. Then take the limit $\Delta\to0$ and interpret.</p>
+<details><summary>Solution</summary>
+
+$a=-2$, $b=3$. $\bar a = e^{-1} = 0.3679$, $\bar b = (e^{-1}-1)/(-2)\cdot3 = (0.6321/2)\cdot3 = 0.9482$. Then $x_1 = 0.3679\cdot1 + 0.9482\cdot1 = 1.3161$, and $x_2 = 0.3679\cdot1.3161+0.9482 = 1.4324$. The fixed point of the recursion is $x^\star = \bar b u/(1-\bar a) = 0.9482/0.6321 = 1.5000 = 3/2$ — exactly the ODE's steady state $bu/a = 3/2$, which is the check that the discretization is consistent. As $\Delta\to0$: $\bar a\to1$, $\bar b\to\Delta b\to0$, and $x$ changes by $O(\Delta)$ per step — a numerical integrator with a small step.
+
+</details>
+
+<p><strong>7.</strong> Show that $\bar{A}_t = e^{\Delta_t A}$ with $A<0$ acts as a forget gate, and compute the gate value for $\Delta_t\in\{0.01, 0.1, 1, 5\}$ with $A=-1$.</p>
+<details><summary>Solution</summary>
+
+With $A=-1$: $\bar{A}_t = e^{-\Delta_t}$, so $\Delta_t=0.01$ gives $0.990$ (99% retained, time constant 100 steps), $0.1$ gives $0.905$ (time constant 10), $1$ gives $0.368$ (time constant 1), and $5$ gives $0.0067$ (essentially a reset). The gate is monotone decreasing in $\Delta_t$ and lies in $(0,1)$ for all finite $\Delta_t>0$, exactly the range of a sigmoid forget gate — but produced from a linear map plus softplus, and with a *diagonal* transition, which is what makes the scan parallelizable.
+
+</details>
+
+<p><strong>8.</strong> Derive $\partial L_{\text{aux}}/\partial z_j$ for the load-balancing loss and explain the sign.</p>
+<details><summary>Solution</summary>
+
+$L = \alpha E\sum_i f_iP_i$ with $f$ treated as constant, $P = \operatorname{softmax}(\mathbf{z})$. Then $\partial L/\partial P_i = \alpha Ef_i$ and $\partial P_i/\partial z_j = P_i(\delta_{ij}-P_j)$, giving $\partial L/\partial z_j = \alpha E P_j\big(f_j - \sum_i f_iP_i\big)$. The bracket is positive for experts receiving a larger share of tokens than their probability mass warrants, so the loss raises their logits — pushing the router toward underused experts. It is a negative-feedback controller with strength $\alpha E P_j$.
+
+</details>
+
+<p><strong>9.</strong> A MoE layer has $d=4096$, $d_{\text{ff}}=8192$, $E=64$, $k=4$. Compute stored and active parameters per layer, the multiplier, and the memory in bf16 for 40 such layers.</p>
+<details><summary>Solution</summary>
+
+Per expert: $3\cdot4096\cdot8192 = 100.7$M. Stored: $64\times = 6.44$B per layer. Active: $4\times = 402.7$M. Multiplier $16\times$. Dense equivalent at the same FLOPs: 402.7M. Memory for the experts alone over 40 layers: $40\cdot6.44\text{B}\cdot2$ bytes $= 515$ GB — which is why large-$E$ MoE is a multi-node proposition and requires expert parallelism (**M25**), not a single-machine one.
+
+</details>
+
+<h3 id="stretch-build-or-break-it">Stretch (build or break it)</h3>
+<p><strong>10.</strong> Implement a parallel associative scan for the LTI case and verify it against the sequential scan. State the combination rule.</p>
+<details><summary>Solution</summary>
+
+Each step $t$ is an affine map on the state: $h_t = \bar A h_{t-1} + \bar B u_t$, i.e. the pair $(\bar A_t, \bar B_tu_t)$ acting as $h\mapsto \bar A_th + \bar B_tu_t$. Composing two such maps, $\big(\bar A_b, \bar B_bu_b\big)\circ\big(\bar A_a,\bar A_au_a\big) = \big(\bar A_b\bar A_a,\ \bar B_bu_b + \bar A_b\bar B_au_a\big)$. This composition is **associative**, so a tree reduction computes the prefix compositions in $\log T$ depth and $O(T)$ total work — the parallel scan. In the LTI case $\bar A_t = \bar A$ is the same at every step and the scan reduces to $\bar A^t$ and a convolution, which is why FFT also works. Implementation: `scipy.signal.lfilter` or an explicit Hillis–Steele/Blelloch scan; verify by asserting equality with the sequential loop to machine precision.
+
+</details>
+
+<p><strong>11.</strong> Argue why a pure sliding-window model fails at a needle-in-a-haystack task while a hybrid with one global layer per seven succeeds, and identify what the attention layer provides that the window cannot.</p>
+<details><summary>Solution</summary>
+
+In the windowed model, a token can only *directly* read tokens within $w$ of it. To carry a fact from position 100 to position 50,000 the information must survive ~49,900 steps of nonlinear mixing through the residual stream, which is a lossy channel: every layer's MLP overwrites parts of the representation, and the value must be re-encoded into whatever format the final layer can read. That is a capacity and precision problem, not a receptive-field problem — the *theoretical* field already covers the sequence. A global attention layer provides one hop with exact copying (a "copy this token" head can read a value into the residual stream and a later head can read it out), which is what the induction-head mechanism does (**M12**). Empirically the fraction of attention layers needed scales with the *density* of exact-recall demands, not with context length, which is why a small ratio suffices for language.
+
+</details>
+
+<h2 id="self-test">Self-test</h2>
+<ol>
+<li>Give the KV-cache formula and compute it for GQA-8 at $L=32$, $d_h=128$, $T=8192$, fp16.</li>
+<li>Why does GQA lose less quality than MQA at the same cache size, in one sentence?</li>
+<li>Give the cost and receptive field of sliding-window attention.</li>
+<li>Derive linear attention's recurrent form and state the property of softmax that is lost.</li>
+<li>What is RWKV's state update, and why does it train in parallel?</li>
+<li>Give the ZOH discretization formulas and the small-$\Delta$ limit.</li>
+<li>What does selectivity mean mechanically, and why does it destroy the convolution form?</li>
+<li>State the MoE forward pass, the capacity rule, and the auxiliary loss.</li>
+<li>Give three measured convergences in frontier architectures and two contested claims.</li>
+</ol>
+<details><summary>Answers</summary>
+
+1. $2Ln_{kv}d_hTb$; with $n_{kv}=8$: $2\cdot32\cdot8\cdot128\cdot8192\cdot2 = 1.07\times10^{9}$ bytes $=1.0$ GiB.
+2. Because all $h$ query heads remain distinct in both layouts, so the heads still ask different questions; MQA additionally forces all heads to share one key space, which restricts what can be found, while GQA-8 gives the model four groups of key space — enough for nearly all the measured quality.
+3. $O(nwd)$ MACs per layer ($n/w$ times cheaper than full attention) and cache $O(n_{kv}d_hw)$; receptive field $r_L = 1+L(w-1)$, linear in depth.
+4. $\mathbf{S}_t = \mathbf{S}_{t-1}+\phi(\mathbf{k}_t)\mathbf{v}_t^\top$, $\mathbf{z}_t=\mathbf{z}_{t-1}+\phi(\mathbf{k}_t)$, $\mathbf{y}_t = \phi(\mathbf{q}_t)^\top\mathbf{S}_t/(\phi(\mathbf{q}_t)^\top\mathbf{z}_t)$. Lost: the softmax's exact infinite-dimensional kernel, hence the guarantee that the output is a convex combination of the values.
+5. $\mathbf{S}_t = e^{\mathbf{w}}\odot\mathbf{S}_{t-1}+e^{\mathbf{k}_t}\mathbf{v}_t$ with per-channel decay; the recursion is linear (a scan), so prefix compositions are associative and a parallel scan or cumulative-sum computes the whole sequence in parallel.
+6. $\bar a = e^{\Delta a}$, $\bar b = \frac{e^{\Delta a}-1}{a}b$, $\bar A = e^{\Delta A}$, $\bar B = (\int_0^\Delta e^{As}ds)B$; as $\Delta\to0$, $\bar a\to1$ and $\bar b\to\Delta b$, giving a numerical integrator.
+7. $\Delta_t$ is a per-token, per-channel forget gate: $\bar A_t = e^{-\Delta_ta}$ close to 1 remembers, close to 0 resets. Because $\Delta_t,\mathbf{B}_t,\mathbf{C}_t$ depend on $u_t$, the product $\prod_j\bar A_j$ depends on $t$ and $s$ separately, so no kernel $\bar K_{t-s}$ exists and the FFT convolution is unavailable — only a scan remains.
+8. $\mathbf{s}=\operatorname{softmax}(\mathbf{W}_r\mathbf{x})$, take top-$k$, renormalize to gates $g_i$, dispatch to experts, combine $\mathbf{y}=\sum_{i\in\mathcal{T}}g_iE_i(\mathbf{x})$; capacity $C=\lceil\gamma Tk/E\rceil$ with overflow dropped; $L_{\text{aux}} = \alpha E\sum_if_iP_i$.
+9. Measured: pre-LN RMSNorm, SwiGLU at $8d/3$, RoPE with a raised base, GQA at $n_{kv}\approx8$, no biases, MoE at the top end, FlashAttention kernels. Contested: that attention can be removed entirely (hybrids only so far), and that MoE is strictly better (comparisons at equal active parameters are rare and expensive).
+
+</details>
+
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><strong>Shazeer (2019), "Fast Transformer Decoding: One Write-Head is All You Need".</strong> The MQA paper, four pages, and the origin of the whole cache-reduction line of work. Extract §3 for the cache arithmetic and the measured speedups.</li>
+<li><strong>Ainslie, Lee-Thorp, de Jong, Zemlyanskiy, Lebrón &amp; Sanghai (2023), "GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints".</strong> Extract the group-count ablation and the uptraining recipe — the table that tells you $n_{kv}=8$ is enough.</li>
+<li><strong>Katharopoulos, Vyas, Pappas &amp; Fleuret (2020), "Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention", ICML.</strong> The clean derivation of the associative reordering. Read it alongside this module's Derivation 1; the paper's version is the canonical one.</li>
+<li><strong>Peng, Alcaide, Anthony, Albalak, Arcadinho et al. (2023), "RWKV: Reinventing RNNs for the Transformer Era", EMNLP.</strong> Extract the WKV formulation and the parallel-training argument; the paper is unusually explicit about its debt to linear attention.</li>
+<li><strong>Gu, Goel &amp; Ré (2022), "Efficiently Modeling Long Sequences with Structured State Spaces", ICLR.</strong> S4. Extract §3 for the HiPPO initialization and the DPLR parameterization — the point of the paper is the choice of $\mathbf{A}$, not the convolution trick.</li>
+<li><strong>Gu &amp; Dao (2023), "Mamba: Linear-Time Sequence Modeling with Selective State Spaces".</strong> Extract §3.1–3.3 for selectivity and the scan, and the hardware-aware kernel discussion — the clearest account anywhere of why "not materializing the state" is a research contribution.</li>
+<li><strong>Fedus, Zoph &amp; Shazeer (2022), "Switch Transformers", JMLR</strong>; <strong>Shazeer et al. (2017), "Outrageously Large Neural Networks", ICLR</strong>; and <strong>Jiang, Sablayrolles, Roux, Mensch, Bamford, Chaplot et al. (2024), "Mixtral of Experts".</strong> Read the 2017 paper for the sparsely-gated layer, the 2022 one for §2.2's load-balancing loss and capacity factor (the authoritative statement of $L_{\text{aux}}$), and Mixtral for a disclosed open-weight config to check your arithmetic against.</li>
+<li><strong>Dao &amp; Gu (2024), "Transformers are SSMs: Generalized Models and Efficient Algorithms Through Structured State Space Duality", ICML.</strong> The unification: linear attention and SSMs are the same object under a change of notation, and the structured-matrix view gives the fastest known kernels for both.</li>
+</ul>
+<h2 id="checkpoint">Checkpoint</h2>
+<p>You are done with this module when you can, without notes:</p>
+<ol>
+<li>Compute KV-cache bytes for any MHA/MQA/GQA configuration and say which number buys serving capacity.</li>
+<li>Explain sliding-window attention's cost and receptive field, and what it cannot do.</li>
+<li>Derive linear attention's recurrent form and name the property it gives up.</li>
+<li>Derive the ZOH discretization and explain why $\Delta$ is a forget gate.</li>
+<li>Draw the selective-scan recurrence, implement it, and say why selectivity removes the FFT path.</li>
+<li>State the MoE forward pass, capacity rule, and auxiliary loss; compute the parameter-multiplier-versus-memory trade for a given config; and separate, for any architectural claim you read, what was measured from what was inferred.</li>
+</ol><div class="pager"><a id="prevlink" href="../m/12-attention-transformers.html"><small>← previous</small><b>M12 · Attention and the Transformer</b></a><a id="nextlink" class="next" href="../m/14-tokenization.html"><small>next →</small><b>M14 · Tokenization</b></a></div></article>
+</main>
+</div>
+</body></html>

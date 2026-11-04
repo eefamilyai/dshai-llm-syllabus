@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>F · Project Ideas — From Zero to Frontier</title>
+<meta name="description" content="Forty projects, graded by difficulty, each with a criterion that says when it is done.">
+<meta property="og:title" content="F · Project Ideas — From Zero to Frontier">
+<meta property="og:description" content="Forty projects, graded by difficulty, each with a criterion that says when it is done.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Appendices / F</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="F">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">F</span><span class="pill d3">difficulty 3/5</span><span class="pill">0 weeks</span><span class="pill">prereqs: none</span><span class="pill">1,882 words</span></div><h1>Project Ideas</h1><p class="tagline">Forty projects, graded by difficulty, each with a criterion that says when it is done.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="how-to-use-these">How to use these</h2>
+<p>Every project below has a <strong>measurable acceptance criterion</strong> — a number, a tolerance, and a protocol. That is deliberate: a project without one turns into an unbounded polish loop, and the criterion is what converts "I built a thing" into "I can show you a number". If a criterion seems arbitrary, replace it with one you can defend, and write the replacement down before you start.</p>
+<p>The <strong>type</strong> column matters. <em>Implement</em> projects teach you how something works by making you build it. <em>Measure</em> projects teach you what is true by making you quantify it — these are the ones that produce transferable judgement. <em>Write</em> projects teach you what you actually showed. Aim for at least one of each per difficulty band; a curriculum of only implementations produces people who can rebuild known systems and cannot evaluate new ones.</p>
+<p>Difficulty is 1 (an afternoon) to 5 (two to four weeks). The bands correspond roughly to: 1–2 after M01–M08, 3 after M12–M16, 4–5 after M18 plus the systems modules.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 470" width="100%" role="img" aria-label="The curriculum as a dependency graph" class="fig-svg"><defs><marker id="road-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="102.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="700">Foundations</text><rect x="40.0" y="58.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.4" opacity="0.95"/><text x="102.0" y="76.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="650">M01</text><text x="102.0" y="91.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Linear algebra</text><rect x="40.0" y="112.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.4" opacity="0.95"/><text x="102.0" y="130.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="650">M02</text><text x="102.0" y="145.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Calculus</text><rect x="40.0" y="166.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.4" opacity="0.95"/><text x="102.0" y="184.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="650">M03</text><text x="102.0" y="199.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Probability</text><rect x="40.0" y="220.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.4" opacity="0.95"/><text x="102.0" y="238.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-blue,#5b8cff)" text-anchor="middle" font-weight="650">M04</text><text x="102.0" y="253.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Optimization</text><text x="276.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="700">ML bedrock</text><rect x="214.0" y="58.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.4" opacity="0.95"/><text x="276.0" y="76.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-violet,#a78bfa)" text-anchor="middle" font-weight="650">M05</text><text x="276.0" y="91.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Classical ML</text><text x="450.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="700">Neural core</text><rect x="388.0" y="58.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.4" opacity="0.95"/><text x="450.0" y="76.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="650">M06</text><text x="450.0" y="91.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">MLPs</text><rect x="388.0" y="112.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.4" opacity="0.95"/><text x="450.0" y="130.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="650">M07</text><text x="450.0" y="145.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Backprop</text><rect x="388.0" y="166.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.4" opacity="0.95"/><text x="450.0" y="184.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="650">M08</text><text x="450.0" y="199.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Dynamics</text><rect x="388.0" y="220.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.4" opacity="0.95"/><text x="450.0" y="238.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="middle" font-weight="650">M09</text><text x="450.0" y="253.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Build a framework</text><text x="624.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="700">Architectures</text><rect x="562.0" y="58.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4" opacity="0.95"/><text x="624.0" y="76.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">M10</text><text x="624.0" y="91.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">CNNs</text><rect x="562.0" y="112.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4" opacity="0.95"/><text x="624.0" y="130.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">M11</text><text x="624.0" y="145.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">RNNs</text><rect x="562.0" y="166.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4" opacity="0.95"/><text x="624.0" y="184.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">M12</text><text x="624.0" y="199.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Attention</text><rect x="562.0" y="220.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.4" opacity="0.95"/><text x="624.0" y="238.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-amber,#f5b544)" text-anchor="middle" font-weight="650">M13</text><text x="624.0" y="253.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Modern zoo</text><text x="798.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="700">LLMs</text><rect x="736.0" y="58.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.4" opacity="0.95"/><text x="798.0" y="76.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">M14</text><text x="798.0" y="91.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Tokenization</text><rect x="736.0" y="112.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.4" opacity="0.95"/><text x="798.0" y="130.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">M15</text><text x="798.0" y="145.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Decoding</text><rect x="736.0" y="166.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.4" opacity="0.95"/><text x="798.0" y="184.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">M16</text><text x="798.0" y="199.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Pretraining</text><rect x="736.0" y="220.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.4" opacity="0.95"/><text x="798.0" y="238.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">M17</text><text x="798.0" y="253.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">SFT / PEFT</text><rect x="736.0" y="274.0" width="124.0" height="42.0" rx="8" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.4" opacity="0.95"/><text x="798.0" y="292.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-green,#34d399)" text-anchor="middle" font-weight="650">M18</text><text x="798.0" y="307.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8.8" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">Preference RL</text><line x1="164.0" y1="120.0" x2="212.0" y2="120.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#road-ah)"/><line x1="338.0" y1="120.0" x2="386.0" y2="120.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#road-ah)"/><line x1="512.0" y1="120.0" x2="560.0" y2="120.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#road-ah)"/><line x1="686.0" y1="120.0" x2="734.0" y2="120.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#road-ah)"/><line x1="512.0" y1="200.0" x2="560.0" y2="330.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#road-ah)" stroke-dasharray="4 3"/><line x1="686.0" y1="330.0" x2="734.0" y2="300.0" stroke="var(--fig-faint,#3a4467)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#road-ah)" stroke-dasharray="4 3"/><rect x="40.0" y="300.0" width="300.0" height="140.0" rx="10" fill="var(--fig-panel,#141a2e)" stroke="var(--fig-edge,#2e3a5e)" stroke-width="1.5"/><text x="190.0" y="324.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="11" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="650">practice track</text><text x="60.0" y="350.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">· M27 Research method</text><text x="60.0" y="372.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">· M28 Capstone ladder</text><text x="60.0" y="394.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9.8" fill="var(--fig-faint,#3a4467)" text-anchor="start" font-weight="400">· M29 Frontiers</text><text x="440.0" y="420.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="middle" font-weight="400">you can enter anywhere with the prerequisites met; the arrows show what actually blocks progress</text></svg><figcaption>The curriculum as a dependency graph. Each project below names the modules it draws on; a project whose modules you have not finished will cost you two to three times its stated difficulty, which is why the bands are ordered.</figcaption></figure></p>
+<h2 id="band-1-an-afternoon-to-a-weekend-difficulty-12">Band 1 — an afternoon to a weekend (difficulty 1–2)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Project</th>
+<th>Type</th>
+<th>Modules</th>
+<th>Acceptance criterion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Gradient descent on a quadratic bowl, by hand</td>
+<td>Implement</td>
+<td>M01, M04</td>
+<td>Reaches the analytic minimum within 1e-3 in under 500 steps for three learning rates, and diverges exactly when $\eta > 2/L$</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Eigen-direction visualiser</td>
+<td>Implement</td>
+<td>M01</td>
+<td>For 20 random 2×2 matrices, computed eigen-directions agree with NumPy within 1e-6 radians, including one complex-eigenvalue case</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Softmax Jacobian, analytic versus numeric</td>
+<td>Implement</td>
+<td>M02, M03</td>
+<td>Maximum relative error below 1e-6 against finite differences at five random logit vectors, including one with near-tied logits</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Entropy, cross-entropy, and KL dashboard</td>
+<td>Implement</td>
+<td>M03</td>
+<td>All three match closed forms for a uniform, a two-point, and a Zipf distribution within 1e-10</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Adam from scratch</td>
+<td>Implement</td>
+<td>M04</td>
+<td>After 100 steps from the same initialisation, parameters match <code>torch.optim.Adam</code> within 1e-5</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Bias–variance decomposition, measured</td>
+<td>Measure</td>
+<td>M05, M08</td>
+<td>Measured test error and the bias²+variance+noise decomposition agree within 10 percent across eight polynomial degrees</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Cross-validation plus a paired test</td>
+<td>Measure</td>
+<td>M05, M20</td>
+<td>Detects a seeded 2-point difference on synthetic data in at least 80 percent of 200 replicates, and reports a CI that covers the true difference in at least 93 percent</td>
+</tr>
+<tr>
+<td>8</td>
+<td>A two-layer MLP with manual backprop</td>
+<td>Implement</td>
+<td>M06, M07</td>
+<td>97 percent or better on MNIST with NumPy only, three seeds, reported as mean with an interval</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Initialisation variance across 20 layers</td>
+<td>Measure</td>
+<td>M08</td>
+<td>Measured activation-variance ratio across depth within 10 percent of the prediction for naive, Xavier, and He initialisation</td>
+</tr>
+<tr>
+<td>10</td>
+<td>LayerNorm and RMSNorm with backward passes</td>
+<td>Implement</td>
+<td>M08</td>
+<td>Forward and backward agree with PyTorch within 1e-5 on float64 inputs of three shapes</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Optimiser race on an ill-conditioned quadratic</td>
+<td>Measure</td>
+<td>M04</td>
+<td>A table of steps-to-tolerance for SGD, momentum, RMSProp, and Adam at matched tuning effort, with the condition number stated</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Sampling filters: top-k, top-p, min-p</td>
+<td>Implement</td>
+<td>M15</td>
+<td>The filtered distribution's entropy matches a closed-form computation for the top-k case within 1e-6, and the top-p filter retains exactly the mass it claims</td>
+</tr>
+</tbody>
+</table>
+<h2 id="band-2-a-week-or-two-difficulty-3">Band 2 — a week or two (difficulty 3)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Project</th>
+<th>Type</th>
+<th>Modules</th>
+<th>Acceptance criterion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>13</td>
+<td>Reverse-mode autodiff engine</td>
+<td>Implement</td>
+<td>M07, M09</td>
+<td>Passes a finite-difference gradient check at 1e-5 relative error on a network with branching and a shared parameter</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Byte-level BPE tokenizer</td>
+<td>Implement</td>
+<td>M14</td>
+<td>Round-trips 10 MB of text exactly, and produces a bits-per-byte table for vocabulary sizes 4k, 8k, 16k, 32k</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Tokenizer bake-off</td>
+<td>Measure</td>
+<td>M14, M20</td>
+<td>Bits-per-byte with 95 percent intervals on a held-out split for three tokenizers at matched vocabulary size, and a stated winner</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Transformer block from scratch</td>
+<td>Implement</td>
+<td>M12</td>
+<td>Matches a reference implementation within 1e-4 in float64, and the causal mask shows zero leakage when position $i$ is perturbed</td>
+</tr>
+<tr>
+<td>17</td>
+<td>RoPE implemented and verified</td>
+<td>Implement</td>
+<td>M12</td>
+<td>Relative-offset property holds within 1e-5 at five offsets, and a pretrained model's perplexity changes by less than 1 percent when RoPE replaces learned positions</td>
+</tr>
+<tr>
+<td>18</td>
+<td>KV cache with incremental decode</td>
+<td>Implement</td>
+<td>M12, M19</td>
+<td>Outputs are identical to the uncached path token for token, and decode is at least 5× faster at 1,024 tokens</td>
+</tr>
+<tr>
+<td>19</td>
+<td>A small language model on your own corpus</td>
+<td>Implement</td>
+<td>M15, M16</td>
+<td>Held-out loss below 1.6 nats per token, decreasing monotonically over the last 80 percent of training, with $N$, $D$, and $C$ stated</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Scaling fit and a held-out forecast</td>
+<td>Measure</td>
+<td>M16, M27</td>
+<td>Fit on four runs, forecast the fifth; the forecast lands within 5 percent of the measured loss, and the exponent interval is reported</td>
+</tr>
+<tr>
+<td>21</td>
+<td>LoRA adapter with a retention measurement</td>
+<td>Implement</td>
+<td>M17</td>
+<td>Parameter count matches $r(d+k)$ exactly, task gain at least 10 points, and general-capability retention no worse than −2 points</td>
+</tr>
+<tr>
+<td>22</td>
+<td>DPO from the loss up</td>
+<td>Implement</td>
+<td>M18</td>
+<td>Preference accuracy at least 65 percent from a 50 percent base, implicit-reward margin rising, and the reference model verifiably frozen</td>
+</tr>
+<tr>
+<td>23</td>
+<td>GRPO with a verifiable reward</td>
+<td>Implement</td>
+<td>M18</td>
+<td>Pass@1 on a held-out math subset improves by at least 5 points at a matched total sampling budget</td>
+</tr>
+<tr>
+<td>24</td>
+<td>An evaluation harness that refuses point estimates</td>
+<td>Implement</td>
+<td>M20</td>
+<td>Every reported number carries an interval, a paired mode reproduces a known difference, and the harness exits non-zero if a bare point estimate is requested</td>
+</tr>
+<tr>
+<td>25</td>
+<td>Contamination probe</td>
+<td>Measure</td>
+<td>M20</td>
+<td>The score difference between pre-cutoff and post-cutoff items of matched difficulty is reported with an interval, and an upper bound on the contamination effect is stated</td>
+</tr>
+<tr>
+<td>26</td>
+<td>RAG pipeline with reranking</td>
+<td>Implement</td>
+<td>M22</td>
+<td>Recall@10 and end-to-end answer accuracy with intervals, and reranking improves recall by at least 5 points over retrieval alone</td>
+</tr>
+</tbody>
+</table>
+<h2 id="band-3-two-to-four-weeks-difficulty-45">Band 3 — two to four weeks (difficulty 4–5)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Project</th>
+<th>Type</th>
+<th>Modules</th>
+<th>Acceptance criterion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>27</td>
+<td>GRPO versus DPO at matched compute</td>
+<td>Measure</td>
+<td>M18, M20</td>
+<td>Paired CI on preference accuracy and on pass@1, with a written verdict that distinguishes "no difference" from "underpowered"</td>
+</tr>
+<tr>
+<td>28</td>
+<td>Logit lens across layers</td>
+<td>Implement</td>
+<td>M21</td>
+<td>A per-layer plot of the top-1 prediction on 50 prompts, plus one claim about where a behaviour is decided, verified by an ablation</td>
+</tr>
+<tr>
+<td>29</td>
+<td>Find and ablate an induction head</td>
+<td>Measure</td>
+<td>M21</td>
+<td>An identified head whose ablation drops repeated-sequence accuracy by a predicted and measured amount, with a control ablation on a random head</td>
+</tr>
+<tr>
+<td>30</td>
+<td>Sparse autoencoder on a small model</td>
+<td>Implement</td>
+<td>M21</td>
+<td>A reconstruction-versus-sparsity curve at three dictionary sizes, and five named features each verified with a clamping experiment</td>
+</tr>
+<tr>
+<td>31</td>
+<td>An inference server with batching</td>
+<td>Implement</td>
+<td>M19</td>
+<td>TTFT and TPOT at p50/p95 for concurrency 1, 4, and 8, with at least 2.5× throughput at concurrency 8 and no request above a stated TPOT p95</td>
+</tr>
+<tr>
+<td>32</td>
+<td>Quantisation study</td>
+<td>Measure</td>
+<td>M26</td>
+<td>A bits-versus-accuracy curve at two group sizes, with the largest quantisation that costs less than 1 point of benchmark accuracy named</td>
+</tr>
+<tr>
+<td>33</td>
+<td>Triton softmax versus PyTorch</td>
+<td>Implement</td>
+<td>M24</td>
+<td>Correct within 1e-4, at least 2× faster on large tensors, and achieved bandwidth at least 70 percent of the roofline prediction</td>
+</tr>
+<tr>
+<td>34</td>
+<td>A roofline analyser for your own model</td>
+<td>Measure</td>
+<td>M24, M26</td>
+<td>Predicted versus measured time within 25 percent for five operations, with the memory-bound or compute-bound verdict recorded for each</td>
+</tr>
+<tr>
+<td>35</td>
+<td>ZeRO memory model</td>
+<td>Measure</td>
+<td>M25</td>
+<td>Simulated per-device memory for stages 1, 2, and 3 matches the closed-form accounting within 5 percent at three world sizes</td>
+</tr>
+<tr>
+<td>36</td>
+<td>A two-GPU data-parallel run</td>
+<td>Implement</td>
+<td>M25</td>
+<td>At least 1.7× throughput over one GPU at matched global batch, with gradient synchronisation verified against a single-GPU run</td>
+</tr>
+<tr>
+<td>37</td>
+<td>Mini-Chinchilla allocation study</td>
+<td>Measure</td>
+<td>M16</td>
+<td>Two allocations at identical compute, both trained, with the winner reported alongside an interval on the loss difference</td>
+</tr>
+<tr>
+<td>38</td>
+<td>Reproduce one figure from one paper</td>
+<td>Measure</td>
+<td>M27</td>
+<td>The figure reproduced at your scale with a two-panel comparison and a written account of the residual discrepancy and its likely cause</td>
+</tr>
+<tr>
+<td>39</td>
+<td>Fuse two kernels</td>
+<td>Implement</td>
+<td>M24, M26</td>
+<td>Speedup exceeds the sum of the individually fused speedups, and the superadditivity is explained by the intermediate tensor that is no longer written</td>
+</tr>
+<tr>
+<td>40</td>
+<td>Write a four-page paper</td>
+<td>Write</td>
+<td>M27</td>
+<td>A claim in claim-evidence-warrant-qualifier form, every table with $n$ and an interval, a limitations paragraph naming an unruled-out threat, and a reproducibility appendix</td>
+</tr>
+</tbody>
+</table>
+<h2 id="if-you-only-do-five">If you only do five</h2>
+<p>If time allows only five projects, take <strong>8</strong> (MLP with manual backprop), <strong>14</strong> (tokenizer), <strong>19</strong> (train a language model), <strong>22</strong> (DPO) and <strong>40</strong> (write it up). That sequence touches the mathematics, the data pipeline, the training loop, the alignment objective, and the communication of a result — which is the shape of the whole field, compressed.</p>
+<h2 id="what-makes-a-criterion-measurable">What makes a criterion measurable</h2>
+<p>A criterion is measurable when four things are fixed: the <strong>quantity</strong> (accuracy, bits per byte, p95 latency, speedup), the <strong>threshold</strong> (≥ 65 percent, &lt; 1e-5, ≥ 2.5×), the <strong>protocol</strong> (which dataset, which concurrency, how many seeds, how many warmup iterations), and the <strong>comparison class</strong> (against what baseline, tuned how). "Fast inference" fails all four. "TPOT p95 under 60 ms at concurrency 8 on 512-token prompts, measured over 200 requests after 20 warmup requests, against a naive no-cache implementation" fails none.</p>
+<p>Two habits make the difference between a project and a portfolio piece. First, write the criterion before the code, in the repository, with a date — a criterion chosen after seeing the result is not a criterion. Second, when you miss it, record the number you got and the reason you stopped: "missed; 1.8× against a 2.5× target because the baseline was already fused" is a better artefact than a silent rewrite of the target, and it is the sentence a reviewer will actually believe.</p><div class="pager"><a id="prevlink" href="../m/apx-e-schedules.html"><small>← previous</small><b>E · Schedules</b></a></div></article>
+</main>
+</div>
+</body></html>

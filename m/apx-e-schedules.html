@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>E · Schedules — From Zero to Frontier</title>
+<meta name="description" content="Three routes through the curriculum, costed in hours, with the gaps named.">
+<meta property="og:title" content="E · Schedules — From Zero to Frontier">
+<meta property="og:description" content="Three routes through the curriculum, costed in hours, with the gaps named.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%2322d3ee'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%235b8cff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23a78bfa'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%2334d399'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/viz.js"></script>
+<script defer src="../assets/app.js"></script>
+</head><body>
+<div class="wrap">
+<aside class="side">
+<a class="brand" href="../index.html"><b>From Zero to Frontier</b><span>neural networks &amp; LLMs</span></a>
+<div id="ptext" style="padding:0 10px 8px;font-family:var(--mono);font-size:10.5px;color:var(--faint)"></div>
+<div style="height:3px;background:var(--edge);border-radius:2px;margin:0 10px 10px"><i id="pfill" style="display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:0"></i></div>
+<div class="phase">Start here</div>
+<div class="nav"><a class="" data-id="M00" href="../m/00-how-to-use.html"><span class="id">M00</span><span class="t">How to Use This Syllabus</span><span class="chk"></span></a></div>
+<div class="phase">Mathematical foundations</div>
+<div class="nav"><a class="" data-id="M01" href="../m/01-linear-algebra.html"><span class="id">M01</span><span class="t">Linear Algebra for Deep Learning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M02" href="../m/02-calculus.html"><span class="id">M02</span><span class="t">Multivariable and Matrix Calculus</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M03" href="../m/03-probability.html"><span class="id">M03</span><span class="t">Probability, Statistics, and Information Theory</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M04" href="../m/04-optimization.html"><span class="id">M04</span><span class="t">Optimization for Deep Learning</span><span class="chk"></span></a></div>
+<div class="phase">Machine learning bedrock</div>
+<div class="nav"><a class="" data-id="M05" href="../m/05-classical-ml.html"><span class="id">M05</span><span class="t">Classical Machine Learning</span><span class="chk"></span></a></div>
+<div class="phase">The neural network core</div>
+<div class="nav"><a class="" data-id="M06" href="../m/06-neurons-mlps.html"><span class="id">M06</span><span class="t">Neurons, Perceptrons, and Multilayer Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M07" href="../m/07-backprop-autograd.html"><span class="id">M07</span><span class="t">Backpropagation and Automatic Differentiation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M08" href="../m/08-training-dynamics.html"><span class="id">M08</span><span class="t">Training Dynamics and Generalization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M09" href="../m/09-build-a-framework.html"><span class="id">M09</span><span class="t">Building Your Own Deep Learning Framework</span><span class="chk"></span></a></div>
+<div class="phase">Architectures</div>
+<div class="nav"><a class="" data-id="M10" href="../m/10-convolutions.html"><span class="id">M10</span><span class="t">Convolutional Networks</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M11" href="../m/11-recurrent-networks.html"><span class="id">M11</span><span class="t">Recurrent Networks, LSTMs, and Sequence Models</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M12" href="../m/12-attention-transformers.html"><span class="id">M12</span><span class="t">Attention and the Transformer</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M13" href="../m/13-modern-architectures.html"><span class="id">M13</span><span class="t">The Modern Architecture Zoo</span><span class="chk"></span></a></div>
+<div class="phase">Large language models</div>
+<div class="nav"><a class="" data-id="M14" href="../m/14-tokenization.html"><span class="id">M14</span><span class="t">Tokenization</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M15" href="../m/15-language-modeling.html"><span class="id">M15</span><span class="t">Language Modeling and Decoding</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M16" href="../m/16-pretraining-scaling.html"><span class="id">M16</span><span class="t">Pretraining and Scaling Laws</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M17" href="../m/17-sft-peft.html"><span class="id">M17</span><span class="t">Supervised Fine-Tuning and Parameter-Efficient Tuning</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M18" href="../m/18-preference-learning.html"><span class="id">M18</span><span class="t">Preference Learning: RLHF, DPO, and Reasoning RL</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M19" href="../m/19-inference-serving.html"><span class="id">M19</span><span class="t">Inference Engineering and Serving</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M20" href="../m/20-evaluation.html"><span class="id">M20</span><span class="t">Evaluation</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M21" href="../m/21-interpretability-safety.html"><span class="id">M21</span><span class="t">Interpretability and Safety</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M22" href="../m/22-retrieval-agents.html"><span class="id">M22</span><span class="t">Retrieval, Tools, and Agents</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M23" href="../m/23-multimodality.html"><span class="id">M23</span><span class="t">Multimodality</span><span class="chk"></span></a></div>
+<div class="phase">Systems and scale</div>
+<div class="nav"><a class="" data-id="M24" href="../m/24-gpu-cuda.html"><span class="id">M24</span><span class="t">GPU Architecture and CUDA</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M25" href="../m/25-distributed-training.html"><span class="id">M25</span><span class="t">Distributed Training</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M26" href="../m/26-efficiency-engineering.html"><span class="id">M26</span><span class="t">Efficiency Engineering</span><span class="chk"></span></a></div>
+<div class="phase">Practice</div>
+<div class="nav"><a class="" data-id="M27" href="../m/27-research-method.html"><span class="id">M27</span><span class="t">Research Method: Reading, Reproducing, and Writing</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M28" href="../m/28-capstone-ladder.html"><span class="id">M28</span><span class="t">The Capstone Ladder</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="M29" href="../m/29-frontiers.html"><span class="id">M29</span><span class="t">Frontiers and Open Problems</span><span class="chk"></span></a></div>
+<div class="phase">Appendices</div>
+<div class="nav"><a class="" data-id="A" href="../m/apx-a-formula-sheet.html"><span class="id">A</span><span class="t">Formula Sheet</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="B" href="../m/apx-b-glossary.html"><span class="id">B</span><span class="t">Glossary</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="C" href="../m/apx-c-paper-list.html"><span class="id">C</span><span class="t">Annotated Paper List</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="D" href="../m/apx-d-resource-map.html"><span class="id">D</span><span class="t">Resource Map</span><span class="chk"></span></a></div>
+<div class="nav"><a class="on" data-id="E" href="../m/apx-e-schedules.html"><span class="id">E</span><span class="t">Schedules</span><span class="chk"></span></a></div>
+<div class="nav"><a class="" data-id="F" href="../m/apx-f-projects.html"><span class="id">F</span><span class="t">Project Ideas</span><span class="chk"></span></a></div>
+<div class="phase">settings</div>
+<div style="padding:6px 10px"><button class="btn" id="cleardone" style="font-size:11px;padding:4px 10px">reset progress</button></div>
+</aside>
+<main>
+  <div class="bar"><i id="rbar"></i></div>
+  <div class="top"><span class="crumb">Appendices / E</span><span class="spacer"></span><button class="btn" id="markdone" data-mod="E">mark complete</button></div>
+  <article class="article" id="content"><div class="meta"><span class="pill">E</span><span class="pill d2">difficulty 2/5</span><span class="pill">0 weeks</span><span class="pill">prereqs: none</span><span class="pill">2,447 words</span></div><h1>Schedules</h1><p class="tagline">Three routes through the curriculum, costed in hours, with the gaps named.</p><div class="toc" id="toc"><b>on this page</b></div><h2 id="how-these-plans-are-costed">How these plans are costed</h2>
+<p>A "study hour" here is focused work: about 20 minutes reading, 40 minutes deriving or implementing, and a checkpoint attempt at the end. It excludes setup, installation, and the hour you lose when a CUDA driver update breaks your environment — add roughly 30 percent if you are provisioning your own hardware, and another 30 percent if you are not yet comfortable writing Python daily.</p>
+<p>Each module in this curriculum declares a cost in its front matter in weeks at about 10 hours per week. The declared costs sum to <strong>63 module-weeks</strong>, which is <strong>630 hours</strong>. That number is the anchor for everything below: any plan that promises the whole curriculum in less than about 600 hours is promising something other than the whole curriculum.</p>
+<p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 430" width="100%" role="img" aria-label="Every module, its phase, its weight, and its difficulty" class="fig-svg"><defs><marker id="map-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-dim,#8b93b0)"/></marker></defs><text x="28.0" y="72.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-blue,#5b8cff)" text-anchor="start" font-weight="700">P1</text><text x="62.0" y="72.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Mathematical foundations</text><rect x="300.0" y="56.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2" opacity="0.61"/><text x="325.0" y="75.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M01</text><rect x="356.0" y="56.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2" opacity="0.74"/><text x="381.0" y="75.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M02</text><rect x="412.0" y="56.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2" opacity="0.74"/><text x="437.0" y="75.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M03</text><rect x="468.0" y="56.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-blue,#5b8cff)" stroke-width="1.2" opacity="0.74"/><text x="493.0" y="75.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M04</text><text x="28.0" y="122.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-violet,#a78bfa)" text-anchor="start" font-weight="700">P2</text><text x="62.0" y="122.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Machine learning bedrock</text><rect x="300.0" y="106.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-violet,#a78bfa)" stroke-width="1.2" opacity="0.61"/><text x="325.0" y="125.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M05</text><text x="28.0" y="172.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-cyan,#22d3ee)" text-anchor="start" font-weight="700">P3</text><text x="62.0" y="172.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">The neural network core</text><rect x="300.0" y="156.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.2" opacity="0.61"/><text x="325.0" y="175.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M06</text><rect x="356.0" y="156.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.2" opacity="0.87"/><text x="381.0" y="175.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M07</text><rect x="412.0" y="156.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.2" opacity="0.87"/><text x="437.0" y="175.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M08</text><rect x="468.0" y="156.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-cyan,#22d3ee)" stroke-width="1.2" opacity="0.74"/><text x="493.0" y="175.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M09</text><text x="28.0" y="222.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-amber,#f5b544)" text-anchor="start" font-weight="700">P4</text><text x="62.0" y="222.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Architectures</text><rect x="300.0" y="206.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.2" opacity="0.74"/><text x="325.0" y="225.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M10</text><rect x="356.0" y="206.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.2" opacity="0.74"/><text x="381.0" y="225.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M11</text><rect x="412.0" y="206.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.2" opacity="1.0"/><text x="437.0" y="225.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M12</text><rect x="468.0" y="206.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-amber,#f5b544)" stroke-width="1.2" opacity="1.0"/><text x="493.0" y="225.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M13</text><text x="28.0" y="272.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-green,#34d399)" text-anchor="start" font-weight="700">P5</text><text x="62.0" y="272.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Large language models</text><rect x="300.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.61"/><text x="325.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M14</text><rect x="356.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.74"/><text x="381.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M15</text><rect x="412.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="1.0"/><text x="437.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M16</text><rect x="468.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.74"/><text x="493.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M17</text><rect x="524.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="1.0"/><text x="549.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M18</text><rect x="580.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.87"/><text x="605.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M19</text><rect x="636.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.74"/><text x="661.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M20</text><rect x="692.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.87"/><text x="717.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M21</text><rect x="748.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.74"/><text x="773.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M22</text><rect x="804.0" y="256.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-green,#34d399)" stroke-width="1.2" opacity="0.87"/><text x="829.0" y="275.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M23</text><text x="28.0" y="322.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-rose,#fb7185)" text-anchor="start" font-weight="700">P6</text><text x="62.0" y="322.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Systems and scale</text><rect x="300.0" y="306.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.2" opacity="0.87"/><text x="325.0" y="325.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M24</text><rect x="356.0" y="306.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.2" opacity="1.0"/><text x="381.0" y="325.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M25</text><rect x="412.0" y="306.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-rose,#fb7185)" stroke-width="1.2" opacity="0.87"/><text x="437.0" y="325.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M26</text><text x="28.0" y="372.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5" fill="var(--fig-lime,#a3e635)" text-anchor="start" font-weight="700">P7</text><text x="62.0" y="372.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.8" fill="var(--fig-ink,#e6e9f5)" text-anchor="start" font-weight="400">Practice</text><rect x="300.0" y="356.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-lime,#a3e635)" stroke-width="1.2" opacity="0.48"/><text x="325.0" y="375.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M00</text><rect x="356.0" y="356.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-lime,#a3e635)" stroke-width="1.2" opacity="0.61"/><text x="381.0" y="375.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M27</text><rect x="412.0" y="356.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-lime,#a3e635)" stroke-width="1.2" opacity="0.74"/><text x="437.0" y="375.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M28</text><rect x="468.0" y="356.0" width="50.0" height="30.0" rx="6" fill="var(--fig-panel2,#1b2340)" stroke="var(--fig-lime,#a3e635)" stroke-width="1.2" opacity="0.61"/><text x="493.0" y="375.0" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="9.5" fill="var(--fig-ink,#e6e9f5)" text-anchor="middle" font-weight="650">M29</text><text x="300.0" y="420.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10.5" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">opacity = difficulty (1-5). Phase 5 is the longest, by design.</text><text x="300.0" y="40.0" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="10" fill="var(--fig-dim,#8b93b0)" text-anchor="start" font-weight="400">modules</text></svg><figcaption>The full phase-to-module map with difficulty and weeks. The three plans below are three different diagonal cuts through this graph — the sprint takes the spine, the standard takes everything except three branches, the thorough takes all of it.</figcaption></figure></p>
+<h2 id="plan-1-the-12-week-sprint-240-hours">Plan 1 — the 12-week sprint (240 hours)</h2>
+<p>Twenty hours a week for twelve weeks. This is for a working engineer who needs to be dangerous with language models quickly, and it is honest about being a <em>reading plus one artefact per week</em> plan, not a mastery plan. It covers the spine — the mathematics you cannot reason without, the transformer, the training loop, and the modern LLM stack — and skips every branch that is not on that spine.</p>
+<table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Modules</th>
+<th>Hours</th>
+<th>Artefact by the end of the week</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>M01, M02</td>
+<td>20</td>
+<td>A notebook that applies a 2×2 matrix to a grid and hand-derives the gradient of a quadratic form</td>
+</tr>
+<tr>
+<td>2</td>
+<td>M03, M04</td>
+<td>20</td>
+<td>A confidence-interval calculator and a plot of SGD / momentum / Adam on an ill-conditioned quadratic</td>
+</tr>
+<tr>
+<td>3</td>
+<td>M05, M06</td>
+<td>20</td>
+<td>A k-fold cross-validation harness and a two-layer MLP in NumPy, no framework</td>
+</tr>
+<tr>
+<td>4</td>
+<td>M07, M08</td>
+<td>20</td>
+<td>An autodiff engine that passes a finite-difference check, plus an initialisation-variance experiment</td>
+</tr>
+<tr>
+<td>5</td>
+<td>M09</td>
+<td>20</td>
+<td>A minimal training framework with a config file and a reproducible run log</td>
+</tr>
+<tr>
+<td>6</td>
+<td>M12, M13</td>
+<td>20</td>
+<td>A transformer block from scratch, a shape trace, and a parameter count reconciled against a real model file</td>
+</tr>
+<tr>
+<td>7</td>
+<td>M14, M15</td>
+<td>20</td>
+<td>A BPE tokenizer with a bits-per-byte table, and a 10M-parameter language model trained on your own corpus</td>
+</tr>
+<tr>
+<td>8</td>
+<td>M16, M17</td>
+<td>20</td>
+<td>A scaling fit from three runs and a LoRA adapter with both task gain and retention measured</td>
+</tr>
+<tr>
+<td>9</td>
+<td>M18</td>
+<td>20</td>
+<td>DPO implemented from the loss up, with preference accuracy and reward margin plotted</td>
+</tr>
+<tr>
+<td>10</td>
+<td>M19, M20</td>
+<td>20</td>
+<td>A KV-cache server reporting TTFT/TPOT percentiles, and an eval harness that prints intervals</td>
+</tr>
+<tr>
+<td>11</td>
+<td>M27, M29</td>
+<td>20</td>
+<td>Three-pass notes on eight papers, and one published claim audited against its evidence</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Review and write-up</td>
+<td>20</td>
+<td>A four-page write-up of your strongest artefact, with its claim, evidence, and limitations</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Totals:</strong> 12 weeks × 20 hours = <strong>240 hours</strong>. <strong>Skipped entirely:</strong> M10, M11, M21, M22, M23, M24, M25, M26, and the full M28 ladder (you touch rungs 1, 2, 3, 4, 5, and a partial 6 as the weekly artefacts above). That is a real cost: you will not be able to read a systems paper, a convolution result, or an interpretability claim with any confidence, and you will have no kernel or serving optimisation experience.</p>
+<h2 id="plan-2-the-6-month-standard-338-hours">Plan 2 — the 6-month standard (338 hours)</h2>
+<p>Thirteen hours a week for twenty-six weeks, one module per week with a consolidation week in the middle and the last week for writing. This is the plan most learners should take. It covers M01 through M22 in order, plus M26 and M27 and M29.</p>
+<table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Module</th>
+<th>Hours</th>
+<th>Artefact by the end of the week</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>M01</td>
+<td>13</td>
+<td>Derivation notebook: SVD, eigen, and a matrix as a transformation</td>
+</tr>
+<tr>
+<td>2</td>
+<td>M02</td>
+<td>13</td>
+<td>Hand-derived gradients for a two-layer network's full parameter set</td>
+</tr>
+<tr>
+<td>3</td>
+<td>M03</td>
+<td>13</td>
+<td>Entropy, KL, and cross-entropy computed and cross-checked numerically</td>
+</tr>
+<tr>
+<td>4</td>
+<td>M04</td>
+<td>13</td>
+<td>An optimiser comparison with a learning-rate sweep and a schedule plot</td>
+</tr>
+<tr>
+<td>5</td>
+<td>M05</td>
+<td>13</td>
+<td>A classical baseline (logistic regression plus a tree) with cross-validated intervals</td>
+</tr>
+<tr>
+<td>6</td>
+<td>M06</td>
+<td>13</td>
+<td>An MLP from scratch trained to a stated accuracy, three seeds</td>
+</tr>
+<tr>
+<td>7</td>
+<td>M07</td>
+<td>13</td>
+<td>An autodiff engine passing a finite-difference gradient check</td>
+</tr>
+<tr>
+<td>8</td>
+<td>M08</td>
+<td>13</td>
+<td>Initialisation, normalisation, and a generalisation-gap experiment</td>
+</tr>
+<tr>
+<td>9</td>
+<td>M09</td>
+<td>13</td>
+<td>A small framework: layers, losses, an optimiser, a training loop, a config</td>
+</tr>
+<tr>
+<td>10</td>
+<td>M10</td>
+<td>13</td>
+<td>A convolution implemented by im2col, benchmarked against PyTorch</td>
+</tr>
+<tr>
+<td>11</td>
+<td>M11</td>
+<td>13</td>
+<td>An LSTM cell trained on a long-range copy task, compared with a vanilla RNN</td>
+</tr>
+<tr>
+<td>12</td>
+<td>M12</td>
+<td>13</td>
+<td>Multi-head attention from scratch, with the causal mask verified by leakage test</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Consolidation</td>
+<td>13</td>
+<td>No new material: re-derive the four checkpoint lists you found hardest</td>
+</tr>
+<tr>
+<td>14</td>
+<td>M13</td>
+<td>13</td>
+<td>RoPE implemented and its relative-offset property verified numerically</td>
+</tr>
+<tr>
+<td>15</td>
+<td>M14</td>
+<td>13</td>
+<td>A byte-level BPE tokenizer and a BPB comparison against a reference tokenizer</td>
+</tr>
+<tr>
+<td>16</td>
+<td>M15</td>
+<td>13</td>
+<td>A decoder with top-k, top-p, temperature, and a diversity measurement</td>
+</tr>
+<tr>
+<td>17</td>
+<td>M16</td>
+<td>13</td>
+<td>A scaling-law fit with an extrapolation interval</td>
+</tr>
+<tr>
+<td>18</td>
+<td>M17</td>
+<td>13</td>
+<td>A LoRA fine-tune with task gain and capability retention both reported</td>
+</tr>
+<tr>
+<td>19</td>
+<td>M18</td>
+<td>13</td>
+<td>DPO from scratch, with the reference-model bookkeeping verified</td>
+</tr>
+<tr>
+<td>20</td>
+<td>M19</td>
+<td>13</td>
+<td>A KV cache and a continuous-batching loop, with TTFT/TPOT at two concurrencies</td>
+</tr>
+<tr>
+<td>21</td>
+<td>M20</td>
+<td>13</td>
+<td>An evaluation harness reporting intervals and a contamination probe</td>
+</tr>
+<tr>
+<td>22</td>
+<td>M26</td>
+<td>13</td>
+<td>A quantisation experiment: bits versus accuracy at two group sizes</td>
+</tr>
+<tr>
+<td>23</td>
+<td>M21</td>
+<td>13</td>
+<td>A logit-lens plot and one causal check on a named feature</td>
+</tr>
+<tr>
+<td>24</td>
+<td>M22</td>
+<td>13</td>
+<td>A retrieval pipeline with reranking, measured by recall@k and answer accuracy</td>
+</tr>
+<tr>
+<td>25</td>
+<td>M27</td>
+<td>13</td>
+<td>A reproduction attempt from the checklist, with the failure localised to one layer</td>
+</tr>
+<tr>
+<td>26</td>
+<td>M29 and write-up</td>
+<td>13</td>
+<td>A survey of one open problem and a four-page write-up of your best artefact</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Totals:</strong> 26 weeks × 13 hours = <strong>338 hours</strong>. <strong>Deferred:</strong> M23, M24, M25, and the full M28 ladder — you will have built about six of its ten rungs as weekly artefacts but not the paper, the kernel, or the harness as standalone deliverables. Add M23 and M25 later if your work touches multimodal input or multi-GPU training; both are two-week modules and neither is a prerequisite for anything else.</p>
+<h2 id="plan-3-the-12-month-thorough-track-624-hours">Plan 3 — the 12-month thorough track (624 hours)</h2>
+<p>Thirteen hours a week for fifty-two calendar weeks, of which forty-eight are working weeks and four are rest weeks. Every module is covered, in dependency order, and the capstone ladder is its own six-week block at the end rather than being threaded through. This is the plan for someone who intends to contribute rather than consume.</p>
+<table>
+<thead>
+<tr>
+<th>Block</th>
+<th>Weeks</th>
+<th>Modules</th>
+<th>Hours</th>
+<th>Artefact at the end of the block</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B1</td>
+<td>1–6</td>
+<td>M01–M04</td>
+<td>78</td>
+<td>A derivation notebook you can hand to someone else, plus an optimiser study</td>
+</tr>
+<tr>
+<td>B2</td>
+<td>7–9</td>
+<td>M05, M06</td>
+<td>39</td>
+<td>A classical baseline and an MLP from scratch, both with intervals</td>
+</tr>
+<tr>
+<td>B3</td>
+<td>10–14</td>
+<td>M07–M09</td>
+<td>65</td>
+<td>An autodiff engine and a small framework, both yours</td>
+</tr>
+<tr>
+<td>B4</td>
+<td>15–19</td>
+<td>M10–M12</td>
+<td>65</td>
+<td>Three architectures from scratch: conv, recurrent, attention</td>
+</tr>
+<tr>
+<td>B5</td>
+<td>20–22</td>
+<td>M13, M14</td>
+<td>39</td>
+<td>RoPE, GQA, and a tokenizer with a compression table</td>
+</tr>
+<tr>
+<td>B6</td>
+<td>23–25</td>
+<td>M15, M16</td>
+<td>39</td>
+<td>A language model trained on your own corpus, plus a scaling fit</td>
+</tr>
+<tr>
+<td>B7</td>
+<td>26–29</td>
+<td>M17, M18</td>
+<td>52</td>
+<td>LoRA with retention measured, and DPO with margins plotted</td>
+</tr>
+<tr>
+<td>B8</td>
+<td>30–33</td>
+<td>M19–M21</td>
+<td>52</td>
+<td>A served model with latency tables, an eval harness, and a logit-lens study</td>
+</tr>
+<tr>
+<td>B9</td>
+<td>34–36</td>
+<td>M22, M23</td>
+<td>39</td>
+<td>A RAG system, and a patch-based vision model or a diffusion sampler</td>
+</tr>
+<tr>
+<td>B10</td>
+<td>37–41</td>
+<td>M24–M26</td>
+<td>65</td>
+<td>A Triton kernel with a roofline account, plus a quantisation study</td>
+</tr>
+<tr>
+<td>B11</td>
+<td>42–43</td>
+<td>M27, M29</td>
+<td>26</td>
+<td>A reproduction with a discrepancy note, and a written survey of one frontier</td>
+</tr>
+<tr>
+<td>B12</td>
+<td>44–48</td>
+<td>M28</td>
+<td>65</td>
+<td>The ladder: ten rungs, each with an acceptance criterion met, and a paper</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Totals:</strong> 48 working weeks × 13 hours = <strong>624 hours</strong>; plus four rest weeks at zero new material, making 52 calendar weeks. The 6-hour gap against the nominal 630 is absorbed by the rest weeks' review sessions, which count as consolidation rather than new material.</p>
+<p>The ladder block deserves a note. M28's front matter says six weeks and its rung table sums to 68 hours at minimum-pass depth; 65 hours in five working weeks is deliberately a little tighter than the module's own budget, on the assumption that by this point you have already built most of the rungs once as block artefacts — B3 gives you rung 1, B5 rung 2, B6 rung 3, B7 rungs 4 and 5, B8 rungs 6 and 9, B10 rung 8, B11 rungs 7 and 10. The capstone block is where they get hardened and written up, not where they are first attempted.</p>
+<h2 id="rest-weeks">Rest weeks</h2>
+<p>Four of them in the thorough track (after working weeks 12, 24, 36, and 48), one in the standard plan (week 13), and none in the sprint — which is one of the reasons the sprint is not a beginner's plan.</p>
+<p>A rest week is not a holiday from the material; it is a week with no new module, spent on:</p>
+<ul>
+<li>Re-deriving, from memory, the checkpoints of the two modules you found hardest. This is the single most effective activity in the whole schedule, and it is the one everyone skips.</li>
+<li>Cleaning up artefacts: the notebook that half-runs, the config file that is out of date, the results table without intervals.</li>
+<li>Reading one paper properly using the three-pass method from <strong>M27</strong>, with no pressure to implement anything.</li>
+<li>Writing a short retro: what you believed at the start of the block, what you believe now, and which belief changed because of a number.</li>
+</ul>
+<p>Without rest weeks, the topics you learned in week 3 are gone by week 20. The spaced re-derivation is cheaper than relearning, and the evidence for that is your own checkpoints.</p>
+<h2 id="review-cadence">Review cadence</h2>
+<p>Three rhythms, nested:</p>
+<p><strong>Weekly (inside the study hours, 30 minutes).</strong> Attempt the checkpoint of the module you just finished, cold, without notes. Anything you cannot do goes on a list. That list is what the rest week consumes.</p>
+<p><strong>Per block or per five modules (2 hours, inside the block's hours).</strong> Re-attempt the oldest items on the list, then re-run one artefact from the block with a fresh seed and check that it still passes. Artefact rot is real: environments drift, and a script that ran in month two often does not run in month eight.</p>
+<p><strong>Quarterly or at each rest week (half a day, outside the counted hours).</strong> Re-read the tables of contents of the modules you have completed and write, from memory, a one-page map of how they connect. If you cannot place a module on the map, it is not learned, whatever your notes say.</p>
+<p>A cadence you will actually keep beats a better one you will not. Thirty minutes weekly and two hours per block is enough; the failure mode is not insufficient review, it is abandoning review entirely by week six.</p>
+<h2 id="choosing-between-them">Choosing between them</h2>
+<p>Take the <strong>sprint</strong> if you have a deadline that is twelve weeks away, you already write production code, and you need breadth of understanding rather than artefacts you can show. Accept in advance that you will skip systems, convolutions, recurrent networks, and interpretability.</p>
+<p>Take the <strong>standard</strong> if you want the whole conceptual arc and are willing to defer three branches. It is the best value per hour of the three and the one most learners should pick.</p>
+<p>Take the <strong>thorough</strong> track if you intend to produce research or work on model internals, and can protect thirteen hours a week for a year. The capstone block is the part that matters; the first 43 weeks exist to make it possible.</p>
+<p>If you have fewer than ten hours a week, do not compress a plan — stretch it. The courses are sequential in a way that punishes skipping: everything after M07 assumes you can differentiate a computational graph, and everything after M12 assumes you can track tensor shapes. A stretched standard plan at six hours a week is roughly eighteen months and is a better use of that time than a sprint at six hours a week, which would be a survey course.</p>
+<h2 id="what-each-plan-does-not-give-you">What each plan does not give you</h2>
+<p>The sprint gives no systems experience and no interpretation skill; you will be able to explain attention and unable to explain why your serving stack is slow.</p>
+<p>The standard plan gives no kernel experience, no multi-GPU experience, and no multimodal experience. If your job involves training anything larger than a single GPU can hold, add M25 immediately after M26; the two together are about 40 hours and they change what you can attempt.</p>
+<p>The thorough track gives you artefacts and no audience. A paper you wrote with no reader is a rehearsal; submit it somewhere — a workshop, a reading group, a colleague who will argue — because the review response is the part of <strong>M27</strong> you cannot simulate.</p><div class="pager"><a id="prevlink" href="../m/apx-d-resource-map.html"><small>← previous</small><b>D · Resource Map</b></a><a id="nextlink" class="next" href="../m/apx-f-projects.html"><small>next →</small><b>F · Project Ideas</b></a></div></article>
+</main>
+</div>
+</body></html>
